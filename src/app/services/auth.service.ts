@@ -5,12 +5,11 @@ import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-
 @Injectable()
 export class TokenService {
-    private _token:string = null;
+    private _token: string = null;
 
-    set token(token:string){
+    set token(token: string) {
         if (!token) {
             localStorage.removeItem('otp-token');
         } else {
@@ -19,7 +18,7 @@ export class TokenService {
         this._token = token;
     }
 
-    get token(){
+    get token() {
         if (!this._token) {
             this._token = localStorage.getItem('otp-token');
         }
@@ -27,14 +26,13 @@ export class TokenService {
     }
 }
 
-
 @Injectable()
 export class AuthService {
 
     user = null;
-    token:string = null;
+    token: string = null;
 
-    constructor(private http:Http, private tokenService: TokenService, private router: Router){
+    constructor(private http: Http, private tokenService: TokenService, private router: Router) {
 
     }
 
@@ -64,7 +62,7 @@ export class AuthService {
         this.router.navigate(['']);
     }
 
-    recoverPass(email:string) {
+    recoverPass(email: string) {
         return new Promise((resolve, reject) => reject());
         // To be updated and reviewed
         // return this.http.post(`${environment.apiUrl}/api/v1/user/${email}/recover-password`, {})

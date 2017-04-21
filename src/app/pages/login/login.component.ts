@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 })
 export class LoginComponent {
 
-  buttonText: string = 'Login';
+  buttonText = 'Login';
 
   constructor(private auth: AuthService) {
 

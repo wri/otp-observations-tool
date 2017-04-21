@@ -8,7 +8,7 @@ export class OauthRequestOptions extends RequestOptions {
     super();
 
   }
-  merge(options?:RequestOptionsArgs):RequestOptions {
+  merge(options?: RequestOptionsArgs): RequestOptions {
     if (!options.headers) {
       options.headers = new Headers();
     }

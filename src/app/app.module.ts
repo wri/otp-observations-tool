@@ -8,8 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { OauthRequestOptions } from 'app/services/oauth-request.service';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
