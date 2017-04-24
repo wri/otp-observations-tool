@@ -1,3 +1,4 @@
+import { AuthGuard } from './services/auth.guard';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -27,6 +28,7 @@ import { ObservationComponent } from 'app/pages/observation/observation.componen
     TokenService,
     AuthService,
     { provide: RequestOptions, useClass: OauthRequestOptions },
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

@@ -36,13 +36,14 @@ export class AuthService {
 
     }
 
-    login(email: string, password: string) {
+    login(email: string, password: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
           // TODO: replace with real logic
           if (email === 'admin@example.com' && password === 'password') {
-            resolve();
+            this.token = 'heyya';
+            resolve(true);
           } else {
-            reject();
+            reject(false);
           }
         });
         // return this.http.post(`${environment.apiUrl}/auth`, {
@@ -53,7 +54,14 @@ export class AuthService {
     }
 
     checkLogged(): Promise<boolean> {
-        return new Promise((resolve, reject) => resolve(true));
+        return new Promise((resolve, reject) => {
+          // TODO: replace with real logic
+          if (this.token) {
+            resolve(true);
+          } else {
+            reject(false);
+          }
+        });
         // return this.http.get(`${environment.apiUrl}/api/v1/user/me`)
         // .map(response => response.json())
         // .map(body => {
@@ -66,11 +74,11 @@ export class AuthService {
         this.user = null;
         this.token = null;
         this.tokenService.token = null;
-        this.router.navigate(['']);
+        this.router.navigate(['/']);
     }
 
-    recoverPass(email: string) {
-        return new Promise((resolve, reject) => reject());
+    recoverPass(email: string): Promise<boolean> {
+        return new Promise((resolve, reject) => reject(false));
         // To be updated and reviewed
         // return this.http.post(`${environment.apiUrl}/api/v1/user/${email}/recover-password`, {})
         // .map(response => response.json()).toPromise()

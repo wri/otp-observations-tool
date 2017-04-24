@@ -1,3 +1,4 @@
+import { AuthGuard } from './services/auth.guard';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from 'app/pages/login/login.component';
@@ -6,12 +7,12 @@ import { ObservationComponent } from 'app/pages/observation/observation.componen
 const routes: Routes = [
   {
     path: '',
-    component: LoginComponent,
-    children: []
+    component: LoginComponent
   },
   {
     path: 'observation',
-    component: ObservationComponent
+    component: ObservationComponent,
+    canActivate: [AuthGuard]
   }
 ];
 
