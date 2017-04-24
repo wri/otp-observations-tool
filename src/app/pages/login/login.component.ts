@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 import { AuthService } from 'app/services/auth.service';
 import { Component } from '@angular/core';
 
@@ -8,15 +10,23 @@ import { Component } from '@angular/core';
 })
 export class LoginComponent {
 
-  buttonText = 'Login';
+  email: string;
+  password: string;
+  submitted = false;
+  unauthorized = false;
 
-  constructor(private auth: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
+  onSubmit(form: NgForm): void {
+    this.submitted = true;
+
+    if (form.valid) {
+      this.authService.login(this.email, this.password)
+        .then(() => this.router.navigate(['observation']))
+        .catch(() => this.unauthorized = true);
+    }
   }
-
-  public onLogin(): void {
-    this.auth.login('user', 'password').then( () => this.buttonText = 'Logged');
-  }
-
-
 }

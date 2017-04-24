@@ -37,7 +37,14 @@ export class AuthService {
     }
 
     login(email: string, password: string) {
-        return new Promise((resolve, reject) => resolve());
+        return new Promise((resolve, reject) => {
+          // TODO: replace with real logic
+          if (email === 'admin@example.com' && password === 'password') {
+            resolve();
+          } else {
+            reject();
+          }
+        });
         // return this.http.post(`${environment.apiUrl}/auth`, {
         //     email,
         //     password

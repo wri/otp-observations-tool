@@ -1,4 +1,19 @@
 <div>
   <h1> Login page </h1>
-  <button (click)="onLogin()">{{buttonText}}</button>
+  <form #form="ngForm" (submit)="onSubmit(form)">
+    <div>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" [(ngModel)]="email" #emailInput="ngModel" email required>
+      <div *ngIf="emailInput.errors?.email">The email should be valid</div>
+    </div>
+    <br/>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" [(ngModel)]="password" required>
+    </div>
+    <br/>
+    <div *ngIf="submitted && !form.valid">Make sure to correctly filled in the fields</div>
+    <div *ngIf="unauthorized">Please make sure you correctly entered your email and password</div>
+    <button type="submit">Log in</button>
+  </form>
 </div>
