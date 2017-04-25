@@ -1,8 +1,10 @@
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { CheckLoginGuard } from 'app/services/check-login.guard';
 import { LoginComponent } from 'app/pages/login/login.component';
+import { RegisterComponent } from 'app/pages/register/register.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ObservationComponent } from 'app/pages/observation/observation.component';
 
 const routes: Routes = [
   {
@@ -14,6 +16,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
   }
 ];
 

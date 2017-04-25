@@ -16,9 +16,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService) {
-
-  }
+    private authService: AuthService) {}
 
   ngOnInit(): void {
     // reset login status
@@ -36,11 +34,8 @@ export class LoginComponent implements OnInit {
               this.router.navigate([this.returnUrl]);
           },
           error => {
-              alert(error);
+              alert('You entered a wrong username+password combination');
               this.loading = false;
           });
     }
-
-
-
 }
