@@ -1,3 +1,4 @@
+import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { AuthService, TokenService } from 'app/services/auth.service';
 import { LoginComponent } from 'app/pages/login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -13,7 +14,8 @@ import { OauthRequestOptions } from 'app/services/oauth-request.service';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    ObservationsComponent
   ],
   imports: [
     BrowserModule,

@@ -39,18 +39,25 @@ export class AuthService {
     }
 
     login(email: string, password: string) {
-        return new Promise((resolve, reject) => resolve());
-        // return this.http.post(`${environment.apiUrl}/auth`, {
-        //     email,
-        //     password
-        // }).map(response => response.json()).toPromise()
-        // .then((body:any) => this.tokenService.token = body.access_token);
+        return this.http.post(`${environment.apiUrl}/login`, {
+          auth: {
+            email,
+            password
+          }
+        })
+        .map(response => response.json())
+        .map(body => {
+            this.token = body.token;
+            this.tokenService.token = body.token;
+            return true;
+        }).toPromise();
     }
 
     checkLogged(): Promise<boolean> {
         return this.http.get(`${environment.apiUrl}/users/current-user`)
         .map(response => response.json())
         .map(body => {
+            console.log('body', body);
             this.user = body;
             return true;
         }).toPromise();
