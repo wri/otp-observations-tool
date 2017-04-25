@@ -1,3 +1,4 @@
+import { CountriesService } from 'app/services/countries.service';
 import { RegisterComponent } from 'app/pages/register/register.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { AuthService, TokenService } from 'app/services/auth.service';
@@ -28,7 +29,8 @@ import { OauthRequestOptions } from 'app/services/oauth-request.service';
   providers: [
     TokenService,
     AuthService,
-    { provide: RequestOptions, useClass: OauthRequestOptions },
+    CountriesService,
+    { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
   bootstrap: [AppComponent]
 })

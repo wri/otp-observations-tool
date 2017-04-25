@@ -22,6 +22,18 @@
             <input type="text" class="form-control" name="institution" [(ngModel)]="model.institution" #institution="ngModel" required />
             <div *ngIf="f.submitted && !institution.valid" class="help-block">Institution is required</div>
         </div>
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country.valid }">
+            <label for="country">Country
+              <select>
+                 <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+              </select>
+            </label>
+        </div>
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" name="email" [(ngModel)]="model.email" #password="ngModel" required email />
+            <p *ngIf="f.submitted && !email.valid" class="help-block">Email is required</p>
+        </div>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
             <label for="password">Password</label>
             <input type="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
