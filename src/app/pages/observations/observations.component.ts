@@ -18,5 +18,9 @@ export class ObservationsComponent {
     console.log('new observation!');
   }
 
+  public triggerLogout(): void{
+    this.auth.logout();
+  }
+
 
 }
