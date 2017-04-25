@@ -16,9 +16,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService) {
-
-  }
+    private authService: AuthService) {}
 
   ngOnInit(): void {
     // reset login status
@@ -40,7 +38,4 @@ export class LoginComponent implements OnInit {
               this.loading = false;
           });
     }
-
-
-
 }

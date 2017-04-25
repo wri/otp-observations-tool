@@ -5,7 +5,7 @@ import { AuthService } from 'app/services/auth.service';
 @Injectable()
 export class CheckLoginGuard implements CanActivate {
 
-    constructor(private authService:AuthService, private router: Router){
+    constructor(private authService: AuthService, private router: Router) {
 
     }
 
