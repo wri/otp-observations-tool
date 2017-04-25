@@ -1,4 +1,4 @@
-
+import { RegisterComponent } from 'app/pages/register/register.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { AuthService, TokenService } from 'app/services/auth.service';
 import { LoginComponent } from 'app/pages/login/login.component';
@@ -18,7 +18,8 @@ import { ObservationComponent } from 'app/pages/observation/observation.componen
   declarations: [
     AppComponent,
     LoginComponent,
-    ObservationsComponent
+    ObservationsComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

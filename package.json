@@ -22,7 +22,7 @@
     "@angular/router": "^4.0.0",
     "angular2-jsonapi": "^3.4.0",
     "core-js": "^2.4.1",
-    "ng2-validation": "^4.1.0",
+    "foundation-sites": "^6.3.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
   },
