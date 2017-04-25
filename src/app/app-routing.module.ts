@@ -1,4 +1,4 @@
-import { CheckLoginGuard } from './services/check-login.guard';
+import { CheckLoginGuard } from 'app/guards/check-login.guard';
 import { LoginComponent } from 'app/pages/login/login.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -6,8 +6,11 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    component: LoginComponent,
     children: []
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   }
 ];
 

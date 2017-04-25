@@ -48,13 +48,12 @@ export class AuthService {
     }
 
     checkLogged(): Promise<boolean> {
-        return new Promise((resolve, reject) => resolve(true));
-        // return this.http.get(`${environment.apiUrl}/api/v1/user/me`)
-        // .map(response => response.json())
-        // .map(body => {
-        //     this.user = body;
-        //     return true;
-        // }).toPromise();
+        return this.http.get(`${environment.apiUrl}/users/current-user`)
+        .map(response => response.json())
+        .map(body => {
+            this.user = body;
+            return true;
+        }).toPromise();
     }
 
     logout() {
