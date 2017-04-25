@@ -1,32 +1,41 @@
-import { Router } from '@angular/router';
-import { NgForm } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'otp-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-  email: string;
-  password: string;
-  submitted = false;
-  unauthorized = false;
+  model: any = {};
+  loading = false;
+  returnUrl: string;
 
   constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService) {}
 
-  onSubmit(form: NgForm): void {
-    this.submitted = true;
+  ngOnInit(): void {
+    // reset login status
+    this.authService.logout();
 
-    if (form.valid) {
-      this.authService.login(this.email, this.password)
-        .then(() => this.router.navigate(['observation']))
-        .catch(() => this.unauthorized = true);
-    }
+    // get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
+
+  login() {
+    this.loading = true;
+    this.authService.login(this.model.username, this.model.password)
+      .then(
+          data => {
+              this.router.navigate([this.returnUrl]);
+          },
+          error => {
+              alert(error);
+              this.loading = false;
+          });
+    }
 }

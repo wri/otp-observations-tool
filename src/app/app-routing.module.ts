@@ -1,4 +1,6 @@
-import { AuthGuard } from './services/auth.guard';
+import { ObservationsComponent } from 'app/pages/observations/observations.component';
+import { CheckLoginGuard } from 'app/services/check-login.guard';
+import { LoginComponent } from 'app/pages/login/login.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from 'app/pages/login/login.component';
@@ -7,17 +9,23 @@ import { ObservationComponent } from 'app/pages/observation/observation.componen
 const routes: Routes = [
   {
     path: '',
-    component: LoginComponent
+    children: [],
+    component: ObservationsComponent,
+    canActivate: [CheckLoginGuard]
   },
   {
-    path: 'observation',
-    component: ObservationComponent,
-    canActivate: [AuthGuard]
+    path: 'login',
+    component: LoginComponent  
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes)
+    ],
+  providers: [
+    CheckLoginGuard
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

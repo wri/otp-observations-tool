@@ -36,38 +36,30 @@ export class AuthService {
 
     }
 
-    login(email: string, password: string): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-          // TODO: replace with real logic
-          if (email === 'admin@example.com' && password === 'password') {
-            this.token = 'heyya';
-            resolve(true);
-          } else {
-            reject(false);
+    login(email: string, password: string) {
+        return this.http.post(`${environment.apiUrl}/login`, {
+          auth: {
+            email,
+            password
           }
-        });
-        // return this.http.post(`${environment.apiUrl}/auth`, {
-        //     email,
-        //     password
-        // }).map(response => response.json()).toPromise()
-        // .then((body:any) => this.tokenService.token = body.access_token);
+        })
+        .map(response => response.json())
+        .map(body => {
+            this.token = body.token;
+            this.tokenService.token = body.token;
+            return true;
+        }).toPromise();
     }
 
     checkLogged(): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-          // TODO: replace with real logic
-          if (this.token) {
-            resolve(true);
-          } else {
-            reject(false);
-          }
-        });
-        // return this.http.get(`${environment.apiUrl}/api/v1/user/me`)
-        // .map(response => response.json())
-        // .map(body => {
-        //     this.user = body;
-        //     return true;
-        // }).toPromise();
+        return this.http.get(`${environment.apiUrl}/users/current-user`)
+        .map(response => response.json())
+        .map(body => {
+            console.log('body', body);
+            this.user = body;
+            return true;
+        }).toPromise();
+
     }
 
     logout() {

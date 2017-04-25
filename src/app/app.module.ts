@@ -1,4 +1,7 @@
-import { AuthGuard } from './services/auth.guard';
+
+import { ObservationsComponent } from 'app/pages/observations/observations.component';
+import { AuthService, TokenService } from 'app/services/auth.service';
+import { LoginComponent } from 'app/pages/login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +18,7 @@ import { ObservationComponent } from 'app/pages/observation/observation.componen
   declarations: [
     AppComponent,
     LoginComponent,
-    ObservationComponent
+    ObservationsComponent
   ],
   imports: [
     BrowserModule,
