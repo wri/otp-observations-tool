@@ -37,7 +37,7 @@ export class AuthService {
     }
 
     login(email: string, password: string) {
-        return this.http.post(`${environment.apiUrl}/login`, {
+      return this.http.post(`${environment.apiUrl}/login`, {
           auth: {
             email,
             password
@@ -52,10 +52,9 @@ export class AuthService {
     }
 
     checkLogged(): Promise<boolean> {
-        return this.http.get(`${environment.apiUrl}/users/current-user`)
+      return this.http.get(`${environment.apiUrl}/users/current-user`)
         .map(response => response.json())
         .map(body => {
-            console.log('body', body);
             this.user = body;
             return true;
         }).toPromise();
