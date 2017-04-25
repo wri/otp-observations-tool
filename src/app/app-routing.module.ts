@@ -3,6 +3,8 @@ import { CheckLoginGuard } from 'app/services/check-login.guard';
 import { LoginComponent } from 'app/pages/login/login.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { LoginComponent } from 'app/pages/login/login.component';
+import { ObservationComponent } from 'app/pages/observation/observation.component';
 
 const routes: Routes = [
   {
@@ -13,7 +15,7 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent  
   }
 ];
 
