@@ -1,26 +1,17 @@
-import { Http } from '@angular/http';
-import { Injectable, OnInit } from '@angular/core';
-import { environment } from 'environments/environment';
-import 'rxjs/add/operator/map';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
-
-// interface Observation {
-
-// }
+import { DatastoreService } from 'app/services/datastore.service';
+import { Observation } from 'app/models/observation.model';
 
 @Injectable()
-class ObservationsService implements OnInit {
+export class ObservationsService {
 
-  observations: object[];
-
-  constructor(
-    private http: Http
+  constructor (
+    private datastoreService: DatastoreService
   ) {}
 
-  ngOnInit(): void {
-    this.http.get(`${environment.apiUrl}/observations`)
-      .map(response => response.json())
-      .toPromise();
+  getObservations(): Promise<Observation[]> {
+    return this.datastoreService.query(Observation).toPromise();
   }
 
 }

@@ -1,9 +1,24 @@
-<div>
-  <h1> Observations page </h1>
+<otp-tabs [tabs]="tabs"></otp-tabs>
+<div class="content">
   <div>
-    <button (click)="triggerNewObservation()">{{newObservationText}}</button>
+    <button (click)="triggerNewObservation()">New observation</button>
     <button (click)="triggerLogout()">Logout</button>
   </div>
-  <otp-bottombar [activeButton]="'observations'">
-  </otp-bottombar>
+
+  <table *ngIf="observations">
+    <thead>
+      <tr>
+        <th width="200">Date</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let observation of observations">
+        <td>{{observation.publication_date | date:'shortDate'}}</td>
+        <td>{{observation.details}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
+<otp-bottombar [activeButton]="'observations'">
+</otp-bottombar>

@@ -22,13 +22,13 @@ const routes: Routes = [
   },
   // -------------OBSERVATIONS------------------
   {
-    path: 'observations/:id',
-    component: ObservationDetailComponent,
+    path: 'observations',
+    component: ObservationListComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'observations',
-    component: ObservationListComponent,
+    path: 'observations/:id',
+    component: ObservationDetailComponent,
     canActivate: [AuthGuard]
   },
   // ----------------USERS----------------------
