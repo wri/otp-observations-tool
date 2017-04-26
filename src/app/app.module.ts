@@ -5,6 +5,7 @@ import { LoginComponent } from 'app/pages/login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { JsonApiModule } from 'angular2-jsonapi';
 import { HttpModule, RequestOptions } from '@angular/http';
 import { AppRoutingModule } from './app-routing.module';
 import { OauthRequestOptions } from 'app/services/oauth-request.service';
@@ -19,6 +20,7 @@ import { AppComponent } from './app.component';
     RegisterComponent
   ],
   imports: [
+    JsonApiModule,
     BrowserModule,
     FormsModule,
     HttpModule,
