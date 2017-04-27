@@ -25,7 +25,7 @@ export class RegisterComponent implements OnInit {
       this.countries = new Array<Country>();
   }
   onSubmit() {
-    console.log('onSubmit');
+    console.log('onSubmit', this.model);
     this.loading = true;
   }
 
