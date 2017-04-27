@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.countriesService.getAll().then(
       data => {
-         console.log('data', data);
+         this.countries = data;
       }
     );
   }
