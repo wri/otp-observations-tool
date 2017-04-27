@@ -25,7 +25,7 @@
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country.valid }">
             <label for="country">Country
               <select>
-                 <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+                 <option *ngFor="let country of countries" [value]="country">{{ country.name }}</option>
               </select>
             </label>
         </div>

@@ -16,31 +16,23 @@ export class LoginComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService) {
-
-  }
+    private authService: AuthService) {}
 
   ngOnInit(): void {
     // reset login status
     this.authService.logout();
 
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/observation';
   }
 
   login() {
     this.loading = true;
     this.authService.login(this.model.username, this.model.password)
-      .then(
-          data => {
-              this.router.navigate([this.returnUrl]);
-          },
-          error => {
-              alert('You entered a wrong username+password combination');
-              this.loading = false;
-          });
+      .then(() => this.router.navigate([this.returnUrl]))
+      .catch(() => {
+        alert('You entered a wrong username+password combination');
+        this.loading = false;
+      });
     }
-
-
-
 }
