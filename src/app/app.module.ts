@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { OauthRequestOptions } from 'app/services/oauth-request.service';
 import { CustomFormsModule } from 'ng2-validation';
 import { AppComponent } from './app.component';
+import { SpinnerModule } from 'angular2-spinner';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { AppComponent } from './app.component';
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    CustomFormsModule
+    CustomFormsModule,
+    SpinnerModule
   ],
   providers: [
     TokenService,

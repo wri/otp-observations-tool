@@ -4,61 +4,62 @@
       <h2>Register</h2>
     </div>
   </div>
+  <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
   <div class="row">
     <div class="large-10 columns">
-      <form name="form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
+      <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
         <div class="form-group">
             <label for="permissions_request">Are you an operator or NGO?
-              <select name="permissions_request" [(ngModel)]="model.permissions_request" #permissions_request="ngModel">
-                 <option default>Please select if you are an operator or an NGO</option>
-                 <option>NGO</option>
-                 <option>Operator</option>
+              <select name="permissions_request" ngModel #permissions_request="ngModel">
+                 <option default selected value="default"> Please select if you are an operator or an NGO</option>
+                 <option value="ngo">NGO</option>
+                 <option value="operator">Operator</option>
               </select>
             </label>
         </div>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
             <label for="name">Name</label>
-            <input type="text" class="form-control" name="name" [(ngModel)]="model.name" #name="ngModel" required />
+            <input type="text" class="form-control" name="name" ngModel #name="ngModel" required />
             <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
         </div>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" name="username" [(ngModel)]="model.username" #username="ngModel" required />
-            <div *ngIf="f.submitted && !username.valid" class="help-text">Username is required</div>
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !nickname.valid }">
+            <label for="nickname">Username</label>
+            <input type="text" class="form-control" name="nickname" ngModel #nickname="ngModel" required />
+            <div *ngIf="f.submitted && !nickname.valid" class="help-text">Username is required</div>
         </div>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !institution.valid }">
             <label for="institution">Institution</label>
-            <input type="text" class="form-control" name="institution" [(ngModel)]="model.institution" #institution="ngModel" required />
+            <input type="text" class="form-control" name="institution" ngModel #institution="ngModel" required />
             <div *ngIf="f.submitted && !institution.valid" class="help-text">Institution is required</div>
         </div>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country.valid }">
-            <label for="country">Country
-              <select name="country" [(ngModel)]="model.country" #country="ngModel" required>
-                 <option *ngFor="let country of countries" [value]="country">{{ country.name }}</option>
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
+            <label for="country_id">Country
+              <select name="country_id" ngModel #country_id="ngModel" required>
+                 <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
               </select>
-              <p *ngIf="f.submitted && !country.valid" class="help-text">Please select a country</p>
+              <p *ngIf="f.submitted && !country_id.valid" class="help-text">Please select a country</p>
             </label>
         </div>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
             <label for="email">Email</label>
-            <input type="text" class="form-control" name="email" [(ngModel)]="model.email" #email="ngModel" required email />
+            <input type="text" class="form-control" name="email" ngModel #email="ngModel" required email />
             <p *ngIf="f.submitted && email.errors?.required" class="help-text">Email is required</p>
             <p *ngIf="f.submitted && email.errors?.email && !email.errors?.required" class="help-text">Please enter an email address</p>
         </div>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
             <label for="password">Password</label>
-            <input type="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
+            <input type="password" class="form-control" name="password" ngModel #password="ngModel" required />
             <div *ngIf="f.submitted && !password.valid" class="help-text">Password is required</div>
         </div>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !confirmPassword.valid }">
-            <label for="confirmPassword">Confirm your password</label>
-            <input type="password" ngModel class="form-control" name="confirmPassword" #confirmPassword="ngModel" [equalTo]="password" required />
-            <div *ngIf="f.submitted && confirmPassword.errors?.required" class="help-text">Please confirm your password</div>
-            <div *ngIf="f.submitted && confirmPassword.errors?.equalTo && !confirmPassword.errors?.required"
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid }">
+            <label for="password_confirmation">Confirm your password</label>
+            <input type="password" ngModel class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="password" required />
+            <div *ngIf="f.submitted && password_confirmation.errors?.required" class="help-text">Please confirm your password</div>
+            <div *ngIf="f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required"
             class="help-text">Password values does not coincide</div>
         </div>
         <div class="form-group">
-            <button type="submit" class="button primary">Register</button>
+            <button disable="loading" type="submit" class="button primary">Register</button>
             <a [routerLink]="['/login']" class="button secondary">Login</a>
         </div>
       </form>
