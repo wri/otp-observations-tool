@@ -1,5 +1,6 @@
-import { FieldsComponent } from './pages/fields/fields.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { ObservationComponent } from 'app/pages/observation/observation.component';
+import { FieldsComponent } from 'app/pages/fields/fields.component';
+import { ProfileComponent } from 'app/pages/profile/profile.component';
 import { UsersComponent } from 'app/pages/users/users.component';
 import { BottombarComponent } from 'app/shared/bottombar/bottombar.component';
 import { SidebarComponent } from 'app/shared/sidebar/sidebar.component';
@@ -25,6 +26,7 @@ import { SpinnerModule } from 'angular2-spinner/dist';
     AppComponent,
     LoginComponent,
     ObservationsComponent,
+    ObservationComponent,
     RegisterComponent,
     SidebarComponent,
     BottombarComponent,

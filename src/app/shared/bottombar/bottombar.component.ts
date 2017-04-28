@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit, Input } from '@angular/core';
 
 
@@ -11,7 +12,7 @@ export class BottombarComponent implements OnInit {
   public admin: boolean = true;
   @Input() public activeButton: string;
 
-  constructor() {
+  constructor(private router: Router) {
     this.activeButton = 'observations';
   }
 
@@ -21,6 +22,7 @@ export class BottombarComponent implements OnInit {
 
   onClick(buttonValue): void{
     this.activeButton = buttonValue;
+    this.router.navigate([buttonValue]);
   }
 
 

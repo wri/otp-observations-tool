@@ -20,6 +20,11 @@ const routes: Routes = [
   },
   {
     path: 'observation',
+    component: ObservationComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'observations',
     component: ObservationsComponent,
     canActivate: [AuthGuard]
   },
