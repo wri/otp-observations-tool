@@ -1,3 +1,6 @@
+import { FieldsComponent } from './pages/fields/fields.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { UsersComponent } from 'app/pages/users/users.component';
 import { BottombarComponent } from 'app/shared/bottombar/bottombar.component';
 import { SidebarComponent } from 'app/shared/sidebar/sidebar.component';
 import { DatastoreService } from 'app/services/datastore.service';
@@ -24,7 +27,10 @@ import { SpinnerModule } from 'angular2-spinner/dist';
     ObservationsComponent,
     RegisterComponent,
     SidebarComponent,
-    BottombarComponent
+    BottombarComponent,
+    UsersComponent,
+    ProfileComponent,
+    FieldsComponent
   ],
   imports: [
     JsonApiModule,

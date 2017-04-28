@@ -1,6 +1,6 @@
-<div class="c-bottombar" data-mobile-app-toggle>
-  <button class="button is-active">Observations</button>
-  <button *ngIf="admin" class="button">Fields</button>
-  <button *ngIf="admin" class="button">Users</button>
-  <button class="button">Profile</button>
+<div class="c-bottombar">
+  <button (click)="onClick('observations')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'observations'}">Observations</button>
+  <button *ngIf="admin" (click)="onClick('fields')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'fields'}">Fields</button>
+  <button *ngIf="admin" (click)="onClick('users')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'users'}">Users</button>
+  <button (click)="onClick('profile')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'profile'}">Profile</button>
 </div>

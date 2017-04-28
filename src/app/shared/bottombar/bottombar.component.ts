@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 
 @Component({
@@ -8,14 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BottombarComponent implements OnInit {
 
-  admin: boolean = false;
+  public admin: boolean = true;
+  @Input() public activeButton: string;
 
   constructor() {
-
+    this.activeButton = 'observations';
   }
 
   ngOnInit(): void {
 
+  }
+
+  onClick(buttonValue): void{
+    this.activeButton = buttonValue;
   }
 
 

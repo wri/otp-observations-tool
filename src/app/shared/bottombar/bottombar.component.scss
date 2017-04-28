@@ -1,0 +1,23 @@
+.c-bottombar {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  bottom: 0;
+
+  .button {
+    background: lightgrey;
+    color: black;
+    margin-bottom: 0;
+    flex: 1 0 0;
+
+    &:nth-child(n+1) {
+      border-left: 1px solid grey;
+    }
+
+    &.is-active {
+      background: grey;
+      color: white;
+    }
+  }
+}
