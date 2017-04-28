@@ -1,0 +1,13 @@
+<div>
+  <h1> Users </h1>
+  <button (click)="triggerNewUser()">
+    New user
+  </button>
+  <ngx-datatable
+    #table
+    [rows]="users"
+    [columns]="columns">
+  </ngx-datatable>
+  <otp-bottombar [activeButton]="'user'">
+  </otp-bottombar>
+</div>

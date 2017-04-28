@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
 import { Component } from '@angular/core';
 
@@ -10,12 +11,15 @@ export class ObservationsComponent {
 
   newObservationText: string = 'New observation';
 
-  constructor(private auth: AuthService) {
+  constructor(
+    private auth: AuthService,
+    private router: Router
+    ) {
 
   }
 
   public triggerNewObservation(): void {
-    console.log('new observation!');
+    this.router.navigate(['observation/new']);
   }
 
   public triggerLogout(): void{

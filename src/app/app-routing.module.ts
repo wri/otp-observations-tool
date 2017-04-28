@@ -1,6 +1,6 @@
 import { ProfileComponent } from 'app/pages/profile/profile.component';
 import { FieldsComponent } from 'app/pages/fields/fields.component';
-import { UsersComponent } from 'app/pages/users/users.component';
+import { UsersComponent } from 'app/pages/user/users.component';
 import { AuthGuard } from 'app/services/auth.guard';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { LoginComponent } from 'app/pages/login/login.component';
@@ -8,6 +8,7 @@ import { RegisterComponent } from 'app/pages/register/register.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ObservationComponent } from 'app/pages/observation/observation.component';
+import { UserDetailComponent } from "app/pages/user/userdetail.component";
 
 const routes: Routes = [
   {
@@ -19,22 +20,27 @@ const routes: Routes = [
     component: RegisterComponent
   },
   {
-    path: 'observation',
+    path: 'observation/:id',
     component: ObservationComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'observations',
+    path: 'observation',
     component: ObservationsComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'users',
+    path: 'user',
     component: UsersComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'fields',
+    path: 'user/new',
+    component: UserDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'observation-field',
     component: FieldsComponent,
     canActivate: [AuthGuard]
   },

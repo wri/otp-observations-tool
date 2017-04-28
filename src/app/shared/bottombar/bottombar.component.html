@@ -1,6 +1,6 @@
 <div class="c-bottombar">
-  <button (click)="onClick('observations')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'observations'}">Observations</button>
-  <button *ngIf="admin" (click)="onClick('fields')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'fields'}">Fields</button>
-  <button *ngIf="admin" (click)="onClick('users')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'users'}">Users</button>
+  <button (click)="onClick('observation')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'observation'}">Observations</button>
+  <button *ngIf="admin" (click)="onClick('observation-field')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'observation-field'}">Fields</button>
+  <button *ngIf="admin" (click)="onClick('user')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'user'}">Users</button>
   <button (click)="onClick('profile')" [ngClass]="{ 'button': true,  'is-active': activeButton === 'profile'}">Profile</button>
 </div>

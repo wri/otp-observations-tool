@@ -1,7 +1,9 @@
+import { UserDetailComponent } from './pages/user/userdetail.component';
+import { UsersService } from 'app/services/users.service';
 import { ObservationComponent } from 'app/pages/observation/observation.component';
 import { FieldsComponent } from 'app/pages/fields/fields.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
-import { UsersComponent } from 'app/pages/users/users.component';
+import { UsersComponent } from 'app/pages/user/users.component';
 import { BottombarComponent } from 'app/shared/bottombar/bottombar.component';
 import { SidebarComponent } from 'app/shared/sidebar/sidebar.component';
 import { DatastoreService } from 'app/services/datastore.service';
@@ -20,6 +22,7 @@ import { OauthRequestOptions } from 'app/services/oauth-request.service';
 import { CustomFormsModule } from 'ng2-validation';
 import { AppComponent } from './app.component';
 import { SpinnerModule } from 'angular2-spinner/dist';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,7 @@ import { SpinnerModule } from 'angular2-spinner/dist';
     SidebarComponent,
     BottombarComponent,
     UsersComponent,
+    UserDetailComponent,
     ProfileComponent,
     FieldsComponent
   ],
@@ -41,13 +45,15 @@ import { SpinnerModule } from 'angular2-spinner/dist';
     HttpModule,
     AppRoutingModule,
     CustomFormsModule,
-    SpinnerModule
+    SpinnerModule,
+    NgxDatatableModule
   ],
   providers: [
     TokenService,
     AuthService,
     CountriesService,
     DatastoreService,
+    UsersService,
     { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
   bootstrap: [AppComponent]
