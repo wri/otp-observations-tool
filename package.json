@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
     "angular2-jsonapi": "^3.4.0",
+    "angular2-spinner": "^1.0.10",
     "core-js": "^2.4.1",
     "foundation-sites": "^6.3.1",
     "ng2-validation": "^4.1.0",

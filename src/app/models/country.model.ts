@@ -1,6 +1,6 @@
-import { JsonApiModel, JsonApiDatastoreConfig, Attribute } from 'angular2-jsonapi';
+import { JsonApiModel, JsonApiModelConfig, Attribute } from 'angular2-jsonapi';
 
-@JsonApiDatastoreConfig({
+@JsonApiModelConfig({
   type: 'countries'
 })
 export class Country extends JsonApiModel {

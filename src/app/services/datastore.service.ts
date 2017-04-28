@@ -1,3 +1,4 @@
+import { Country } from 'app/models/country.model';
 import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
@@ -6,9 +7,10 @@ import { Observation } from 'app/models/observation.model';
 
 @Injectable()
 @JsonApiDatastoreConfig({
-  baseUrl: environment.apiUrl,
+  baseUrl: `${environment.apiUrl}/` ,
   models: {
-    observations: Observation
+    observations: Observation,
+    countries: Country
   }
 })
 export class DatastoreService extends JsonApiDatastore {

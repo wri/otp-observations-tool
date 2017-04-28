@@ -1,8 +1,8 @@
-import { JsonApiModel, JsonApiDatastoreConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
 import { Country } from 'app/models/country.model';
 import { User } from 'app/models/user.model';
 
-@JsonApiDatastoreConfig({
+@JsonApiModelConfig({
   type: 'operators'
 })
 export class Operator extends JsonApiModel {
