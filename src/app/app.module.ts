@@ -1,3 +1,5 @@
+import { BottombarComponent } from 'app/shared/bottombar/bottombar.component';
+import { SidebarComponent } from 'app/shared/sidebar/sidebar.component';
 import { DatastoreService } from 'app/services/datastore.service';
 import { CountriesService } from 'app/services/countries.service';
 import { RegisterComponent } from 'app/pages/register/register.component';
@@ -13,14 +15,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { OauthRequestOptions } from 'app/services/oauth-request.service';
 import { CustomFormsModule } from 'ng2-validation';
 import { AppComponent } from './app.component';
-import { SpinnerModule } from 'angular2-spinner';
+import { SpinnerModule } from 'angular2-spinner/dist';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ObservationsComponent,
-    RegisterComponent
+    RegisterComponent,
+    SidebarComponent,
+    BottombarComponent
   ],
   imports: [
     JsonApiModule,
