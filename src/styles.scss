@@ -40,3 +40,7 @@
 // @include foundation-top-bar;
 // @include foundation-visibility-classes;
 // @include foundation-float-classes;
+
+html {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
