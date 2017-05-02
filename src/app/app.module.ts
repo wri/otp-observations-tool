@@ -1,3 +1,4 @@
+import { TabsComponent } from 'app/shared/tabs/tabs.component';
 import { ObservationComponent } from 'app/pages/observation/observation.component';
 import { FieldsComponent } from 'app/pages/fields/fields.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
@@ -32,7 +33,8 @@ import { SpinnerModule } from 'angular2-spinner/dist';
     BottombarComponent,
     UsersComponent,
     ProfileComponent,
-    FieldsComponent
+    FieldsComponent,
+    TabsComponent
   ],
   imports: [
     JsonApiModule,
