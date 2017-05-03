@@ -1,0 +1,25 @@
+<div>
+  <h1> Users </h1>
+  <button (click)="triggerNewUser()">
+    New user
+  </button>
+  <ngx-datatable class="material"
+    #table
+    [rows]="users"
+    [columns]="columns">
+    <ngx-datatable-column name="Name">
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Nickname">
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Email">
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Age">
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        <a href="/user/edit">EDIT</a>
+        <a href="/user/new">DELETE</a>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+  <otp-bottombar [activeButton]="'user'">
+  </otp-bottombar>
+</div>
