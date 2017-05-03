@@ -5,20 +5,14 @@
     <button (click)="triggerLogout()">Logout</button>
   </div>
 
-  <table *ngIf="observations">
-    <thead>
-      <tr>
-        <th width="200">Date</th>
-        <th>Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let observation of observations">
-        <td>{{observation.publication_date | date:'shortDate'}}</td>
-        <td>{{observation.details}}</td>
-      </tr>
-    </tbody>
-  </table>
+  <ngx-datatable class="material" [rows]="rows" [rowHeight]="'auto'" *ngIf="rows">
+    <ngx-datatable-column name="Date">
+      <ng-template let-value="value" ngx-datatable-cell-template>
+       {{value | date:'shortDate'}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Details"></ngx-datatable-column>
+  </ngx-datatable>
 </div>
 <otp-bottombar [activeButton]="'observations'">
 </otp-bottombar>

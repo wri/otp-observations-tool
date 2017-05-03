@@ -12,11 +12,18 @@ import { Tab } from 'app/shared/tabs/tabs.component';
 })
 export class ObservationListComponent implements OnInit {
 
-  observations: Observation[];
+  observations: Observation[] = [];
   tabs: Tab[] = [
     { id: 'operators', name: 'Observations on operators' },
     { id: 'governance', name: 'Observations on governance' },
   ];
+
+  private get rows () {
+    return this.observations.map(observation => ({
+      date: observation.publication_date,
+      details: observation.details
+    }));
+  }
 
   constructor(
     private auth: AuthService,
