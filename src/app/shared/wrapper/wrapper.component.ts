@@ -8,12 +8,4 @@ import { Component } from '@angular/core';
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.scss']
 })
-export class WrapperComponent {
-
-  private navigationItems: NavigationItem[] = [
-    { name: 'Observations', url: 'observations' },
-    { name: 'Observation fields', url: 'fields' },
-    { name: 'Users', url: 'users' },
-  ];
-
-}
+export class WrapperComponent {}

@@ -1,4 +1,5 @@
-import { NavigationComponent } from './shared/navigation/navigation.component';
+import { DesktopHeaderComponent } from 'app/shared/desktop-header/desktop-header.component';
+import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { UsersService } from 'app/services/users.service';
@@ -46,7 +47,8 @@ import { ObservationsService } from 'app/services/observations.service';
     FieldDetailComponent,
     TabsComponent,
     WrapperComponent,
-    NavigationComponent
+    NavigationComponent,
+    DesktopHeaderComponent
   ],
   imports: [
     JsonApiModule,

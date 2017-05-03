@@ -48,6 +48,14 @@
 // @include foundation-visibility-classes;
 // @include foundation-float-classes;
 
+
+@import 'src/settings.scss';
+
 html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.wrapper {
+  margin: 0 auto;
+  max-width: $body-max-width;
 }

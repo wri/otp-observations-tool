@@ -1,9 +1,10 @@
 <div class="app">
-  <otp-navigation [items]="navigationItems" (change)="onChange($event)"></otp-navigation>
-  <!--<otp-sidebar *showItSizes="{min:768}"></otp-sidebar>-->
+  <otp-desktop-header *showItSizes="{min:768}"></otp-desktop-header>
+
   <div class="content">
     <router-outlet ></router-outlet>
   </div>
+
   <otp-bottombar *showItSizes="{min:200,max:768}"></otp-bottombar>
 </div>
 
