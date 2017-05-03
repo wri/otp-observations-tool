@@ -1,19 +1,29 @@
+import { UserDetailComponent } from 'app/pages/users/user-detail.component';
+import { User } from './../../models/user.model';
+import { UsersService } from 'app/services/users.service';
 import { AuthService } from 'app/services/auth.service';
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'otp-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
 
-  constructor(private auth: AuthService) {
+  @ViewChild('userDetail') userDetail: UserDetailComponent;
+
+  constructor(
+    private auth: AuthService,
+    private userService: UsersService
+  ) {
 
   }
 
-  public triggerLogout(): void{
-    this.auth.logout();
+  ngOnInit(): void {
+    this.userService.getLoggedUser().then( (data) => {
+      this.userDetail.user = data[0];
+    });
   }
 
 

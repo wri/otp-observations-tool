@@ -2,11 +2,11 @@ import { AuthService } from 'app/services/auth.service';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'otp-fields',
-  templateUrl: './fields.component.html',
-  styleUrls: ['./fields.component.scss']
+  selector: 'otp-field-detail',
+  templateUrl: './field-detail.component.html',
+  styleUrls: ['./field-detail.component.scss']
 })
-export class FieldsComponent {
+export class FieldDetailComponent {
 
   constructor(private auth: AuthService) {
 

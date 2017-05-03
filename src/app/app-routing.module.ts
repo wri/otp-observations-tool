@@ -1,13 +1,15 @@
 import { ProfileComponent } from 'app/pages/profile/profile.component';
-import { FieldsComponent } from 'app/pages/fields/fields.component';
-import { UsersComponent } from 'app/pages/users/users.component';
+import { FieldListComponent } from 'app/pages/fields/field-list.component';
+import { FieldDetailComponent } from 'app/pages/fields/field-detail.component';
+import { UserListComponent } from 'app/pages/users/user-list.component';
 import { AuthGuard } from 'app/services/auth.guard';
-import { ObservationsComponent } from 'app/pages/observations/observations.component';
+import { ObservationListComponent } from 'app/pages/observations/observation-list.component';
 import { LoginComponent } from 'app/pages/login/login.component';
 import { RegisterComponent } from 'app/pages/register/register.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ObservationComponent } from 'app/pages/observation/observation.component';
+import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
+import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 
 const routes: Routes = [
   {
@@ -18,24 +20,37 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent
   },
+  // -------------OBSERVATIONS------------------
   {
-    path: 'observation',
-    component: ObservationComponent,
+    path: 'observations/:id',
+    component: ObservationDetailComponent,
     canActivate: [AuthGuard]
   },
   {
     path: 'observations',
-    component: ObservationsComponent,
+    component: ObservationListComponent,
     canActivate: [AuthGuard]
   },
+  // ----------------USERS----------------------
   {
     path: 'users',
-    component: UsersComponent,
+    component: UserListComponent,
     canActivate: [AuthGuard]
   },
   {
+    path: 'users/:id/edit',
+    component: UserDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'users/new',
+    component: UserDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  // -------------FIELDS------------
+  {
     path: 'fields',
-    component: FieldsComponent,
+    component: FieldListComponent,
     canActivate: [AuthGuard]
   },
   {
