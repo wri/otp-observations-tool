@@ -27,6 +27,7 @@ import { CustomFormsModule } from 'ng2-validation';
 import { SpinnerModule } from 'angular2-spinner/dist';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ResponsiveModule } from 'ng2-responsive';
+import { ObservationsService } from 'app/services/observations.service';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { ResponsiveModule } from 'ng2-responsive';
     CountriesService,
     DatastoreService,
     UsersService,
+    ObservationsService,
     { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
   bootstrap: [AppComponent]
