@@ -6,10 +6,10 @@
   <p>
     ADMIN
   <p>
-  <ul class="list-group">
-    <li class="list-group-item" routerLink="/private/observations" active>Observations</li>
-    <li *ngIf="admin" class="list-group-item" routerLink="/private/fields">Observation fields</li>
-    <li *ngIf="admin" class="list-group-item" routerLink="/private/users">Users</li>
-    <li class="list-group-item" routerLink="/private/profile">Profile</li>
-  </ul>
+  <div class="list-group">
+    <a class="list-group-item" routerLink="/private/observations" active>Observations</a>
+    <a *ngIf="admin" class="list-group-item" routerLink="/private/fields">Observation fields</a>
+    <a *ngIf="admin" class="list-group-item" routerLink="/private/users">Users</a>
+    <a class="list-group-item" routerLink="/private/profile">Profile</a>
+  </div>
 </nav>

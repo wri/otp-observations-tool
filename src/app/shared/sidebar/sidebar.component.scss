@@ -1,8 +1,8 @@
 
-@import 'src/styles.scss';
+@import 'src/settings.scss';
 
 .c-sidebar {
-  width: 200px;
+  width: $sidebar-width;
   height: 100%;
   position: fixed;
   background-color: $dark-grey;
@@ -19,10 +19,8 @@
 
 .list-group {
   margin-bottom: 1rem;
-  background: #333333;
   box-shadow: none;
   overflow: hidden;
-  list-style-type: none;
   padding: 0px;
   margin: 0px;
 }
