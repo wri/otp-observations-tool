@@ -1,4 +1,15 @@
 
+@import 'src/styles.scss';
+
+.c-sidebar {
+  width: 200px;
+  height: 100%;
+  position: fixed;
+  background-color: $dark-grey;
+  top: 0;
+  left: 0;
+}
+
 .list-group {
   margin-bottom: 1rem;
   background: #333333;

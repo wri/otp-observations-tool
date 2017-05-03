@@ -1,8 +1,7 @@
-<div class="nav">
-
+<nav class="c-sidebar">
   <ul class="list-group">
-    <li class="list-group-item active">Observations</li>
-    <li *ngIf="admin" class="list-group-item">Observation fields</li>
-    <li *ngIf="admin" class="list-group-item">Users</li>
+    <li class="list-group" href="/private/observations" >Observations</li>
+    <li *ngIf="admin" class="list-group" href="/private/fields" >Observation fields</li>
+    <li *ngIf="admin" class="list-group" href="/private/users" >Users</li>
   </ul>
-</div>
+</nav>

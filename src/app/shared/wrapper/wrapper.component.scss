@@ -1,0 +1,7 @@
+@import 'src/styles.scss';
+
+.content {
+  @media (min-width: $break-mobile) {
+    margin-left:200px;
+  }
+}

@@ -48,6 +48,9 @@
 // @include foundation-visibility-classes;
 // @include foundation-float-classes;
 
+$dark-grey: #333333;
+$break-mobile: 768px;
+
 html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
