@@ -16,6 +16,7 @@ import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: LoginComponent
   },
   {
