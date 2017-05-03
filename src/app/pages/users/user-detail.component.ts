@@ -5,7 +5,7 @@ import { AuthService } from 'app/services/auth.service';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'otp-userdetail',
+  selector: 'otp-user-detail',
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.scss']
 })
