@@ -9,7 +9,7 @@ import { FieldListComponent } from 'app/pages/fields/field-list.component';
 import { FieldDetailComponent } from 'app/pages/fields/field-detail.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
 import { UserListComponent } from 'app/pages/users/user-list.component';
-import { BottombarComponent } from 'app/shared/bottombar/bottombar.component';
+import { BottombarComponent } from 'app/shared/bottom-bar/bottom-bar.component';
 import { SidebarComponent } from 'app/shared/sidebar/sidebar.component';
 import { DatastoreService } from 'app/services/datastore.service';
 import { CountriesService } from 'app/services/countries.service';
