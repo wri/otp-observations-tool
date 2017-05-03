@@ -6,8 +6,8 @@ import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'otp-userdetail',
-  templateUrl: './userdetail.component.html',
-  styleUrls: ['./userdetail.component.scss']
+  templateUrl: './user-detail.component.html',
+  styleUrls: ['./user-detail.component.scss']
 })
 export class UserDetailComponent implements OnInit {
 

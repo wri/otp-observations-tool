@@ -1,4 +1,4 @@
-<button role="menuitem" (click)="onClick('observation')" [ngClass]="{'is-active': activeButton === 'observation'}">Observations</button>
-<button role="menuitem" *ngIf="admin" (click)="onClick('observation-field')" [ngClass]="{'is-active': activeButton === 'observation-field'}">Fields</button>
-<button role="menuitem" *ngIf="admin" (click)="onClick('user')" [ngClass]="{'is-active': activeButton === 'user'}">Users</button>
+<button role="menuitem" (click)="onClick('observations')" [ngClass]="{'is-active': activeButton === 'observations'}">Observations</button>
+<button role="menuitem" *ngIf="admin" (click)="onClick('observation-fields')" [ngClass]="{'is-active': activeButton === 'observation-fields'}">Fields</button>
+<button role="menuitem" *ngIf="admin" (click)="onClick('users')" [ngClass]="{'is-active': activeButton === 'users'}">Users</button>
 <button role="menuitem" (click)="onClick('profile')" [ngClass]="{'is-active': activeButton === 'profile'}">Profile</button>

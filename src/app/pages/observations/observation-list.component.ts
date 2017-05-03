@@ -3,11 +3,11 @@ import { AuthService } from 'app/services/auth.service';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'otp-observations',
-  templateUrl: './observations.component.html',
-  styleUrls: ['./observations.component.scss']
+  selector: 'otp-observation-list',
+  templateUrl: './observation-list.component.html',
+  styleUrls: ['./observation-list.component.scss']
 })
-export class ObservationsComponent {
+export class ObservationListComponent {
 
   newObservationText: string = 'New observation';
 

@@ -1,4 +1,4 @@
-import { UserDetailComponent } from 'app/pages/user/userdetail.component';
+import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { User } from './../../models/user.model';
 import { UsersService } from 'app/services/users.service';
 import { AuthService } from 'app/services/auth.service';

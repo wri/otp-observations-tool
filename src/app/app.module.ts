@@ -1,16 +1,17 @@
-import { UserDetailComponent } from './pages/user/userdetail.component';
+import { UserDetailComponent } from './pages/users/user-detail.component';
 import { UsersService } from 'app/services/users.service';
 import { TabsComponent } from 'app/shared/tabs/tabs.component';
-import { ObservationComponent } from 'app/pages/observation/observation.component';
-import { FieldsComponent } from 'app/pages/fields/fields.component';
+import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
+import { FieldListComponent } from 'app/pages/fields/field-list.component';
+import { FieldDetailComponent } from 'app/pages/fields/field-detail.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
-import { UsersComponent } from 'app/pages/user/users.component';
+import { UserListComponent } from 'app/pages/users/user-list.component';
 import { BottombarComponent } from 'app/shared/bottombar/bottombar.component';
 import { SidebarComponent } from 'app/shared/sidebar/sidebar.component';
 import { DatastoreService } from 'app/services/datastore.service';
 import { CountriesService } from 'app/services/countries.service';
 import { RegisterComponent } from 'app/pages/register/register.component';
-import { ObservationsComponent } from 'app/pages/observations/observations.component';
+import { ObservationListComponent } from 'app/pages/observations/observation-list.component';
 import { AuthService, TokenService } from 'app/services/auth.service';
 import { LoginComponent } from 'app/pages/login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -29,15 +30,16 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
   declarations: [
     AppComponent,
     LoginComponent,
-    ObservationsComponent,
-    ObservationComponent,
+    ObservationListComponent,
+    ObservationDetailComponent,
     RegisterComponent,
     SidebarComponent,
     BottombarComponent,
-    UsersComponent,
+    UserListComponent,
     UserDetailComponent,
     ProfileComponent,
-    FieldsComponent,
+    FieldListComponent,
+    FieldDetailComponent,
     TabsComponent
   ],
   imports: [
