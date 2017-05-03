@@ -1,8 +1,15 @@
-<div class="nav">
-
-  <ul class="list-group">
-    <li class="list-group-item active">Observations</li>
-    <li *ngIf="admin" class="list-group-item">Observation fields</li>
-    <li *ngIf="admin" class="list-group-item">Users</li>
-  </ul>
-</div>
+<nav class="c-sidebar">
+  <img src="assets/otp_logo.png" class="profile-pic"/>
+  <p>
+    Name Surname
+  </p>
+  <p>
+    ADMIN
+  <p>
+  <div class="list-group">
+    <a class="list-group-item" routerLink="/private/observations" active>Observations</a>
+    <a *ngIf="admin" class="list-group-item" routerLink="/private/fields">Observation fields</a>
+    <a *ngIf="admin" class="list-group-item" routerLink="/private/users">Users</a>
+    <a class="list-group-item" routerLink="/private/profile">Profile</a>
+  </div>
+</nav>

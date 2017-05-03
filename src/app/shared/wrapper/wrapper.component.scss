@@ -1,0 +1,8 @@
+@import 'src/settings.scss';
+
+.content {
+  @media (min-width: $break-mobile) {
+    margin-left: $sidebar-width;
+    padding-left: 20px;
+  }
+}

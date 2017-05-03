@@ -4,7 +4,6 @@
     <button (click)="triggerNewObservation()">New observation</button>
     <button (click)="triggerLogout()">Logout</button>
   </div>
-
   <ngx-datatable class="material" [rows]="rows" [rowHeight]="'auto'" *ngIf="rows">
     <ngx-datatable-column name="Date">
       <ng-template let-value="value" ngx-datatable-cell-template>
@@ -14,5 +13,3 @@
     <ngx-datatable-column name="Details"></ngx-datatable-column>
   </ngx-datatable>
 </div>
-<otp-bottombar [activeButton]="'observations'">
-</otp-bottombar>

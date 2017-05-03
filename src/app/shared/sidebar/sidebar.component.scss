@@ -1,11 +1,26 @@
 
+@import 'src/settings.scss';
+
+.c-sidebar {
+  width: $sidebar-width;
+  height: 100%;
+  position: fixed;
+  background-color: $dark-grey;
+  color: $white;
+  top: 0;
+  left: 0;
+  text-align: center;
+}
+
+.profile-pic {
+  cursor: pointer;
+  clip-path: circle(30px at center);
+}
+
 .list-group {
   margin-bottom: 1rem;
-  background: #333333;
   box-shadow: none;
   overflow: hidden;
-  color: #ffffff;
-  list-style-type: none;
   padding: 0px;
   margin: 0px;
 }
@@ -15,6 +30,8 @@
 }
 
 .list-group-item {
+  text-decoration: none;
+  display: block;
   padding: 1rem;
   border-bottom: 1px solid #e6e6e6;
 }
@@ -26,7 +43,7 @@
 
 .list-group-item.active {
   color: #fefefe;
-  background-color: #404040;
+  background-color: #e6e6e6;
 }
 
 .list-group-item:hover, .list-group-item:focus {
@@ -35,7 +52,7 @@
 }
 
 .list-group-item:hover.active, .list-group-item:focus.active {
-  background-color: #404040;
+  background-color: #e6e6e6;
 }
 
 

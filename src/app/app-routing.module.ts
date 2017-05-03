@@ -10,54 +10,57 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
+import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
+
 
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     component: LoginComponent
   },
   {
     path: 'register',
     component: RegisterComponent
   },
-  // -------------OBSERVATIONS------------------
   {
-    path: 'observations',
-    component: ObservationListComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'observations/:id',
-    component: ObservationDetailComponent,
-    canActivate: [AuthGuard]
-  },
-  // ----------------USERS----------------------
-  {
-    path: 'users',
-    component: UserListComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'users/:id/edit',
-    component: UserDetailComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'users/new',
-    component: UserDetailComponent,
-    canActivate: [AuthGuard]
-  },
-  // -------------FIELDS------------
-  {
-    path: 'fields',
-    component: FieldListComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [AuthGuard]
-  },
+    path: 'private',
+    component: WrapperComponent,
+    canActivate: [AuthGuard],
+    children:[
+      // -------------OBSERVATIONS------------------
+      {
+        path: 'observations/:id',
+        component: ObservationDetailComponent
+      },
+      {
+        path: 'observations',
+        component: ObservationListComponent
+      },
+      // ----------------USERS----------------------
+      {
+        path: 'users',
+        component: UserListComponent
+      },
+      {
+        path: 'users/:id/edit',
+        component: UserDetailComponent
+      },
+      {
+        path: 'users/new',
+        component: UserDetailComponent
+      },
+      // -------------FIELDS------------
+      {
+        path: 'fields',
+        component: FieldListComponent
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent
+      }
+    ]
+  }
 ];
 
 @NgModule({

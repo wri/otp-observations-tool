@@ -20,7 +20,7 @@ export class BottombarComponent {
 
   onClick(buttonValue): void {
     this.activeButton = buttonValue;
-    this.router.navigate([buttonValue]);
+    this.router.navigate([`private/${buttonValue}`]);
   }
 
 }

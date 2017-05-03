@@ -1,4 +1,5 @@
-import { UserDetailComponent } from './pages/users/user-detail.component';
+import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
+import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { UsersService } from 'app/services/users.service';
 import { TabsComponent } from 'app/shared/tabs/tabs.component';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
@@ -14,17 +15,18 @@ import { RegisterComponent } from 'app/pages/register/register.component';
 import { ObservationListComponent } from 'app/pages/observations/observation-list.component';
 import { AuthService, TokenService } from 'app/services/auth.service';
 import { LoginComponent } from 'app/pages/login/login.component';
+import { AppComponent } from 'app/app.component';
+import { AppRoutingModule } from 'app/app-routing.module';
+import { OauthRequestOptions } from 'app/services/oauth-request.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JsonApiModule } from 'angular2-jsonapi';
 import { HttpModule, RequestOptions } from '@angular/http';
-import { AppRoutingModule } from './app-routing.module';
-import { OauthRequestOptions } from 'app/services/oauth-request.service';
 import { CustomFormsModule } from 'ng2-validation';
-import { AppComponent } from './app.component';
 import { SpinnerModule } from 'angular2-spinner/dist';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { ResponsiveModule } from 'ng2-responsive';
 import { ObservationsService } from 'app/services/observations.service';
 
 @NgModule({
@@ -41,7 +43,8 @@ import { ObservationsService } from 'app/services/observations.service';
     ProfileComponent,
     FieldListComponent,
     FieldDetailComponent,
-    TabsComponent
+    TabsComponent,
+    WrapperComponent
   ],
   imports: [
     JsonApiModule,
@@ -51,7 +54,8 @@ import { ObservationsService } from 'app/services/observations.service';
     AppRoutingModule,
     CustomFormsModule,
     SpinnerModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    ResponsiveModule
   ],
   providers: [
     TokenService,
