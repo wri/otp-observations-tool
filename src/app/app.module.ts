@@ -1,5 +1,6 @@
 import { UserDetailComponent } from './pages/user/userdetail.component';
 import { UsersService } from 'app/services/users.service';
+import { TabsComponent } from 'app/shared/tabs/tabs.component';
 import { ObservationComponent } from 'app/pages/observation/observation.component';
 import { FieldsComponent } from 'app/pages/fields/fields.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
@@ -36,7 +37,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     UsersComponent,
     UserDetailComponent,
     ProfileComponent,
-    FieldsComponent
+    FieldsComponent,
+    TabsComponent
   ],
   imports: [
     JsonApiModule,

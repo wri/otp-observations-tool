@@ -1,29 +1,26 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 
 @Component({
   selector: 'otp-bottombar',
+  // tslint:disable-next-line:use-host-property-decorator
+  host: {
+    'role': 'menubar'
+  },
   templateUrl: './bottombar.component.html',
   styleUrls: ['./bottombar.component.scss']
 })
-export class BottombarComponent implements OnInit {
+export class BottombarComponent {
 
-  public admin: boolean = true;
-  @Input() public activeButton: string;
+  admin = true;
+  @Input() public activeButton = 'observations';
 
-  constructor(private router: Router) {
-    this.activeButton = 'observations';
-  }
+  constructor(private router: Router) {}
 
-  ngOnInit(): void {
-
-  }
-
-  onClick(buttonValue): void{
+  onClick(buttonValue): void {
     this.activeButton = buttonValue;
     this.router.navigate([buttonValue]);
   }
-
 
 }
