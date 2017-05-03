@@ -1,0 +1,83 @@
+@import 'src/settings.scss';
+@import 'src/mixins.scss';
+
+:host {
+
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      height: 42px;
+      margin-right: 10px;
+      line-height: 42px;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+
+      &.-active {
+        position: relative;
+
+        &:after {
+          display: block;
+          position: absolute;
+          bottom: 0;
+          left: 10px;
+          height: 7px;
+          width: calc(100% - 20px);
+          background-color: $black;
+          content: '';
+        }
+      }
+
+      > a,
+      > button {
+        padding: 0 10px;
+        cursor: pointer;
+        color: $black;
+        text-decoration: none;
+      }
+    }
+
+    &.-mini {
+      li {
+        height: 35px;
+        line-height: 35px;
+        text-transform: uppercase;
+        font-size: .8em;
+
+        &.-active:after {
+          height: 3px;
+        }
+
+        &:not(.-active) {
+          opacity: .6;
+        }
+      }
+    }
+
+    &.-vertical {
+      flex-direction: column;
+
+      li {
+        &.-active {
+          font-weight: 700;
+
+          &:after {
+            @include arrow(7px, 2px, $black, right);
+
+            position: absolute;
+            top: calc(50% - 4px);
+            left: -8px;
+            background-color: transparent;
+          }
+        }
+      }
+    }
+  }
+
+}

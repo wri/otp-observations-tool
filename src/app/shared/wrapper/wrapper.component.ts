@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { NavigationItem } from './../navigation/navigation.component';
 import { Component } from '@angular/core';
 
 
@@ -7,5 +9,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./wrapper.component.scss']
 })
 export class WrapperComponent {
+
+  private navigationItems: NavigationItem[] = [
+    { name: 'Observations', url: 'observations' },
+    { name: 'Observation fields', url: 'fields' },
+    { name: 'Users', url: 'users' },
+  ];
 
 }

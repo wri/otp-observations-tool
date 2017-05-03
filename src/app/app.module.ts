@@ -1,3 +1,4 @@
+import { NavigationComponent } from './shared/navigation/navigation.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { UsersService } from 'app/services/users.service';
@@ -44,7 +45,8 @@ import { ObservationsService } from 'app/services/observations.service';
     FieldListComponent,
     FieldDetailComponent,
     TabsComponent,
-    WrapperComponent
+    WrapperComponent,
+    NavigationComponent
   ],
   imports: [
     JsonApiModule,
