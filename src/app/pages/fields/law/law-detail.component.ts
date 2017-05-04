@@ -5,14 +5,14 @@ import { AuthService } from 'app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'otp-government-detail',
-  templateUrl: './government-detail.component.html',
-  styleUrls: ['./government-detail.component.scss']
+  selector: 'otp-law-detail',
+  templateUrl: './law-detail.component.html',
+  styleUrls: ['./law-detail.component.scss']
 })
-export class GovernmentDetailComponent implements OnInit {
+export class LawDetailComponent implements OnInit {
 
   private countries: Country[];
-  private titleText: String = 'New Government';
+  private titleText: String = 'New Law';
 
   constructor(
     private auth: AuthService,
@@ -31,7 +31,7 @@ export class GovernmentDetailComponent implements OnInit {
   }
 
   onCancel(): void{
-    this.router.navigate(['/private/fields/governments']);
+    this.router.navigate(['/private/fields/laws']);
   }
 
   onSubmit(formValues):void {
