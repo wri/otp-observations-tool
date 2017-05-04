@@ -1,3 +1,4 @@
+import { ObserverListComponent } from './pages/fields/observers/observer-list.component';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
 import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
@@ -95,6 +96,10 @@ const routes: Routes = [
             component: LawDetailComponent
           },
           // --------------OBSERVERS-----------------
+          {
+            path: 'observers',
+            component: ObserverListComponent
+          },
           {
             path: 'observers/new',
             component: ObserverDetailComponent

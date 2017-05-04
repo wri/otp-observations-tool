@@ -1,3 +1,4 @@
+import { ObserverListComponent } from './pages/fields/observers/observer-list.component';
 import { LawsService } from './services/laws.service';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
@@ -66,6 +67,7 @@ import { ObservationsService } from 'app/services/observations.service';
     LawDetailComponent,
     LawListComponent,
     ObserverDetailComponent,
+    ObserverListComponent,
     SpeciesDetailComponent,
     CategoryListComponent
   ],
