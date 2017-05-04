@@ -1,9 +1,11 @@
 <div class="app">
-  <otp-sidebar *showItSizes="{min:768}"></otp-sidebar>
-  <div class="content">
+  <otp-desktop-header *showItSizes="{min:768}"></otp-desktop-header>
+
+  <div class="wrapper">
     <router-outlet ></router-outlet>
   </div>
-  <otp-bottombar *showItSizes="{min:200,max:768}"></otp-bottombar>
+
+  <otp-bottom-bar *showItSizes="{min:200,max:768}"></otp-bottom-bar>
 </div>
 
 

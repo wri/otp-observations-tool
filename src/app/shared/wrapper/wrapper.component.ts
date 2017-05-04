@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { NavigationItem } from './../navigation/navigation.component';
 import { Component } from '@angular/core';
 
 
@@ -6,6 +8,4 @@ import { Component } from '@angular/core';
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.scss']
 })
-export class WrapperComponent {
-
-}
+export class WrapperComponent {}

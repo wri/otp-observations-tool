@@ -1,3 +1,5 @@
+import { DesktopHeaderComponent } from 'app/shared/desktop-header/desktop-header.component';
+import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { UsersService } from 'app/services/users.service';
@@ -7,8 +9,7 @@ import { FieldListComponent } from 'app/pages/fields/field-list.component';
 import { FieldDetailComponent } from 'app/pages/fields/field-detail.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
 import { UserListComponent } from 'app/pages/users/user-list.component';
-import { BottombarComponent } from 'app/shared/bottombar/bottombar.component';
-import { SidebarComponent } from 'app/shared/sidebar/sidebar.component';
+import { BottombarComponent } from 'app/shared/bottom-bar/bottom-bar.component';
 import { DatastoreService } from 'app/services/datastore.service';
 import { CountriesService } from 'app/services/countries.service';
 import { RegisterComponent } from 'app/pages/register/register.component';
@@ -36,7 +37,6 @@ import { ObservationsService } from 'app/services/observations.service';
     ObservationListComponent,
     ObservationDetailComponent,
     RegisterComponent,
-    SidebarComponent,
     BottombarComponent,
     UserListComponent,
     UserDetailComponent,
@@ -44,7 +44,9 @@ import { ObservationsService } from 'app/services/observations.service';
     FieldListComponent,
     FieldDetailComponent,
     TabsComponent,
-    WrapperComponent
+    WrapperComponent,
+    NavigationComponent,
+    DesktopHeaderComponent
   ],
   imports: [
     JsonApiModule,

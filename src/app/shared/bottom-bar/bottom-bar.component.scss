@@ -1,3 +1,5 @@
+@import 'src/settings.scss';
+
 :host {
   position: fixed;
   display: flex;
@@ -8,10 +10,10 @@
   button {
     width: 100%;
     height: 58px;
-    background: lightgrey;
-    color: black;
+    background: $lighter-grey;
+    color: $black;
     margin-bottom: 0;
-    border-left: 1px solid grey;
+    border-left: 1px solid $grey;
     font-size: .7em;
 
     &:first-of-type {
@@ -19,8 +21,8 @@
     }
 
     &.is-active {
-      background: grey;
-      color: white;
+      background: $grey;
+      color: $white;
     }
   }
 }

@@ -1,0 +1,43 @@
+@import 'src/settings.scss';
+
+:host {
+  display: block;
+  background: $light-grey;
+  border-bottom: 1px solid $black;
+
+  h1 {
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+
+    ul {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+
+      li {
+        margin-right: 10px;
+        padding: 0 10px;
+        color: $grey;
+
+        &:last-of-type {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  // We move the navigation 10px to the left to compensate
+  // the inner padding of the first element
+  otp-navigation {
+    position: relative;
+    left: -10px;
+  }
+}
