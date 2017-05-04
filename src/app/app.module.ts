@@ -2,6 +2,7 @@ import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
 import { SubCategoriesService } from 'app/services/sub-categories.service';
+import { CategoryListComponent } from './pages/fields/categories/category-list-component';
 import { DesktopHeaderComponent } from 'app/shared/desktop-header/desktop-header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
@@ -51,7 +52,8 @@ import { ObservationsService } from 'app/services/observations.service';
     TabsComponent,
     WrapperComponent,
     NavigationComponent,
-    DesktopHeaderComponent
+    DesktopHeaderComponent,
+    CategoryListComponent,
   ],
   imports: [
     JsonApiModule,

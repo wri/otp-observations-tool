@@ -12,6 +12,7 @@
     li {
       display: flex;
       height: 42px;
+      flex-shrink: 0; // Required for the mobile
       margin-right: 10px;
       line-height: 42px;
 
@@ -49,6 +50,10 @@
         line-height: 35px;
         text-transform: uppercase;
         font-size: .8em;
+
+        button {
+          text-transform: uppercase;
+        }
 
         &.-active:after {
           height: 3px;
