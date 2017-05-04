@@ -1,0 +1,62 @@
+<div class="container">
+  <div class="row">
+    <div class="large-10 columns">
+      <h2>{{titleText}}</h2>
+    </div>
+  </div>
+  <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
+  <div class="row">
+    <div class="large-10 columns">
+      <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" ngModel #name="ngModel" required />
+            <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
+        </div>
+        <div class="form-group">
+            <label for="common_name">Common name</label>
+            <input type="text" class="form-control" name="common_name" ngModel #common_name="ngModel" />
+        </div>
+        <div class="form-group">
+            <label for="scientific_name">Scientific name</label>
+            <input type="text" class="form-control" name="scientific_name" ngModel #scientific_name="ngModel" />
+        </div>
+        <div class="form-group">
+            <label for="species_class">Species class</label>
+            <input type="text" class="form-control" name="species_class" ngModel #species_class="ngModel" />
+        </div>
+        <div class="form-group">
+            <label for="sub_species">Sub species</label>
+            <input type="text" class="form-control" name="sub_species" ngModel #sub_species="ngModel" />
+        </div>
+        <div class="form-group">
+            <label for="species_family">Species family</label>
+            <input type="text" class="form-control" name="species_family" ngModel #species_family="ngModel" />
+        </div>
+        <div class="form-group">
+            <label for="kingdom">Kingdom</label>
+            <input type="text" class="form-control" name="kingdom" ngModel #kingdom="ngModel" />
+        </div>
+        <div class="form-group">
+            <label for="cites_status">CITES status</label>
+            <input type="text" class="form-control" name="cites_status" ngModel #cites_status="ngModel" />
+        </div>
+        <div class="form-group">
+            <label for="iucn_status">IUCN status</label>
+            <input type="text" class="form-control" name="iucn_status" ngModel #iucn_status="ngModel" />
+        </div>
+        <!--
+          TODO:  A MULTI SELECTOR OF COUNTRIES HAS TO BE ADDED HERE
+          -->
+        <div class="form-group actions">
+            <button disable="loading" type="button" (click)="onCancel()" class="button secondary">Cancel</button>
+            <button disable="loading" type="submit" class="button primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
