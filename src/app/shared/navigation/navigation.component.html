@@ -1,0 +1,6 @@
+<ul [class]="'-' + this.layout">
+    <li *ngFor="let item of items" [class.active]="this.manageActiveItem && item === activeItem" routerLinkActive="-active">
+      <a *ngIf="item.url" [routerLink]="item.url" (click)="onClick(item)">{{item.name}}</a>
+      <button *ngIf="!item.url" type="button" (click)="onClick(item)">{{item.name}}</button>
+    </li>
+</ul>

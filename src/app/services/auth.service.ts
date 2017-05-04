@@ -61,6 +61,16 @@ export class AuthService {
 
     }
 
+    /**
+     * Return whether the current user is an admin
+     * @returns {boolean}
+     */
+    isAdmin(): Promise<boolean> {
+      // TODO: we temparily assume that if the user is connected,
+      // they are an admin
+      return this.checkLogged();
+    }
+
     logout() {
         this.user = null;
         this.token = null;
