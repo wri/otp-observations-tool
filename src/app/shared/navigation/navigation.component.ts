@@ -1,9 +1,12 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 export interface NavigationItem {
   name: string;
   // If the URL isn't specified, then you have to listen to the change event
   url?: string;
+  // If the route should be exactly matched
+  exact?: boolean;
 }
 
 @Component({
@@ -23,6 +26,11 @@ export class NavigationComponent implements OnInit {
   private get manageActiveItem(): boolean {
     return this.items.reduce((res, item) => res || !item.url, false);
   }
+
+  constructor (
+    private router: Router,
+    private activedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     // We always set a default active item
@@ -46,6 +54,18 @@ export class NavigationComponent implements OnInit {
     if (!item.url) {
       this.change.emit(item);
     }
+  }
+
+  /**
+   * Return whether the item is active
+   * @param item
+   */
+  private isActive(item: NavigationItem): boolean {
+    const urlTree = this.router.createUrlTree([item.url], { relativeTo: this.activedRoute });
+
+    return this.manageActiveItem
+      ? item === this.activeItem
+      : this.router.isActive(urlTree, item.exact || false);
   }
 
 }
