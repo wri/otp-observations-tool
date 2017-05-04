@@ -1,0 +1,16 @@
+<div>
+  <h1> Laws </h1>
+  <button (click)="triggerNewLaw()">
+    New law
+  </button>
+  <ngx-datatable class="material"
+    #table
+    [rows]="laws">
+    <ngx-datatable-column prop="legal_reference" name="Legal Reference">
+    </ngx-datatable-column>
+    <ngx-datatable-column prop="legal_penalty" name="Legal Penalty">
+    </ngx-datatable-column>
+    <ngx-datatable-column prop="vpa_indicator" name="VPA indicator">
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>

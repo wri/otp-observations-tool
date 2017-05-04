@@ -1,6 +1,9 @@
+import { ObserverListComponent } from './pages/fields/observers/observer-list.component';
+import { LawsService } from './services/laws.service';
+import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
 import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
-import { LawDetailComponent } from 'app/pages/fields/law/law-detail.component';
+import { LawDetailComponent } from 'app/pages/fields/laws/law-detail.component';
 import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
 import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
 import { OperatorsService } from 'app/services/operators.service';
@@ -62,7 +65,9 @@ import { ObservationsService } from 'app/services/observations.service';
     GovernmentListComponent,
     GovernmentDetailComponent,
     LawDetailComponent,
+    LawListComponent,
     ObserverDetailComponent,
+    ObserverListComponent,
     SpeciesDetailComponent,
     CategoryListComponent
   ],
@@ -89,6 +94,7 @@ import { ObservationsService } from 'app/services/observations.service';
     SubCategoriesService,
     ObserversService,
     OperatorsService,
+    LawsService,
     { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
   bootstrap: [AppComponent]

@@ -15,7 +15,7 @@ export class FieldListComponent {
     { name: 'Countries', url: 'countries' },
     { name: 'Governments', url: 'governments' },
     { name: 'Operators', url: 'operators' },
-    { name: 'Monitors', url: 'monitors' },
+    { name: 'Monitors', url: 'observers' },
     { name: 'Laws', url: 'laws' },
   ];
 
