@@ -1,9 +1,15 @@
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 10px;
-}
+:host {
+  h2 {
+    margin-top: 0;
+  }
 
-label {
-  text-transform: uppercase;
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+  }
+
+  label {
+    text-transform: uppercase;
+  }
 }

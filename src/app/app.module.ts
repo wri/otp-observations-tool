@@ -1,6 +1,7 @@
 import { ObserverListComponent } from './pages/fields/observers/observer-list.component';
 import { LawsService } from './services/laws.service';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
+import { ActionBarComponent } from 'app/shared/action-bar/action-bar.component';
 import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
 import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
 import { LawDetailComponent } from 'app/pages/fields/laws/law-detail.component';
@@ -69,7 +70,8 @@ import { ObservationsService } from 'app/services/observations.service';
     ObserverDetailComponent,
     ObserverListComponent,
     SpeciesDetailComponent,
-    CategoryListComponent
+    CategoryListComponent,
+    ActionBarComponent,
   ],
   imports: [
     JsonApiModule,

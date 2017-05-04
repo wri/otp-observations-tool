@@ -1,14 +1,11 @@
-<div>
-  <h1> Government Units </h1>
-  <button (click)="triggerNewGovernment()">
-    New Government Unit
-  </button>
-  <ngx-datatable class="material"
-    #table
-    [rows]="governments">
-    <ngx-datatable-column prop="government_entity" name="Name">
-    </ngx-datatable-column>
-    <ngx-datatable-column prop="details" name="Details">
-    </ngx-datatable-column>
-  </ngx-datatable>
-</div>
+<button (click)="triggerNewGovernment()">
+  New Government Unit
+</button>
+<ngx-datatable class="material"
+  #table
+  [rows]="governments">
+  <ngx-datatable-column prop="government_entity" name="Name">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="details" name="Details">
+  </ngx-datatable-column>
+</ngx-datatable>

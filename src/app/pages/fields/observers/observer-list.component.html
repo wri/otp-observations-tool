@@ -1,18 +1,15 @@
-<div>
-  <h1> Observers </h1>
-  <button (click)="triggerNewObserver()">
-    New Observer
-  </button>
-  <ngx-datatable class="material"
-    #table
-    [rows]="observers">
-    <ngx-datatable-column prop="name" name="Name">
-    </ngx-datatable-column>
-    <ngx-datatable-column prop="observer_type" name="Type">
-    </ngx-datatable-column>
-    <ngx-datatable-column prop="organization" name="Organization">
-    </ngx-datatable-column>
-    <ngx-datatable-column prop="active" name="Active">
-    </ngx-datatable-column>
-  </ngx-datatable>
-</div>
+<button (click)="triggerNewObserver()">
+  New Observer
+</button>
+<ngx-datatable class="material"
+  #table
+  [rows]="observers">
+  <ngx-datatable-column prop="name" name="Name">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="observer_type" name="Type">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="organization" name="Organization">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="active" name="Active">
+  </ngx-datatable-column>
+</ngx-datatable>

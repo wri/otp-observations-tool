@@ -1,0 +1,22 @@
+@import 'src/settings.scss';
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: $bottom-bar-height;
+  z-index: 1;
+  background: $lighter-grey;
+
+  /deep/ .button {
+    margin: 0 10px 0 0;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
