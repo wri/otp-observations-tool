@@ -11,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GovernmentDetailComponent implements OnInit {
 
-  private countries: Country[];
+  private countries: Country[] = [];
   private titleText: String = 'New Government';
 
   constructor(
@@ -19,7 +19,7 @@ export class GovernmentDetailComponent implements OnInit {
     private countriesService: CountriesService,
     private router: Router
   ) {
-    this.countries = new Array<Country>();
+
   }
 
   ngOnInit(): void {
