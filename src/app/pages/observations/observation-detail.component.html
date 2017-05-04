@@ -62,19 +62,50 @@
                 <p *ngIf="f.submitted && !government_id.valid" class="help-text">Please select a government entity</p>
               </label>
           </div>
-          <!--<div class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
-              <label for="government_id">MONITOR
-                <select name="government_id" ngModel #country_id="ngModel" required>
-                  <option *ngFor="let government of governments" [value]="severity.id">{{ government.government_entity }}</option>
+          <div *ngIf="!governanceSelected" class="form-group">
+              <label for="pv">PV</label>
+              <input type="text" class="form-control" name="pv" ngModel #pv="ngModel"  />
+          </div>
+          <div *ngIf="!governanceSelected" class="form-group">
+              <label for="concern_opinion">OPINION OF OPERATOR</label>
+              <input type="text" class="form-control" name="concern_opinion" ngModel #concern_opinion="ngModel"  />
+          </div>
+          <div *ngIf="!governanceSelected" class="form-group">
+              <label for="litigation_status">LITIGATION STATUS</label>
+              <input type="text" class="form-control" name="litigation_status" ngModel #litigation_status="ngModel"  />
+          </div>
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !observer_id.valid }">
+              <label for="observer_id">MONITOR
+                <select name="observer_id" ngModel #observer_id="ngModel" required>
+                  <option *ngFor="let observer of observers" [value]="observer.id">{{ observer.name }}</option>
                 </select>
-                <p *ngIf="f.submitted && !government_id.valid" class="help-text">Please select a government entity</p>
+                <p *ngIf="f.submitted && !observer_id.valid" class="help-text">Please select an observer</p>
               </label>
-          </div>-->
-
+          </div>
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
+              <label for="operator_id">OPERATOR
+                <select name="operator_id" ngModel #operator_id="ngModel" required>
+                  <option *ngFor="let operator of operators" [value]="operator.id">{{ operator.name }}</option>
+                </select>
+                <p *ngIf="f.submitted && !operator_id.valid" class="help-text">Please select an operator</p>
+              </label>
+          </div>
+          <div class="form-group">
+              <label for="active">ACTIVE</label>
+              <input type="checkbox" name="active" ngModel #active="ngModel" />
+          </div>
+          <div class="form-group">
+              <label for="details">DETAILS</label>
+              <textarea name="details" ngModel #details="ngModel"></textarea>
+          </div>
+          <div class="form-group">
+              <label for="evidence">EVIDENCE</label>
+              <input type="text" class="form-control" name="evidence" ngModel #evidence="ngModel"  />
+          </div>
         </div>
-        <div class="form-group">
+        <div class="form-group actions">
+            <button disable="loading" type="button" (click)="onCancel()" class="button secondary">Cancel</button>
             <button disable="loading" type="submit" class="button primary">Create</button>
-            <button disable="loading" type="button" class="button secondary">Cancel</button>
         </div>
       </form>
     </div>

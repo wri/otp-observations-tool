@@ -1,3 +1,5 @@
+import { OperatorsService } from 'app/services/operators.service';
+import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
 import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { DesktopHeaderComponent } from 'app/shared/desktop-header/desktop-header.component';
@@ -72,6 +74,8 @@ import { ObservationsService } from 'app/services/observations.service';
     UsersService,
     ObservationsService,
     SubCategoriesService,
+    ObserversService,
+    OperatorsService,
     { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
   bootstrap: [AppComponent]
