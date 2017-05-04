@@ -2,7 +2,7 @@ import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2
 import { Country } from 'app/models/country.model';
 
 @JsonApiModelConfig({
-  type: 'governments'
+  type: 'laws'
 })
 export class Law extends JsonApiModel {
 

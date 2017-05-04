@@ -1,6 +1,7 @@
-import { SpeciesDetailComponent } from './pages/fields/species/species-detail.component';
-import { ObserverDetailComponent } from './pages/fields/observers/observer-detail.component';
-import { LawDetailComponent } from 'app/pages/fields/law/law-detail.component';
+import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
+import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
+import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
+import { LawDetailComponent } from 'app/pages/fields/laws/law-detail.component';
 import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
 import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
@@ -86,6 +87,10 @@ const routes: Routes = [
           },
           // --------------LAWS-----------------
           {
+            path: 'laws',
+            component: LawListComponent
+          },
+          {
             path: 'laws/new',
             component: LawDetailComponent
           },
@@ -98,7 +103,7 @@ const routes: Routes = [
           {
             path: 'species/new',
             component: SpeciesDetailComponent
-          }    
+          }
         ]
       },
       {
