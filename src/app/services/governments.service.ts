@@ -14,8 +14,11 @@ export class GovernmentsService {
 
     }
 
-    getGovernments(country: Country){
-        return this.http.get(`${environment.apiUrl}/governments`)
-          .map(response => response.json()).toPromise();
+    getAll(){
+        return this.datastoreService.query(Government).toPromise();
+    }
+
+    getByCountry(country: Country){
+
     }
 }
