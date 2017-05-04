@@ -1,3 +1,5 @@
+import { GovernmentsService } from 'app/services/governments.service';
+import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { DesktopHeaderComponent } from 'app/shared/desktop-header/desktop-header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
@@ -27,6 +29,7 @@ import { HttpModule, RequestOptions } from '@angular/http';
 import { CustomFormsModule } from 'ng2-validation';
 import { SpinnerModule } from 'angular2-spinner/dist';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { DatePickerModule } from 'ng2-datepicker';
 import { ResponsiveModule } from 'ng2-responsive';
 import { ObservationsService } from 'app/services/observations.service';
 
@@ -57,15 +60,18 @@ import { ObservationsService } from 'app/services/observations.service';
     CustomFormsModule,
     SpinnerModule,
     NgxDatatableModule,
-    ResponsiveModule
+    ResponsiveModule,
+    DatePickerModule
   ],
   providers: [
     TokenService,
     AuthService,
+    GovernmentsService,
     CountriesService,
     DatastoreService,
     UsersService,
     ObservationsService,
+    SubCategoriesService,
     { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
   bootstrap: [AppComponent]
