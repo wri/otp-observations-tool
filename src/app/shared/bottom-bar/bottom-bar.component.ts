@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 
@@ -14,21 +13,12 @@ import { AuthService } from 'app/services/auth.service';
 })
 export class BottombarComponent implements OnInit {
 
-  isAdmin = false;
-  @Input() public activeButton = 'observations';
+  private isAdmin = false;
 
-  constructor(
-    private router: Router,
-    private auth: AuthService
-  ) {}
+  constructor(private auth: AuthService) {}
 
   async ngOnInit() {
     this.isAdmin = await this.auth.isAdmin();
-  }
-
-  onClick(buttonValue): void {
-    this.activeButton = buttonValue;
-    this.router.navigate([`private/${buttonValue}`]);
   }
 
 }

@@ -7,7 +7,8 @@
   overflow: hidden;
   bottom: 0;
 
-  button {
+  a {
+    display: block;
     width: 100%;
     height: $bottom-bar-height;
     background: $lighter-grey;
@@ -15,12 +16,15 @@
     margin-bottom: 0;
     border-left: 1px solid $grey;
     font-size: .7em;
+    text-decoration: none;
+    line-height: $bottom-bar-height;
+    text-align: center;
 
     &:first-of-type {
       border-left: 0;
     }
 
-    &.is-active {
+    &.-active {
       background: $grey;
       color: $white;
     }
