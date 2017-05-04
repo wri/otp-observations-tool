@@ -16,6 +16,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
+import { CategoryListComponent } from 'app/pages/fields/categories/category-list-component';
 
 
 const routes: Routes = [
@@ -64,6 +65,16 @@ const routes: Routes = [
         path: 'fields',
         component: FieldListComponent,
         children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'categories'
+          },
+          // --------------CATEGORIES--------------
+          {
+            path: 'categories',
+            component: CategoryListComponent
+          },
           // --------------GOVERNMENTS-----------------
           {
             path: 'governments',
@@ -87,7 +98,7 @@ const routes: Routes = [
           {
             path: 'species/new',
             component: SpeciesDetailComponent
-          },
+          }    
         ]
       },
       {
