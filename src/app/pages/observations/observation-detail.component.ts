@@ -4,4 +4,8 @@ import { Component } from '@angular/core';
   selector: 'otp-observation-detail',
   templateUrl: './observation-detail.component.html'
 })
-export class ObservationDetailComponent {}
+export class ObservationDetailComponent {
+
+  private titleText: String = 'New observation';
+
+}

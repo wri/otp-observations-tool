@@ -37,7 +37,7 @@ export class ObservationListComponent implements OnInit {
   }
 
   triggerNewObservation(): void {
-    // this.router.navigate(['observations/new']);
+     this.router.navigate(['private/observations/new']);
   }
 
   triggerLogout(): void {
