@@ -1,3 +1,5 @@
+import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
+import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
 import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
@@ -51,7 +53,9 @@ import { ObservationsService } from 'app/services/observations.service';
     TabsComponent,
     WrapperComponent,
     NavigationComponent,
-    DesktopHeaderComponent
+    DesktopHeaderComponent,
+    GovernmentListComponent,
+    GovernmentDetailComponent
   ],
   imports: [
     JsonApiModule,

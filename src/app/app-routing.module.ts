@@ -1,3 +1,5 @@
+import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
+import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
 import { FieldListComponent } from 'app/pages/fields/field-list.component';
 import { FieldDetailComponent } from 'app/pages/fields/field-detail.component';
@@ -57,7 +59,17 @@ const routes: Routes = [
       // -------------FIELDS------------
       {
         path: 'fields',
-        component: FieldListComponent
+        component: FieldListComponent,
+        children: [
+          {
+            path: 'governments',
+            component: GovernmentListComponent
+          },
+          {
+            path: 'governments/new',
+            component: GovernmentDetailComponent
+          }
+        ]
       },
       {
         path: 'profile',
