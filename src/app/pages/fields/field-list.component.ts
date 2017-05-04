@@ -1,5 +1,5 @@
-import { AuthService } from 'app/services/auth.service';
 import { Component } from '@angular/core';
+import { NavigationItem } from 'app/shared/navigation/navigation.component';
 
 @Component({
   selector: 'otp-field-list',
@@ -8,13 +8,15 @@ import { Component } from '@angular/core';
 })
 export class FieldListComponent {
 
-  constructor(private auth: AuthService) {
-
-  }
-
-  public triggerLogout(): void{
-    this.auth.logout();
-  }
-
+  private navigationItems: NavigationItem[] = [
+    { name: 'Categories', url: 'categories' },
+    { name: 'Sub-categories', url: 'subcategories' },
+    { name: 'Species', url: 'species' },
+    { name: 'Countries', url: 'countries' },
+    { name: 'Governments', url: 'governments' },
+    { name: 'Operators', url: 'operators' },
+    { name: 'Monitors', url: 'monitors' },
+    { name: 'Laws', url: 'laws' },
+  ];
 
 }
