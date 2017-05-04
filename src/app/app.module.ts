@@ -1,3 +1,4 @@
+import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
 import { LawDetailComponent } from 'app/pages/fields/law/law-detail.component';
 import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
 import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
@@ -57,7 +58,8 @@ import { ObservationsService } from 'app/services/observations.service';
     DesktopHeaderComponent,
     GovernmentListComponent,
     GovernmentDetailComponent,
-    LawDetailComponent
+    LawDetailComponent,
+    ObserverDetailComponent
   ],
   imports: [
     JsonApiModule,
