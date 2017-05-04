@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row">
+    <div class="large-10 columns">
+      <h2>{{titleText}}</h2>
+    </div>
+  </div>
+  <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
+  <div class="row">
+    <div class="large-10 columns">
+      <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_entity.valid }">
+            <label for="government_entity">Government entity</label>
+            <input type="text" class="form-control" name="government_entity" ngModel #government_entity="ngModel" required />
+            <div *ngIf="f.submitted && !government_entity.valid" class="help-text">Government entity is required</div>
+        </div>
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
+            <label for="country_id">Country
+              <select name="country_id" ngModel #country_id="ngModel" required>
+                <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+              </select>
+            </label>
+            <p *ngIf="f.submitted && !country_id.valid" class="help-text">Please select a country</p>
+        </div>
+        <div class="form-group">
+            <label for="details">Details</label>
+            <input type="text" class="form-control" name="details" ngModel #details="ngModel" />
+        </div>
+        <div class="form-group actions">
+            <button disable="loading" type="button" (click)="onCancel()" class="button secondary">Cancel</button>
+            <button disable="loading" type="submit" class="button primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+

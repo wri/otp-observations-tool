@@ -1,3 +1,8 @@
+import { SpeciesDetailComponent } from './pages/fields/species/species-detail.component';
+import { ObserverDetailComponent } from './pages/fields/observers/observer-detail.component';
+import { LawDetailComponent } from 'app/pages/fields/law/law-detail.component';
+import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
+import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
 import { FieldListComponent } from 'app/pages/fields/field-list.component';
 import { FieldDetailComponent } from 'app/pages/fields/field-detail.component';
@@ -65,10 +70,35 @@ const routes: Routes = [
             pathMatch: 'full',
             redirectTo: 'categories'
           },
+          // --------------CATEGORIES--------------
           {
             path: 'categories',
             component: CategoryListComponent
-          }
+          },
+          // --------------GOVERNMENTS-----------------
+          {
+            path: 'governments',
+            component: GovernmentListComponent
+          },
+          {
+            path: 'governments/new',
+            component: GovernmentDetailComponent
+          },
+          // --------------LAWS-----------------
+          {
+            path: 'laws/new',
+            component: LawDetailComponent
+          },
+          // --------------OBSERVERS-----------------
+          {
+            path: 'observers/new',
+            component: ObserverDetailComponent
+          },
+          // --------------SPECIES-----------------
+          {
+            path: 'species/new',
+            component: SpeciesDetailComponent
+          }    
         ]
       },
       {

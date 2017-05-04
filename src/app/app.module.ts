@@ -1,3 +1,8 @@
+import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
+import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
+import { LawDetailComponent } from 'app/pages/fields/law/law-detail.component';
+import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
+import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
 import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
@@ -36,6 +41,7 @@ import { DatePickerModule } from 'ng2-datepicker';
 import { ResponsiveModule } from 'ng2-responsive';
 import { ObservationsService } from 'app/services/observations.service';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +59,12 @@ import { ObservationsService } from 'app/services/observations.service';
     WrapperComponent,
     NavigationComponent,
     DesktopHeaderComponent,
-    CategoryListComponent,
+    GovernmentListComponent,
+    GovernmentDetailComponent,
+    LawDetailComponent,
+    ObserverDetailComponent,
+    SpeciesDetailComponent,
+    CategoryListComponent
   ],
   imports: [
     JsonApiModule,
