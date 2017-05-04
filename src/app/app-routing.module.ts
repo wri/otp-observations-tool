@@ -37,6 +37,10 @@ const routes: Routes = [
         path: 'observations',
         component: ObservationListComponent
       },
+      {
+        path: 'observations/new',
+        component: ObservationDetailComponent
+      },
       // ----------------USERS----------------------
       {
         path: 'users',

@@ -1,1 +1,118 @@
-<h1>Observations</h1>
+<div class="container">
+  <div class="row">
+    <div class="large-10 columns">
+      <h2>{{titleText}}</h2>
+    </div>
+  </div>
+  <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
+  <div class="row">
+    <div class="large-10 columns">
+      <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+        <div class="form-group">
+            <label for="type">TYPE
+              <select (change)="onTypeChange($event)" name="type" ngModel #type="ngModel" required>
+                 <option selected [value]="'operator'">Operator</option>
+                 <option [value]="'governance'">Governance</option>
+              </select>
+            </label>
+            <p *ngIf="f.submitted && !type.valid" class="help-text">Please select a type</p>
+        </div>
+        <div class="white-card">
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
+              <label for="country_id">Country
+                <select name="country_id" ngModel #country_id="ngModel" required>
+                  <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+                </select>
+              </label>
+              <p *ngIf="f.submitted && !country_id.valid" class="help-text">Please select a country</p>
+          </div>
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !nickname.valid }">
+              <label for="nickname">GPS Coordinates</label>
+              <input type="text" class="form-control" name="nickname" ngModel #nickname="ngModel" required />
+              <div *ngIf="f.submitted && !nickname.valid" class="help-text">GPS coordinates are required</div>
+          </div>
+          <!--<div leaflet style="height: 200px;"
+            >
+          </div>-->
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
+              <label for="subcategory_id">Sub-category
+                <select name="subcategory_id" ngModel #subcategory_id="ngModel" required>
+                  <option *ngFor="let subcategory of subcategories" [value]="subcategory.id">{{ subcategory.name }}</option>
+                </select>
+              </label>
+              <p *ngIf="f.submitted && !subcategory_id.valid" class="help-text">Please select a sub-category</p>
+          </div>
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
+              <label for="severity_id">Severity
+                <select name="severity_id" ngModel #severity_id="ngModel" required>
+                  <option *ngFor="let severity of severities" [value]="severity.id">{{ severity.id }} - {{ severity.description }}</option>
+                </select>
+              </label>
+              <p *ngIf="f.submitted && !severity_id.valid" class="help-text">Please select a severity</p>
+          </div>
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
+              <label for="publication_date">Publication date</label>
+              <ng2-datepicker name="publication_date" #publication_date="ngModel" [options]="dateOptions" ngModel required></ng2-datepicker>
+              <div *ngIf="f.submitted && !publication_date.valid" class="help-text">Publication date is required</div>
+          </div>
+          <div *ngIf="governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
+              <label for="government_id">Government Entity
+                <select name="government_id" ngModel #government_id="ngModel" required>
+                  <option *ngFor="let government of governments" [value]="severity.id">{{ government.government_entity }}</option>
+                </select>
+              </label>
+              <p *ngIf="f.submitted && !government_id.valid" class="help-text">Please select a government entity</p>
+          </div>
+          <div *ngIf="!governanceSelected" class="form-group">
+              <label for="pv">PV</label>
+              <input type="text" class="form-control" name="pv" ngModel #pv="ngModel"  />
+          </div>
+          <div *ngIf="!governanceSelected" class="form-group">
+              <label for="concern_opinion">Opinion of operator</label>
+              <input type="text" class="form-control" name="concern_opinion" ngModel #concern_opinion="ngModel"  />
+          </div>
+          <div *ngIf="!governanceSelected" class="form-group">
+              <label for="litigation_status">Litigation status</label>
+              <input type="text" class="form-control" name="litigation_status" ngModel #litigation_status="ngModel"  />
+          </div>
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !observer_id.valid }">
+              <label for="observer_id">Monitor
+                <select name="observer_id" ngModel #observer_id="ngModel" required>
+                  <option *ngFor="let observer of observers" [value]="observer.id">{{ observer.name }}</option>
+                </select>
+              </label>
+              <p *ngIf="f.submitted && !observer_id.valid" class="help-text">Please select an observer</p>
+          </div>
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
+              <label for="operator_id">Operator
+                <select name="operator_id" ngModel #operator_id="ngModel" required>
+                  <option *ngFor="let operator of operators" [value]="operator.id">{{ operator.name }}</option>
+                </select>
+              </label>
+              <p *ngIf="f.submitted && !operator_id.valid" class="help-text">Please select an operator</p>
+          </div>
+          <div class="form-group">
+              <label for="active">Active</label>
+              <input type="checkbox" name="active" ngModel #active="ngModel" />
+          </div>
+          <div class="form-group">
+              <label for="details">Details</label>
+              <textarea name="details" ngModel #details="ngModel"></textarea>
+          </div>
+          <div class="form-group">
+              <label for="evidence">Evidence</label>
+              <input type="text" class="form-control" name="evidence" ngModel #evidence="ngModel"  />
+          </div>
+        </div>
+        <div class="form-group actions">
+            <button disable="loading" type="button" (click)="onCancel()" class="button secondary">Cancel</button>
+            <button disable="loading" type="submit" class="button primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+

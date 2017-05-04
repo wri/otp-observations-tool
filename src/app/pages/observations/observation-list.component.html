@@ -1,8 +1,7 @@
 <otp-tabs [tabs]="tabs"></otp-tabs>
 <div class="content">
   <div>
-    <button (click)="triggerNewObservation()">New observation</button>
-    <button (click)="triggerLogout()">Logout</button>
+    <a [routerLink]="[private/observations/new]">New observation</a>
   </div>
   <ngx-datatable class="material" [rows]="rows" [rowHeight]="'auto'" *ngIf="rows">
     <ngx-datatable-column name="Date">

@@ -35,13 +35,4 @@ export class ObservationListComponent implements OnInit {
     this.observationsService.getObservations()
       .then(observations => this.observations = observations);
   }
-
-  triggerNewObservation(): void {
-    // this.router.navigate(['observations/new']);
-  }
-
-  triggerLogout(): void {
-    this.auth.logout();
-  }
-
 }

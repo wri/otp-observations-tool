@@ -1,0 +1,18 @@
+@import 'src/settings.scss';
+
+.white-card {
+  background-color: $white;
+  padding: 20px;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+}
+
+label {
+  text-transform: uppercase;
+}
