@@ -1,4 +1,5 @@
-import { ObserverListComponent } from './pages/fields/observers/observer-list.component';
+import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
+import { ObserverListComponent } from 'app/pages/fields/observers/observer-list.component';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
 import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
@@ -105,6 +106,10 @@ const routes: Routes = [
             component: ObserverDetailComponent
           },
           // --------------SPECIES-----------------
+          {
+            path: 'species',
+            component: SpeciesListComponent
+          },
           {
             path: 'species/new',
             component: SpeciesDetailComponent

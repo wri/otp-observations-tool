@@ -1,0 +1,13 @@
+<button (click)="triggerNewSpecies()">
+  New species
+</button>
+<ngx-datatable class="material"
+  #table
+  [rows]="species">
+  <ngx-datatable-column prop="name" name="Name">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="species_class" name="Species Class">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="scientific_name" name="Scientific Name">
+  </ngx-datatable-column>
+</ngx-datatable>

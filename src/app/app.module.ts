@@ -1,5 +1,7 @@
-import { ObserverListComponent } from './pages/fields/observers/observer-list.component';
-import { LawsService } from './services/laws.service';
+import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
+import { SpeciesService } from 'app/services/species.service';
+import { ObserverListComponent } from 'app/pages/fields/observers/observer-list.component';
+import { LawsService } from 'app/services/laws.service';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { ActionBarComponent } from 'app/shared/action-bar/action-bar.component';
 import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
@@ -11,7 +13,7 @@ import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
 import { SubCategoriesService } from 'app/services/sub-categories.service';
-import { CategoryListComponent } from './pages/fields/categories/category-list-component';
+import { CategoryListComponent } from 'app/pages/fields/categories/category-list-component';
 import { DesktopHeaderComponent } from 'app/shared/desktop-header/desktop-header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
@@ -70,6 +72,7 @@ import { ObservationsService } from 'app/services/observations.service';
     ObserverDetailComponent,
     ObserverListComponent,
     SpeciesDetailComponent,
+    SpeciesListComponent,
     CategoryListComponent,
     ActionBarComponent,
   ],
@@ -96,6 +99,7 @@ import { ObservationsService } from 'app/services/observations.service';
     SubCategoriesService,
     ObserversService,
     OperatorsService,
+    SpeciesService,
     LawsService,
     { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
