@@ -1,0 +1,11 @@
+<button (click)="triggerNewAnnexOperator()">
+  New Annex Operator
+</button>
+<ngx-datatable class="material"
+  #table
+  [rows]="annexOperators">
+  <ngx-datatable-column prop="illegality" name="Name">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="details" name="Details">
+  </ngx-datatable-column>
+</ngx-datatable>

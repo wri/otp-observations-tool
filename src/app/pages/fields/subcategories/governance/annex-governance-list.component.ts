@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnnexGovernanceListComponent implements OnInit {
 
-  private annexGovernance: AnnexGovernance[];
+  private annexGovernances: AnnexGovernance[];
 
   constructor(
     private subCategoriesService: SubCategoriesService,
@@ -20,11 +20,11 @@ export class AnnexGovernanceListComponent implements OnInit {
 
   ngOnInit(): void {
     this.subCategoriesService.getAllGovernances().then((data) => {
-      this.annexGovernance = data;
+      this.annexGovernances = data;
     });
   }
 
-  triggerNewCategory(): void{
+  triggerNewAnnexGovernance(): void{
     this.router.navigate(['private/fields/subcategories/governance/new']);
   }
 

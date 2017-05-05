@@ -24,7 +24,7 @@ export class AnnexOperatorListComponent implements OnInit {
     });
   }
 
-  triggerNewCategory(): void{
+  triggerNewAnnexOperator(): void{
     this.router.navigate(['private/fields/subcategories/operators/new']);
   }
 
