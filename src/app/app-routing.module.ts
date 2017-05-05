@@ -1,4 +1,10 @@
-import { ObserverListComponent } from './pages/fields/observers/observer-list.component';
+import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
+import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
+import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
+import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
+import { CountryDetailComponent } from 'app/pages/fields/countries/country-detail.component';
+import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
+import { ObserverListComponent } from 'app/pages/fields/observers/observer-list.component';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
 import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
@@ -18,7 +24,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
-import { CategoryListComponent } from 'app/pages/fields/categories/category-list-component';
+import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 
 
 const routes: Routes = [
@@ -77,6 +83,10 @@ const routes: Routes = [
             path: 'categories',
             component: CategoryListComponent
           },
+          {
+            path: 'categories/new',
+            component: CategoryDetailComponent
+          },
           // --------------GOVERNMENTS-----------------
           {
             path: 'governments',
@@ -106,8 +116,30 @@ const routes: Routes = [
           },
           // --------------SPECIES-----------------
           {
+            path: 'species',
+            component: SpeciesListComponent
+          },
+          {
             path: 'species/new',
             component: SpeciesDetailComponent
+          },
+          // --------------COUNTRIES-----------------
+          {
+            path: 'countries',
+            component: CountryListComponent
+          },
+          {
+            path: 'countries/new',
+            component: CountryDetailComponent
+          },
+          // --------------OPERATORS-----------------
+          {
+            path: 'operators',
+            component: OperatorListComponent
+          },
+          {
+            path: 'operators/new',
+            component: OperatorDetailComponent
           }
         ]
       },

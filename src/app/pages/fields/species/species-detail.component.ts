@@ -1,7 +1,6 @@
 import { Router } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
-import { AuthService } from 'app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -17,7 +16,6 @@ export class SpeciesDetailComponent implements OnInit {
   private titleText: String = 'New Species';
 
   constructor(
-    private auth: AuthService,
     private countriesService: CountriesService,
     private router: Router
   ) {
@@ -30,7 +28,7 @@ export class SpeciesDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.countriesService.getCountries().then(
+    this.countriesService.getAll().then(
       data => {
          this.countries = data;
          this.countries.forEach((value) => {
