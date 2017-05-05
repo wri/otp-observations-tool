@@ -12,10 +12,10 @@
     li {
       font-size: $font-size-default;
       display: flex;
-      height: 42px;
+      height: 50px;
       flex-shrink: 0; // Required for the mobile
       margin-right: 10px;
-      line-height: 42px;
+      line-height: 50px;
       text-transform: uppercase;
 
       &:last-of-type {

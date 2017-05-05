@@ -1,11 +1,11 @@
-<div class="container">
-  <div class="row">
+<div class="l-wrapper">
+  <div class="row collapse">
     <div class="large-10 columns">
       <h2>{{titleText}}</h2>
     </div>
   </div>
   <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
-  <div class="row">
+  <div class="row collapse">
     <div class="large-10 columns">
       <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
         <div class="form-group">
@@ -112,7 +112,3 @@
     </div>
   </div>
 </div>
-
-
-
-
