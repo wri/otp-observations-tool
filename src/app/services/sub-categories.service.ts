@@ -8,15 +8,23 @@ import { Http } from '@angular/http';
 @Injectable()
 export class SubCategoriesService {
 
-    constructor(private datastoreService: DatastoreService) {
+    constructor(
+      private datastoreService: DatastoreService,
+      private http: Http
+    ) {
 
     }
 
     getAllGovernances(){
-        return this.datastoreService.query(AnnexGovernance).toPromise();
+      return this.datastoreService.query(AnnexGovernance).toPromise();
     }
 
     getAllOperators(){
-        return this.datastoreService.query(AnnexOperator).toPromise();
+      return this.datastoreService.query(AnnexOperator).toPromise();
+    }
+
+    getAllGovernancesWithoutJSONAPI(){
+      return this.http.get(`${environment.apiUrl}/annex_governances`)
+        .map(response => response.json()).toPromise();
     }
 }
