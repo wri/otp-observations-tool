@@ -13,15 +13,20 @@
           <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
       </div>
       <div class="form-group">
-          <label for="observer_type">Observer type
-            <select name="observer_type" ngModel #observer_type="ngModel" required>
-                <option selected [value]="'Mandated'">Mandated</option>
-                <option [value]="'SemiMandated'">SemiMandated</option>
-                <option [value]="'External'">External</option>
-                <option [value]="'Government'">Government</option>
+          <label for="operator_type">Operator type
+            <select name="operator_type" ngModel #operator_type="ngModel" required>
+                <option selected [value]="'Logging'">Logging</option>
+                <option [value]="'Company'">Company</option>
+                <option [value]="'Artisanal'">Artisanal</option>
+                <option [value]="'Sawmill'">Sawmill</option>
+                <option [value]="'CommunityForest'">Community Forest</option>
+                <option [value]="'ARB1327'">ARB1327</option>
+                <option [value]="'PalmOil'">Palm Oil</option>
+                <option [value]="'Trader'">Trader</option>
+                <option [value]="'Company'">Company</option>
             </select>
           </label>
-          <p *ngIf="f.submitted && !observer_type.valid" class="help-text">Please select a observer_type</p>
+          <p *ngIf="f.submitted && !operator_type.valid" class="help-text">Please select a operator_type</p>
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
           <label for="country_id">Country
@@ -31,8 +36,12 @@
           </label>
       </div>
       <div class="form-group">
-          <label for="organization">Organization</label>
-          <input type="text" class="form-control" name="organization" ngModel #organization="ngModel" />
+          <label for="concession">Concession</label>
+          <input type="text" class="form-control" name="concession" ngModel #concession="ngModel" />
+      </div>
+      <div class="form-group">
+          <label for="country_centroid">Country centroid</label>
+          <input type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
       </div>
       <div class="form-group">
           <label for="active">Active</label>
@@ -40,7 +49,7 @@
       </div>
 
       <div class="form-group actions" *showItSizes="{min: 768}">
-          <button disable="loading" observer_type="button" (click)="onCancel()" class="button secondary">Cancel</button>
+          <button disable="loading" operator_type="button" (click)="onCancel()" class="button secondary">Cancel</button>
           <button disable="loading" type="submit" class="button primary">Create</button>
       </div>
 

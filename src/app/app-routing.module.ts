@@ -1,3 +1,5 @@
+import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
+import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
 import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
 import { CountryDetailComponent } from 'app/pages/fields/countries/country-detail.component';
 import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
@@ -124,6 +126,15 @@ const routes: Routes = [
           {
             path: 'countries/new',
             component: CountryDetailComponent
+          },
+          // --------------OPERATORS-----------------
+          {
+            path: 'operators',
+            component: OperatorListComponent
+          },
+          {
+            path: 'operators/new',
+            component: OperatorDetailComponent
           }
         ]
       },
