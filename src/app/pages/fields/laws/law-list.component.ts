@@ -1,7 +1,6 @@
 import { Router } from '@angular/router';
 import { LawsService } from './../../../services/laws.service';
 import { Law } from 'app/models/law.model';
-import { AuthService } from 'app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -14,7 +13,6 @@ export class LawListComponent implements OnInit {
   private laws: Law[];
 
   constructor(
-    private auth: AuthService,
     private lawsService: LawsService,
     private router: Router
   ) {

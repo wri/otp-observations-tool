@@ -1,7 +1,6 @@
 import { ObserversService } from './../../../services/observers.service';
 import { Observer } from './../../../models/observer.model';
 import { Router } from '@angular/router';
-import { AuthService } from 'app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -14,7 +13,6 @@ export class ObserverListComponent implements OnInit {
   private observers: Observer[];
 
   constructor(
-    private auth: AuthService,
     private observersService: ObserversService,
     private router: Router
   ) {
