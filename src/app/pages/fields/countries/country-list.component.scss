@@ -1,0 +1,15 @@
+:host {
+  h2 {
+    margin-top: 0;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+  }
+
+  label {
+    text-transform: uppercase;
+  }
+}

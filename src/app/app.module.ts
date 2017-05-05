@@ -1,3 +1,5 @@
+import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
+import { CountryDetailComponent } from 'app/pages/fields/countries/country-detail.component';
 import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
 import { SpeciesService } from 'app/services/species.service';
 import { ObserverListComponent } from 'app/pages/fields/observers/observer-list.component';
@@ -75,6 +77,8 @@ import { ObservationsService } from 'app/services/observations.service';
     SpeciesListComponent,
     CategoryListComponent,
     ActionBarComponent,
+    CountryDetailComponent,
+    CountryListComponent
   ],
   imports: [
     JsonApiModule,
