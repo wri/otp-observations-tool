@@ -10,11 +10,13 @@
     list-style: none;
 
     li {
+      font-size: $font-size-default;
       display: flex;
       height: 42px;
       flex-shrink: 0; // Required for the mobile
       margin-right: 10px;
       line-height: 42px;
+      text-transform: uppercase;
 
       &:last-of-type {
         margin-right: 0;
@@ -22,15 +24,16 @@
 
       &.-active {
         position: relative;
+        font-weight: $font-weight-bold;
 
         &:after {
           display: block;
           position: absolute;
           bottom: 0;
           left: 10px;
-          height: 7px;
+          height: 6px;
           width: calc(100% - 20px);
-          background-color: $black;
+          background-color: $primary-color;
           content: '';
         }
       }

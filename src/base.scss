@@ -4,8 +4,10 @@ html {
 
 body {
   font-family: 'Acumin Pro';
-  font-weight: normal;
-  font-style: normal;
+  font-weight: $font-weight-default;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: $dark-grey;
 }
 
 .wrapper {
