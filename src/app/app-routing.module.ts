@@ -1,3 +1,4 @@
+import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
 import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
 import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
 import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
@@ -23,7 +24,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
-import { CategoryListComponent } from 'app/pages/fields/categories/category-list-component';
+import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 
 
 const routes: Routes = [
@@ -81,6 +82,10 @@ const routes: Routes = [
           {
             path: 'categories',
             component: CategoryListComponent
+          },
+          {
+            path: 'categories/new',
+            component: CategoryDetailComponent
           },
           // --------------GOVERNMENTS-----------------
           {

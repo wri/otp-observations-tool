@@ -1,3 +1,5 @@
+import { CategoriesService } from 'app/services/categories.service';
+import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
 import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
 import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
 import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
@@ -17,7 +19,7 @@ import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
 import { SubCategoriesService } from 'app/services/sub-categories.service';
-import { CategoryListComponent } from 'app/pages/fields/categories/category-list-component';
+import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 import { DesktopHeaderComponent } from 'app/shared/desktop-header/desktop-header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
@@ -78,6 +80,7 @@ import { ObservationsService } from 'app/services/observations.service';
     SpeciesDetailComponent,
     SpeciesListComponent,
     CategoryListComponent,
+    CategoryDetailComponent,
     ActionBarComponent,
     CountryDetailComponent,
     CountryListComponent,
@@ -109,6 +112,7 @@ import { ObservationsService } from 'app/services/observations.service';
     OperatorsService,
     SpeciesService,
     LawsService,
+    CategoriesService,
     { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
   bootstrap: [AppComponent]
