@@ -15,7 +15,7 @@ export class CountriesService {
      * Return the list of all the countries
      * @returns {Promise<Country[]>}
      */
-    getCountries(): Promise<Country[]> {
+    getAll(): Promise<Country[]> {
         return this.datastoreService
           .query(Country, { page: { size: 10000 } })
           .toPromise();

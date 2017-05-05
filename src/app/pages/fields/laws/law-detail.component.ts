@@ -23,7 +23,7 @@ export class LawDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.countriesService.getCountries().then(
+    this.countriesService.getAll().then(
       data => {
          this.countries = data;
       }

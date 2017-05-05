@@ -78,7 +78,7 @@ export class ObservationDetailComponent implements OnInit {
 
   ngOnInit(): void {
     // ----- COUNTRIES ----
-    this.countriesService.getCountries().then(
+    this.countriesService.getAll().then(
       data => {
          this.countries = data;
       }

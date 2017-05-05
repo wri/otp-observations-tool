@@ -30,7 +30,7 @@ export class SpeciesDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.countriesService.getCountries().then(
+    this.countriesService.getAll().then(
       data => {
          this.countries = data;
          this.countries.forEach((value) => {
