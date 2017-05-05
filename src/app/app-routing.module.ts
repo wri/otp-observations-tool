@@ -97,6 +97,11 @@ const routes: Routes = [
             path: 'subcategories',
             component: SubcategoriesComponent,
             children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'operators'
+              },
               // ----------OPERATORS----------
               {
                 path: 'operators',

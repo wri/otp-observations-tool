@@ -9,16 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SubcategoriesComponent implements OnInit {
 
-  private navigationItems: NavigationItem[] = [];
+  private navigationItems: NavigationItem[] = [
+      { name: 'For Operators', url: 'operators' },
+      { name: 'For Governance', url: 'governance' }
+    ];
 
   constructor(
     private router: Router
   ) {
 
-    this.navigationItems = [
-      { name: 'FOR OPERATORS', url: 'operators' },
-      { name: 'FOR GOVERNANCE', url: 'governance' }
-    ];
   }
 
   ngOnInit(): void {
