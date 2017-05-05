@@ -9,7 +9,7 @@
     <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
           <label for="name">Name</label>
-          <input type="text" class="form-control" name="name" ngModel #name="ngModel" required />
+          <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
           <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
       </div>
       <div class="form-group">
@@ -37,15 +37,15 @@
       </div>
       <div class="form-group">
           <label for="concession">Concession</label>
-          <input type="text" class="form-control" name="concession" ngModel #concession="ngModel" />
+          <input id="concession" type="text" class="form-control" name="concession" ngModel #concession="ngModel" />
       </div>
       <div class="form-group">
           <label for="country_centroid">Country centroid</label>
-          <input type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
+          <input id="country_centroid" type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
       </div>
       <div class="form-group">
           <label for="active">Active</label>
-          <input type="checkbox" name="active" ngModel #active="ngModel" />
+          <input id="active" type="checkbox" name="active" ngModel #active="ngModel" />
       </div>
 
       <div class="form-group actions" *showItSizes="{min: 768}">

@@ -9,33 +9,33 @@
     <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
           <label for="name">Name</label>
-          <input type="text" class="form-control" name="name" ngModel #name="ngModel" required />
+          <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
           <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
       </div>
       <div class="form-group">
           <label for="region_name">Region name</label>
-          <input type="text" class="form-control" name="region_name" ngModel #region_name="ngModel" />
+          <input id="region_name" type="text" class="form-control" name="region_name" ngModel #region_name="ngModel" />
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !iso.valid }">
           <label for="iso">ISO</label>
-          <input type="text" class="form-control" name="iso" ngModel #iso="ngModel" required />
+          <input id="iso" type="text" class="form-control" name="iso" ngModel #iso="ngModel" required />
           <div *ngIf="f.submitted && !iso.valid" class="help-text">ISO is required</div>
       </div>
       <div class="form-group">
           <label for="region_iso">Region ISO</label>
-          <input type="text" class="form-control" name="region_iso" ngModel #region_iso="ngModel" />
+          <input id="region_iso" type="text" class="form-control" name="region_iso" ngModel #region_iso="ngModel" />
       </div>
       <div class="form-group">
           <label for="country_centroid">Country centroid</label>
-          <input type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
+          <input id="country_centroid" type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
       </div>
       <div class="form-group">
           <label for="region_centroid">Region centroid</label>
-          <input type="text" class="form-control" name="region_centroid" ngModel #region_centroid="ngModel" />
+          <input id="region_centroid" type="text" class="form-control" name="region_centroid" ngModel #region_centroid="ngModel" />
       </div>
       <div class="form-group">
           <label for="is_active">Available for observations?</label>
-          <input type="checkbox" name="is_active" ngModel #is_active="ngModel" />
+          <input id="is_active" type="checkbox" name="is_active" ngModel #is_active="ngModel" />
       </div>
 
       <div class="form-group actions" *showItSizes="{min: 768}">
