@@ -1,3 +1,8 @@
+import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
+import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
+import { AnnexOperatorListComponent } from 'app/pages/fields/subcategories/operators/annex-operator-list.component';
+import { AnnexOperatorDetailComponent } from 'app/pages/fields/subcategories/operators/annex-operator-detail.component';
+import { SubcategoriesComponent } from 'app/pages/fields/subcategories/subcategories.component';
 import { CategoriesService } from 'app/services/categories.service';
 import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
 import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
@@ -85,7 +90,12 @@ import { ObservationsService } from 'app/services/observations.service';
     CountryDetailComponent,
     CountryListComponent,
     OperatorDetailComponent,
-    OperatorListComponent
+    OperatorListComponent,
+    SubcategoriesComponent,
+    AnnexOperatorDetailComponent,
+    AnnexOperatorListComponent,
+    AnnexGovernanceDetailComponent,
+    AnnexGovernanceListComponent
   ],
   imports: [
     JsonApiModule,

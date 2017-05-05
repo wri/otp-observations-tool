@@ -1,3 +1,8 @@
+import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
+import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
+import { AnnexOperatorListComponent } from 'app/pages/fields/subcategories/operators/annex-operator-list.component';
+import { AnnexOperatorDetailComponent } from 'app/pages/fields/subcategories/operators/annex-operator-detail.component';
+import { SubcategoriesComponent } from 'app/pages/fields/subcategories/subcategories.component';
 import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
 import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
 import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
@@ -86,6 +91,31 @@ const routes: Routes = [
           {
             path: 'categories/new',
             component: CategoryDetailComponent
+          },
+          // --------------SUB-CATEGORIES--------------
+          {
+            path: 'subcategories',
+            component: SubcategoriesComponent,
+            children: [
+              // ----------OPERATORS----------
+              {
+                path: 'operators',
+                component: AnnexOperatorListComponent
+              },
+              {
+                path: 'operators/new',
+                component: AnnexOperatorDetailComponent
+              },
+              // ----------GOVERNANCE----------
+              {
+                path: 'governance',
+                component: AnnexGovernanceListComponent
+              },
+              {
+                path: 'governance/new',
+                component: AnnexGovernanceDetailComponent
+              },
+            ]
           },
           // --------------GOVERNMENTS-----------------
           {
