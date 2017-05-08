@@ -2,4 +2,18 @@
   display: block;
   margin-top: 20px;
   padding-bottom: 58px;
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+
+    button {
+      margin-left: 10px;
+    }
+  }
+
+  label {
+    text-transform: uppercase;
+  }
 }
