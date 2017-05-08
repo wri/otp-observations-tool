@@ -10,9 +10,9 @@
       <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
         <div class="form-group">
             <label for="type">TYPE
-              <select (change)="onTypeChange($event)" name="type" ngModel #type="ngModel" required>
-                 <option selected [value]="'operator'">Operator</option>
-                 <option [value]="'governance'">Governance</option>
+              <select (change)="onTypeChange($event)" name="observation_type" ngModel #observation_type="ngModel" required>
+                 <option selected [value]="'AnnexOperator'">Operator</option>
+                 <option [value]="'AnnexGovernance'">Governance</option>
               </select>
             </label>
             <p *ngIf="f.submitted && !type.valid" class="help-text">Please select a type</p>

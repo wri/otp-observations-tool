@@ -1,3 +1,4 @@
+import { ObservationsService } from 'app/services/observations.service';
 import { Severity } from './../../models/severity.model';
 import { Router } from '@angular/router';
 import { Operator } from 'app/models/operator.model';
@@ -42,6 +43,7 @@ export class ObservationDetailComponent implements OnInit {
     private governmentsService: GovernmentsService,
     private observersService: ObserversService,
     private operatorsService: OperatorsService,
+    private observationsService: ObservationsService,
     private router: Router,
     private http: Http) {
 
@@ -74,6 +76,25 @@ export class ObservationDetailComponent implements OnInit {
 
   onCancel(): void{
     this.router.navigate(['/private/observations']);
+  }
+  onSubmit(formValues): void{
+    const formattedDate = formValues.publication_date.formatted;
+    const valuesUpdated = formValues;
+    delete valuesUpdated.publication_date;
+    valuesUpdated.publication_date = formattedDate;
+
+    this.loading = true;
+    this.observationsService.createObservation(valuesUpdated).then(
+        data => {
+          alert('Observation created successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/observations']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
   }
 
   ngOnInit(): void {
@@ -111,7 +132,7 @@ export class ObservationDetailComponent implements OnInit {
 
   getSubcategory(value){
     if (this.governanceSelected) {
-      return value.governance_pillar;
+      return value.governance_problem;
     } else {
       return value.illegality;
     }

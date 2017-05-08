@@ -1,5 +1,6 @@
+import { environment } from './../../environments/environment';
+import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/toPromise';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Observation } from 'app/models/observation.model';
 
@@ -7,7 +8,8 @@ import { Observation } from 'app/models/observation.model';
 export class ObservationsService {
 
   constructor (
-    private datastoreService: DatastoreService
+    private datastoreService: DatastoreService,
+    private http: Http
   ) {}
 
   getAll(): Promise<Observation[]> {
@@ -18,6 +20,13 @@ export class ObservationsService {
       type: type,
       include: 'countries.name,governments'
     }).toPromise();
+  }
+
+  createObservation(formValues): Promise<any> {
+    const payload = { observation: formValues };
+    return this.http.post(`${environment.apiUrl}/observations`, payload)
+      .map(response => response.json())
+      .toPromise();
   }
 
 }
