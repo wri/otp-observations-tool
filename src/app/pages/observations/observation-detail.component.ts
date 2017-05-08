@@ -1,3 +1,4 @@
+import { Severity } from './../../models/severity.model';
 import { Router } from '@angular/router';
 import { Operator } from 'app/models/operator.model';
 import { OperatorsService } from 'app/services/operators.service';
@@ -29,9 +30,8 @@ export class ObservationDetailComponent implements OnInit {
   private governments: Government[];
   private observers: Observer[];
   private operators: Operator[];
-  private subCategoriesOperators: AnnexOperator[];
-  private subCategoriesGovernance: AnnexGovernance[];
   private subCategories: any;
+  private severities: Severity[];
   private dateOptions: DatePickerOptions;
   private type: String;
   private governanceSelected: boolean;
@@ -58,18 +58,18 @@ export class ObservationDetailComponent implements OnInit {
     if (this.type === 'operator') {
       this.subCategoriesService.getAllOperators().then(
         data => {
-          this.subCategoriesOperators = data;
+          this.subCategories = data;
         }
       );
     } else if(this.type === 'governance') {
       this.subCategoriesService.getAllGovernances().then(
         data => {
-          this.subCategoriesGovernance = data;
+          this.subCategories = data;
         }
       );
     }
 
-    console.log(this.type);
+    console.log('subcategories', this.subCategories);
   }
 
   onCancel(): void{
@@ -86,7 +86,7 @@ export class ObservationDetailComponent implements OnInit {
     // ----- SUB CATEGORIES ----
     this.subCategoriesService.getAllOperators().then(
       data => {
-        this.subCategoriesOperators = data;
+        this.subCategories = data;
       }
     );
     // ----- OBSERVERS ----
@@ -101,6 +101,20 @@ export class ObservationDetailComponent implements OnInit {
          this.operators = data;
       }
     );
+  }
+
+  onSubCategoryChange(value) {
+    this.severities = this.subCategories.find((val) => {
+      return val.id === value;
+    }).severities;
+  }
+
+  getSubcategory(value){
+    if (this.governanceSelected) {
+      return value.governance_pillar;
+    } else {
+      return value.illegality;
+    }
   }
 
 }
