@@ -46,4 +46,14 @@ export class ObservationListComponent implements OnInit {
   onDelete(id): void {
     this.router.navigate([`/private/observations/delete/${id}`]);
   }
+
+  getCategory(row): string {
+    if (row.annex_operator) {
+      return row.annex_operator.illegality;
+    } else if (row.annex_governance) {
+      return row.annex_governance.governance_pillar;
+    } else {
+      return '';
+    }
+  }
 }

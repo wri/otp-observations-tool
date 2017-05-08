@@ -1,8 +1,8 @@
-<otp-navigation [items]="navigationItems"></otp-navigation>
 <div class="content">
   <div>
     <a href="private/observations/new">New observation</a>
   </div>
+  <otp-navigation [items]="navigationItems"></otp-navigation>
   <ngx-datatable
     class="material"
     [rows]="rows"
@@ -11,12 +11,21 @@
     [selectionType]="'single'"
     *ngIf="rows"
     >
-    <ngx-datatable-column name="Date">
+    <ngx-datatable-column prop="publication_date" name="Date">
       <ng-template let-value="value" ngx-datatable-cell-template>
        {{value | date:'shortDate'}}
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="Details"></ngx-datatable-column>
+    <ngx-datatable-column prop="country.iso" name="Country"></ngx-datatable-column>
+    <ngx-datatable-column prop="operator.name" name="Operator"></ngx-datatable-column>
+    <ngx-datatable-column prop="government.government_entity" name="Forest Unit"></ngx-datatable-column>
+    <ngx-datatable-column name="Category">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+       {{getCategory(row)}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column prop="details" name="Observation"></ngx-datatable-column>
+    <ngx-datatable-column prop="severity.level" name="Severity"></ngx-datatable-column>
     <ngx-datatable-column name="Actions">
       <ng-template let-row="row" ngx-datatable-cell-template>
         <button (click)="onEdit(row.id)">EDIT</button>
