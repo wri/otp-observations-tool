@@ -15,10 +15,10 @@ export class GovernmentsService {
     }
 
     getAll(){
-        return this.datastoreService.query(Government).toPromise();
+      return this.datastoreService.query(Government).toPromise();
     }
 
-    getByCountry(country: Country){
-
+    getByCountry(countryId){
+      return this.datastoreService.query(Government, { country_id: countryId }).toPromise();
     }
 }

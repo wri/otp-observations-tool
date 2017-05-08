@@ -55,23 +55,21 @@ export class ObservationDetailComponent implements OnInit {
 
   onTypeChange(event): void{
     this.type = event.target.value;
-    this.governanceSelected = this.type === 'governance';
+    this.governanceSelected = this.type === 'AnnexGovernance';
 
-    if (this.type === 'operator') {
+    if (this.type === 'AnnexOperator') {
       this.subCategoriesService.getAllOperators().then(
         data => {
           this.subCategories = data;
         }
       );
-    } else if(this.type === 'governance') {
+    } else if(this.type === 'AnnexGovernance') {
       this.subCategoriesService.getAllGovernances().then(
         data => {
           this.subCategories = data;
         }
       );
     }
-
-    console.log('subcategories', this.subCategories);
   }
 
   onCancel(): void{
@@ -128,6 +126,15 @@ export class ObservationDetailComponent implements OnInit {
     this.severities = this.subCategories.find((val) => {
       return val.id === value;
     }).severities;
+  }
+
+  onCountryChange(value) {
+    this.governmentsService.getByCountry(value).then(
+      data => {
+         this.governments = data;
+         console.log(this.governments);
+      }
+    );;
   }
 
   getSubcategory(value){

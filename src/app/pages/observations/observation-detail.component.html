@@ -20,7 +20,7 @@
         <div class="white-card">
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
               <label for="country_id">Country
-                <select name="country_id" ngModel #country_id="ngModel" required>
+                <select (change)="onCountryChange(country_id.value)" name="country_id" ngModel #country_id="ngModel" required>
                   <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
                 </select>
               </label>
@@ -65,7 +65,7 @@
           <div *ngIf="governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
               <label for="government_id">Government Entity
                 <select name="government_id" ngModel #government_id="ngModel" required>
-                  <option *ngFor="let government of governments" [value]="severity.id">{{ government.government_entity }}</option>
+                  <option *ngFor="let government of governments" [value]="government.id">{{ government.government_entity }}</option>
                 </select>
               </label>
               <p *ngIf="f.submitted && !government_id.valid" class="help-text">Please select a government entity</p>
