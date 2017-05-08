@@ -14,7 +14,10 @@ export class ObservationsService {
     return this.datastoreService.query(Observation).toPromise();
   }
   getByType(type: String): Promise<Observation[]> {
-    return this.datastoreService.query(Observation, { type: type }).toPromise();
+    return this.datastoreService.query(Observation, {
+      type: type,
+      include: 'countries.name,governments'
+    }).toPromise();
   }
 
 }

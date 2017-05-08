@@ -69,7 +69,11 @@ const routes: Routes = [
             component: ObservationDetailComponent
           },
           {
-            path: ':id',
+            path: 'edit/:id',
+            component: ObservationDetailComponent
+          },
+          {
+            path: 'delete/:id',
             component: ObservationDetailComponent
           },
         ]

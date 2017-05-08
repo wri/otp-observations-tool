@@ -3,12 +3,25 @@
   <div>
     <a [routerLink]="[private/observations/new]">New observation</a>
   </div>
-  <ngx-datatable class="material" [rows]="rows" [rowHeight]="'auto'" *ngIf="rows">
+  <ngx-datatable
+    class="material"
+    [rows]="rows"
+    [rowHeight]="'auto'"
+    [selected]="selected"
+    [selectionType]="'single'"
+    *ngIf="rows"
+    >
     <ngx-datatable-column name="Date">
       <ng-template let-value="value" ngx-datatable-cell-template>
        {{value | date:'shortDate'}}
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Details"></ngx-datatable-column>
+    <ngx-datatable-column name="Actions">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <button (click)="onEdit(row.id)">EDIT</button>
+        <button (click)="onDelete(row.id)">DELETE</button>
+      </ng-template>
+    </ngx-datatable-column>
   </ngx-datatable>
 </div>

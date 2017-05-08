@@ -12,17 +12,16 @@ import { Tab } from 'app/shared/tabs/tabs.component';
 })
 export class ObservationListComponent implements OnInit {
 
-  observations: Observation[] = [];
+  private observations: Observation[] = [];
   private navigationItems: NavigationItem[] = [
       { name: 'For Operators', url: '/private/observations/operators' },
       { name: 'For Governance', url: '/private/observations/governance' }
     ];
+  private selected = [];
+  private editURL: string;
 
   private get rows () {
-    return this.observations.map(observation => ({
-      date: observation.publication_date,
-      details: observation.details
-    }));
+    return this.observations;
   }
 
   constructor(
@@ -39,6 +38,12 @@ export class ObservationListComponent implements OnInit {
       this.observationsService.getByType('governance')
         .then(observations => this.observations = observations);
     }
+  }
 
+  onEdit(id): void {
+    this.router.navigate([`/private/observations/edit/${id}`]);
+  }
+  onDelete(id): void {
+    this.router.navigate([`/private/observations/delete/${id}`]);
   }
 }
