@@ -1,6 +1,9 @@
 <div class="l-wrapper">
   <div class="c-container -j-between">
-    <otp-tabs [tabs]="tabs"></otp-tabs>
+    <div class="c-container -j-start">
+      <h2>Observations ({{rows.length}})</h2>
+      <otp-tabs [tabs]="tabs"></otp-tabs>
+    </div>
     <div class="c-button-container -j-end">
       <a class="c-button -primary" [routerLink]="[private/observations/new]">New observation</a>
     </div>

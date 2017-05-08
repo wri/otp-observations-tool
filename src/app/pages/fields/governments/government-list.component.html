@@ -1,9 +1,19 @@
-<button (click)="triggerNewGovernment()">
-  New Government Unit
-</button>
-<ngx-datatable class="material"
+
+<div class="c-container -j-between">
+  <h2>Government Units ({{governments.length}})</h2>
+  <div class="c-button-container -j-end">
+    <button (click)="triggerNewGovernment()" class="c-button -primary">
+      New Government Unit
+    </button>
+  </div>
+</div>
+
+<ngx-datatable class="wri"
   #table
-  [rows]="governments">
+  [rows]="governments"
+  columnMode="force"
+  headerHeight=false
+>
   <ngx-datatable-column prop="government_entity" name="Name">
   </ngx-datatable-column>
   <ngx-datatable-column prop="details" name="Details">

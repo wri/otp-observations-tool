@@ -1,6 +1,8 @@
 @import 'src/settings.scss';
 
 :host {
+  margin: 0 0 0 20px;
+  &:first-child { margin: 0; }
   ul {
     position: relative;
     display: flex;
