@@ -1,8 +1,9 @@
 <div class="l-wrapper">
-  <otp-tabs [tabs]="tabs"></otp-tabs>
+  <!-- <otp-tabs [tabs]="tabs"></otp-tabs> -->
   <div class="content">
-    <div>
-      <a [routerLink]="[private/observations/new]">New observation</a>
+    <h2>Observations ({{rows.length}})</h2>
+    <div class="c-button-container -j-end a-start">
+      <a class="c-button -primary" [routerLink]="[private/observations/new]">New observation</a>
     </div>
     <ngx-datatable
       class="material"

@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import 'src/settings.scss';
+@import 'src/settings';
 
 // NGX DATATABLE
 @import '~@swimlane/ngx-datatable/release/index.css';
@@ -53,6 +53,10 @@
 // @include foundation-float-classes;
 
 
-@import 'src/fonts.scss';
-@import 'src/base.scss';
-@import 'src/layout.scss';
+@import 'src/styles/fonts';
+@import 'src/styles/base';
+@import 'src/styles/layout';
+
+@import 'src/styles/components/button';
+@import 'src/styles/components/button-container';
+@import 'src/styles/components/form-group';
