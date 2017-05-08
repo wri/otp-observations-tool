@@ -1,6 +1,6 @@
+import { NavigationItem } from 'app/shared/navigation/navigation.component';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'app/services/auth.service';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { Tab } from 'app/shared/tabs/tabs.component';
@@ -13,10 +13,10 @@ import { Tab } from 'app/shared/tabs/tabs.component';
 export class ObservationListComponent implements OnInit {
 
   observations: Observation[] = [];
-  tabs: Tab[] = [
-    { id: 'operators', name: 'Observations on operators' },
-    { id: 'governance', name: 'Observations on governance' },
-  ];
+  private navigationItems: NavigationItem[] = [
+      { name: 'For Operators', url: 'operators' },
+      { name: 'For Governance', url: 'governance' }
+    ];
 
   private get rows () {
     return this.observations.map(observation => ({
@@ -26,7 +26,6 @@ export class ObservationListComponent implements OnInit {
   }
 
   constructor(
-    private auth: AuthService,
     private router: Router,
     private observationsService: ObservationsService
   ) {}

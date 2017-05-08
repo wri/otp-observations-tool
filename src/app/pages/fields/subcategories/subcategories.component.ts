@@ -25,7 +25,7 @@ export class SubcategoriesComponent implements OnInit {
   }
 
   onNavigationChange(event): void{
-
+    console.log(event);
   }
 
 

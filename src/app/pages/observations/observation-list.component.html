@@ -1,4 +1,4 @@
-<otp-tabs [tabs]="tabs"></otp-tabs>
+<otp-navigation [items]="navigationItems" (change)="onNavigationChange($event)"></otp-navigation>
 <div class="content">
   <div>
     <a [routerLink]="[private/observations/new]">New observation</a>

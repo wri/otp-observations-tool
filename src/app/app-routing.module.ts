@@ -60,6 +60,14 @@ const routes: Routes = [
         path: 'observations/new',
         component: ObservationDetailComponent
       },
+      {
+        path: 'observations/operators',
+        component: ObservationListComponent
+      },
+      {
+        path: 'observations/governance',
+        component: ObservationListComponent
+      },
       // ----------------USERS----------------------
       {
         path: 'users',
