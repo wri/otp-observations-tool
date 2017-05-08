@@ -14,8 +14,8 @@ export class ObservationListComponent implements OnInit {
 
   observations: Observation[] = [];
   tabs: Tab[] = [
-    { id: 'operators', name: 'Observations on operators' },
-    { id: 'governance', name: 'Observations on governance' },
+    { id: 'operators', name: 'Operators' },
+    { id: 'governance', name: 'Governance' },
   ];
 
   private get rows () {

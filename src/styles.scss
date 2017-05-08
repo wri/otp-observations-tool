@@ -3,7 +3,6 @@
 
 // NGX DATATABLE
 @import '~@swimlane/ngx-datatable/release/index.css';
-@import '~@swimlane/ngx-datatable/release/themes/material.css';
 @import '~@swimlane/ngx-datatable/release/assets/icons.css';
 
 // FOUNDATION 6
@@ -59,4 +58,6 @@
 
 @import 'src/styles/components/button';
 @import 'src/styles/components/button-container';
+@import 'src/styles/components/container';
 @import 'src/styles/components/form-group';
+@import 'src/styles/components/wri-table';

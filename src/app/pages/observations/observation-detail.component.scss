@@ -1,7 +1,5 @@
-@import 'src/settings.scss';
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 10px;
+:host {
+  display: block;
+  margin-top: 20px;
+  padding-bottom: 58px;
 }

@@ -1,24 +1,23 @@
 <div class="l-wrapper">
-  <!-- <otp-tabs [tabs]="tabs"></otp-tabs> -->
-  <div class="content">
-    <h2>Observations ({{rows.length}})</h2>
-    <div class="c-button-container -j-end a-start">
+  <div class="c-container -j-between">
+    <otp-tabs [tabs]="tabs"></otp-tabs>
+    <div class="c-button-container -j-end">
       <a class="c-button -primary" [routerLink]="[private/observations/new]">New observation</a>
     </div>
-    <ngx-datatable
-      class="material"
-      [rows]="rows"
-      [rowHeight]="'auto'"
-      columnMode="force"
-      headerHeight=false
-      *ngIf="rows"
-    >
-      <ngx-datatable-column name="Date" maxWidth=100>
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          {{value | date:'MM/dd/yy'}}
-        </ng-template>
-      </ngx-datatable-column>
-      <ngx-datatable-column name="Details"></ngx-datatable-column>
-    </ngx-datatable>
   </div>
+  <ngx-datatable
+    class="wri"
+    [rows]="rows"
+    [rowHeight]="'auto'"
+    columnMode="force"
+    headerHeight=false
+    *ngIf="rows"
+  >
+    <ngx-datatable-column name="Date" maxWidth=100>
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{value | date:'MM/dd/yy'}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Details"></ngx-datatable-column>
+  </ngx-datatable>
 </div>

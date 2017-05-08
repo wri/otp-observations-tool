@@ -1,13 +1,7 @@
-.c-button-container {
+.c-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin: 20px 0;
-
-  > * {
-    margin-left: 20px;
-    &:first-child { margin-left: 0; }
-  }
 
   // Justify
   &.-j-start { justify-content: flex-start; }

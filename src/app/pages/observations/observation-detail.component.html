@@ -1,13 +1,16 @@
 <div class="l-wrapper">
-  <div class="row collapse">
-    <div class="large-10 columns">
-      <h2>{{titleText}}</h2>
-    </div>
-  </div>
   <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
   <div class="row collapse">
     <div class="large-10 columns">
       <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+        <div class="c-container -j-between">
+          <h2>{{titleText}}</h2>
+          <div class="c-button-container -j-end form-group">
+            <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+            <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          </div>
+        </div>
+
         <div class="white-card">
           <div class="form-group">
               <label for="type">Type
