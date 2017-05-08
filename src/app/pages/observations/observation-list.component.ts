@@ -31,8 +31,14 @@ export class ObservationListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('params', this.router.url);
-    this.observationsService.getObservations()
-      .then(observations => this.observations = observations);
+    const url = this.router.url;
+    if (url.endsWith('operators')) {
+      this.observationsService.getByType('operator')
+        .then(observations => this.observations = observations);
+    } else if (url.endsWith('governance')) {
+      this.observationsService.getByType('governance')
+        .then(observations => this.observations = observations);
+    }
+
   }
 }

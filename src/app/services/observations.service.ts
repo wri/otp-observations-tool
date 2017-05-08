@@ -10,8 +10,11 @@ export class ObservationsService {
     private datastoreService: DatastoreService
   ) {}
 
-  getObservations(): Promise<Observation[]> {
+  getAll(): Promise<Observation[]> {
     return this.datastoreService.query(Observation).toPromise();
+  }
+  getByType(type: String): Promise<Observation[]> {
+    return this.datastoreService.query(Observation, { type: type }).toPromise();
   }
 
 }
