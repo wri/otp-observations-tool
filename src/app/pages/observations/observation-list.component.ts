@@ -14,8 +14,8 @@ export class ObservationListComponent implements OnInit {
 
   observations: Observation[] = [];
   private navigationItems: NavigationItem[] = [
-      { name: 'For Operators', url: 'operators' },
-      { name: 'For Governance', url: 'governance' }
+      { name: 'For Operators', url: '/private/observations/operators' },
+      { name: 'For Governance', url: '/private/observations/governance' }
     ];
 
   private get rows () {
@@ -31,6 +31,7 @@ export class ObservationListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('params', this.router.url);
     this.observationsService.getObservations()
       .then(observations => this.observations = observations);
   }
