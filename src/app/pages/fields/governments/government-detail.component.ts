@@ -1,3 +1,4 @@
+import { GovernmentsService } from 'app/services/governments.service';
 import { Router } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
@@ -12,9 +13,11 @@ export class GovernmentDetailComponent implements OnInit {
 
   private countries: Country[] = [];
   private titleText: String = 'New Government';
+  private loading: boolean = false;
 
   constructor(
     private countriesService: CountriesService,
+    private governmentsService: GovernmentsService,
     private router: Router
   ) {
 
@@ -33,7 +36,18 @@ export class GovernmentDetailComponent implements OnInit {
   }
 
   onSubmit(formValues):void {
-    console.log('submit!', formValues);
+    this.loading = true;
+    this.governmentsService.createGovernment(formValues).then(
+        data => {
+          alert('Government created successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/governments']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
   }
 
 
