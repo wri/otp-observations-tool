@@ -21,15 +21,6 @@
         </div>
 
         <div class="white-card">
-          <div class="form-group">
-              <label for="type">Type
-                <select (change)="onTypeChange($event)" name="type" ngModel #type="ngModel" required>
-                   <option selected [value]="'operator'">Operator</option>
-                   <option [value]="'governance'">Governance</option>
-                </select>
-              </label>
-              <p *ngIf="f.submitted && !type.valid" class="help-text">Please select a type</p>
-          </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
               <label for="country_id">Country
                 <select id="country_id" (change)="onCountryChange(country_id.value)" name="country_id" ngModel #country_id="ngModel" required>
