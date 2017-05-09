@@ -27,4 +27,5 @@ export class SubCategoriesService {
       return this.http.get(`${environment.apiUrl}/annex_governances`)
         .map(response => response.json()).toPromise();
     }
+
 }

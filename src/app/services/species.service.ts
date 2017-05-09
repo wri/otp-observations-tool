@@ -15,7 +15,7 @@ export class SpeciesService {
     }
 
     getAll(){
-        return this.datastoreService.query(Species, { page: { size: 10000 } }).toPromise();
+        return this.datastoreService.query(Species, { page: { size: 100 } }).toPromise();
     }
 
     createSpecies(formValues): Promise<any> {
