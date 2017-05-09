@@ -1,4 +1,4 @@
-<spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
+<spinner *ngIf="loading" [tickness]="1" [size]="20"></spinner>
 <div class="row collapse">
   <div class="large-10 columns">
     <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
