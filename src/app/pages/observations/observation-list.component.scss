@@ -1,9 +1,13 @@
+@import 'src/settings';
+
 :host {
   display: block;
   margin-top: 20px;
   padding-bottom: 58px;
 
-  otp-navigation {
-    margin-left: 20px;
+  @media screen and (min-width: $break-tablet) {
+    otp-navigation {
+      margin-left: 20px;
+    }
   }
 }
