@@ -1,3 +1,4 @@
+import { LawsService } from 'app/services/laws.service';
 import { Router } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
@@ -12,9 +13,11 @@ export class LawDetailComponent implements OnInit {
 
   private countries: Country[];
   private titleText: String = 'New Law';
+  private loading = false;
 
   constructor(
     private countriesService: CountriesService,
+    private lawsService: LawsService,
     private router: Router
   ) {
     this.countries = new Array<Country>();
@@ -33,7 +36,19 @@ export class LawDetailComponent implements OnInit {
   }
 
   onSubmit(formValues):void {
-    console.log('submit!', formValues);
+
+    this.loading = true;
+    this.lawsService.createLaw(formValues).then(
+        data => {
+          alert('Law created successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/laws']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
   }
 
 
