@@ -35,4 +35,9 @@ export class UsersService {
         .map(response => response.json())
         .toPromise();
     }
+
+    public deleteUser(user: User): Promise<any> {
+      return this.datastoreService.deleteRecord(User, user.id)
+        .toPromise();
+    }
 }

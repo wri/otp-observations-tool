@@ -84,11 +84,11 @@ const routes: Routes = [
         component: UserListComponent
       },
       {
-        path: 'users/:id/edit',
+        path: 'users/new',
         component: UserDetailComponent
       },
       {
-        path: 'users/new',
+        path: 'users/:id/edit',
         component: UserDetailComponent
       },
       // -------------FIELDS------------
