@@ -10,8 +10,8 @@ import { Component, OnInit } from '@angular/core';
 export class SubcategoriesComponent {
 
   private navigationItems: NavigationItem[] = [
-      { name: 'For Operators', url: 'operators' },
-      { name: 'For Governance', url: 'governance' }
+      { name: 'Operators', url: 'operators' },
+      { name: 'Governance', url: 'governance' }
     ];
 
   constructor(

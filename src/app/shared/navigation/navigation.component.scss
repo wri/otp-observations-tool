@@ -2,8 +2,11 @@
 @import 'src/styles/mixins.scss';
 
 :host {
+  display: block;
+  overflow: hidden;
 
   ul {
+    position: relative;
     display: flex;
     margin: 0;
     padding: 0;
@@ -48,22 +51,40 @@
     }
 
     &.-mini {
+      float: left;
+
+      &:after {
+        display: block;
+        position: absolute;
+        bottom: 1px;
+        left: 0;
+        height: 1px;
+        width: 100%;
+        background-color: #CCC;
+        content: '';
+      }
+
       li {
+        position: relative;
+        z-index: 1;
         height: 35px;
         line-height: 35px;
-        text-transform: uppercase;
         font-size: .8em;
-
-        button {
-          text-transform: uppercase;
-        }
+        text-transform: none;
 
         &.-active:after {
           height: 3px;
+          width: 100%;
+          left: 0;
         }
 
         &:not(.-active) {
           opacity: .6;
+        }
+
+        > a,
+        > button {
+          padding: 0;
         }
       }
     }
