@@ -30,8 +30,9 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authService.login(this.model.username, this.model.password)
       .then(() => this.router.navigate([this.returnUrl]))
-      .catch(() => {
+      .catch((error) => {
         alert('You entered a wrong username+password combination');
+        console.log(error);
         this.loading = false;
       });
     }

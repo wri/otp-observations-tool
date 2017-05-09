@@ -2,7 +2,7 @@
   <div class="c-container -j-between">
     <div class="c-container -j-start">
       <h2>Observations ({{rows.length}})</h2>
-      <otp-tabs [tabs]="tabs"></otp-tabs>
+      <otp-navigation [items]="navigationItems"></otp-navigation>
     </div>
     <div class="c-button-container -j-end">
       <a class="c-button -primary" [routerLink]="[private/observations/new]">New observation</a>
@@ -14,13 +14,30 @@
     [rowHeight]="'auto'"
     columnMode="force"
     headerHeight=false
+    [selected]="selected"
+    selectionType="single"
     *ngIf="rows"
   >
-    <ngx-datatable-column name="Date" maxWidth=100>
+    <ngx-datatable-column prop="publication_date" name="Date" maxWidth=100>
       <ng-template let-value="value" ngx-datatable-cell-template>
         {{value | date:'MM/dd/yy'}}
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="Details"></ngx-datatable-column>
+    <ngx-datatable-column prop="country.iso" name="Country"></ngx-datatable-column>
+    <ngx-datatable-column prop="operator.name" name="Operator"></ngx-datatable-column>
+    <ngx-datatable-column prop="government.government_entity" name="Forest Unit"></ngx-datatable-column>
+    <ngx-datatable-column name="Category">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+       {{getCategory(row)}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column prop="details" name="Observation"></ngx-datatable-column>
+    <ngx-datatable-column prop="severity.level" name="Severity"></ngx-datatable-column>
+    <ngx-datatable-column name="Actions">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <button (click)="onEdit(row.id)">EDIT</button>
+        <button (click)="onDelete(row)">DELETE</button>
+      </ng-template>
+    </ngx-datatable-column>
   </ngx-datatable>
 </div>

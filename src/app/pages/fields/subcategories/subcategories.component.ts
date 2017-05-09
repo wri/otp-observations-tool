@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './subcategories.component.html',
   styleUrls: ['./subcategories.component.scss']
 })
-export class SubcategoriesComponent implements OnInit {
+export class SubcategoriesComponent {
 
   private navigationItems: NavigationItem[] = [
       { name: 'For Operators', url: 'operators' },
@@ -19,15 +19,5 @@ export class SubcategoriesComponent implements OnInit {
   ) {
 
   }
-
-  ngOnInit(): void {
-
-  }
-
-  onNavigationChange(event): void{
-
-  }
-
-
 
 }

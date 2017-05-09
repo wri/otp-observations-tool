@@ -1,3 +1,5 @@
+import { ObservationsService } from 'app/services/observations.service';
+import { Severity } from './../../models/severity.model';
 import { Router } from '@angular/router';
 import { Operator } from 'app/models/operator.model';
 import { OperatorsService } from 'app/services/operators.service';
@@ -29,9 +31,8 @@ export class ObservationDetailComponent implements OnInit {
   private governments: Government[];
   private observers: Observer[];
   private operators: Operator[];
-  private subCategoriesOperators: AnnexOperator[];
-  private subCategoriesGovernance: AnnexGovernance[];
   private subCategories: any;
+  private severities: Severity[];
   private dateOptions: DatePickerOptions;
   private type: String;
   private governanceSelected: boolean;
@@ -42,6 +43,7 @@ export class ObservationDetailComponent implements OnInit {
     private governmentsService: GovernmentsService,
     private observersService: ObserversService,
     private operatorsService: OperatorsService,
+    private observationsService: ObservationsService,
     private router: Router,
     private http: Http) {
 
@@ -53,27 +55,44 @@ export class ObservationDetailComponent implements OnInit {
 
   onTypeChange(event): void{
     this.type = event.target.value;
-    this.governanceSelected = this.type === 'governance';
+    this.governanceSelected = this.type === 'AnnexGovernance';
 
-    if (this.type === 'operator') {
+    if (this.type === 'AnnexOperator') {
       this.subCategoriesService.getAllOperators().then(
         data => {
-          this.subCategoriesOperators = data;
+          this.subCategories = data;
         }
       );
-    } else if(this.type === 'governance') {
+    } else if(this.type === 'AnnexGovernance') {
       this.subCategoriesService.getAllGovernances().then(
         data => {
-          this.subCategoriesGovernance = data;
+          this.subCategories = data;
         }
       );
     }
-
-    console.log(this.type);
   }
 
   onCancel(): void{
     this.router.navigate(['/private/observations']);
+  }
+  onSubmit(formValues): void{
+    const formattedDate = formValues.publication_date.formatted;
+    const valuesUpdated = formValues;
+    delete valuesUpdated.publication_date;
+    valuesUpdated.publication_date = formattedDate;
+
+    this.loading = true;
+    this.observationsService.createObservation(valuesUpdated).then(
+        data => {
+          alert('Observation created successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/observations']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
   }
 
   ngOnInit(): void {
@@ -86,7 +105,7 @@ export class ObservationDetailComponent implements OnInit {
     // ----- SUB CATEGORIES ----
     this.subCategoriesService.getAllOperators().then(
       data => {
-        this.subCategoriesOperators = data;
+        this.subCategories = data;
       }
     );
     // ----- OBSERVERS ----
@@ -101,6 +120,28 @@ export class ObservationDetailComponent implements OnInit {
          this.operators = data;
       }
     );
+  }
+
+  onSubCategoryChange(value) {
+    this.severities = this.subCategories.find((val) => {
+      return val.id === value;
+    }).severities;
+  }
+
+  onCountryChange(value) {
+    this.governmentsService.getByCountry(value).then(
+      data => {
+         this.governments = data;
+      }
+    );;
+  }
+
+  getSubcategory(value){
+    if (this.governanceSelected) {
+      return value.governance_problem;
+    } else {
+      return value.illegality;
+    }
   }
 
 }

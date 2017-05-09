@@ -49,16 +49,34 @@ const routes: Routes = [
     children: [
       // -------------OBSERVATIONS------------------
       {
-        path: 'observations/:id',
-        component: ObservationDetailComponent
-      },
-      {
         path: 'observations',
-        component: ObservationListComponent
-      },
-      {
-        path: 'observations/new',
-        component: ObservationDetailComponent
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'operators'
+          },
+          {
+            path: 'operators',
+            component: ObservationListComponent
+          },
+          {
+            path: 'governance',
+            component: ObservationListComponent
+          },
+          {
+            path: 'new',
+            component: ObservationDetailComponent
+          },
+          {
+            path: 'edit/:id',
+            component: ObservationDetailComponent
+          },
+          {
+            path: 'delete/:id',
+            component: ObservationDetailComponent
+          },
+        ]
       },
       // ----------------USERS----------------------
       {
