@@ -54,6 +54,11 @@ export class ObservationListComponent implements OnInit {
     }
   }
 
+  getOperator(row): string{
+    console.log('row', row);
+    return '';
+  }
+
   getCategory(row): string {
     if (row.annex_operator) {
       return row.annex_operator.illegality;

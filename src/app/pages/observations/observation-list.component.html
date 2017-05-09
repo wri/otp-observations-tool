@@ -25,8 +25,11 @@
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column prop="country.iso" name="Country"></ngx-datatable-column>
-    <ngx-datatable-column prop="operator.name" name="Operator"></ngx-datatable-column>
-    <ngx-datatable-column prop="government.government_entity" name="Forest Unit"></ngx-datatable-column>
+    <ngx-datatable-column name="Operator">
+       <ng-template let-row="row" ngx-datatable-cell-template>
+       {{getOperator(row)}}
+      </ng-template>
+    </ngx-datatable-column>
     <ngx-datatable-column name="Category">
       <ng-template let-row="row" ngx-datatable-cell-template>
        {{getCategory(row)}}
