@@ -2,7 +2,10 @@
   <div class="c-container -j-between">
     <div class="c-container -j-start">
       <h2>Observations ({{rows.length}})</h2>
-      <otp-navigation [items]="navigationItems"></otp-navigation>
+      <otp-navigation
+        layout="mini"
+        [items]="navigationItems"
+      ></otp-navigation>
     </div>
     <div class="c-button-container -j-end">
       <a class="c-button -primary" [routerLink]="['../new']">New observation</a>
