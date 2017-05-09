@@ -16,6 +16,7 @@ export class GovernmentListComponent implements OnInit {
     private router: Router,
     private governmentsService: GovernmentsService
   ) {
+    this.governments = [];
   }
 
   ngOnInit(): void {

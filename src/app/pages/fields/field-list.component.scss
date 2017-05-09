@@ -1,14 +1,9 @@
 @import 'src/settings.scss';
 
 :host {
-
-  > .wrapper {
-    @media screen and (min-width: $break-tablet) {
-      display: flex;
-      justify-content: space-between;
-      padding-top: 30px;
-    }
-  }
+  display: block;
+  margin-top: 20px;
+  padding-bottom: 58px;
 
   > .mobile-navigation {
     margin-bottom: 35px;

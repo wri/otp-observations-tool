@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'src/settings';
 
 // NGX DATATABLE
 @import '~@swimlane/ngx-datatable/release/index.css';
-@import '~@swimlane/ngx-datatable/release/themes/material.css';
 @import '~@swimlane/ngx-datatable/release/assets/icons.css';
 
 // FOUNDATION 6
@@ -52,18 +52,12 @@
 // @include foundation-float-classes;
 
 
-@import 'src/settings.scss';
+@import 'src/styles/fonts';
+@import 'src/styles/base';
+@import 'src/styles/layout';
 
-html {
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-.wrapper {
-  margin: 0 auto;
-  padding: 0 10px;
-  max-width: $body-max-width;
-
-  @media screen and (min-width: $break-mobile) {
-    padding: 0 20px;
-  }
-}
+@import 'src/styles/components/button';
+@import 'src/styles/components/button-container';
+@import 'src/styles/components/container';
+@import 'src/styles/components/form-group';
+@import 'src/styles/components/wri-table';

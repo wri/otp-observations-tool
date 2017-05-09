@@ -1,9 +1,17 @@
-<button (click)="triggerNewSpecies()">
-  New species
-</button>
-<ngx-datatable class="material"
+<div class="c-container -j-between">
+  <h2>Species ({{species.length}})</h2>
+  <div class="c-button-container -j-end">
+    <button (click)="triggerNewSpecies()" class="c-button -primary">
+      New species
+    </button>
+  </div>
+</div>
+<ngx-datatable class="wri"
   #table
-  [rows]="species">
+  [rows]="species"
+  columnMode="force"
+  headerHeight=false
+>
   <ngx-datatable-column prop="name" name="Name">
   </ngx-datatable-column>
   <ngx-datatable-column prop="species_class" name="Species Class">

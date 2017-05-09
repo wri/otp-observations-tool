@@ -1,0 +1,15 @@
+// TODO: change the form-group to c-form-group
+.form-group {
+  label {
+    font-size: $font-size-default;
+    font-weight: $font-weight-default;
+    text-transform: uppercase;
+  }
+
+  .help-text {
+    margin: -0.5rem 0 1rem;
+    font-size: 0.8125rem;
+    font-style: italic;
+    color: $color-error;
+  }
+}

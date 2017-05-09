@@ -16,6 +16,7 @@ export class OperatorListComponent implements OnInit {
     private operatorsService: OperatorsService,
     private router: Router
   ) {
+    this.operators = [];
   }
 
   ngOnInit(): void {

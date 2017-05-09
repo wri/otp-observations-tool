@@ -12,10 +12,11 @@ import { Tab } from 'app/shared/tabs/tabs.component';
 })
 export class ObservationListComponent implements OnInit {
 
+
   private observations: Observation[] = [];
   private navigationItems: NavigationItem[] = [
-      { name: 'For Operators', url: '/private/observations/operators' },
-      { name: 'For Governance', url: '/private/observations/governance' }
+      { name: 'Operators', url: '/private/observations/operators' },
+      { name: 'Governance', url: '/private/observations/governance' }
     ];
   private selected = [];
   private editURL: string;

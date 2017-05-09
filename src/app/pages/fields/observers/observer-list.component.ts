@@ -16,6 +16,7 @@ export class ObserverListComponent implements OnInit {
     private observersService: ObserversService,
     private router: Router
   ) {
+    this.observers = [];
   }
 
   ngOnInit(): void {

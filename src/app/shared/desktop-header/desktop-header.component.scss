@@ -2,12 +2,13 @@
 
 :host {
   display: block;
-  background: $light-grey;
-  border-bottom: 1px solid $black;
+  background: $white;
+  border-bottom: 1px solid $lighter-grey;
 
   h1 {
+    font-size: $font-size-huge;
+    font-weight: $font-weight-thin;
     margin: 0;
-    font-weight: 400;
   }
 
   .menu {

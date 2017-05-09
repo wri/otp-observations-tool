@@ -1,0 +1,41 @@
+.c-button {
+  display: inline-block;
+  text-align: center;
+  line-height: 1;
+  font-size: $font-size-default;
+  transition: all .1s linear;
+  align-items: center;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 12px 20px;
+  border-width: 1px;
+  border-style: solid;
+  text-decoration: none;
+  cursor: pointer;
+
+  &.-primary {
+    border-color: $color-primary;
+    color: $white;
+    background: $color-primary;
+
+    &:hover {
+      background: darken($color-primary, 10%);
+    }
+  }
+
+  &.-secondary {
+    border-color: $color-primary;
+    color: $dark-grey;
+    background: $light-grey;
+
+    &:hover {
+      background: darken($light-grey, 10%);
+    }
+  }
+
+
+  &.-disabled {
+    pointer-events: none;
+    opacity: .4;
+  }
+}

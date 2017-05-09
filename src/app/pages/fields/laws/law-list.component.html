@@ -1,9 +1,18 @@
-<button (click)="triggerNewLaw()">
-  New law
-</button>
-<ngx-datatable class="material"
+<div class="c-container -j-between">
+  <h2>Laws ({{laws.length}})</h2>
+  <div class="c-button-container -j-end">
+    <button (click)="triggerNewLaw()" class="c-button -primary">
+      New law
+    </button>
+  </div>
+</div>
+
+<ngx-datatable class="wri"
   #table
-  [rows]="laws">
+  [rows]="laws"
+  columnMode="force"
+  headerHeight=false
+>
   <ngx-datatable-column prop="legal_reference" name="Legal Reference">
   </ngx-datatable-column>
   <ngx-datatable-column prop="legal_penalty" name="Legal Penalty">

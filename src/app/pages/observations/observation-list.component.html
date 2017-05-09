@@ -1,19 +1,26 @@
-<div class="content">
-  <div>
-    <a href="private/observations/new">New observation</a>
+<div class="l-wrapper">
+  <div class="c-container -j-between">
+    <div class="c-container -j-start">
+      <h2>Observations ({{rows.length}})</h2>
+      <otp-navigation [items]="navigationItems"></otp-navigation>
+    </div>
+    <div class="c-button-container -j-end">
+      <a class="c-button -primary" [routerLink]="[private/observations/new]">New observation</a>
+    </div>
   </div>
-  <otp-navigation [items]="navigationItems"></otp-navigation>
   <ngx-datatable
-    class="material"
+    class="wri"
     [rows]="rows"
-    rowHeight="auto"
+    [rowHeight]="'auto'"
+    columnMode="force"
+    headerHeight=false
     [selected]="selected"
     selectionType="single"
     *ngIf="rows"
-    >
-    <ngx-datatable-column prop="publication_date" name="Date">
+  >
+    <ngx-datatable-column prop="publication_date" name="Date" maxWidth=100>
       <ng-template let-value="value" ngx-datatable-cell-template>
-       {{value | date:'shortDate'}}
+        {{value | date:'MM/dd/yy'}}
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column prop="country.iso" name="Country"></ngx-datatable-column>

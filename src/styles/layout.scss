@@ -1,0 +1,9 @@
+.l-wrapper {
+  margin: 0 auto;
+  padding: 0 10px;
+  max-width: $body-max-width;
+
+  @media screen and (min-width: $break-mobile) {
+    padding: 0 20px;
+  }
+}

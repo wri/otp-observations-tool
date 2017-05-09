@@ -16,6 +16,7 @@ export class AnnexOperatorListComponent implements OnInit {
     private subCategoriesService: SubCategoriesService,
     private router: Router
   ) {
+    this.annexOperators = [];
   }
 
   ngOnInit(): void {

@@ -1,19 +1,25 @@
-<div>
-  <h1> Users </h1>
-  <button (click)="triggerNewUser()">
-    New user
-  </button>
-  <ngx-datatable class="material"
+<div class="l-wrapper">
+  <div class="c-container -j-between">
+    <h2>Users ({{users.length}})</h2>
+    <div class="c-button-container -j-end">
+      <button (click)="triggerNewUser()" class="c-button -primary">
+        New user
+      </button>
+    </div>
+  </div>
+
+  <ngx-datatable
+    class="wri"
     #table
     [rows]="users"
-    [columns]="columns">
-    <ngx-datatable-column name="Name">
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Nickname">
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Email">
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Actions">
+    [columns]="columns"
+    columnMode="force"
+    headerHeight=false
+  >
+    <ngx-datatable-column name="Name"></ngx-datatable-column>
+    <ngx-datatable-column name="Nickname"></ngx-datatable-column>
+    <ngx-datatable-column name="Email"></ngx-datatable-column>
+    <ngx-datatable-column name="Actions" maxWidth=150>
       <ng-template let-value="value" ngx-datatable-cell-template>
         <a href="/users/edit">EDIT</a>
         <a href="/users/delete">DELETE</a>

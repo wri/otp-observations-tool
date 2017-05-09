@@ -1,9 +1,17 @@
-<button (click)="triggerNewObserver()">
-  New Observer
-</button>
-<ngx-datatable class="material"
+<div class="c-container -j-between">
+  <h2>Monitors ({{observers.length}})</h2>
+  <div class="c-button-container -j-end">
+    <button (click)="triggerNewObserver()" class="c-button -primary">
+      New Monitor
+    </button>
+  </div>
+</div>
+<ngx-datatable class="wri"
   #table
-  [rows]="observers">
+  [rows]="observers"
+  columnMode="force"
+  headerHeight=false
+>
   <ngx-datatable-column prop="publication_date" name="Date">
   </ngx-datatable-column>
   <ngx-datatable-column prop="name" name="Name">

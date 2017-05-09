@@ -24,7 +24,7 @@ export class UserListComponent implements OnInit {
     private userService: UsersService,
     private router: Router
     ) {
-
+      this.users = [];
   }
 
   private triggerLogout(): void{

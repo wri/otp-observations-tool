@@ -16,6 +16,7 @@ export class CategoryListComponent implements OnInit {
     private categoriesService: CategoriesService,
     private router: Router
   ) {
+    this.categories = [];
   }
 
   ngOnInit(): void {

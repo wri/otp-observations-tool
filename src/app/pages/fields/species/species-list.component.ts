@@ -17,6 +17,7 @@ export class SpeciesListComponent implements OnInit {
     private speciesService: SpeciesService,
     private router: Router
   ) {
+    this.species = [];
   }
 
   ngOnInit(): void {

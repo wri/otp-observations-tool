@@ -16,6 +16,7 @@ export class AnnexGovernanceListComponent implements OnInit {
     private subCategoriesService: SubCategoriesService,
     private router: Router
   ) {
+    this.annexGovernances = [];
   }
 
   ngOnInit(): void {

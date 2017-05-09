@@ -1,0 +1,17 @@
+.c-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  // Justify
+  &.-j-start { justify-content: flex-start; }
+  &.-j-end { justify-content: flex-end; }
+  &.-j-center { justify-content: center; }
+  &.-j-between { justify-content: space-between; }
+  &.-j-around { justify-content: space-around; }
+
+  // Align
+  &.-a-start { align-items: flex-start; }
+  &.-a-end { align-items: flex-end; }
+  &.-a-center { align-items: center; }
+}

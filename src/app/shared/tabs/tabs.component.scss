@@ -1,41 +1,55 @@
-:host {
+@import 'src/settings.scss';
 
+:host {
+  margin: 0 0 0 20px;
+  &:first-child { margin: 0; }
   ul {
+    position: relative;
     display: flex;
-    height: 50px;
     align-items: stretch;
     margin: 0;
     padding: 0;
     list-style: none;
 
+    &:after {
+      display: block;
+      position: absolute;
+      bottom: 1px;
+      left: 0;
+      height: 1px;
+      width: 100%;
+      background-color: #CCC;
+      content: '';
+    }
+
+
     li {
+      position: relative;
+      z-index: 1;
       display: flex;
       justify-content: center;
       align-items:  center;
       width: 100%;
-      padding: 0 10px;
+      padding: 10px;
       text-align: center;
-      border: 1px solid transparent;
-      border-bottom: 1px solid grey;
-      text-transform: uppercase;
-      font-size: .75em;
+      font-size: $font-size-default;
       line-height: 1;
       cursor: pointer;
+      outline: none;
 
       &.active {
-        border-top: 1px solid grey;
-        border-right: 1px solid grey;
-        border-left: 1px solid grey;
-        border-bottom-color: transparent;
-        background-color: #F4F4F4;
-      }
+        font-weight: $font-weight-bold;
 
-      &:first-of-type {
-        border-left: 0;
-      }
-
-      &:last-of-type {
-        border-right: 0;
+        &:after {
+          display: block;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 3px;
+          width: 100%;
+          background-color: $color-primary;
+          content: '';
+        }
       }
     }
   }

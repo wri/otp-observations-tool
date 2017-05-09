@@ -16,6 +16,7 @@ export class LawListComponent implements OnInit {
     private lawsService: LawsService,
     private router: Router
   ) {
+    this.laws = [];
   }
 
   ngOnInit(): void {
