@@ -11,8 +11,8 @@
         <div class="form-group">
             <label for="observation_type">TYPE
               <select id="observation_type" (change)="onTypeChange($event)" name="observation_type" ngModel #observation_type="ngModel" required>
-                 <option selected [value]="'AnnexOperator'">Operator</option>
-                 <option [value]="'AnnexGovernance'">Governance</option>
+                 <option selected value="AnnexOperator">Operator</option>
+                 <option value="AnnexGovernance">Governance</option>
               </select>
             </label>
             <p *ngIf="f.submitted && !type.valid" class="help-text">Please select a type</p>

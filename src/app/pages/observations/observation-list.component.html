@@ -6,9 +6,9 @@
   <ngx-datatable
     class="material"
     [rows]="rows"
-    [rowHeight]="'auto'"
+    rowHeight="auto"
     [selected]="selected"
-    [selectionType]="'single'"
+    selectionType="single"
     *ngIf="rows"
     >
     <ngx-datatable-column prop="publication_date" name="Date">

@@ -29,4 +29,8 @@ export class ObservationsService {
       .toPromise();
   }
 
+  deleteObservationWithId(id): void{
+
+  }
+
 }

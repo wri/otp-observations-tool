@@ -132,7 +132,6 @@ export class ObservationDetailComponent implements OnInit {
     this.governmentsService.getByCountry(value).then(
       data => {
          this.governments = data;
-         console.log(this.governments);
       }
     );;
   }
