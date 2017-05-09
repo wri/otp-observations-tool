@@ -91,10 +91,14 @@
 
     &.-vertical {
       flex-direction: column;
+      margin: 20px 0 0;
 
       li {
+        text-transform: none;
+        font-size: $font-size-big;
+
         &.-active {
-          font-weight: 700;
+          font-weight: $font-weight-bold;
 
           &:after {
             @include arrow(7px, 2px, $black, right);
@@ -104,6 +108,8 @@
             left: -8px;
             background-color: transparent;
           }
+
+          a { color: $color-primary; }
         }
       }
     }
