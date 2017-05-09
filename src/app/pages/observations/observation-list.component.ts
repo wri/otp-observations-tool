@@ -45,7 +45,11 @@ export class ObservationListComponent implements OnInit {
   }
   onDelete(row): void {
     if(confirm(`Are you sure to delete the observation with details: ${row.details}`)) {
-      this.observationsService.deleteObservationWithId(row.id);
+      this.observationsService.deleteObservationWithId(row.id).then(
+        data => {
+          alert(data.messages[0].title);
+          this.ngOnInit();
+        });
     }
   }
 

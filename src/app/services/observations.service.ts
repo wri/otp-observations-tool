@@ -29,8 +29,10 @@ export class ObservationsService {
       .toPromise();
   }
 
-  deleteObservationWithId(id): void{
-
+  deleteObservationWithId(id): Promise<any>{
+    return this.http.delete(`${environment.apiUrl}/observations/${id}`)
+      .map(response => response.json())
+      .toPromise();;
   }
 
 }
