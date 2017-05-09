@@ -1,5 +1,18 @@
-import { ObserverListComponent } from './pages/fields/observers/observer-list.component';
-import { LawsService } from './services/laws.service';
+import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
+import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
+import { AnnexOperatorListComponent } from 'app/pages/fields/subcategories/operators/annex-operator-list.component';
+import { AnnexOperatorDetailComponent } from 'app/pages/fields/subcategories/operators/annex-operator-detail.component';
+import { SubcategoriesComponent } from 'app/pages/fields/subcategories/subcategories.component';
+import { CategoriesService } from 'app/services/categories.service';
+import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
+import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
+import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
+import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
+import { CountryDetailComponent } from 'app/pages/fields/countries/country-detail.component';
+import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
+import { SpeciesService } from 'app/services/species.service';
+import { ObserverListComponent } from 'app/pages/fields/observers/observer-list.component';
+import { LawsService } from 'app/services/laws.service';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { ActionBarComponent } from 'app/shared/action-bar/action-bar.component';
 import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
@@ -11,7 +24,7 @@ import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
 import { SubCategoriesService } from 'app/services/sub-categories.service';
-import { CategoryListComponent } from './pages/fields/categories/category-list-component';
+import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 import { DesktopHeaderComponent } from 'app/shared/desktop-header/desktop-header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
@@ -70,8 +83,19 @@ import { ObservationsService } from 'app/services/observations.service';
     ObserverDetailComponent,
     ObserverListComponent,
     SpeciesDetailComponent,
+    SpeciesListComponent,
     CategoryListComponent,
+    CategoryDetailComponent,
     ActionBarComponent,
+    CountryDetailComponent,
+    CountryListComponent,
+    OperatorDetailComponent,
+    OperatorListComponent,
+    SubcategoriesComponent,
+    AnnexOperatorDetailComponent,
+    AnnexOperatorListComponent,
+    AnnexGovernanceDetailComponent,
+    AnnexGovernanceListComponent
   ],
   imports: [
     JsonApiModule,
@@ -96,7 +120,9 @@ import { ObservationsService } from 'app/services/observations.service';
     SubCategoriesService,
     ObserversService,
     OperatorsService,
+    SpeciesService,
     LawsService,
+    CategoriesService,
     { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
   bootstrap: [AppComponent]

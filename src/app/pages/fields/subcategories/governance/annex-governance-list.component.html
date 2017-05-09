@@ -1,0 +1,11 @@
+<button (click)="triggerNewAnnexGovernance()">
+  New Annex Governance
+</button>
+<ngx-datatable class="material"
+  #table
+  [rows]="annexGovernances">
+  <ngx-datatable-column prop="governance_pillar" name="Governance Pillar">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="governance_problem" name="Governance Problem">
+  </ngx-datatable-column>
+</ngx-datatable>

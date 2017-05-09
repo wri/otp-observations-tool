@@ -32,7 +32,7 @@ export class UserListComponent implements OnInit {
   }
 
   private triggerNewUser(): void{
-    this.router.navigate(['user/new']);
+    this.router.navigate(['private/users/new']);
   }
 
 

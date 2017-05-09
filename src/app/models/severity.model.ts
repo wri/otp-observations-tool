@@ -6,5 +6,6 @@ import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany } from 'angular2-j
 export class Severity extends JsonApiModel {
 
   @Attribute() level: number;
+  @Attribute() details: string;
 
 }

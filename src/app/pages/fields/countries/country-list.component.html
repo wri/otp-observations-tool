@@ -1,0 +1,15 @@
+<button (click)="triggerNewCountry()">
+  New Country
+</button>
+<ngx-datatable class="material"
+  #table
+  [rows]="countries">
+  <ngx-datatable-column prop="name" name="Name">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="iso" name="ISO">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="region_name" name="Region Name">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="is_active" name="Active">
+  </ngx-datatable-column>
+</ngx-datatable>

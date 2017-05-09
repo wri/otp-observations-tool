@@ -1,0 +1,15 @@
+<button (click)="triggerNewOperator()">
+  New Operator
+</button>
+<ngx-datatable class="material"
+  #table
+  [rows]="operators">
+  <ngx-datatable-column prop="name" name="Name">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="operator_type" name="Type">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="concession" name="Concession">
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="is_active" name="Active">
+  </ngx-datatable-column>
+</ngx-datatable>

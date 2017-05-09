@@ -12,7 +12,7 @@
 
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !legal_reference.valid }">
           <label for="legal_reference">Legal reference</label>
-          <input type="text" class="form-control" name="legal_reference" ngModel #legal_reference="ngModel" required />
+          <input id="legal_reference" type="text" class="form-control" name="legal_reference" ngModel #legal_reference="ngModel" required />
           <div *ngIf="f.submitted && !legal_reference.valid" class="help-text">Legal reference is required</div>
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
@@ -25,11 +25,11 @@
       </div>
       <div class="form-group">
           <label for="vpa_indicator">VPA indicator</label>
-          <input type="text" class="form-control" name="vpa_indicator" ngModel #vpa_indicator="ngModel" />
+          <input id="vpa_indicator" type="text" class="form-control" name="vpa_indicator" ngModel #vpa_indicator="ngModel" />
       </div>
       <div class="form-group">
           <label for="legal_penalty">Legal penalty</label>
-          <input type="text" class="form-control" name="legal_penalty" ngModel #legal_penalty="ngModel" />
+          <input id="legal_penalty" type="text" class="form-control" name="legal_penalty" ngModel #legal_penalty="ngModel" />
       </div>
 
       <div class="c-button-container -j-end form-group">

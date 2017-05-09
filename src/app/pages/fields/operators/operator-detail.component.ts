@@ -4,20 +4,19 @@ import { CountriesService } from 'app/services/countries.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'otp-government-detail',
-  templateUrl: './government-detail.component.html',
-  styleUrls: ['./government-detail.component.scss']
+  selector: 'otp-operator-detail',
+  templateUrl: './operator-detail.component.html',
+  styleUrls: ['./operator-detail.component.scss']
 })
-export class GovernmentDetailComponent implements OnInit {
+export class OperatorDetailComponent implements OnInit {
 
   private countries: Country[] = [];
-  private titleText: String = 'New Government';
+  private titleText: String = 'New Operator';
 
   constructor(
     private countriesService: CountriesService,
     private router: Router
   ) {
-
   }
 
   ngOnInit(): void {
@@ -29,7 +28,7 @@ export class GovernmentDetailComponent implements OnInit {
   }
 
   onCancel(): void{
-    this.router.navigate(['/private/fields/governments']);
+    this.router.navigate(['/private/fields/operators']);
   }
 
   onSubmit(formValues):void {

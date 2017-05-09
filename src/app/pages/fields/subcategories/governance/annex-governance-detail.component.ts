@@ -4,14 +4,14 @@ import { CountriesService } from 'app/services/countries.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'otp-government-detail',
-  templateUrl: './government-detail.component.html',
-  styleUrls: ['./government-detail.component.scss']
+  selector: 'otp-annex-governance-detail',
+  templateUrl: './annex-governance-detail.component.html',
+  styleUrls: ['./annex-governance-detail.component.scss']
 })
-export class GovernmentDetailComponent implements OnInit {
+export class AnnexGovernanceDetailComponent implements OnInit {
 
   private countries: Country[] = [];
-  private titleText: String = 'New Government';
+  private titleText: String = 'New Annex Governance';
 
   constructor(
     private countriesService: CountriesService,
@@ -29,7 +29,7 @@ export class GovernmentDetailComponent implements OnInit {
   }
 
   onCancel(): void{
-    this.router.navigate(['/private/fields/governments']);
+    this.router.navigate(['/private/fields/subcategories/governance']);
   }
 
   onSubmit(formValues):void {

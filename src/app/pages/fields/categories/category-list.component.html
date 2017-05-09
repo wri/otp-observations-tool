@@ -1,0 +1,9 @@
+<button (click)="triggerNewCategory()">
+  New Category
+</button>
+<ngx-datatable class="material"
+  #table
+  [rows]="categories">
+  <ngx-datatable-column prop="name" name="Name">
+  </ngx-datatable-column>
+</ngx-datatable>
