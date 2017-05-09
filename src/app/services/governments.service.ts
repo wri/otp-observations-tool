@@ -15,10 +15,17 @@ export class GovernmentsService {
     }
 
     getAll(){
-      return this.datastoreService.query(Government).toPromise();
+      return this.datastoreService.query(Government, { page: { size: 1000 } }).toPromise();
     }
 
     getByCountry(countryId){
       return this.datastoreService.query(Government, { country_id: countryId }).toPromise();
+    }
+
+    createGovernment(formValues): Promise<any> {
+      const payload = { government: formValues };
+      return this.http.post(`${environment.apiUrl}/governments`, payload)
+        .map(response => response.json())
+        .toPromise();
     }
 }

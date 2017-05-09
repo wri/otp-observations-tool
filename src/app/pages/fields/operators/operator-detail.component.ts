@@ -1,3 +1,4 @@
+import { OperatorsService } from 'app/services/operators.service';
 import { Router } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
@@ -12,9 +13,11 @@ export class OperatorDetailComponent implements OnInit {
 
   private countries: Country[] = [];
   private titleText: String = 'New Operator';
+  private loading: boolean;
 
   constructor(
     private countriesService: CountriesService,
+    private operatorsService: OperatorsService,
     private router: Router
   ) {
   }
@@ -32,7 +35,18 @@ export class OperatorDetailComponent implements OnInit {
   }
 
   onSubmit(formValues):void {
-    console.log('submit!', formValues);
+    this.loading = true;
+    this.operatorsService.createOperator(formValues).then(
+        data => {
+          alert('Operator created successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/operators']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
   }
 
 

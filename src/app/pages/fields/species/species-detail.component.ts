@@ -1,3 +1,4 @@
+import { SpeciesService } from 'app/services/species.service';
 import { Router } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
@@ -14,9 +15,11 @@ export class SpeciesDetailComponent implements OnInit {
   private countriesDropdownSettings: any;
   private countriesDropdownData: any;
   private titleText: String = 'New Species';
+  private loading: boolean = false;
 
   constructor(
     private countriesService: CountriesService,
+    private speciesService: SpeciesService,
     private router: Router
   ) {
     this.countries = new Array<Country>();
@@ -43,7 +46,18 @@ export class SpeciesDetailComponent implements OnInit {
   }
 
   onSubmit(formValues):void {
-    console.log('submit!', formValues);
+    this.loading = true;
+    this.speciesService.createSpecies(formValues).then(
+        data => {
+          alert('Species created successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/species']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
   }
 
 

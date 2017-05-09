@@ -7,11 +7,21 @@ import { Http } from '@angular/http';
 @Injectable()
 export class ObserversService {
 
-    constructor(private datastoreService: DatastoreService) {
+    constructor(
+      private datastoreService: DatastoreService,
+      private http:Http
+    ) {
 
     }
 
     getAll(){
-        return this.datastoreService.query(Observer).toPromise();
+        return this.datastoreService.query(Observer, { page: { size: 1000 }}).toPromise();
+    }
+
+    createObserver(formValues): Promise<any> {
+      const payload = { observer: formValues };
+      return this.http.post(`${environment.apiUrl}/observers`, payload)
+        .map(response => response.json())
+        .toPromise();
     }
 }

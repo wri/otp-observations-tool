@@ -1,3 +1,4 @@
+import { Document } from 'app/models/document.model';
 import { AnnexOperator } from 'app/models/annex-operator.model';
 import { AnnexGovernance } from 'app/models/annex-governance.model';
 import { User } from 'app/models/user.model';
@@ -32,7 +33,8 @@ import { Observation } from 'app/models/observation.model';
     species: Species,
     users: User,
     annex_governances: AnnexGovernance,
-    annex_operators: AnnexOperator
+    annex_operators: AnnexOperator,
+    documents: Document
   }
 })
 export class DatastoreService extends JsonApiDatastore {
