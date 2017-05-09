@@ -1,4 +1,5 @@
 import { Document } from 'app/models/document.model';
+import { TokenService } from 'app/services/auth.service';
 import { AnnexOperator } from 'app/models/annex-operator.model';
 import { AnnexGovernance } from 'app/models/annex-governance.model';
 import { User } from 'app/models/user.model';
@@ -13,7 +14,7 @@ import { Severity } from 'app/models/severity.model';
 import { Country } from 'app/models/country.model';
 import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { JsonApiDatastore, JsonApiDatastoreConfig } from 'angular2-jsonapi';
 import { Observation } from 'app/models/observation.model';
 
@@ -39,8 +40,17 @@ import { Observation } from 'app/models/observation.model';
 })
 export class DatastoreService extends JsonApiDatastore {
 
-  constructor (http: Http) {
+  constructor (http: Http, private tokenService: TokenService) {
     super(http);
+
+    const headers = new Headers();
+
+    if (this.tokenService.token) {
+      headers.set('Authorization', `Bearer ${this.tokenService.token}`);
+    }
+    headers.set('OTP-API-KEY', environment.OTP_API_KEY);
+
+    this.headers = headers;
   }
 
 }

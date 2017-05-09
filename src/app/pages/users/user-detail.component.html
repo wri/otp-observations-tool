@@ -1,56 +1,58 @@
 <div class="l-wrapper">
-  <h2>{{titleText}}</h2>
+  <h2>{{mode === 'new' ? 'New' : 'Update'}} user</h2>
 
   <div class="row">
     <div class="large-10 columns">
       <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
           <label for="name">Name</label>
-          <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
+          <input id="name" type="text" class="form-control" name="name" [(ngModel)]="user && user.name" #name="ngModel" required />
           <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
         </div>
 
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !nickname.valid }">
           <label for="nickname">Username</label>
-          <input id="nickname" type="text" class="form-control" name="nickname" ngModel #nickname="ngModel" required />
+          <input id="nickname" type="text" class="form-control" name="nickname" [(ngModel)]="user && user.nickname" #nickname="ngModel" required />
           <div *ngIf="f.submitted && !nickname.valid" class="help-text">Username is required</div>
         </div>
 
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
           <label for="email">Email</label>
-          <input id="email" type="email" class="form-control" name="email" ngModel #email="ngModel" email required />
+          <input id="email" type="email" class="form-control" name="email" [(ngModel)]="user && user.email" #email="ngModel" email required />
           <div *ngIf="f.submitted && email.errors?.required" class="help-text">Email is required</div>
           <div *ngIf="f.submitted && email.errors?.email && !email.errors?.required" class="help-text">Please enter an email address</div>
         </div>
 
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !institution.valid }">
           <label for="institution">Institution</label>
-          <input id="institution" type="text" class="form-control" name="institution" ngModel #institution="ngModel" />
+          <input id="institution" type="text" class="form-control" name="institution" [(ngModel)]="user && user.institution" #institution="ngModel" />
         </div>
 
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
           <label for="country_id">Country</label>
-          <select id="country_id" name="country_id" ngModel #country_id="ngModel">
+          <select id="country_id" name="country_id" [(ngModel)]="user && user.country.id" #country_id="ngModel">
             <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
           </select>
         </div>
 
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-          <label for="password">Password</label>
-          <input id="password" type="password" class="form-control" name="password" ngModel #password="ngModel" required />
-          <div *ngIf="f.submitted && !password.valid" class="help-text">Password is required</div>
-        </div>
+        <ng-template *ngIf="mode === 'new'">
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+            <label for="password">Password</label>
+            <input id="password" type="password" class="form-control" name="password" ngModel #password="ngModel" required />
+            <div *ngIf="f.submitted && !password.valid" class="help-text">Password is required</div>
+          </div>
 
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid }">
-          <label for="password_confirmation">Confirm your password</label>
-          <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" ngModel #password_confirmation="ngModel" [equalTo]="password" required />
-          <div *ngIf="f.submitted && password_confirmation.errors?.required" class="help-text">Please confirm your password</div>
-          <div *ngIf="f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required" class="help-text">Password values don't not coincide</div>
-        </div>
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid }">
+            <label for="password_confirmation">Confirm your password</label>
+            <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" ngModel #password_confirmation="ngModel" [equalTo]="password" required />
+            <div *ngIf="f.submitted && password_confirmation.errors?.required" class="help-text">Please confirm your password</div>
+            <div *ngIf="f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required" class="help-text">Password values don't not coincide</div>
+          </div>
+        </ng-template>
 
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !permissions_accepted.valid }">
-          <label for="permissions_accepted">Permissions</label>
-          <select id="permissions_accepted" name="permissions_accepted" ngModel #permissions_accepted="ngModel">
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !permissions_request.valid }">
+          <label for="permissions_request">Permissions</label>
+          <select id="permissions_request" name="permissions_request" [(ngModel)]="user && user.permissions_request" #permissions_request="ngModel">
             <option value="operator">Operator</option>
             <option value="ngo">NGO</option>
           </select>
@@ -58,12 +60,12 @@
 
         <div class="form-group actions" *showItSizes="{min: 768}">
             <button type="button" (click)="onCancel()" class="button secondary">Cancel</button>
-            <button type="submit" class="button primary">Create</button>
+            <button type="submit" class="button primary">{{mode === 'new' ? 'Create' : 'Update'}}</button>
         </div>
 
         <otp-action-bar *xs>
           <button type="button" (click)="onCancel()" class="button secondary">Cancel</button>
-          <button type="submit" class="button primary">Create</button>
+          <button type="submit" class="button primary">{{mode === 'new' ? 'Create' : 'Update'}}</button>
         </otp-action-bar>
       </form>
     </div>

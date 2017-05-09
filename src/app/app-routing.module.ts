@@ -88,7 +88,7 @@ const routes: Routes = [
         component: UserDetailComponent
       },
       {
-        path: 'users/:id/edit',
+        path: 'users/edit/:id',
         component: UserDetailComponent
       },
       // -------------FIELDS------------

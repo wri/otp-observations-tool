@@ -1,5 +1,5 @@
 import { CountriesService } from 'app/services/countries.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { User } from 'app/models/user.model';
 import { UsersService } from 'app/services/users.service';
 import { AuthService } from 'app/services/auth.service';
@@ -13,28 +13,39 @@ import { Country } from 'app/models/country.model';
 })
 export class UserDetailComponent implements OnInit {
 
-  private titleText: String = 'New User';
-
   private countries: Country[] = [];
   public user: User;
-  @Input() public mode = 'new';
-  @Input() public userId: string;
+  public mode = 'new';
+  @Input() public userId: number;
 
   constructor(
     private auth: AuthService,
     private userService: UsersService,
     private countriesService: CountriesService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
+  /**
+   * Update the mode of the component according to the URL
+   */
+  updateMode(): void {
+    if (this.router.url.match(/\/edit\/[0-9]+$/)) {
+      this.mode = 'edit';
+    }
+  }
 
   ngOnInit(): void {
+    this.updateMode();
+
+    this.countriesService.getAll()
+      .then(data => this.countries = data);
+
     if (this.mode === 'edit') {
-      this.userService.getUser(this.userId).then((data) => {
-        this.user = data.length > 0 ? data[0] : null;
-      });
-    } else {
-      this.countriesService.getAll().then(data => { this.countries = data; });
+      this.userId = +this.route.snapshot.params['id'];
+
+      this.userService.getUser(this.userId)
+        .then(user => this.user = user);
     }
   }
 
@@ -43,12 +54,15 @@ export class UserDetailComponent implements OnInit {
       delete formValues.country_id;
     }
 
-    this.userService.createUser(formValues)
-      .then(() => this.router.navigate(['/private/users']))
-      .catch(error => {
-        const errorMessage = error.json().errors[0].title;
-        alert(errorMessage);
-      });
+    if (this.mode === 'edit') {
+      this.userService.updateUser(this.user)
+        .then(() => this.router.navigate(['/private/users']))
+        .catch(() => alert('Unable to update the user'));
+    } else {
+      this.userService.createUser(formValues)
+        .then(() => this.router.navigate(['/private/users']))
+        .catch(() => alert('Unable to create the user'));
+    }
   }
 
 }

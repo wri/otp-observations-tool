@@ -2,7 +2,7 @@ import { User } from 'app/models/user.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { Http } from '@angular/http';
+import { Http, RequestOptionsArgs, Headers } from '@angular/http';
 
 @Injectable()
 export class UsersService {
@@ -20,8 +20,9 @@ export class UsersService {
         .toPromise();
     }
 
-    public getUser(id): Promise<User[]> {
-      return this.datastoreService.query(User, id).toPromise();
+    public getUser(id): Promise<User> {
+      return this.datastoreService.findRecord(User, id)
+        .toPromise();
     }
 
     public getLoggedUser(): Promise<User[]> {
@@ -34,6 +35,19 @@ export class UsersService {
       return this.http.post(`${environment.apiUrl}/register`, payload)
         .map(response => response.json())
         .toPromise();
+    }
+
+    public updateUser(user: User): Promise<any> {
+      return this.http.patch(`${environment.apiUrl}/users/${user.id}`, {
+        user: {
+          name: user.name,
+          nickname: user.nickname,
+          email: user.email,
+          institution: user.institution,
+          country_id: user.country.id,
+          permissions_request: user.permissions_request
+        }
+      }).toPromise();
     }
 
     public deleteUser(user: User): Promise<any> {

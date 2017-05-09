@@ -21,7 +21,7 @@
     <ngx-datatable-column name="Email"></ngx-datatable-column>
     <ngx-datatable-column name="Actions" maxWidth=150>
       <ng-template let-row="row" ngx-datatable-cell-template>
-        <a href="/users/edit/{{row.id}}">EDIT</a>
+        <a routerLink="edit/{{row.id}}">EDIT</a>
         <button type="button" (click)="onDelete(row)">DELETE</button>
       </ng-template>
     </ngx-datatable-column>
