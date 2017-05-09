@@ -9,8 +9,8 @@
     <div class="large-10 columns">
       <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
         <div class="form-group">
-            <label for="type">TYPE
-              <select (change)="onTypeChange($event)" name="observation_type" ngModel #observation_type="ngModel" required>
+            <label for="observation_type">TYPE
+              <select id="observation_type" (change)="onTypeChange($event)" name="observation_type" ngModel #observation_type="ngModel" required>
                  <option selected [value]="'AnnexOperator'">Operator</option>
                  <option [value]="'AnnexGovernance'">Governance</option>
               </select>
@@ -20,7 +20,7 @@
         <div class="white-card">
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
               <label for="country_id">Country
-                <select (change)="onCountryChange(country_id.value)" name="country_id" ngModel #country_id="ngModel" required>
+                <select id="country_id" (change)="onCountryChange(country_id.value)" name="country_id" ngModel #country_id="ngModel" required>
                   <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
                 </select>
               </label>
@@ -43,7 +43,8 @@
           </div>-->
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
               <label for="subcategory_id">Sub-category
-                <select (change)="onSubCategoryChange(subcategory_id.value)" name="subcategory_id" ngModel #subcategory_id="ngModel" required>
+                <select id="subcategory_id" (change)="onSubCategoryChange(subcategory_id.value)" name="subcategory_id"
+                  ngModel #subcategory_id="ngModel" required>
                   <option *ngFor="let subCategory of subCategories" [value]="subCategory.id">{{ getSubcategory(subCategory) }}</option>
                 </select>
               </label>
@@ -51,7 +52,7 @@
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
               <label for="severity_id">Severity
-                <select name="severity_id" ngModel #severity_id="ngModel" required>
+                <select id="severity_id" name="severity_id" ngModel #severity_id="ngModel" required>
                   <option *ngFor="let severity of severities" [value]="severity.id">{{ severity.level }} - {{ severity.details }}</option>
                 </select>
               </label>
@@ -59,12 +60,13 @@
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
               <label for="publication_date">Publication date</label>
-              <ng2-datepicker name="publication_date" #publication_date="ngModel" [options]="dateOptions" ngModel required></ng2-datepicker>
+              <ng2-datepicker id="publication_date" name="publication_date" #publication_date="ngModel" [options]="dateOptions"
+                ngModel required></ng2-datepicker>
               <div *ngIf="f.submitted && !publication_date.valid" class="help-text">Publication date is required</div>
           </div>
           <div *ngIf="governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
               <label for="government_id">Government Entity
-                <select name="government_id" ngModel #government_id="ngModel" required>
+                <select id="government_id" name="government_id" ngModel #government_id="ngModel" required>
                   <option *ngFor="let government of governments" [value]="government.id">{{ government.government_entity }}</option>
                 </select>
               </label>
@@ -84,7 +86,7 @@
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !observer_id.valid }">
               <label for="observer_id">Monitor
-                <select name="observer_id" ngModel #observer_id="ngModel" required>
+                <select id="observer_id" name="observer_id" ngModel #observer_id="ngModel" required>
                   <option *ngFor="let observer of observers" [value]="observer.id">{{ observer.name }}</option>
                 </select>
               </label>
@@ -92,7 +94,7 @@
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
               <label for="operator_id">Operator
-                <select name="operator_id" ngModel #operator_id="ngModel" required>
+                <select id="operator_id" name="operator_id" ngModel #operator_id="ngModel" required>
                   <option *ngFor="let operator of operators" [value]="operator.id">{{ operator.name }}</option>
                 </select>
               </label>

@@ -43,8 +43,10 @@ export class ObservationListComponent implements OnInit {
   onEdit(id): void {
     this.router.navigate([`/private/observations/edit/${id}`]);
   }
-  onDelete(id): void {
-    this.router.navigate([`/private/observations/delete/${id}`]);
+  onDelete(row): void {
+    if(confirm(`Are you sure to delete the observation with details: ${row.details}`)) {
+      this.observationsService.deleteObservationWithId(row.id);
+    }
   }
 
   getCategory(row): string {
