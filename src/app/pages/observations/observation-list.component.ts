@@ -55,7 +55,6 @@ export class ObservationListComponent implements OnInit {
   }
 
   getCategory(row): string {
-    console.log(row);
     if (row.annex_operator) {
       return row.annex_operator.illegality;
     } else if (row.annex_governance) {
