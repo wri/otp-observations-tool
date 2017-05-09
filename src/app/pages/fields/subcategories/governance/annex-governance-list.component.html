@@ -1,9 +1,17 @@
-<button (click)="triggerNewAnnexGovernance()">
-  New Annex Governance
-</button>
-<ngx-datatable class="material"
+<div class="c-container -j-between">
+  <h2>Annex Governances ({{annexGovernances.length}})</h2>
+  <div class="c-button-container -j-end">
+    <button (click)="triggerNewAnnexGovernance()" class="c-button -primary">
+      New Annex Governance
+    </button>
+  </div>
+</div>
+<ngx-datatable class="wri"
   #table
-  [rows]="annexGovernances">
+  [rows]="annexGovernances"
+  columnMode="force"
+  headerHeight=false
+>
   <ngx-datatable-column prop="governance_pillar" name="Governance Pillar">
   </ngx-datatable-column>
   <ngx-datatable-column prop="governance_problem" name="Governance Problem">

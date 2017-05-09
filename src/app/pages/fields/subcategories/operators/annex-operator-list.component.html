@@ -1,11 +1,17 @@
-<button (click)="triggerNewAnnexOperator()">
-  New Annex Operator
-</button>
-<ngx-datatable class="material"
+<div class="c-container -j-between">
+  <h2>Annex Operators ({{annexOperators.length}})</h2>
+  <div class="c-button-container -j-end">
+    <button (click)="triggerNewAnnexOperator()" class="c-button -primary">
+      New Annex Operator
+    </button>
+  </div>
+</div>
+<ngx-datatable class="wri"
   #table
-  [rows]="annexOperators">
-  <ngx-datatable-column prop="illegality" name="Name">
-  </ngx-datatable-column>
-  <ngx-datatable-column prop="details" name="Details">
-  </ngx-datatable-column>
+  [rows]="annexOperators"
+  columnMode="force"
+  headerHeight=false
+>
+  <ngx-datatable-column prop="illegality" name="Name"></ngx-datatable-column>
+  <ngx-datatable-column prop="details" name="Details"></ngx-datatable-column>
 </ngx-datatable>

@@ -17,6 +17,7 @@ export class CountryListComponent implements OnInit {
     private countriesService: CountriesService,
     private router: Router
   ) {
+    this.countries = [];
   }
 
   ngOnInit(): void {

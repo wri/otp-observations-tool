@@ -1,9 +1,17 @@
-<button (click)="triggerNewCountry()">
-  New Country
-</button>
-<ngx-datatable class="material"
+<div class="c-container -j-between">
+  <h2>Countries ({{countries.length}})</h2>
+  <div class="c-button-container -j-end">
+    <button (click)="triggerNewCountry()" class="c-button -primary">
+      New Country
+    </button>
+  </div>
+</div>
+<ngx-datatable class="wri"
   #table
-  [rows]="countries">
+  [rows]="countries"
+  columnMode="force"
+  headerHeight=false
+>
   <ngx-datatable-column prop="name" name="Name">
   </ngx-datatable-column>
   <ngx-datatable-column prop="iso" name="ISO">

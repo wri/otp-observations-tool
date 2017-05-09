@@ -1,9 +1,16 @@
-<button (click)="triggerNewCategory()">
-  New Category
-</button>
-<ngx-datatable class="material"
+<div class="c-container -j-between">
+  <h2>Categories ({{categories.length}})</h2>
+  <div class="c-button-container -j-end">
+    <button (click)="triggerNewCategory()" class="c-button -primary">
+      New Category
+    </button>
+  </div>
+</div>
+<ngx-datatable class="wri"
   #table
-  [rows]="categories">
-  <ngx-datatable-column prop="name" name="Name">
-  </ngx-datatable-column>
+  [rows]="categories"
+  columnMode="force"
+  headerHeight=false
+>
+  <ngx-datatable-column prop="name" name="Name"></ngx-datatable-column>
 </ngx-datatable>

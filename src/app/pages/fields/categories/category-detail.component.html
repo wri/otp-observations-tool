@@ -1,11 +1,14 @@
-<div class="row">
-  <div class="large-10 columns">
-    <h2>{{titleText}}</h2>
-  </div>
-</div>
 <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
 <div class="row">
   <div class="large-10 columns">
+    <div class="c-container -j-between">
+      <h2>{{titleText}}</h2>
+      <div class="c-button-container -j-end form-group">
+        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+      </div>
+    </div>
+
     <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
         <label for="name">Name</label>
@@ -13,15 +16,10 @@
         <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
       </div>
 
-      <div class="form-group actions" *showItSizes="{min: 768}">
-        <button disable="loading" type="button" (click)="onCancel()" class="button secondary">Cancel</button>
-        <button disable="loading" type="submit" class="button primary">Create</button>
+      <div class="c-button-container -j-end form-group">
+        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+        <button disable="loading" type="submit" class="c-button -primary">Create</button>
       </div>
-
-      <otp-action-bar *xs>
-        <button disable="loading" type="button" (click)="onCancel()" class="button secondary">Cancel</button>
-        <button disable="loading" type="submit" class="button primary">Create</button>
-      </otp-action-bar>
     </form>
   </div>
 </div>
