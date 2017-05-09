@@ -28,6 +28,6 @@ export class LawsService {
     deleteLawWithId(id): Promise<any>{
       return this.http.delete(`${environment.apiUrl}/laws/${id}`)
         .map(response => response.json())
-        .toPromise();;
+        .toPromise();
     }
 }

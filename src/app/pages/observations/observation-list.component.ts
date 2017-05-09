@@ -55,7 +55,6 @@ export class ObservationListComponent implements OnInit {
   }
 
   getOperator(row): string{
-    console.log('row', row);
     return '';
   }
 

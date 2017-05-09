@@ -23,7 +23,7 @@ export class GovernmentsService {
     }
 
     createGovernment(formValues): Promise<any> {
-      const payload = { operator: formValues };
+      const payload = { government: formValues };
       return this.http.post(`${environment.apiUrl}/governments`, payload)
         .map(response => response.json())
         .toPromise();
