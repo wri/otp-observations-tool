@@ -20,9 +20,8 @@ export class AnnexGovernanceListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subCategoriesService.getAllGovernancesWithoutJSONAPI().then((data) => {
-      this.annexGovernances = data.data.map( value => value.attributes);
-      console.log(data);
+    this.subCategoriesService.getAllGovernances().then((data) => {
+      this.annexGovernances = data;
     });
   }
 
