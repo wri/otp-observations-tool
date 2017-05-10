@@ -26,7 +26,7 @@ import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
 import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
-import { DesktopHeaderComponent } from 'app/shared/desktop-header/desktop-header.component';
+import { HeaderComponent } from 'app/shared/header/header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
@@ -77,7 +77,7 @@ import { ObservationsService } from 'app/services/observations.service';
     TabsComponent,
     WrapperComponent,
     NavigationComponent,
-    DesktopHeaderComponent,
+    HeaderComponent,
     GovernmentListComponent,
     GovernmentDetailComponent,
     LawDetailComponent,

@@ -8,11 +8,12 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  height: $bottom-bar-height;
+  height: ($bottom-bar-height + 1px);
   z-index: 1;
-  background: $lighter-grey;
+  border-top: 1px solid $lighter-grey;
+  background: $white;
 
-  /deep/ .button {
+  /deep/ .c-button {
     margin: 0 10px 0 0;
 
     &:last-of-type {

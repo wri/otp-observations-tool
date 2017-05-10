@@ -3,11 +3,11 @@ import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
 
 @Component({
-  selector: 'otp-desktop-header',
-  templateUrl: './desktop-header.component.html',
-  styleUrls: ['./desktop-header.component.scss']
+  selector: 'otp-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss']
 })
-export class DesktopHeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit {
 
   private navigationItems: NavigationItem[] = [];
 

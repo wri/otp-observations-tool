@@ -1,0 +1,10 @@
+<div class="l-wrapper">
+  <div class="menu">
+    <img src="assets/OTP-logo.svg" alt="Open Timber Portal" />
+    <ul>
+      <li>English</li>
+      <li><button type="button" (click)="logout()">Log out</button></li>
+    </ul>
+  </div>
+  <otp-navigation [items]="navigationItems" (change)="onChange($event)" *showItSizes="{min: 768}"></otp-navigation>
+</div>
