@@ -24,4 +24,8 @@ export class SpeciesService {
         .map(response => response.json())
         .toPromise();
     }
+
+    deleteSpecies(species: Species): Promise<any> {
+      return this.datastoreService.deleteRecord(Species, species.id).toPromise();
+    }
 }

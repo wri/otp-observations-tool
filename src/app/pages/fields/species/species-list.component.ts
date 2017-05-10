@@ -34,8 +34,20 @@ export class SpeciesListComponent implements OnInit {
 
   }
 
-  onDelete(row): void{
-
+   /**
+   * Event handler to delete a species
+   * @private
+   * @param {Species} species
+   */
+  private onDelete(species: Species): void {
+    if (confirm(`Are you sure to delete the species: ${species.name}?`) ) {
+      this.speciesService.deleteSpecies(species)
+      .then((data) => {
+        this.ngOnInit();
+        alert(data.json().messages[0].title);
+      })
+      .catch((e) => alert('Unable to delete the species: ${species.name} '));
+    }
   }
 
 }
