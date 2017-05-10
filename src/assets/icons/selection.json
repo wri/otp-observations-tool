@@ -1,0 +1,89 @@
+{
+  "IcoMoonType": "selection",
+  "icons": [
+    {
+      "icon": {
+        "paths": [
+          "M512.001 73.143h219.428v146.286h-731.429v-146.286h219.429v-73.143h292.571v73.143zM73.143 1024v-731.429h585.143v731.429h-585.143z"
+        ],
+        "attrs": [],
+        "width": 731,
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "grid": 0,
+        "tags": [
+          "Delete"
+        ],
+        "colorPermutations": {}
+      },
+      "attrs": [],
+      "properties": {
+        "order": 143,
+        "id": 1,
+        "name": "delete",
+        "prevSize": 32
+      },
+      "setIdx": 0,
+      "setId": 13,
+      "iconIdx": 0
+    },
+    {
+      "icon": {
+        "paths": [
+          "M972 221.143l-100.286 100.286-205.714-205.714 100.286-100.286c10.286-10.286 23.143-15.429 38.571-15.429s28.286 5.143 38.571 15.429l128.571 128.571c10.286 10.286 15.429 23.143 15.429 38.571s-5.143 28.286-15.429 38.571zM0 781.714l606.857-606.857 205.714 205.714-606.857 606.857h-205.714v-205.714z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "grid": 0,
+        "tags": [
+          "Edit"
+        ],
+        "colorPermutations": {}
+      },
+      "attrs": [],
+      "properties": {
+        "order": 142,
+        "id": 0,
+        "name": "edit",
+        "prevSize": 32
+      },
+      "setIdx": 0,
+      "setId": 13,
+      "iconIdx": 1
+    }
+  ],
+  "height": 1024,
+  "preferences": {
+    "showGlyphs": true,
+    "showQuickUse": true,
+    "showQuickUse2": true,
+    "showSVGs": true,
+    "fontPref": {
+      "prefix": "icon-",
+      "metadata": {
+        "fontFamily": "icomoon"
+      },
+      "metrics": {
+        "emSize": 1024,
+        "baseline": 6.25,
+        "whitespace": 50
+      },
+      "embed": false
+    },
+    "imagePref": {
+      "prefix": "icon-",
+      "png": true,
+      "useClassSelector": true,
+      "color": 0,
+      "bgColor": 16777215,
+      "classSelector": ".icon",
+      "height": 32,
+      "columns": 16,
+      "margin": 16
+    },
+    "historySize": 100,
+    "showCodes": true,
+    "gridSize": 16
+  }
+}

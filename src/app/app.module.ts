@@ -1,3 +1,4 @@
+import { IconComponent } from 'app/shared/icons/icon.component';
 import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
 import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
 import { AnnexOperatorListComponent } from 'app/pages/fields/subcategories/operators/annex-operator-list.component';
@@ -95,7 +96,8 @@ import { ObservationsService } from 'app/services/observations.service';
     AnnexOperatorDetailComponent,
     AnnexOperatorListComponent,
     AnnexGovernanceDetailComponent,
-    AnnexGovernanceListComponent
+    AnnexGovernanceListComponent,
+    IconComponent
   ],
   imports: [
     JsonApiModule,
