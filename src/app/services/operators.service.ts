@@ -24,4 +24,8 @@ export class OperatorsService {
         .map(response => response.json())
         .toPromise();
     }
+
+    deleteOperator(operator: Operator): Promise<any> {
+      return this.datastoreService.deleteRecord(Operator, operator.id).toPromise();
+    }
 }

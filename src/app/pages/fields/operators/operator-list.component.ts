@@ -33,8 +33,14 @@ export class OperatorListComponent implements OnInit {
 
   }
 
-  onDelete(row): void{
-
+  onDelete(operator: Operator): void {
+    if (confirm(`Are you sure to delete the operator with name: ${operator.name}?`)) {
+      this.operatorsService.deleteOperator(operator).then(
+        data => {
+          alert(data.json().messages[0].title);
+          this.ngOnInit();
+        });
+    }
   }
 
 }

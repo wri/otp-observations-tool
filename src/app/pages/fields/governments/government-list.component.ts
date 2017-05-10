@@ -25,15 +25,27 @@ export class GovernmentListComponent implements OnInit {
     });
   }
 
-  triggerNewGovernment(): void{
+  triggerNewGovernment(): void {
     this.router.navigate(['private/fields/governments/new']);
   }
 
-  onDelete(row): void{
-
+  /**
+   * Event handler to delete a government
+   * @private
+   * @param {Government} government
+   */
+  private onDelete(government: Government): void {
+    if (confirm(`Are you sure to delete the government: ${government.government_entity}?`) ) {
+      this.governmentsService.deleteGovernment(government)
+      .then((data) => {
+        this.ngOnInit();
+        alert(data.json().messages[0].title);
+      })
+      .catch((e) => alert('Unable to delete the government: ${government.government_entity} '));
+    }
   }
 
-  onEdit(row): void{
+  onEdit(row): void {
 
   }
 

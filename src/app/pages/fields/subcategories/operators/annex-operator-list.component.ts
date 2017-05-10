@@ -33,11 +33,11 @@ export class AnnexOperatorListComponent implements OnInit {
 
   }
 
-  onDelete(annexOperator: AnnexOperator): void{
-    if(confirm(`Are you sure to delete the AnnexOperator with name: ${annexOperator.illegality}?`)) {
+  onDelete(annexOperator: AnnexOperator): void {
+    if (confirm(`Are you sure to delete the AnnexOperator with name: ${annexOperator.illegality}?`)) {
       this.subCategoriesService.deleteAnnexOperator(annexOperator).then(
         data => {
-          alert(data.messages[0].title);
+          alert(data.json().messages[0].title);
           this.ngOnInit();
         });
     }
