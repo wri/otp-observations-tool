@@ -23,4 +23,8 @@ export class CategoriesService {
         .map(response => response.json())
         .toPromise();
     }
+
+    deleteCategory(category: Category): Promise<any> {
+      return this.datastoreService.deleteRecord(Category, category.id).toPromise();
+    }
 }

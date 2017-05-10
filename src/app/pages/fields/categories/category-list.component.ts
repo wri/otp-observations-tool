@@ -33,8 +33,15 @@ export class CategoryListComponent implements OnInit {
 
   }
 
-  onDelete(row): void{
-
+  private onDelete(category: Category): void {
+    if (confirm(`Are you sure to delete the category: ${category.name}?`) ) {
+      this.categoriesService.deleteCategory(category)
+      .then((data) => {
+        this.ngOnInit();
+        alert(data.json().messages[0].title);
+      })
+      .catch((e) => alert('Unable to delete the category: ${category.name} '));
+    }
   }
 
 
