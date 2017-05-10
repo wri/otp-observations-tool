@@ -28,4 +28,12 @@ export class SubCategoriesService {
         .map(response => response.json()).toPromise();
     }
 
+    deleteAnnexGovernance(annexGovernance: AnnexGovernance): Promise<any>{
+      return this.datastoreService.deleteRecord(AnnexGovernance, annexGovernance.id).toPromise();
+    }
+
+    deleteAnnexOperator(annexOperator: AnnexOperator): Promise<any>{
+      return this.datastoreService.deleteRecord(AnnexOperator, annexOperator.id).toPromise();
+    }
+
 }
