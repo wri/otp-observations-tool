@@ -1,3 +1,4 @@
+import { CategoriesService } from 'app/services/categories.service';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 
@@ -9,19 +10,32 @@ import { Component } from '@angular/core';
 export class CategoryDetailComponent {
 
   private titleText: String = 'New Category';
+  private loading = false;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private categoriesService: CategoriesService
   ) {
 
   }
 
-  onCancel(): void{
+  onCancel(): void {
     this.router.navigate(['/private/fields/categories']);
   }
 
   onSubmit(formValues):void {
-    console.log('submit!', formValues);
+    this.loading = true;
+    this.categoriesService.crateCategory(formValues).then(
+        data => {
+          alert('Category created successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/categories']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
   }
 
 
