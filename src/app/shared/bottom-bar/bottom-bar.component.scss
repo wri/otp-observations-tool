@@ -3,33 +3,36 @@
 :host {
   position: fixed;
   display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
   width: 100%;
   overflow: hidden;
   bottom: 0;
-  -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
-  -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+  background-color: white;
+  border-top: 1px solid $lighter-grey;
 
   a {
     display: block;
-    width: 100%;
+    position: relative;
     height: $bottom-bar-height;
-    background: $lighter-grey;
     color: $black;
     margin-bottom: 0;
-    border-left: 1px solid $grey;
     font-size: $font-size-default;
     text-decoration: none;
     line-height: $bottom-bar-height;
     text-align: center;
+    letter-spacing: .5px;
+    text-transform: uppercase;
 
-    &:first-of-type {
-      border-left: 0;
-    }
-
-    &.-active {
-      background: $color-primary;
-      color: $white;
+    &.-active:after {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background-color: $color-primary;
+      content: '';
     }
   }
 }
