@@ -4,7 +4,7 @@
     <h1>Open Timber Portal</h1>
     <ul>
       <li>English</li>
-      <li>Adam Smith</li>
+      <li><button type="button" (click)="logout()">Log out</button></li>
     </ul>
   </div>
   <otp-navigation [items]="navigationItems" (change)="onChange($event)"></otp-navigation>
