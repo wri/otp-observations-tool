@@ -45,7 +45,7 @@ export class ObservationListComponent implements OnInit {
     this.router.navigate([`/private/observations/edit/${row.id}`]);
   }
   onDelete(row): void {
-    if(confirm(`Are you sure to delete the observation with details: ${row.details}`)) {
+    if(confirm(`Are you sure to delete the observation with details: ${row.details}?`)) {
       this.observationsService.deleteObservationWithId(row.id).then(
         data => {
           alert(data.messages[0].title);

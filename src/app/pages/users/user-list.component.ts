@@ -39,8 +39,18 @@ export class UserListComponent implements OnInit {
    * @param {User} user
    */
   private onDelete(user: User): void {
-    this.userService.deleteUser(user)
+    if(confirm(`Are you sure to delete the user with name: ${user.name}?`)) {
+      this.userService.deleteUser(user)
       .then(() => this.ngOnInit())
       .catch((e) => alert('Unable to delete the user'));
+    }
+  }
+  /**
+   * Event handler to edit a user
+   * @private
+   * @param {User} user
+   */
+  private onEdit(user: User): void {
+    this.router.navigate([`private/users/edit/${user.id}`]);
   }
 }
