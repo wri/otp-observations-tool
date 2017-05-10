@@ -1,40 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { environment } from 'environments/environment';
+import { TokenService } from 'app/services/token.service';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
-export class TokenService {
-    private _token: string = null;
-
-    set token(token: string) {
-        if (!token) {
-            localStorage.removeItem('otp-token');
-        } else {
-            localStorage.setItem('otp-token', token);
-        }
-        this._token = token;
-    }
-
-    get token() {
-        if (!this._token) {
-            this._token = localStorage.getItem('otp-token');
-        }
-        return this._token;
-    }
-}
-
-@Injectable()
 export class AuthService {
 
-    user = null;
+    userId: string = null;
+    admin = false;
     token: string = null;
 
-    constructor(private http: Http, private tokenService: TokenService, private router: Router) {
-
-    }
+    constructor(
+      private http: Http,
+      private tokenService: TokenService,
+      private router: Router
+    ) {}
 
     login(email: string, password: string) {
       return this.http.post(`${environment.apiUrl}/login`, {
@@ -54,9 +37,10 @@ export class AuthService {
     checkLogged(): Promise<boolean> {
       return this.http.get(`${environment.apiUrl}/users/current-user`)
         .map(response => response.json())
-        .map(body => {
-            this.user = body;
-            return true;
+        .map(response => {
+          this.userId = response.data.id;
+          this.admin = response.included.length && response.included[0].attributes.user_role === 'admin';
+          return true;
         }).toPromise();
 
     }
@@ -66,13 +50,11 @@ export class AuthService {
      * @returns {boolean}
      */
     isAdmin(): Promise<boolean> {
-      // TODO: we temparily assume that if the user is connected,
-      // they are an admin
-      return this.checkLogged();
+      return new Promise(resolve => resolve(this.admin));
     }
 
     logout() {
-        this.user = null;
+        this.userId = null;
         this.token = null;
         this.tokenService.token = null;
         this.router.navigate(['/']);

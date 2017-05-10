@@ -17,12 +17,12 @@
     headerHeight=false
   >
     <ngx-datatable-column name="Name"></ngx-datatable-column>
-    <ngx-datatable-column name="Nickname"></ngx-datatable-column>
+    <ngx-datatable-column name="Username" prop="nickname"></ngx-datatable-column>
     <ngx-datatable-column name="Email"></ngx-datatable-column>
     <ngx-datatable-column name="Actions" maxWidth=150>
-      <ng-template let-value="value" ngx-datatable-cell-template>
-        <a href="/users/edit">EDIT</a>
-        <a href="/users/delete">DELETE</a>
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <a routerLink="edit/{{row.id}}">EDIT</a>
+        <button type="button" (click)="onDelete(row)">DELETE</button>
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>

@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.getLoggedUser().then( (data) => {
+      this.userDetail.mode = 'edit';
       this.userDetail.user = data[0];
     });
   }
