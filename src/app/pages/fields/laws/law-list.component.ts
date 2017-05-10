@@ -29,5 +29,12 @@ export class LawListComponent implements OnInit {
     this.router.navigate(['private/fields/laws/new']);
   }
 
+  onEdit(row): void{
+
+  }
+
+  onDelete(row): void{
+
+  }
 
 }

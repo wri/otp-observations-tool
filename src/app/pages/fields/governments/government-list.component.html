@@ -17,4 +17,10 @@
   </ngx-datatable-column>
   <ngx-datatable-column prop="details" name="Details">
   </ngx-datatable-column>
+  <ngx-datatable-column name="Actions">
+     <ng-template let-row="row" ngx-datatable-cell-template>
+       <button (click)="onEdit(row)">EDIT</button>
+       <button (click)="onDelete(row)">DELETE</button>
+     </ng-template>
+  </ngx-datatable-column>
 </ngx-datatable>

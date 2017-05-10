@@ -30,5 +30,13 @@ export class AnnexGovernanceListComponent implements OnInit {
     this.router.navigate(['private/fields/subcategories/governance/new']);
   }
 
+  onEdit(row): void{
+
+  }
+
+  onDelete(row): void{
+
+  }
+
 
 }

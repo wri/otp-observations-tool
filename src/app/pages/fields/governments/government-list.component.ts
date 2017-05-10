@@ -29,5 +29,13 @@ export class GovernmentListComponent implements OnInit {
     this.router.navigate(['private/fields/governments/new']);
   }
 
+  onDelete(row): void{
+
+  }
+
+  onEdit(row): void{
+
+  }
+
 
 }

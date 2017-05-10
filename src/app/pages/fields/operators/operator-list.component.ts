@@ -29,5 +29,12 @@ export class OperatorListComponent implements OnInit {
     this.router.navigate(['private/fields/operators/new']);
   }
 
+  onEdit(row): void{
+
+  }
+
+  onDelete(row): void{
+
+  }
 
 }
