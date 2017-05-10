@@ -1,3 +1,4 @@
+import { UserPermission } from 'app/models/user_permission.model';
 import { Document } from 'app/models/document.model';
 import { TokenService } from 'app/services/token.service';
 import { AnnexOperator } from 'app/models/annex-operator.model';
@@ -35,7 +36,8 @@ import { Observation } from 'app/models/observation.model';
     users: User,
     annex_governances: AnnexGovernance,
     annex_operators: AnnexOperator,
-    documents: Document
+    documents: Document,
+    user_permissions: UserPermission
   }
 })
 export class DatastoreService extends JsonApiDatastore {

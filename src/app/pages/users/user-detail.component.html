@@ -59,9 +59,11 @@
 
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !user_permission_attributes.valid }">
           <label for="user_permission_attributes">Permissions</label>
-          <select id="user_permission_attributes" name="user_permission_attributes" [(ngModel)]="user && user.user_permission_attributes" #user_permission_attributes="ngModel">
-            <option value="operator">Operator</option>
+          <select id="user_permission_attributes" name="user_permission_attributes" [(ngModel)]="user && user.user_permission.user_role" #user_permission_attributes="ngModel">
+            <option value="admin" disabled>Admin</option>
             <option value="ngo">NGO</option>
+            <option value="operator">Operator</option>
+            <option value="user">User</option>
           </select>
         </div>
 
