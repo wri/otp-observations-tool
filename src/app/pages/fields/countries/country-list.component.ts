@@ -34,8 +34,15 @@ export class CountryListComponent implements OnInit {
 
   }
 
-  onDelete(row): void{
-
+  private onDelete(country: Country): void {
+    if (confirm(`Are you sure to delete the country: ${country.name}?`) ) {
+      this.countriesService.deleteCountry(country)
+      .then((data) => {
+        this.ngOnInit();
+        alert(data.json().messages[0].title);
+      })
+      .catch((e) => alert('Unable to delete the country: ${country.name} '));
+    }
   }
 
 
