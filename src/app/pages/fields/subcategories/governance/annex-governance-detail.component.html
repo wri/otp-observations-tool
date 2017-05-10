@@ -17,10 +17,10 @@
           <div *ngIf="f.submitted && !governance_pillar.valid" class="help-text">Governance pillar is required</div>
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !governance_problem.valid }">
-          <label for="governance_problem">Governance pillar</label>
+          <label for="governance_problem">Governance problem</label>
           <input id="governance_problem" type="text" class="form-control" name="governance_problem"
           ngModel #governance_problem="ngModel" required />
-          <div *ngIf="f.submitted && !governance_pillar.valid" class="help-text">Governance pillar is required</div>
+          <div *ngIf="f.submitted && !governance_problem.valid" class="help-text">Governance problem is required</div>
       </div>
       <div class="form-group">
           <label for="details">Details</label>

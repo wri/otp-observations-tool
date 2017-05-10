@@ -14,11 +14,11 @@ export class GovernmentsService {
 
     }
 
-    getAll(){
+    getAll() {
       return this.datastoreService.query(Government, { page: { size: 1000 } }).toPromise();
     }
 
-    getByCountry(countryId){
+    getByCountry(countryId) {
       return this.datastoreService.query(Government, { country_id: countryId }).toPromise();
     }
 
@@ -27,5 +27,9 @@ export class GovernmentsService {
       return this.http.post(`${environment.apiUrl}/governments`, payload)
         .map(response => response.json())
         .toPromise();
+    }
+
+    deleteGovernment(government: Government): Promise<any> {
+      return this.datastoreService.deleteRecord(Government, government.id).toPromise();
     }
 }

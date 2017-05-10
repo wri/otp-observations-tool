@@ -23,9 +23,26 @@ export class SubCategoriesService {
       return this.datastoreService.query(AnnexOperator).toPromise();
     }
 
-    getAllGovernancesWithoutJSONAPI(){
-      return this.http.get(`${environment.apiUrl}/annex_governances`)
-        .map(response => response.json()).toPromise();
+    deleteAnnexGovernance(annexGovernance: AnnexGovernance): Promise<any> {
+      return this.datastoreService.deleteRecord(AnnexGovernance, annexGovernance.id).toPromise();
+    }
+
+    deleteAnnexOperator(annexOperator: AnnexOperator): Promise<any>{
+      return this.datastoreService.deleteRecord(AnnexOperator, annexOperator.id).toPromise();
+    }
+
+    createAnnexGovernance(formValues): Promise<any> {
+      const payload = { annex_governance: formValues };
+      return this.http.post(`${environment.apiUrl}/annex_governances`, payload)
+        .map(response => response.json())
+        .toPromise();
+    }
+
+    createAnnexOperator(formValues): Promise<any> {
+      const payload = { annex_operator: formValues };
+      return this.http.post(`${environment.apiUrl}/annex_operators`, payload)
+        .map(response => response.json())
+        .toPromise();
     }
 
 }

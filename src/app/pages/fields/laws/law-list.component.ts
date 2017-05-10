@@ -33,8 +33,17 @@ export class LawListComponent implements OnInit {
 
   }
 
-  onDelete(row): void{
-
+  /**
+   * Event handler to delete a law
+   * @private
+   * @param {Law} law
+   */
+  private onDelete(law: Law): void {
+    if(confirm(`Are you sure to delete the law: ${law.legal_reference}?`)) {
+      this.lawsService.deleteLaw(law)
+      .then(() => this.ngOnInit())
+      .catch((e) => alert('Unable to delete the law: ${law.legal_reference} '));
+    }
   }
 
 }

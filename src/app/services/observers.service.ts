@@ -24,4 +24,8 @@ export class ObserversService {
         .map(response => response.json())
         .toPromise();
     }
+
+    deleteObserver(observer: Observer): Promise<any>{
+      return this.datastoreService.deleteRecord(Observer, observer.id).toPromise();
+    }
 }

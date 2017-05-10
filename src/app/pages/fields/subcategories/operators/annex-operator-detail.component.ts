@@ -1,3 +1,4 @@
+import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
 import { Router } from '@angular/router';
@@ -15,10 +16,12 @@ export class AnnexOperatorDetailComponent implements OnInit {
   private countries: Country[] = [];
   private laws: Law[] = [];
   private titleText: String = 'New Annex Operator';
+  private loading = false;
 
   constructor(
     private countriesService: CountriesService,
     private lawsService: LawsService,
+    private subCategoriesService: SubCategoriesService,
     private router: Router
   ) {
 
@@ -41,8 +44,19 @@ export class AnnexOperatorDetailComponent implements OnInit {
     this.router.navigate(['/private/fields/subcategories/operators']);
   }
 
-  onSubmit(formValues):void {
-    console.log('submit!', formValues);
+  onSubmit(formValues): void {
+    this.loading = true;
+    this.subCategoriesService.createAnnexOperator(formValues).then(
+        data => {
+          alert('AnnexOperator created successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/subcategories/operators']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
   }
 
 

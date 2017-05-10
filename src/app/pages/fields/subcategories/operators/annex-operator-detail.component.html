@@ -10,10 +10,10 @@
         </div>
       </div>
 
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-          <label for="name">Name</label>
-          <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
-          <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
+      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !illegality.valid }">
+          <label for="illegality">Name</label>
+          <input id="illegality" type="text" class="form-control" name="illegality" ngModel #illegality="ngModel" required />
+          <div *ngIf="f.submitted && !illegality.valid" class="help-text">Name is required</div>
       </div>
       <div class="form-group">
           <label for="country_id">Country

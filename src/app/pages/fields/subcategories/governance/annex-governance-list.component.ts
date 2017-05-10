@@ -20,22 +20,27 @@ export class AnnexGovernanceListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subCategoriesService.getAllGovernancesWithoutJSONAPI().then((data) => {
-      this.annexGovernances = data.data.map( value => value.attributes);
-      console.log(data);
+    this.subCategoriesService.getAllGovernances().then((data) => {
+      this.annexGovernances = data;
     });
   }
 
-  triggerNewAnnexGovernance(): void{
+  triggerNewAnnexGovernance(): void {
     this.router.navigate(['private/fields/subcategories/governance/new']);
   }
 
-  onEdit(row): void{
+  onEdit(row): void {
 
   }
 
-  onDelete(row): void{
-
+  onDelete(annexGovernance: AnnexGovernance): void {
+    if (confirm(`Are you sure to delete the AnnexGovernance with name: ${annexGovernance.governance_pillar}?`)) {
+      this.subCategoriesService.deleteAnnexGovernance(annexGovernance).then(
+        data => {
+          alert(data.json().messages[0].title);
+          this.ngOnInit();
+        });
+    }
   }
 
 

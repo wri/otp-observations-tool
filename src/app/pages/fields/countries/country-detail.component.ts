@@ -10,18 +10,30 @@ import { Component } from '@angular/core';
 export class CountryDetailComponent {
 
   private titleText: String = 'New Country';
+  private loading = false;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private countriesService: CountriesService
   ) {
   }
 
-  onCancel(): void{
+  onCancel(): void {
     this.router.navigate(['/private/fields/countries']);
   }
 
-  onSubmit(formValues):void {
-    console.log('submit!', formValues);
+  onSubmit(formValues): void {
+    this.countriesService.createCountry(formValues).then(
+        data => {
+          alert('Country created successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/countries']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
   }
 
 

@@ -13,7 +13,7 @@ export class GovernmentDetailComponent implements OnInit {
 
   private countries: Country[] = [];
   private titleText: String = 'New Government';
-  private loading: boolean = false;
+  private loading = false;
 
   constructor(
     private countriesService: CountriesService,

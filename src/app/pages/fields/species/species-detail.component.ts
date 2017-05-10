@@ -1,3 +1,4 @@
+import { Species } from 'app/models/species.model';
 import { SpeciesService } from 'app/services/species.service';
 import { Router } from '@angular/router';
 import { Country } from 'app/models/country.model';
@@ -15,7 +16,7 @@ export class SpeciesDetailComponent implements OnInit {
   private countriesDropdownSettings: any;
   private countriesDropdownData: any;
   private titleText: String = 'New Species';
-  private loading: boolean = false;
+  private loading = false;
 
   constructor(
     private countriesService: CountriesService,
@@ -59,6 +60,5 @@ export class SpeciesDetailComponent implements OnInit {
         this.loading = false;
       });
   }
-
 
 }

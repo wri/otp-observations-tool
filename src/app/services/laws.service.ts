@@ -15,7 +15,7 @@ export class LawsService {
     }
 
     getAll(){
-        return this.datastoreService.query(Law).toPromise();
+        return this.datastoreService.query(Law, { page: { size: 100 }}).toPromise();
     }
 
     createLaw(formValues): Promise<any> {
@@ -25,9 +25,8 @@ export class LawsService {
         .toPromise();
     }
 
-    deleteLawWithId(id): Promise<any>{
-      return this.http.delete(`${environment.apiUrl}/laws/${id}`)
-        .map(response => response.json())
+    deleteLaw(law:Law): Promise<any>{
+      return this.datastoreService.deleteRecord(Law, law.id)
         .toPromise();
     }
 }

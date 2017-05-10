@@ -33,8 +33,20 @@ export class ObserverListComponent implements OnInit {
 
   }
 
-  onDelete(row): void{
-
+  /**
+   * Event handler to delete a observer
+   * @private
+   * @param {Observer} observer
+   */
+  private onDelete(observer: Observer): void {
+    if (confirm(`Are you sure to delete the observer: ${observer.name}?`) ) {
+      this.observersService.deleteObserver(observer)
+      .then((data) => {
+        this.ngOnInit();
+        alert(data.json().messages[0].title);
+      })
+      .catch((e) => alert('Unable to delete the observer: ${observer.name} '));
+    }
   }
 
 }
