@@ -5,12 +5,6 @@
   background: $white;
   border-bottom: 1px solid $lighter-grey;
 
-  h1 {
-    font-size: $font-size-huge;
-    font-weight: $font-weight-thin;
-    margin: 0;
-  }
-
   .menu {
     display: flex;
     justify-content: space-between;
@@ -19,6 +13,7 @@
 
     ul {
       display: flex;
+      align-items: center;
       margin: 0;
       padding: 0;
       list-style: none;
@@ -30,7 +25,14 @@
 
         &:last-of-type {
           margin-right: 0;
+          padding-right: 0;
           cursor: pointer;
+        }
+
+        button { // For the mobile
+          line-height: inherit;
+          font-family: inherit;
+          font-size: inherit;
         }
       }
     }
