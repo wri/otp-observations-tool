@@ -19,11 +19,11 @@
     <ngx-datatable-column name="Name"></ngx-datatable-column>
     <ngx-datatable-column name="Username" prop="nickname"></ngx-datatable-column>
     <ngx-datatable-column name="Email"></ngx-datatable-column>
-    <ngx-datatable-column name="Actions" maxWidth=150>
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        <a routerLink="edit/{{row.id}}">EDIT</a>
-        <button type="button" (click)="onDelete(row)">DELETE</button>
-      </ng-template>
+    <ngx-datatable-column name="Actions">
+     <ng-template let-row="row" ngx-datatable-cell-template>
+       <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
+       <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
+     </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>
 </div>
