@@ -34,6 +34,10 @@ export class LoginComponent implements OnInit {
         alert('You entered a wrong username+password combination');
         console.log(error);
         this.loading = false;
-      });
-    }
+     });
+  }
+
+  triggerRegister() {
+    this.router.navigate(['/register']);
+  }
 }
