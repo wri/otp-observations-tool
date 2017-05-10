@@ -45,7 +45,7 @@ export class UsersService {
           email: user.email,
           institution: user.institution,
           country_id: user.country.id,
-          permissions_request: user.permissions_request
+          user_permission_attributes: user.user_permission_attributes
         }
       }).toPromise();
     }

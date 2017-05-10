@@ -42,7 +42,7 @@
           </select>
         </div>
 
-        <ng-template *ngIf="mode === 'new'">
+        <ng-template [ngIf]="mode === 'new'">
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
             <label for="password">Password</label>
             <input id="password" type="password" class="form-control" name="password" ngModel #password="ngModel" required />
@@ -57,9 +57,9 @@
           </div>
         </ng-template>
 
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !permissions_request.valid }">
-          <label for="permissions_request">Permissions</label>
-          <select id="permissions_request" name="permissions_request" [(ngModel)]="user && user.permissions_request" #permissions_request="ngModel">
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !user_permission_attributes.valid }">
+          <label for="user_permission_attributes">Permissions</label>
+          <select id="user_permission_attributes" name="user_permission_attributes" [(ngModel)]="user && user.user_permission_attributes" #user_permission_attributes="ngModel">
             <option value="operator">Operator</option>
             <option value="ngo">NGO</option>
           </select>
