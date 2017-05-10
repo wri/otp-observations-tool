@@ -1,6 +1,6 @@
 import { NgModule, Injectable } from '@angular/core';
 import { RequestOptions, RequestOptionsArgs, RequestMethod, Headers } from '@angular/http';
-import { TokenService } from 'app/services/auth.service';
+import { TokenService } from 'app/services/token.service';
 import { environment } from 'environments/environment';
 
 @Injectable()

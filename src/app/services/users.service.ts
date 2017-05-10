@@ -10,9 +10,7 @@ export class UsersService {
     constructor(
       private datastoreService: DatastoreService,
       private http: Http
-    ) {
-
-    }
+    ) {}
 
     public getAll(): Promise<User[]> {
       return this.datastoreService

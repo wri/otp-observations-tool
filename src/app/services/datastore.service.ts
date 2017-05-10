@@ -1,5 +1,5 @@
 import { Document } from 'app/models/document.model';
-import { TokenService } from 'app/services/auth.service';
+import { TokenService } from 'app/services/token.service';
 import { AnnexOperator } from 'app/models/annex-operator.model';
 import { AnnexGovernance } from 'app/models/annex-governance.model';
 import { User } from 'app/models/user.model';
