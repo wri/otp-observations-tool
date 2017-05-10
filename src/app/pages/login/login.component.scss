@@ -1,0 +1,16 @@
+@import 'src/settings.scss';
+
+.container {
+  background: $white;
+  border-bottom: 1px solid $lighter-grey;
+  height: 100%;
+  width: 100%;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+  }
+
+}
