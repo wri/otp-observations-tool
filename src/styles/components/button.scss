@@ -18,7 +18,8 @@
     color: $white;
     background: $color-primary;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: darken($color-primary, 10%);
     }
   }
@@ -26,9 +27,9 @@
   &.-secondary {
     border-color: $color-primary;
     color: $dark-grey;
-    background: $light-grey;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: darken($light-grey, 10%);
     }
   }

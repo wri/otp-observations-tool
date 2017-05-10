@@ -5,7 +5,7 @@
       <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
         <div class="c-container -j-between">
           <h2>{{mode === 'new' ? 'New' : 'Update'}} user</h2>
-          <div class="c-button-container -j-end form-group">
+          <div class="c-button-container -j-end form-group" *showItSizes="{min: 768}">
             <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
             <button disable="loading" type="submit" class="c-button -primary">{{mode === 'new' ? 'Create' : 'Update'}}</button>
           </div>
@@ -71,8 +71,8 @@
         </div>
 
         <otp-action-bar *xs>
-          <button disable="loading" type="button" (click)="onCancel()" class="button secondary">Cancel</button>
-          <button disable="loading" type="submit" class="button primary">{{mode === 'new' ? 'Create' : 'Update'}}</button>
+          <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+          <button disable="loading" type="submit" class="c-button -primary">{{mode === 'new' ? 'Create' : 'Update'}}</button>
         </otp-action-bar>
       </form>
     </div>
