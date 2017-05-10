@@ -29,5 +29,12 @@ export class ObserverListComponent implements OnInit {
     this.router.navigate(['private/fields/observers/new']);
   }
 
+  onEdit(row): void{
+
+  }
+
+  onDelete(row): void{
+
+  }
 
 }

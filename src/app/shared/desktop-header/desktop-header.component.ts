@@ -28,7 +28,7 @@ export class DesktopHeaderComponent implements OnInit {
     }
   }
 
-  logout() {
+  logout(): void{
     this.auth.logout();
   }
 

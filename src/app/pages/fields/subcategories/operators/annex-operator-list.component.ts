@@ -29,5 +29,13 @@ export class AnnexOperatorListComponent implements OnInit {
     this.router.navigate(['private/fields/subcategories/operators/new']);
   }
 
+  onEdit(row): void{
+
+  }
+
+  onDelete(row): void{
+
+  }
+
 
 }

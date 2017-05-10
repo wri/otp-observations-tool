@@ -30,5 +30,13 @@ export class CountryListComponent implements OnInit {
     this.router.navigate(['private/fields/countries/new']);
   }
 
+  onEdit(row): void{
+
+  }
+
+  onDelete(row): void{
+
+  }
+
 
 }
