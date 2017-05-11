@@ -1,0 +1,31 @@
+@import 'src/settings.scss';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  background: $white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0px 20px 110px;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $light-grey;
+  border-bottom: 1px solid $lighter-grey;
+  height: 100%;
+  width: 100%;
+
+  .login-container {
+    width: 100%;
+    max-width: 400px;
+  }
+}
