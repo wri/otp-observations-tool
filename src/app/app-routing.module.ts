@@ -1,3 +1,4 @@
+import { ObservationDetailEditComponent } from 'app/pages/observations/observation-detail-edit.component';
 import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
 import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
 import { AnnexOperatorListComponent } from 'app/pages/fields/subcategories/operators/annex-operator-list.component';
@@ -70,7 +71,7 @@ const routes: Routes = [
           },
           {
             path: 'edit/:id',
-            component: ObservationDetailComponent
+            component: ObservationDetailEditComponent
           },
           {
             path: 'delete/:id',

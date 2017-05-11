@@ -15,12 +15,20 @@ export class SubCategoriesService {
 
     }
 
-    getAllGovernances(){
-      return this.datastoreService.query(AnnexGovernance).toPromise();
+    getAllAnnexGovernances(): AnnexGovernance[] {
+      return this.datastoreService.peekAll(AnnexGovernance);
     }
 
-    getAllOperators(){
-      return this.datastoreService.query(AnnexOperator).toPromise();
+    getAnnexGovernancesByCountry(countryId: string): Promise<AnnexGovernance[]> {
+      return this.datastoreService.query(AnnexGovernance, { country: countryId }).toPromise();
+    }
+
+    getAllAnnexOperators(): AnnexOperator[] {
+      return this.datastoreService.peekAll(AnnexOperator);
+    }
+
+    getAnnexOperatorsByCountry(countryId: string): Promise<AnnexOperator[]> {
+      return this.datastoreService.query(AnnexOperator, { country: countryId }).toPromise();
     }
 
     deleteAnnexGovernance(annexGovernance: AnnexGovernance): Promise<any> {

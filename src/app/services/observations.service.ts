@@ -15,11 +15,15 @@ export class ObservationsService {
   getAll(): Promise<Observation[]> {
     return this.datastoreService.query(Observation).toPromise();
   }
-  getByType(type: String): Promise<Observation[]> {
+  getByType(type: string): Promise<Observation[]> {
     return this.datastoreService.query(Observation, {
       type: type,
       include: 'countries.name,governments'
     }).toPromise();
+  }
+
+  getById(id: string): Promise<Observation> {
+    return this.datastoreService.findRecord(Observation, id).toPromise();
   }
 
   createObservation(formValues): Promise<any> {
