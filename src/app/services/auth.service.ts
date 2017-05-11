@@ -9,8 +9,8 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class AuthService {
 
-  private userId: string;
-  private userRole: string;
+  public userId: string;
+  public userRole: string;
 
   constructor(
     private http: Http,
