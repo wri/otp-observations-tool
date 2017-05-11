@@ -10,9 +10,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserListComponent implements OnInit {
 
-  private users: User[] = [];
+  users: User[] = [];
 
-  private columns = [
+  columns = [
     { name: 'Name' },
     { name: 'Nickname' },
     { name: 'Email' }
@@ -23,7 +23,7 @@ export class UserListComponent implements OnInit {
     private router: Router
   ) {}
 
-  private triggerNewUser(): void{
+  triggerNewUser(): void{
     this.router.navigate(['private/users/new']);
   }
 
@@ -38,7 +38,7 @@ export class UserListComponent implements OnInit {
    * @private
    * @param {User} user
    */
-  private onDelete(user: User): void {
+  onDelete(user: User): void {
     if(confirm(`Are you sure to delete the user with name: ${user.name}?`)) {
       this.userService.deleteUser(user)
       .then(() => this.ngOnInit())
@@ -50,7 +50,7 @@ export class UserListComponent implements OnInit {
    * @private
    * @param {User} user
    */
-  private onEdit(user: User): void {
+  onEdit(user: User): void {
     this.router.navigate([`private/users/edit/${user.id}`]);
   }
 }

@@ -13,10 +13,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnnexOperatorDetailComponent implements OnInit {
 
-  private countries: Country[] = [];
-  private laws: Law[] = [];
-  private titleText: String = 'New Annex Operator';
-  private loading = false;
+  countries: Country[] = [];
+  laws: Law[] = [];
+  titleText: String = 'New Annex Operator';
+  loading = false;
 
   constructor(
     private countriesService: CountriesService,

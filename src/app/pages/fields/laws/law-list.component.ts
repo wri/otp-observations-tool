@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LawListComponent implements OnInit {
 
-  private laws: Law[];
+  laws: Law[];
 
   constructor(
     private lawsService: LawsService,

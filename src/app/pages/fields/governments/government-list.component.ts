@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GovernmentListComponent implements OnInit {
 
-  private governments: Government[];
+  governments: Government[];
 
   constructor(
     private router: Router,

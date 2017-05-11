@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SubcategoriesComponent {
 
-  private navigationItems: NavigationItem[] = [
+  navigationItems: NavigationItem[] = [
       { name: 'Operators', url: 'operators' },
       { name: 'Governance', url: 'governance' }
     ];

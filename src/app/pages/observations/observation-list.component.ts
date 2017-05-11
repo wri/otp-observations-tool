@@ -15,14 +15,14 @@ export class ObservationListComponent implements OnInit {
 
 
   private observations: Observation[] = [];
-  private navigationItems: NavigationItem[] = [
+  navigationItems: NavigationItem[] = [
       { name: 'Operators', url: '/private/observations/operators' },
       { name: 'Governance', url: '/private/observations/governance' }
     ];
   private selected = [];
   private editURL: string;
 
-  private get rows () {
+  get rows () {
     return this.observations;
   }
 

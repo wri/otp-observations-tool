@@ -13,7 +13,8 @@ import { Country } from 'app/models/country.model';
 })
 export class UserDetailComponent implements OnInit {
 
-  private countries: Country[] = [];
+  loading = false;
+  countries: Country[] = [];
   public user: User;
   public mode = 'new';
   @Input() public userId: number;

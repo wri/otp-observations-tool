@@ -13,7 +13,7 @@ import { AuthService } from 'app/services/auth.service';
 })
 export class BottombarComponent implements OnInit {
 
-  private isAdmin = false;
+  isAdmin = false;
 
   constructor(private auth: AuthService) {}
 

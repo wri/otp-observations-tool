@@ -9,8 +9,8 @@ import { Component } from '@angular/core';
 })
 export class CategoryDetailComponent {
 
-  private titleText: String = 'New Category';
-  private loading = false;
+  titleText: String = 'New Category';
+  loading = false;
 
   constructor(
     private router: Router,

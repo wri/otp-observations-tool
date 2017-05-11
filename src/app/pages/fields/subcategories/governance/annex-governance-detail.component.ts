@@ -12,8 +12,8 @@ import { Component, OnInit } from '@angular/core';
 export class AnnexGovernanceDetailComponent implements OnInit {
 
   private countries: Country[] = [];
-  private titleText: String = 'New Annex Governance';
-  private loading = false;
+  titleText: String = 'New Annex Governance';
+  loading = false;
 
   constructor(
     private countriesService: CountriesService,
