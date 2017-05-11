@@ -23,8 +23,8 @@ export class HeaderComponent implements OnInit {
     ];
 
     if (!isAdmin) {
-      // We just keep the "Observations" tab
-      this.navigationItems = [this.navigationItems[0]];
+      // We just keep the "Observations" and "Observation fields" tabs
+      this.navigationItems = this.navigationItems.slice(0, 2);
     }
   }
 
