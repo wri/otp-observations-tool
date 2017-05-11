@@ -68,7 +68,8 @@
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
               <label for="severity_id">Severity
-                <select id="severity_id" name="severity_id" ngModel #severity_id="ngModel" required>
+                <select id="severity_id" name="severity_id" [(ngModel)]="observation && observation.severity && observation.severity.id"
+                  #severity_id="ngModel" required>
                   <option *ngFor="let severity of severities" [value]="severity.id">{{ severity.level }} - {{ severity.details }}</option>
                 </select>
               </label>
@@ -82,7 +83,7 @@
           </div>
           <div *ngIf="isGovernance" class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
               <label for="government_id">Government Entity
-                <select id="government_id" name="government_id" ngModel #government_id="ngModel" required>
+                <select id="government_id" name="government_id" [(ngModel)]="observation && observation.government && observation.government.id" #government_id="ngModel" required>
                   <option *ngFor="let government of governments" [value]="government.id">{{ government.government_entity }}</option>
                 </select>
               </label>
@@ -112,7 +113,7 @@
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
               <label for="operator_id">Operator
-                <select id="operator_id" name="operator_id" [(ngModel)]="observation && observation.operator.id" #operator_id="ngModel" required>
+                <select id="operator_id" name="operator_id" [(ngModel)]="observation && observation.operator && observation.operator.id" #operator_id="ngModel" required>
                   <option *ngFor="let operator of operators" [value]="operator.id">{{ operator.name }}</option>
                 </select>
               </label>
@@ -134,13 +135,13 @@
         <div class="c-container -j-end -t-d-column -t-a-start" *showItSizes="{min: 768}">
           <div class="c-button-container -j-end form-group">
             <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-            <button disable="loading" type="submit" class="c-button -primary">Create</button>
+            <button disable="loading" type="submit" class="c-button -primary">Update</button>
           </div>
         </div>
 
         <otp-action-bar *xs>
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          <button disable="loading" type="submit" class="c-button -primary">Update</button>
         </otp-action-bar>
       </form>
     </div>

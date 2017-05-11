@@ -58,17 +58,9 @@ export class ObservationDetailComponent implements OnInit {
     this.governanceSelected = this.type === 'AnnexGovernance';
 
     if (this.type === 'AnnexOperator') {
-      this.subCategoriesService.getAllOperators().then(
-        data => {
-          this.subCategories = data;
-        }
-      );
+      this.subCategories = this.subCategoriesService.getAllAnnexOperators();
     } else if(this.type === 'AnnexGovernance') {
-      this.subCategoriesService.getAllGovernances().then(
-        data => {
-          this.subCategories = data;
-        }
-      );
+      this.subCategories = this.subCategoriesService.getAllAnnexGovernances();
     }
   }
 
@@ -103,11 +95,8 @@ export class ObservationDetailComponent implements OnInit {
       }
     );
     // ----- SUB CATEGORIES ----
-    this.subCategoriesService.getAllOperators().then(
-      data => {
-        this.subCategories = data;
-      }
-    );
+    this.subCategories = this.subCategoriesService.getAllAnnexOperators();
+
     // ----- OBSERVERS ----
     this.observersService.getAll().then(
       data => {

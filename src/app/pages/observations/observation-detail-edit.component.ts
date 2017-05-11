@@ -36,12 +36,9 @@ export class ObservationDetailEditComponent implements OnInit {
   private severities: Severity[];
   private dateOptions: DatePickerOptions;
   private isGovernance: boolean;
-  private operatorsLoaded = false;
-  private observersLoaded = false;
-  private countriesLoaded = false;
+  private governmentsLoaded = false;
   private subcategoriesLoaded = false;
   private observationId: string;
-
 
   constructor(
     private countriesService: CountriesService,
@@ -72,40 +69,36 @@ export class ObservationDetailEditComponent implements OnInit {
     this.loading = true;
 
     // ----- COUNTRIES ----
-    this.countriesService.getAll().then(
+    const promises = [];
+    promises.push(this.countriesService.getAll().then(
       data => {
          this.countries = data;
-         this.countriesLoaded = true;
-         this.loadObservation();
       }
-    );
+    ).catch(error => alert(error)));
     // ----- OBSERVERS ----
-    this.observersService.getAll().then(
+    promises.push(this.observersService.getAll().then(
       data => {
          this.observers = data;
-         this.observersLoaded = true;
-         this.loadObservation();
       }
-    );
+    ).catch(error => alert(error)));
     // ----- OPERATORS ----
-    this.operatorsService.getAll().then(
+    promises.push(this.operatorsService.getAll().then(
       data => {
          this.operators = data;
-         this.operatorsLoaded = true;
-         this.loadObservation();
       }
-    );
+    ).catch(error => alert(error)));
+    Promise.all(promises)
+      .then(() => this.loadObservation())
+      .catch(error => alert(error));
   }
 
   loadObservation(): void {
-    if (this.countriesLoaded && this.operatorsLoaded && this.observersLoaded) {
-      this.observationsService.getById(this.observationId).then(
-        data => {
-          this.observation = data;
-          this.isGovernance = this.observation.observation_type === 'AnnexGovernance';
-          this.loadSubcategories();
-      });
-    }
+    this.observationsService.getById(this.observationId).then(
+      data => {
+        this.observation = data;
+        this.isGovernance = this.observation.observation_type === 'AnnexGovernance';
+        this.loadSubcategories();
+    }).catch(error => alert(error));
   }
 
   loadSubcategories(): void {
@@ -113,40 +106,48 @@ export class ObservationDetailEditComponent implements OnInit {
       this.subCategoriesService.getAnnexGovernancesByCountry(this.observation.country.id).then(
         data => {
           this.annexGovernances = data;
-          this.observation = this.observation;
-          this.loading = false;
-      });
+          this.severities = this.annexGovernances.find((val) => {
+            return val.id === this.observation.annex_governance.id;
+          }).severities;
+          this.subcategoriesLoaded = true;
+          this.loadGovernments();
+      }).catch( error => alert(error));
     } else {
       this.subCategoriesService.getAnnexOperatorsByCountry(this.observation.country.id).then(
         data => {
           this.annexOperators = data;
-          this.observation = this.observation;
+          this.severities = this.annexOperators.find((val) => {
+            return val.id === this.observation.annex_operator.id;
+          }).severities;
+          this.subcategoriesLoaded = true;
           this.loading = false;
-      });
+      }).catch( error => alert(error));
     }
   }
 
-  onAnnexOperatorChange(value) {
-    // this.severities = this.subCategories.find((val) => {
-    //   return val.id === value;
-    // }).severities;
-  }
-
-  onAnnexGovernanceChange(value) {
-    // this.severities = this.subCategories.find((val) => {
-    //   return val.id === value;
-    // }).severities;
-  }
-
-  onCountryChange(value) {
-    this.governmentsService.getByCountry(value).then(
+  loadGovernments(): void {
+    this.loading = true;
+    this.governmentsService.getByCountry(this.observation.country.id).then(
       data => {
-         this.governments = data;
-      }
-    );;
+        this.governments = data;
+        this.loading = false;
+    }).catch( error => alert(error));
   }
 
-  getSubcategory(value){
+  onAnnexOperatorChange(value): void {
+    console.log('onAnnexOperatorChange');
+  }
+
+  onAnnexGovernanceChange(value): void {
+    console.log('onAnnexGovernanceChange');
+  }
+
+  onCountryChange(value): void {
+    console.log('onCountryChange');
+    this.loadGovernments();
+  }
+
+  getSubcategory(value): void {
     if (this.isGovernance) {
       return value.governance_problem;
     } else {
