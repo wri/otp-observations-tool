@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
 
   model: any = {};
   loading = false;
-  returnUrl: string;
+  returnUrl = '/private/observations';
 
   constructor(
     private route: ActivatedRoute,
@@ -19,11 +19,9 @@ export class LoginComponent implements OnInit {
     private authService: AuthService) {}
 
   ngOnInit(): void {
-    // reset login status
-    this.authService.logout();
-
-    // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/private/observations';
+    if (this.route.snapshot.queryParams.returnUrl) {
+      this.returnUrl = this.route.snapshot.queryParams.returnUrl;
+    }
   }
 
   login() {
@@ -35,6 +33,8 @@ export class LoginComponent implements OnInit {
         } else {
           this.router.navigate([this.returnUrl]);
         }
+
+        return isLogged;
       })
       .catch((error) => {
         alert('You entered a wrong username+password combination');

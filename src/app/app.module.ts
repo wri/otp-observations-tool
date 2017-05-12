@@ -1,4 +1,5 @@
 import { ObservationDetailEditComponent } from 'app/pages/observations/observation-detail-edit.component';
+import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { IconComponent } from 'app/shared/icons/icon.component';
 import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
 import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
@@ -115,6 +116,7 @@ import { ObservationsService } from 'app/services/observations.service';
   providers: [
     TokenService,
     AuthService,
+    AlreadyLoggedGuard,
     GovernmentsService,
     CountriesService,
     DatastoreService,

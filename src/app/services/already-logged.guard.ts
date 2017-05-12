@@ -1,11 +1,12 @@
 import { AuthService } from 'app/services/auth.service';
-import { CanActivate, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AlreadyLoggedGuard implements CanActivate {
+  private returnUrl = '/private/observations';
 
-  constructor (
+  constructor(
     private authService: AuthService,
     private router: Router
   ) {}
@@ -13,13 +14,11 @@ export class AuthGuard implements CanActivate {
   async canActivate(): Promise<boolean> {
     const isLogged = await this.authService.isUserLogged();
 
-    if (!isLogged) {
-      this.router.navigate(['/'], {
-        queryParams: { returnUrl: location.pathname }
-      });
+    if (isLogged) {
+      this.router.navigate([this.returnUrl]);
     }
 
-    return isLogged;
+    return !isLogged;
   }
 
 }
