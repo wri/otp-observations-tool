@@ -22,7 +22,7 @@ export class ObserverListComponent implements OnInit {
   ngOnInit(): void {
     this.observersService.getAll().then((data) => {
       this.observers = data;
-    });
+    }).catch( error => alert(error));
   }
 
   triggerNewObserver(): void {

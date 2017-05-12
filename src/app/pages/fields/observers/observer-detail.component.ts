@@ -12,8 +12,8 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ObserverDetailComponent implements OnInit {
 
-  observer: Observer;
-  countries: Country[] = [];
+  public observer: Observer;
+  public countries: Country[] = [];
   titleText: string;
   submitButtonText: string;
   loading: boolean;
