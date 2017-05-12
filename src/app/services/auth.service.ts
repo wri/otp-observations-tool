@@ -57,25 +57,33 @@ export class AuthService {
         this.userId = body.user_id;
         this.userRole = body.role;
 
+        this.triggerLoginStatus(true);
+
         return true;
       }).toPromise();
   }
 
   /**
-   * Check if the user is logged correctly
+   * Check if the user is logged
+   * Resolve if the user is logged, reject if not
+   * NOTE: this method send a request to the server, if you want to subscribe
+   * to login status changes, use loginStatus
    * @returns {Promise<boolean>}
    */
-  checkLogged(): Promise<boolean> {
+  async isUserLogged(): Promise<boolean> {
     if (!this.tokenService.token) {
-      return new Promise(resolve => resolve(false));
+      this.triggerLoginStatus(false);
+      return false;
     }
 
-    return this.http.get(`${environment.apiUrl}/users/current-user`)
-      .map(response => {
-        this.triggerLoginStatus(true);
-        return true;
-      })
-      .toPromise();
+    try {
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user`);
+      this.triggerLoginStatus(!!response);
+      return !!response;
+    } catch (e) {
+      this.triggerLoginStatus(false);
+      return false;
+    }
   }
 
   /**
