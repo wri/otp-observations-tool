@@ -43,8 +43,8 @@ export class ObservationsService {
   updateObservation(observation: Observation): Promise<any> {
 
     let tempDate: any = observation.publication_date;
-    if (typeof tempDate !== 'string') {
-      tempDate = `${tempDate.getDate()}-${tempDate.getMonth()}-${tempDate.getFullYear()}`;
+    if (tempDate.formatted) {
+      tempDate = tempDate.formatted;
     }
 
     const observationUpdated = {
@@ -62,8 +62,8 @@ export class ObservationsService {
       government_id: observation.government ? observation.government.id : '',
       publication_date: tempDate,
       is_active: observation.is_active ? observation.is_active : '',
-      latitude: observation.latitude,
-      longitude: observation.longitude
+      lat: observation.lat,
+      lng: observation.lng
     };
 
     const payload = { observation: observationUpdated };
