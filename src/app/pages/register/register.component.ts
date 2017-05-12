@@ -17,17 +17,16 @@ export class RegisterComponent implements OnInit {
   model: any = {};
   loading = false;
   returnUrl: string;
-  countries: Country[];
+  countries: Country[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private countriesService: CountriesService,
-    private http: Http) {
+    private http: Http
+  ) {}
 
-      this.countries = new Array<Country>();
-  }
   onSubmit(formValues) {
     this.loading = true;
 
@@ -41,25 +40,21 @@ export class RegisterComponent implements OnInit {
 
     this.http.post(`${environment.apiUrl}/register`, payload)
       .map(response => response.json())
-      .toPromise().then(
-        data => {
-          alert('User registered successfully!');
-          this.loading = false;
-        }
-      ).catch(error => {
+      .toPromise()
+      .then(() => {
+        alert('User registered successfully!');
+        this.router.navigate(['']);
+      })
+      .catch(error => {
         const errorMessage = error.json().errors[0].title;
         alert(errorMessage);
-        this.loading = false;
-      });
+      })
+      .then(() => this.loading = false);
   }
 
   ngOnInit(): void {
-    this.countriesService.getAll().then(
-      data => {
-         this.countries = data;
-      }
-    );
+    this.countriesService.getAll()
+      .then(data => this.countries = data);
   }
-
 
 }

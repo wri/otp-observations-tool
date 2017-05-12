@@ -3,29 +3,22 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-}
-
-.header {
-  background: $white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 0px 20px 110px;
-}
-
-.container {
-  flex: 1;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  background: $light-grey;
-  border-bottom: 1px solid $lighter-grey;
-  height: 100%;
-  width: 100%;
+  position: relative;
+  top: ($bottom-bar-height / 2); // We compensate the wrapper bottom padding
+  height: calc(100vh - #{84px + $bottom-bar-height}); // 84px = header's height
+
+  @media screen and (min-width: $break-tablet) {
+    height: calc(100vh - #{89px + $bottom-bar-height}); // 89px = header's height
+  }
+
+  > .l-wrapper {
+    width: 100%;
+  }
 
   .login-container {
     width: 100%;
+    margin: 0 auto;
     max-width: 400px;
   }
 }
