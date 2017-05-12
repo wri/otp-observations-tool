@@ -106,21 +106,16 @@ export class ObservationDetailEditComponent implements OnInit {
       this.subCategoriesService.getAnnexGovernancesByCountry(this.observation.country.id).then(
         data => {
           this.annexGovernances = data;
-
-          this.severities = this.annexGovernances.find((val) => {
-            return val.id === this.observation.annex_governance.id;
-          }).severities;
+          this.loadSeverities();
           this.subcategoriesLoaded = true;
           this.loadGovernments();
+          this.loading = false;
       }).catch( error => alert(error));
     } else {
       this.subCategoriesService.getAnnexOperatorsByCountry(this.observation.country.id).then(
         data => {
           this.annexOperators = data;
-
-          this.severities = this.annexOperators.find((val) => {
-            return val.id === this.observation.annex_operator.id;
-          }).severities;
+          this.loadSeverities();
           this.subcategoriesLoaded = true;
           this.loading = false;
       }).catch( error => alert(error));
@@ -144,8 +139,20 @@ export class ObservationDetailEditComponent implements OnInit {
     console.log('onAnnexGovernanceChange');
   }
 
+  loadSeverities(): void {
+    if (this.isGovernance) {
+      this.severities = this.annexGovernances.find((val) => {
+        return val.id === this.observation.annex_governance.id;
+      }).severities;
+    } else {
+      this.severities = this.annexOperators.find((val) => {
+        return val.id === this.observation.annex_operator.id;
+      }).severities;
+    }
+  }
+
   onCountryChange(value): void {
-    console.log('onCountryChange');
+    this.loadSubcategories();
     this.loadGovernments();
   }
 

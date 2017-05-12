@@ -44,14 +44,23 @@
           <!--<div leaflet style="height: 200px;"
             >
           </div>-->
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
-              <label for="subcategory_id">Sub-category
-                <select id="subcategory_id" (change)="onSubCategoryChange(subcategory_id.value)" name="subcategory_id"
-                  ngModel #subcategory_id="ngModel" required>
-                  <option *ngFor="let subCategory of subCategories" [value]="subCategory.id">{{ getSubcategory(subCategory) }}</option>
+          <div *ngIf="governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !annex_governance_id.valid }">
+              <label for="annex_governance_id">Sub-category
+                <select id="annex_governance_id" (change)="onAnnexGovernanceChange(annex_governance_id.value)" name="annex_governance_id"
+                  [(ngModel)]="observation && observation.annex_governance.id" #annex_governance_id="ngModel" required>
+                  <option *ngFor="let annexGovernance of annexGovernances" [value]="annexGovernance.id">{{ annexGovernance.governance_problem }}</option>
                 </select>
               </label>
-              <p *ngIf="f.submitted && !subcategory_id.valid" class="help-text">Please select a sub-category</p>
+              <p *ngIf="f.submitted && !annex_governance_id.valid" class="help-text">Please select a sub-category</p>
+          </div>
+          <div *ngIf="!governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !annex_operator_id.valid }">
+              <label for="annex_operator_id">Sub-category
+                <select id="annex_operator_id" (change)="onAnnexOperatorChange(annex_operator_id.value)" name="annex_operator_id"
+                  [(ngModel)]="observation && observation.annex_operator.id" #annex_operator_id="ngModel" required>
+                  <option *ngFor="let annexOperator of annexOperators" [value]="annexOperator.id">{{ annexOperator.illegality }}</option>
+                </select>
+              </label>
+              <p *ngIf="f.submitted && !annex_operator_id.valid" class="help-text">Please select a sub-category</p>
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
               <label for="severity_id">Severity
@@ -95,7 +104,7 @@
               </label>
               <p *ngIf="f.submitted && !observer_id.valid" class="help-text">Please select an observer</p>
           </div>
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
+          <div *ngIf="!governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
               <label for="operator_id">Operator
                 <select id="operator_id" name="operator_id" ngModel #operator_id="ngModel" required>
                   <option *ngFor="let operator of operators" [value]="operator.id">{{ operator.name }}</option>

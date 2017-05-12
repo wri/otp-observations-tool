@@ -31,11 +31,13 @@ export class ObservationDetailComponent implements OnInit {
   private governments: Government[];
   private observers: Observer[];
   private operators: Operator[];
-  private subCategories: any;
+  private annexGovernances: AnnexGovernance[];
+  private annexOperators: AnnexOperator[];
   private severities: Severity[];
   private dateOptions: DatePickerOptions;
   private type: String;
   private governanceSelected: boolean;
+  private selectedCountry: string;
 
   constructor(
     private countriesService: CountriesService,
@@ -56,11 +58,8 @@ export class ObservationDetailComponent implements OnInit {
   onTypeChange(event): void{
     this.type = event.target.value;
     this.governanceSelected = this.type === 'AnnexGovernance';
-
-    if (this.type === 'AnnexOperator') {
-      this.subCategories = this.subCategoriesService.getAllAnnexOperators();
-    } else if(this.type === 'AnnexGovernance') {
-      this.subCategories = this.subCategoriesService.getAllAnnexGovernances();
+    if (this.selectedCountry) {
+      this.onCountryChange(this.selectedCountry);
     }
   }
 
@@ -94,8 +93,6 @@ export class ObservationDetailComponent implements OnInit {
          this.countries = data;
       }
     );
-    // ----- SUB CATEGORIES ----
-    this.subCategories = this.subCategoriesService.getAllAnnexOperators();
 
     // ----- OBSERVERS ----
     this.observersService.getAll().then(
@@ -103,34 +100,63 @@ export class ObservationDetailComponent implements OnInit {
          this.observers = data;
       }
     );
-    // ----- OPERATORS ----
-    this.operatorsService.getAll().then(
+  }
+
+  onSubCategoryChange(value) {
+    this.loadSeverities(value);
+  }
+
+  loadSubcategories(countryId): void {
+    if (this.governanceSelected) {
+      this.subCategoriesService.getAnnexGovernancesByCountry(countryId).then(
+        data => {
+          this.annexGovernances = data;
+          debugger;
+        }
+      );
+    } else if(this.type === 'AnnexGovernance') {
+      this.subCategoriesService.getAnnexOperatorsByCountry(countryId).then(
+        data => {
+          this.annexOperators = data;
+          debugger;
+        }
+      );
+    }
+  }
+
+  loadGovernments(countryId): void {
+    this.governmentsService.getByCountry(countryId).then(
       data => {
-         this.operators = data;
+         this.governments = data;
       }
     );
   }
 
-  onSubCategoryChange(value) {
-    this.severities = this.subCategories.find((val) => {
-      return val.id === value;
-    }).severities;
+  loadOperators(countryId): void {
+    this.operatorsService.getByCountry(countryId).then(
+      data => {
+        this.operators = data;
+      }
+    );
+  }
+
+  loadSeverities(subcategory): void {
+    if (this.governanceSelected) {
+      this.severities = this.annexGovernances.find((val) => {
+        return val.id === subcategory;
+      }).severities;
+    } else {
+      this.severities = this.annexOperators.find((val) => {
+        return val.id === subcategory;
+      }).severities;
+    }
   }
 
   onCountryChange(value) {
-    this.governmentsService.getByCountry(value).then(
-      data => {
-         this.governments = data;
-      }
-    );;
-  }
-
-  getSubcategory(value){
-    if (this.governanceSelected) {
-      return value.governance_problem;
-    } else {
-      return value.illegality;
-    }
+    this.selectedCountry = value;
+    this.loadGovernments(value);
+    this.loadOperators(value);
+    this.loadSubcategories(value);
   }
 
 }
