@@ -30,7 +30,7 @@ export class LawListComponent implements OnInit {
   }
 
   onEdit(row): void{
-
+    this.router.navigate([`private/fields/laws/edit/${row.id}`]);
   }
 
   /**

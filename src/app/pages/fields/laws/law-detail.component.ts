@@ -51,16 +51,31 @@ export class LawDetailComponent implements OnInit {
          this.countries = data;
       }
     );
+    if (this.mode === 'edit') {
+      this.loadLaw();
+    }
+  }
+
+  loadLaw(): void {
+    this.loading = true;
+    this.lawsService.getById(this.lawId).then(
+      data => {
+        this.law = data;
+        this.loading = false;
+      }
+    ).catch( error => alert(error));
   }
 
   onCancel(): void{
     this.router.navigate(['/private/fields/laws']);
   }
 
-  onSubmit(formValues):void {
+  onSubmit(formValues): void {
 
     this.loading = true;
-    this.lawsService.createLaw(formValues).then(
+
+    if (this.mode === 'new') {
+      this.lawsService.createLaw(formValues).then(
         data => {
           alert('Law created successfully!');
           this.loading = false;
@@ -71,6 +86,19 @@ export class LawDetailComponent implements OnInit {
         alert(errorMessage);
         this.loading = false;
       });
+    } else {
+      this.lawsService.updateLaw(this.law).then(
+        data => {
+          alert('Law updated successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/laws']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
+    }
   }
 
 
