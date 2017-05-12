@@ -61,8 +61,16 @@ export class ObservationDetailEditComponent implements OnInit {
     this.router.navigate(['/private/observations']);
   }
 
-  onSubmit(formValues): void {
-
+  onSubmit(formValues, event): void {
+    event.preventDefault();
+    this.loading = true;
+    this.observationsService.updateObservation(this.observation).then(
+      data => {
+        alert('Observation updated successfully!');
+        this.loading = false;
+        this.router.navigate(['private/observations']);
+      }
+    ).catch( error => alert(error));
   }
 
   ngOnInit(): void {
@@ -79,12 +87,6 @@ export class ObservationDetailEditComponent implements OnInit {
     promises.push(this.observersService.getAll().then(
       data => {
          this.observers = data;
-      }
-    ).catch(error => alert(error)));
-    // ----- OPERATORS ----
-    promises.push(this.operatorsService.getAll().then(
-      data => {
-         this.operators = data;
       }
     ).catch(error => alert(error)));
     Promise.all(promises)
@@ -131,6 +133,14 @@ export class ObservationDetailEditComponent implements OnInit {
     }).catch( error => alert(error));
   }
 
+  loadOperators(): void {
+    this.operatorsService.getByCountry(this.observation.country.id).then(
+      data => {
+        this.operators = data;
+      }
+    );
+  }
+
   onAnnexOperatorChange(value): void {
     console.log('onAnnexOperatorChange');
   }
@@ -154,6 +164,9 @@ export class ObservationDetailEditComponent implements OnInit {
   onCountryChange(value): void {
     this.loadSubcategories();
     this.loadGovernments();
+    if (!this.isGovernance) {
+      this.loadOperators();
+    }
   }
 
   getSubcategory(value): void {

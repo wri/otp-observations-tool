@@ -2,7 +2,7 @@
   <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
   <div class="row collapse">
     <div class="large-10 columns">
-      <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+      <form name="form" (ngSubmit)="f.valid && onSubmit(f.value, $event)" #f="ngForm" novalidate>
         <div class="c-container -j-between -t-d-column -t-a-start">
           <h2>{{titleText}}</h2>
           <div class="c-button-container -j-end form-group" *showItSizes="{min: 768}">
@@ -12,13 +12,12 @@
         </div>
         <div class="form-group">
             <label for="observation_type">TYPE
-              <select disabled  id="observation_type" name="observation_type"
-                [(ngModel)]="observation && observation.observation_type" #observation_type="ngModel" required>
+              <select disabled id="observation_type" name="observation_type"
+                [(ngModel)]="observation && observation.observation_type" #observation_type="ngModel">
                  <option selected value="AnnexOperator">Operator</option>
                  <option value="AnnexGovernance">Governance</option>
               </select>
             </label>
-            <p *ngIf="f.submitted && !observation_type.valid" class="help-text">Please select a observation type</p>
         </div>
 
         <div class="white-card">
