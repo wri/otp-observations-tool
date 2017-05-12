@@ -18,7 +18,6 @@ export class ObservationsService {
   getByType(type: string): Promise<Observation[]> {
     return this.datastoreService.query(Observation, {
       type: type,
-      include: 'countries.name,governments',
       sort: '-created_at'
     }).toPromise();
   }

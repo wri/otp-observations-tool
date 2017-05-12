@@ -27,7 +27,7 @@ export class OperatorListComponent implements OnInit {
     this.router.navigate(['private/fields/operators/new']);
   }
 
-  onEdit(row): void{
+  onEdit(row): void {
 
   }
 
