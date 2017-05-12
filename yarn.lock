@@ -441,7 +441,7 @@ babel-messages@^6.23.0:
   dependencies:
     babel-runtime "^6.22.0"
 
-babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.6.1:
+babel-runtime@^6.18.0, babel-runtime@^6.22.0:
   version "6.23.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.23.0.tgz#0a9489f144de70efb3ce4300accdb329e2fc543b"
   dependencies:
@@ -545,7 +545,7 @@ blocking-proxy@0.0.5:
   dependencies:
     minimist "^1.2.0"
 
-bluebird@^3.3.0, bluebird@^3.4.6, bluebird@^3.4.7:
+bluebird@^3.3.0, bluebird@^3.4.7:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
@@ -2861,15 +2861,6 @@ less@^2.7.2:
     request "^2.72.0"
     source-map "^0.5.3"
 
-libphonenumber-js@^0.4.5:
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-0.4.10.tgz#8d64813675742074c01037a6ea266c1b394336c3"
-  dependencies:
-    babel-runtime "^6.6.1"
-    bluebird "^3.4.6"
-    minimist "^1.2.0"
-    xml2js "^0.4.17"
-
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
@@ -3178,12 +3169,6 @@ ng2-datepicker@^1.8.3:
 ng2-slimscroll@^1.2.6:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/ng2-slimscroll/-/ng2-slimscroll-1.3.2.tgz#8b052ca8748080ecce8138f1ab5826beaddf5d49"
-
-ng2-validation@^4.1.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/ng2-validation/-/ng2-validation-4.2.0.tgz#f38d441d3fb7e862155166480045aaff9ad11dbb"
-  dependencies:
-    libphonenumber-js "^0.4.5"
 
 no-case@^2.2.0:
   version "2.3.1"

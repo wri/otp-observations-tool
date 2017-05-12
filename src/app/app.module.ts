@@ -1,3 +1,6 @@
+import { EqualToValidatorDirective } from 'app/directives/equal-to.directive';
+import { EmailValidatorDirective } from 'app/directives/email.directive';
+import { NumberValidatorDirective } from 'app/directives/number.directive';
 import { ResponsiveService } from 'app/services/responsive.service';
 import { ObservationDetailEditComponent } from 'app/pages/observations/observation-detail-edit.component';
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
@@ -55,7 +58,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JsonApiModule } from 'angular2-jsonapi';
 import { HttpModule, RequestOptions } from '@angular/http';
-import { CustomFormsModule } from 'ng2-validation';
 import { SpinnerModule } from 'angular2-spinner/dist';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DatePickerModule } from 'ng2-datepicker';
@@ -103,6 +105,9 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     IconComponent,
     MaxTabletDirective,
     MinTabletDirective,
+    NumberValidatorDirective,
+    EmailValidatorDirective,
+    EqualToValidatorDirective,
   ],
   imports: [
     JsonApiModule,
@@ -110,7 +115,6 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    CustomFormsModule,
     SpinnerModule,
     NgxDatatableModule,
     DatePickerModule
