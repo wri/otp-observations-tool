@@ -111,14 +111,12 @@ export class ObservationDetailComponent implements OnInit {
       this.subCategoriesService.getAnnexGovernancesByCountry(countryId).then(
         data => {
           this.annexGovernances = data;
-          debugger;
         }
       );
     } else if(this.type === 'AnnexGovernance') {
       this.subCategoriesService.getAnnexOperatorsByCountry(countryId).then(
         data => {
           this.annexOperators = data;
-          debugger;
         }
       );
     }
