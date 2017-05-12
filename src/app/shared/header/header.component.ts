@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
 
@@ -7,29 +7,33 @@ import { NavigationItem } from 'app/shared/navigation/navigation.component';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
 
-  private navigationItems: NavigationItem[] = [];
+  private isAdmin = false;
+  isLogged = false;
 
-  constructor (private auth: AuthService) {}
+  private _navigationItems: NavigationItem[] = [
+    { name: 'Observations', url: '/private/observations' },
+    { name: 'Observation fields', url: '/private/fields' },
+    { name: 'Users', url: '/private/users' },
+  ];
 
-  async ngOnInit() {
-    const isAdmin = await this.auth.isAdmin();
-
-    this.navigationItems = [
-      { name: 'Observations', url: 'observations' },
-      { name: 'Observation fields', url: 'fields' },
-      { name: 'Users', url: 'users' },
-    ];
-
-    if (!isAdmin) {
-      // We just keep the "Observations" and "Observation fields" tabs
-      this.navigationItems = this.navigationItems.slice(0, 2);
-    }
+  get navigationItems(): NavigationItem[] {
+    return this.isAdmin
+      ? this._navigationItems
+      : this._navigationItems.slice(0, 2);
   }
 
-  logout(): void{
-    this.auth.logout();
+  constructor (private authService: AuthService) {
+    // Each time the status of the login change, we update some variables
+    this.authService.loginStatus.subscribe(isLogged => {
+      this.isLogged = isLogged;
+      this.authService.isAdmin().then(isAdmin => this.isAdmin = isAdmin);
+    });
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 
 }

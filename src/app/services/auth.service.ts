@@ -5,18 +5,34 @@ import { TokenService } from 'app/services/token.service';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Injectable()
 export class AuthService {
 
   public userId: string;
   public userRole: string;
+  // Observable of the login status of the user
+  private logged$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  get loginStatus() {
+    return this.logged$;
+  }
 
   constructor(
     private http: Http,
     private tokenService: TokenService,
     private router: Router
   ) {}
+
+  /**
+   * Trigger the login status to the component listening to the
+   * logged$ observable
+   * @param {boolean} isLogged whether or not the user is logged
+   */
+  triggerLoginStatus(isLogged: boolean) {
+    this.logged$.next(isLogged);
+  }
 
   /**
    * Log the user
@@ -33,6 +49,7 @@ export class AuthService {
       .map(response => response.json())
       .map(body => {
         if (body.role !== 'ngo' && body.role !== 'admin') {
+          this.triggerLoginStatus(false);
           return false;
         }
 
@@ -40,27 +57,44 @@ export class AuthService {
         this.userId = body.user_id;
         this.userRole = body.role;
 
+        this.triggerLoginStatus(true);
+
         return true;
       }).toPromise();
   }
 
   /**
-   * Check if the user is logged correctly
-   * Reject if the user isn't logged, resolve otherwise
+   * Check if the user is logged
+   * Resolve if the user is logged, reject if not
+   * NOTE: this method send a request to the server, if you want to subscribe
+   * to login status changes, use loginStatus
    * @returns {Promise<boolean>}
    */
-  checkLogged(): Promise<boolean> {
+  async isUserLogged(): Promise<boolean> {
     if (!this.tokenService.token) {
-      return new Promise((resolve, reject) => reject());
+      this.triggerLoginStatus(false);
+      return false;
     }
 
-    return this.http.get(`${environment.apiUrl}/users/current-user`)
-      .map(response => true)
-      .toPromise();
+    try {
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user`)
+        .map(data => data.json())
+        .toPromise();
+
+      this.userRole = response.included.length && response.included[0].attributes.user_role;
+      this.triggerLoginStatus(!!response);
+      return !!response;
+    } catch (e) {
+      this.triggerLoginStatus(false);
+      return false;
+    }
   }
 
   /**
    * Return whether the current user is an admin
+   * NOTE: you shouldn't call this method outside of loginStatus
+   * as you'll have the value as a certain time and it can evolve if the user
+   * logouts or logins with a different account
    * @returns {boolean}
    */
   isAdmin(): Promise<boolean> {
@@ -73,6 +107,7 @@ export class AuthService {
       this.tokenService.token = null;
       this.userId = null;
       this.userRole = null;
+      this.triggerLoginStatus(false);
       this.router.navigate(['/']);
   }
 

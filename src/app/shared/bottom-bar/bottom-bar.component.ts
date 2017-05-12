@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 
 
@@ -11,14 +11,15 @@ import { AuthService } from 'app/services/auth.service';
   templateUrl: './bottom-bar.component.html',
   styleUrls: ['./bottom-bar.component.scss']
 })
-export class BottombarComponent implements OnInit {
+export class BottombarComponent {
 
   isAdmin = false;
 
-  constructor(private auth: AuthService) {}
-
-  async ngOnInit() {
-    this.isAdmin = await this.auth.isAdmin();
+  constructor(private authService: AuthService) {
+    // Each time the status of the login change, we update some variables
+    this.authService.loginStatus.subscribe(isLogged => {
+      this.authService.isAdmin().then(isAdmin => this.isAdmin = isAdmin);
+    });
   }
 
 }

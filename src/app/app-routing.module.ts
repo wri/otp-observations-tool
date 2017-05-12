@@ -1,4 +1,5 @@
 import { ObservationDetailEditComponent } from 'app/pages/observations/observation-detail-edit.component';
+import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
 import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
 import { AnnexOperatorListComponent } from 'app/pages/fields/subcategories/operators/annex-operator-list.component';
@@ -29,7 +30,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
-import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
 import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 
 
@@ -37,6 +37,7 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    canActivate: [AlreadyLoggedGuard],
     component: LoginComponent
   },
   {
@@ -45,7 +46,6 @@ const routes: Routes = [
   },
   {
     path: 'private',
-    component: WrapperComponent,
     canActivate: [AuthGuard],
     children: [
       // -------------OBSERVATIONS------------------

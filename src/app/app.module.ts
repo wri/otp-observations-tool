@@ -1,4 +1,5 @@
 import { ObservationDetailEditComponent } from 'app/pages/observations/observation-detail-edit.component';
+import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { IconComponent } from 'app/shared/icons/icon.component';
 import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
 import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
@@ -29,7 +30,6 @@ import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 import { HeaderComponent } from 'app/shared/header/header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
-import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { UsersService } from 'app/services/users.service';
 import { TabsComponent } from 'app/shared/tabs/tabs.component';
@@ -77,7 +77,6 @@ import { ObservationsService } from 'app/services/observations.service';
     FieldListComponent,
     FieldDetailComponent,
     TabsComponent,
-    WrapperComponent,
     NavigationComponent,
     HeaderComponent,
     GovernmentListComponent,
@@ -117,6 +116,7 @@ import { ObservationsService } from 'app/services/observations.service';
   providers: [
     TokenService,
     AuthService,
+    AlreadyLoggedGuard,
     GovernmentsService,
     CountriesService,
     DatastoreService,
