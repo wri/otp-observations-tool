@@ -20,7 +20,7 @@ export class SubCategoriesService {
     }
 
     getAnnexGovernancesByCountry(countryId: string): Promise<AnnexGovernance[]> {
-      return this.datastoreService.query(AnnexGovernance, { country: countryId }).toPromise();
+      return this.datastoreService.query(AnnexGovernance, { country: countryId, page: { size: 10000 } }).toPromise();
     }
 
     getAllAnnexOperators(): AnnexOperator[] {
@@ -28,7 +28,7 @@ export class SubCategoriesService {
     }
 
     getAnnexOperatorsByCountry(countryId: string): Promise<AnnexOperator[]> {
-      return this.datastoreService.query(AnnexOperator, { country: countryId }).toPromise();
+      return this.datastoreService.query(AnnexOperator, { country: countryId, page: { size: 10000 } }).toPromise();
     }
 
     deleteAnnexGovernance(annexGovernance: AnnexGovernance): Promise<any> {

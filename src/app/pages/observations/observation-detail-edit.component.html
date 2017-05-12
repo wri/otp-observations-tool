@@ -111,7 +111,7 @@
               </label>
               <p *ngIf="f.submitted && !observer_id.valid" class="help-text">Please select an observer</p>
           </div>
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
+          <div *ngIf="!isGovernance" class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
               <label for="operator_id">Operator
                 <select id="operator_id" name="operator_id" [(ngModel)]="observation && observation.operator && observation.operator.id" #operator_id="ngModel" required>
                   <option *ngFor="let operator of operators" [value]="operator.id">{{ operator.name }}</option>

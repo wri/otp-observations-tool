@@ -106,7 +106,7 @@ export class ObservationDetailEditComponent implements OnInit {
       this.subCategoriesService.getAnnexGovernancesByCountry(this.observation.country.id).then(
         data => {
           this.annexGovernances = data;
-          debugger;
+
           this.severities = this.annexGovernances.find((val) => {
             return val.id === this.observation.annex_governance.id;
           }).severities;
@@ -117,7 +117,7 @@ export class ObservationDetailEditComponent implements OnInit {
       this.subCategoriesService.getAnnexOperatorsByCountry(this.observation.country.id).then(
         data => {
           this.annexOperators = data;
-          debugger;
+
           this.severities = this.annexOperators.find((val) => {
             return val.id === this.observation.annex_operator.id;
           }).severities;
