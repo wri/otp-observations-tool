@@ -14,7 +14,7 @@ export class ObserversService {
 
     }
 
-    getAll(){
+    getAll(): Promise<Observer[]> {
         return this.datastoreService.query(Observer, { page: { size: 1000 }}).toPromise();
     }
 
@@ -25,7 +25,27 @@ export class ObserversService {
         .toPromise();
     }
 
+    updateObserver(observer: Observer): Promise<any> {
+      const payload = { observer: {
+          country_id: observer.country.id,
+          name: observer.name,
+          organization: observer.organization,
+          observer_type: observer.observer_type,
+          is_active: observer.is_active,
+          logo: observer.logo
+        }
+      };
+
+      return this.http.patch(`${environment.apiUrl}/observers/${observer.id}`, payload)
+        .map(response => response.json())
+        .toPromise();
+    }
+
     deleteObserver(observer: Observer): Promise<any>{
       return this.datastoreService.deleteRecord(Observer, observer.id).toPromise();
+    }
+
+    getById(observerId): Promise<Observer> {
+      return this.datastoreService.findRecord(Observer, observerId).toPromise();
     }
 }

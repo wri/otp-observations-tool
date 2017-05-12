@@ -25,12 +25,12 @@ export class ObserverListComponent implements OnInit {
     });
   }
 
-  triggerNewObserver(): void{
+  triggerNewObserver(): void {
     this.router.navigate(['private/fields/observers/new']);
   }
 
-  onEdit(row): void{
-
+  onEdit(row): void {
+    this.router.navigate([`private/fields/observers/edit/${row.id}`]);
   }
 
   /**
