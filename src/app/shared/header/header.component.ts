@@ -13,9 +13,9 @@ export class HeaderComponent {
   isLogged = false;
 
   private _navigationItems: NavigationItem[] = [
-    { name: 'Observations', url: 'observations' },
-    { name: 'Observation fields', url: 'fields' },
-    { name: 'Users', url: 'users' },
+    { name: 'Observations', url: '/private/observations' },
+    { name: 'Observation fields', url: '/private/fields' },
+    { name: 'Users', url: '/private/users' },
   ];
 
   get navigationItems(): NavigationItem[] {
