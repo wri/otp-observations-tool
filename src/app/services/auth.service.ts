@@ -77,7 +77,11 @@ export class AuthService {
     }
 
     try {
-      const response = await this.http.get(`${environment.apiUrl}/users/current-user`);
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user`)
+        .map(data => data.json())
+        .toPromise();
+
+      this.userRole = response.included.length && response.included[0].attributes.user_role;
       this.triggerLoginStatus(!!response);
       return !!response;
     } catch (e) {
@@ -88,6 +92,9 @@ export class AuthService {
 
   /**
    * Return whether the current user is an admin
+   * NOTE: you shouldn't call this method outside of loginStatus
+   * as you'll have the value as a certain time and it can evolve if the user
+   * logouts or logins with a different account
    * @returns {boolean}
    */
   isAdmin(): Promise<boolean> {
