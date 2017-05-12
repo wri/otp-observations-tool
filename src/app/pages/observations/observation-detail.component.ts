@@ -27,16 +27,16 @@ export class ObservationDetailComponent implements OnInit {
   private model: any = {};
   loading = false;
   private returnUrl: string;
-  countries: Country[];
-  private governments: Government[];
-  private observers: Observer[];
-  private operators: Operator[];
-  private annexGovernances: AnnexGovernance[];
-  private annexOperators: AnnexOperator[];
-  private severities: Severity[];
-  private dateOptions: DatePickerOptions;
-  private type: String;
-  private governanceSelected: boolean;
+  countries: Country[] = [];
+  governments: Government[];
+  observers: Observer[];
+  operators: Operator[];
+  annexGovernances: AnnexGovernance[];
+  annexOperators: AnnexOperator[];
+  severities: Severity[];
+  dateOptions: DatePickerOptions;
+  type: String;
+  governanceSelected: boolean;
   private selectedCountry: string;
 
   constructor(
@@ -47,9 +47,8 @@ export class ObservationDetailComponent implements OnInit {
     private operatorsService: OperatorsService,
     private observationsService: ObservationsService,
     private router: Router,
-    private http: Http) {
-
-      this.countries = new Array<Country>();
+    private http: Http
+  ) {
       this.dateOptions = new DatePickerOptions();
       this.type = 'operator';
       this.governanceSelected = false;

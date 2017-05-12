@@ -24,21 +24,21 @@ import { DatePickerOptions } from 'ng2-datepicker';
 })
 export class ObservationDetailEditComponent implements OnInit {
 
-  private titleText: String = 'Edit observation';
-  private observation: Observation;
-  private loading = false;
-  private countries: Country[];
-  private governments: Government[];
-  private observers: Observer[];
-  private operators: Operator[];
-  private annexGovernances: AnnexGovernance[];
-  private annexOperators: AnnexOperator[];
-  private severities: Severity[];
-  private dateOptions: DatePickerOptions;
-  private isGovernance: boolean;
-  private governmentsLoaded = false;
-  private subcategoriesLoaded = false;
-  private observationId: string;
+  titleText: String = 'Edit observation';
+  observation: Observation;
+  loading = false;
+  countries: Country[];
+  governments: Government[];
+  observers: Observer[];
+  operators: Operator[];
+  annexGovernances: AnnexGovernance[];
+  annexOperators: AnnexOperator[];
+  severities: Severity[];
+  dateOptions: DatePickerOptions;
+  isGovernance: boolean;
+  governmentsLoaded = false;
+  subcategoriesLoaded = false;
+  observationId: string;
 
   constructor(
     private countriesService: CountriesService,
@@ -49,12 +49,11 @@ export class ObservationDetailEditComponent implements OnInit {
     private observationsService: ObservationsService,
     private router: Router,
     private route: ActivatedRoute,
-    private http: Http) {
-
-      this.dateOptions = new DatePickerOptions();
-
-      // -- Get observation ID from URL---
-      this.observationId = this.route.snapshot.params.id;
+    private http: Http
+  ) {
+    this.dateOptions = new DatePickerOptions();
+    // -- Get observation ID from URL---
+    this.observationId = this.route.snapshot.params.id;
   }
 
   onCancel(): void {
