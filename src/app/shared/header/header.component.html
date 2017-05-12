@@ -7,6 +7,6 @@
     </ul>
   </div>
   <ng-template [ngIf]="isLogged">
-    <otp-navigation [items]="navigationItems" (change)="onChange($event)" *showItSizes="{min: 768}"></otp-navigation>
+    <otp-navigation [items]="navigationItems" (change)="onChange($event)" *otpMinTablet></otp-navigation>
   </ng-template>
 </div>

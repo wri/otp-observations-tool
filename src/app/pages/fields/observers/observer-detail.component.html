@@ -4,7 +4,7 @@
     <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
       <div class="c-container -j-between -t-d-column -t-a-start">
         <h2>{{titleText}}</h2>
-        <div class="c-button-container -j-end form-group" *showItSizes="{min: 768}">
+        <div class="c-button-container -j-end form-group" *otpMinTablet>
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
           <button disable="loading" type="submit" class="c-button -primary">Create</button>
         </div>
@@ -42,14 +42,14 @@
           <input id="active" type="checkbox" name="active" ngModel #active="ngModel" />
       </div>
 
-      <div class="c-container -j-end -t-d-column -t-a-start" *showItSizes="{min: 768}">
+      <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
         <div class="c-button-container -j-end form-group">
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
           <button disable="loading" type="submit" class="c-button -primary">Create</button>
         </div>
       </div>
 
-      <otp-action-bar *xs>
+      <otp-action-bar *otpMaxTablet>
         <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
         <button disable="loading" type="submit" class="c-button -primary">Create</button>
       </otp-action-bar>

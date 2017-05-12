@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod-build": "ng build --prod --aot --extract-css"
+    "prod-build": "ng build --prod --aot --extract-css",
+    "bundle-report": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -30,7 +31,6 @@
     "foundation-sites": "^6.3.1",
     "leaflet": "^1.0.3",
     "ng2-datepicker": "^1.8.3",
-    "ng2-responsive": "^0.8.3",
     "ng2-validation": "^4.1.0",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
@@ -52,6 +52,7 @@
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
-    "typescript": "~2.2.0"
+    "typescript": "~2.2.0",
+    "webpack-bundle-analyzer": "^2.8.1"
   }
 }
