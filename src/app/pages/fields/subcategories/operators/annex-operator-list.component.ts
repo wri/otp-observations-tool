@@ -20,9 +20,7 @@ export class AnnexOperatorListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subCategoriesService.getAllOperators().then((data) => {
-      this.annexOperators = data;
-    });
+    this.annexOperators = this.subCategoriesService.getAllAnnexOperators();
   }
 
   triggerNewAnnexOperator(): void{

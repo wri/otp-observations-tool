@@ -20,9 +20,7 @@ export class AnnexGovernanceListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subCategoriesService.getAllGovernances().then((data) => {
-      this.annexGovernances = data;
-    });
+    this.annexGovernances = this.subCategoriesService.getAllAnnexGovernances();
   }
 
   triggerNewAnnexGovernance(): void {

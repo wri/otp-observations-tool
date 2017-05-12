@@ -25,6 +25,8 @@ export class Observation extends JsonApiModel {
   @Attribute() evidence?: string;
   @Attribute() concern_opinion?: string;
   @Attribute() litigation_status?: string;
+  @Attribute() lat?: string;
+  @Attribute() lng?: string;
 
   @BelongsTo() country: Country;
   @BelongsTo() annex_operator?: AnnexOperator;

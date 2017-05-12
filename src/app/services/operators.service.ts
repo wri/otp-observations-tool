@@ -14,8 +14,12 @@ export class OperatorsService {
 
     }
 
-    getAll(){
-        return this.datastoreService.query(Operator, { page: { size: 1000 } }).toPromise();
+    getAll(): Operator[] {
+      return this.datastoreService.peekAll(Operator);
+    }
+
+    getByCountry(countryId): Promise<Operator[]> {
+      return this.datastoreService.query(Operator, { countr_id: countryId, page: { size: 10000 }}).toPromise();
     }
 
     createOperator(formValues): Promise<any> {
