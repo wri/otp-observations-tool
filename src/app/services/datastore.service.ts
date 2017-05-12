@@ -21,7 +21,7 @@ import { Observation } from 'app/models/observation.model';
 
 @Injectable()
 @JsonApiDatastoreConfig({
-  baseUrl: `${environment.apiUrl}/` ,
+  baseUrl: environment.apiUrl,
   models: {
     observations: Observation,
     countries: Country,

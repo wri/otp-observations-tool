@@ -12,11 +12,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SpeciesDetailComponent implements OnInit {
 
-  private countries: Country[];
-  private countriesDropdownSettings: any;
-  private countriesDropdownData: any;
-  private titleText: String = 'New Species';
-  private loading = false;
+  countries: Country[];
+  countriesDropdownSettings: any;
+  countriesDropdownData: any;
+  titleText: String = 'New Species';
+  loading = false;
 
   constructor(
     private countriesService: CountriesService,

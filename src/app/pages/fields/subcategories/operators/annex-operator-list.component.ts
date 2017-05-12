@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnnexOperatorListComponent implements OnInit {
 
-  private annexOperators: AnnexOperator[];
+  annexOperators: AnnexOperator[];
 
   constructor(
     private subCategoriesService: SubCategoriesService,

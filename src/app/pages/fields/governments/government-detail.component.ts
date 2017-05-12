@@ -11,9 +11,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GovernmentDetailComponent implements OnInit {
 
-  private countries: Country[] = [];
-  private titleText: String = 'New Government';
-  private loading = false;
+  countries: Country[] = [];
+  titleText: String = 'New Government';
+  loading = false;
 
   constructor(
     private countriesService: CountriesService,

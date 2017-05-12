@@ -11,9 +11,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OperatorDetailComponent implements OnInit {
 
-  private countries: Country[] = [];
-  private titleText: String = 'New Operator';
-  private loading: boolean;
+  countries: Country[] = [];
+  titleText: String = 'New Operator';
+  loading: boolean;
 
   constructor(
     private countriesService: CountriesService,

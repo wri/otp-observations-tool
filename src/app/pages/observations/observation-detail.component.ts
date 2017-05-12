@@ -23,11 +23,11 @@ import { DatePickerOptions } from 'ng2-datepicker';
 })
 export class ObservationDetailComponent implements OnInit {
 
-  private titleText: String = 'New observation';
+  titleText: String = 'New observation';
   private model: any = {};
-  private loading = false;
+  loading = false;
   private returnUrl: string;
-  private countries: Country[];
+  countries: Country[];
   private governments: Government[];
   private observers: Observer[];
   private operators: Operator[];

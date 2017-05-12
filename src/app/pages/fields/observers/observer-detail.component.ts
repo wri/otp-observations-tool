@@ -11,9 +11,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ObserverDetailComponent implements OnInit {
 
-  private countries: Country[] = [];
-  private titleText: String = 'New Monitor';
-  private loading: boolean;
+  countries: Country[] = [];
+  titleText: String = 'New Monitor';
+  loading: boolean;
 
   constructor(
     private countriesService: CountriesService,

@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnnexGovernanceListComponent implements OnInit {
 
-  private annexGovernances: AnnexGovernance[];
+  annexGovernances: AnnexGovernance[];
 
   constructor(
     private subCategoriesService: SubCategoriesService,

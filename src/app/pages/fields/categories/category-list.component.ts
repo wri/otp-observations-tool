@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CategoryListComponent implements OnInit {
 
-  private categories: Category[];
+  categories: Category[];
 
   constructor(
     private categoriesService: CategoriesService,

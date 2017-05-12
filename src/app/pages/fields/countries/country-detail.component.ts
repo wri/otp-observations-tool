@@ -9,8 +9,8 @@ import { Component } from '@angular/core';
 })
 export class CountryDetailComponent {
 
-  private titleText: String = 'New Country';
-  private loading = false;
+  titleText: String = 'New Country';
+  loading = false;
 
   constructor(
     private router: Router,

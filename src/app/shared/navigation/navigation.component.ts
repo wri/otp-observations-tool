@@ -17,8 +17,8 @@ export interface NavigationItem {
 export class NavigationComponent implements OnInit {
 
   @Input() private activeItem: NavigationItem;
-  @Input() private items: NavigationItem[] = [];
-  @Input() private layout: 'mini'|'horizontal'|'vertical' = 'horizontal';
+  @Input() items: NavigationItem[] = [];
+  @Input() layout: 'mini'|'horizontal'|'vertical' = 'horizontal';
   @Output() private change = new EventEmitter();
 
   // Whether or not the component should manage which item is active

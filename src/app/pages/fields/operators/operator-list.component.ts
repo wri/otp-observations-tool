@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OperatorListComponent implements OnInit {
 
-  private operators: Operator[];
+  operators: Operator[];
 
   constructor(
     private operatorsService: OperatorsService,

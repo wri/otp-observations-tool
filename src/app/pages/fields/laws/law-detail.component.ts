@@ -11,9 +11,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LawDetailComponent implements OnInit {
 
-  private countries: Country[];
-  private titleText: String = 'New Law';
-  private loading = false;
+  countries: Country[];
+  titleText: String = 'New Law';
+  loading = false;
 
   constructor(
     private countriesService: CountriesService,

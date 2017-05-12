@@ -11,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CountryListComponent implements OnInit {
 
-  private countries: Country[];
+  countries: Country[];
 
   constructor(
     private countriesService: CountriesService,

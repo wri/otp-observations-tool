@@ -36,6 +36,9 @@ export class RegisterComponent implements OnInit {
       delete payload.user.permissions_request;
     }
 
+    // We only create NGO users
+    payload.user.permissions_request = 'ngo';
+
     this.http.post(`${environment.apiUrl}/register`, payload)
       .map(response => response.json())
       .toPromise().then(

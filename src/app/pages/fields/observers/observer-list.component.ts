@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ObserverListComponent implements OnInit {
 
-  private observers: Observer[];
+  observers: Observer[];
 
   constructor(
     private observersService: ObserversService,

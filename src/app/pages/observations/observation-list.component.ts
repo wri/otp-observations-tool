@@ -1,3 +1,4 @@
+import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -14,20 +15,21 @@ export class ObservationListComponent implements OnInit {
 
 
   private observations: Observation[] = [];
-  private navigationItems: NavigationItem[] = [
+  navigationItems: NavigationItem[] = [
       { name: 'Operators', url: '/private/observations/operators' },
       { name: 'Governance', url: '/private/observations/governance' }
     ];
   private selected = [];
   private editURL: string;
 
-  private get rows () {
+  get rows () {
     return this.observations;
   }
 
   constructor(
     private router: Router,
-    private observationsService: ObservationsService
+    private observationsService: ObservationsService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +46,7 @@ export class ObservationListComponent implements OnInit {
   onEdit(row): void {
     this.router.navigate([`/private/observations/edit/${row.id}`]);
   }
+
   onDelete(row): void {
     if(confirm(`Are you sure to delete the observation with details: ${row.details}?`)) {
       this.observationsService.deleteObservationWithId(row.id).then(
@@ -52,6 +55,17 @@ export class ObservationListComponent implements OnInit {
           this.ngOnInit();
         });
     }
+  }
+
+  /**
+   * Return whether the logged user can edit or delete an observation
+   * @param {Observation} observation
+   * @returns {boolean}
+   */
+  canEdit(observation: Observation): boolean {
+    return observation.user
+      ? observation.user.id === this.authService.userId
+      : this.authService.userRole === 'admin';
   }
 
   getCategory(row): string {

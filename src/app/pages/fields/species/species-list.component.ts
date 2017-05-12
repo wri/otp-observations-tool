@@ -11,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SpeciesListComponent implements OnInit {
 
-  private species: Species[];
+  species: Species[];
 
   constructor(
     private speciesService: SpeciesService,
