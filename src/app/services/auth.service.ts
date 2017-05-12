@@ -5,18 +5,34 @@ import { TokenService } from 'app/services/token.service';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Injectable()
 export class AuthService {
 
   public userId: string;
   public userRole: string;
+  // Observable of the login status of the user
+  private logged$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  get loginStatus() {
+    return this.logged$;
+  }
 
   constructor(
     private http: Http,
     private tokenService: TokenService,
     private router: Router
   ) {}
+
+  /**
+   * Trigger the login status to the component listening to the
+   * logged$ observable
+   * @param {boolean} isLogged whether or not the user is logged
+   */
+  triggerLoginStatus(isLogged: boolean) {
+    this.logged$.next(isLogged);
+  }
 
   /**
    * Log the user
@@ -33,6 +49,7 @@ export class AuthService {
       .map(response => response.json())
       .map(body => {
         if (body.role !== 'ngo' && body.role !== 'admin') {
+          this.triggerLoginStatus(false);
           return false;
         }
 
@@ -46,16 +63,18 @@ export class AuthService {
 
   /**
    * Check if the user is logged correctly
-   * Reject if the user isn't logged, resolve otherwise
    * @returns {Promise<boolean>}
    */
   checkLogged(): Promise<boolean> {
     if (!this.tokenService.token) {
-      return new Promise((resolve, reject) => reject());
+      return new Promise(resolve => resolve(false));
     }
 
     return this.http.get(`${environment.apiUrl}/users/current-user`)
-      .map(response => true)
+      .map(response => {
+        this.triggerLoginStatus(true);
+        return true;
+      })
       .toPromise();
   }
 
@@ -73,6 +92,7 @@ export class AuthService {
       this.tokenService.token = null;
       this.userId = null;
       this.userRole = null;
+      this.triggerLoginStatus(false);
       this.router.navigate(['/']);
   }
 

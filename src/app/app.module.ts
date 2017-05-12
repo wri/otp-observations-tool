@@ -29,7 +29,6 @@ import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 import { HeaderComponent } from 'app/shared/header/header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
-import { WrapperComponent } from 'app/shared/wrapper/wrapper.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { UsersService } from 'app/services/users.service';
 import { TabsComponent } from 'app/shared/tabs/tabs.component';
@@ -77,7 +76,6 @@ import { ObservationsService } from 'app/services/observations.service';
     FieldListComponent,
     FieldDetailComponent,
     TabsComponent,
-    WrapperComponent,
     NavigationComponent,
     HeaderComponent,
     GovernmentListComponent,

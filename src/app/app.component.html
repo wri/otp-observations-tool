@@ -1,2 +1,11 @@
+<div class="pre-header">
+  <div class="l-wrapper">
+    <a href="http://www.wri.org/" rel="noopener" *xs><img src="assets/wri-monoline-mbl.svg" alt="World Resources Institute" /></a>
+    <a href="http://www.wri.org/" rel="noopener" *showItSizes="{min: 768}"><img src="assets/wri-monoline.svg" alt="World Resources Institute" /></a>
+  </div>
+</div>
+<otp-header></otp-header>
 <router-outlet></router-outlet>
-
+<ng-template [ngIf]="isLogged">
+  <otp-bottom-bar *xs></otp-bottom-bar>
+</ng-template>

@@ -9,12 +9,15 @@ import { NavigationItem } from 'app/shared/navigation/navigation.component';
 })
 export class HeaderComponent implements OnInit {
 
+  isLogged = false;
   private navigationItems: NavigationItem[] = [];
 
-  constructor (private auth: AuthService) {}
+  constructor (private authService: AuthService) {
+    this.authService.loginStatus.subscribe(isLogged => this.isLogged = isLogged);
+  }
 
   async ngOnInit() {
-    const isAdmin = await this.auth.isAdmin();
+    const isAdmin = await this.authService.isAdmin();
 
     this.navigationItems = [
       { name: 'Observations', url: 'observations' },
@@ -28,8 +31,8 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  logout(): void{
-    this.auth.logout();
+  logout(): void {
+    this.authService.logout();
   }
 
 }

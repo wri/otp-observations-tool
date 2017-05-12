@@ -45,7 +45,6 @@ const routes: Routes = [
   },
   {
     path: 'private',
-    component: WrapperComponent,
     canActivate: [AuthGuard],
     children: [
       // -------------OBSERVATIONS------------------
