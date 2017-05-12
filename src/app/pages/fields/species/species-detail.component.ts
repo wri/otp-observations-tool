@@ -15,7 +15,8 @@ export class SpeciesDetailComponent implements OnInit {
   countries: Country[];
   countriesDropdownSettings: any;
   countriesDropdownData: any;
-  titleText: String = 'New Species';
+  titleText: string;
+  submitButtonText: string;
   loading = false;
 
   constructor(

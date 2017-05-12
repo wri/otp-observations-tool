@@ -14,13 +14,37 @@ export class SpeciesService {
 
     }
 
-    getAll(){
-        return this.datastoreService.query(Species, { page: { size: 100 } }).toPromise();
+    getAll(): Promise<Species[]> {
+      return this.datastoreService.query(Species, { page: { size: 100 } }).toPromise();
+    }
+
+    getById(species: Species): Promise<Species> {
+      return this.datastoreService.findRecord(Species, species.id).toPromise();
     }
 
     createSpecies(formValues): Promise<any> {
       const payload = { species: formValues };
       return this.http.post(`${environment.apiUrl}/species`, payload)
+        .map(response => response.json())
+        .toPromise();
+    }
+
+    updateSpecies(species: Species): Promise<any> {
+      const payload = {
+        species: {
+          name: species.name,
+          scientific_name: species.scientific_name,
+          common_name: species.common_name,
+          country_ids: species.countries,
+          species_class: species.species_class,
+          sub_species: species.sub_species,
+          cites_status: species.cites_status,
+          cites_id: species.cites_id,
+          iucn_status: species.iucn_status
+        }
+      };
+
+      return this.http.patch(`${environment.apiUrl}/species/${species.id}`, payload)
         .map(response => response.json())
         .toPromise();
     }
