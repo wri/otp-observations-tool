@@ -30,7 +30,6 @@ export class SpeciesService {
     }
 
     updateSpecies(species: Species): Promise<any> {
-      debugger;
       const payload = {
         species: {
           name: species.name,

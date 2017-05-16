@@ -29,8 +29,8 @@ export class CategoryListComponent implements OnInit {
     this.router.navigate(['private/fields/categories/new']);
   }
 
-  onEdit(row): void{
-
+  onEdit(row): void {
+    this.router.navigate([`/private/fields/categories/edit/${row.id}`]);
   }
 
   private onDelete(category: Category): void {

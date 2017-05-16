@@ -28,7 +28,6 @@ export class SpeciesDetailComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.countries = new Array<Country>();
     this.countriesDropdownSettings = {
       text: 'Please select a set of countries',
       enableSearchFilter: true
