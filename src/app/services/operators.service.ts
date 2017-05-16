@@ -14,8 +14,8 @@ export class OperatorsService {
 
     }
 
-    getAll(): Operator[] {
-      return this.datastoreService.peekAll(Operator);
+    getAll(): Promise<Operator[]> {
+      return this.datastoreService.query(Operator).toPromise();
     }
 
     getByCountry(countryId): Promise<Operator[]> {

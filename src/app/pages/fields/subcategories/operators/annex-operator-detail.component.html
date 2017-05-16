@@ -1,30 +1,32 @@
 <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
 <div class="row">
   <div class="large-10 columns">
-    <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+    <form name="form" (ngSubmit)="f.valid && onSubmit(f.value, $event)" #f="ngForm" novalidate>
       <div class="c-container -j-between -t-d-column -t-a-start">
         <h2>{{titleText}}</h2>
         <div class="c-button-container -j-end form-group" *showItSizes="{min: 768}">
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
         </div>
       </div>
 
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !illegality.valid }">
           <label for="illegality">Name</label>
-          <input id="illegality" type="text" class="form-control" name="illegality" ngModel #illegality="ngModel" required />
+          <input id="illegality" type="text" class="form-control" name="illegality"
+            [(ngModel)]="annexOperator && annexOperator.illegality" #illegality="ngModel" required />
           <div *ngIf="f.submitted && !illegality.valid" class="help-text">Name is required</div>
       </div>
       <div class="form-group">
           <label for="country_id">Country
-            <select name="country_id" ngModel #country_id="ngModel">
-              <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+            <select name="country_id" [(ngModel)]="annexOperator && annexOperator.country"
+              #country_id="ngModel">
+              <option *ngFor="let country of countries" [value]="country">{{ country.name }}</option>
             </select>
           </label>
       </div>
       <div class="form-group">
           <label for="law_ids">Law references
-            <select multiple name="law_ids" ngModel #law_ids="ngModel">
+            <select multiple name="law_ids" [(ngModel)]="annexOperator && annexOperator.law" #law_ids="ngModel">
               <option *ngFor="let law of laws" [value]="law.id">{{ law.legal_reference }}</option>
             </select>
           </label>
@@ -37,13 +39,13 @@
       <div class="c-container -j-end -t-d-column -t-a-start" *showItSizes="{min: 768}">
         <div class="c-button-container -j-end form-group">
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
         </div>
       </div>
 
       <otp-action-bar *xs>
         <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+        <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
       </otp-action-bar>
     </form>
   </div>

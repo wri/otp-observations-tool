@@ -15,33 +15,77 @@ export class SubCategoriesService {
 
     }
 
-    getAllAnnexGovernances(): AnnexGovernance[] {
-      return this.datastoreService.peekAll(AnnexGovernance);
+    // -------------- ANNEX GOVERNANCE -----------------------
+
+    getAllAnnexGovernances(): Promise<AnnexGovernance[]> {
+      return this.datastoreService.query(AnnexGovernance).toPromise();
     }
 
     getAnnexGovernancesByCountry(countryId: string): Promise<AnnexGovernance[]> {
       return this.datastoreService.query(AnnexGovernance, { country: countryId, page: { size: 10000 } }).toPromise();
     }
 
-    getAllAnnexOperators(): AnnexOperator[] {
-      return this.datastoreService.peekAll(AnnexOperator);
-    }
-
-    getAnnexOperatorsByCountry(countryId: string): Promise<AnnexOperator[]> {
-      return this.datastoreService.query(AnnexOperator, { country: countryId, page: { size: 10000 } }).toPromise();
+    getAnnexGovernanceById(annexGovernanceId: string): Promise<AnnexGovernance> {
+      return this.datastoreService.findRecord(AnnexGovernance, annexGovernanceId).toPromise();
     }
 
     deleteAnnexGovernance(annexGovernance: AnnexGovernance): Promise<any> {
       return this.datastoreService.deleteRecord(AnnexGovernance, annexGovernance.id).toPromise();
     }
 
-    deleteAnnexOperator(annexOperator: AnnexOperator): Promise<any>{
-      return this.datastoreService.deleteRecord(AnnexOperator, annexOperator.id).toPromise();
+    updateAnnexGovernance(annexGovernance: AnnexGovernance): Promise<any> {
+      const payload = {
+        annex_governance: {
+          governance_pillar: annexGovernance.governance_pillar,
+          governance_problem: annexGovernance.governance_problem,
+          details: annexGovernance.details,
+          category_ids: annexGovernance.categories
+        }
+      };
+
+      return this.http.patch(`${environment.apiUrl}/annex_governances/${annexGovernance.id}`, payload)
+        .map(response => response.json())
+        .toPromise();
     }
 
     createAnnexGovernance(formValues): Promise<any> {
       const payload = { annex_governance: formValues };
       return this.http.post(`${environment.apiUrl}/annex_governances`, payload)
+        .map(response => response.json())
+        .toPromise();
+    }
+
+    // -------------- ANNEX OPERATOR -----------------------
+
+    getAllAnnexOperators(): Promise<AnnexOperator[]> {
+      return this.datastoreService.query(AnnexOperator).toPromise();
+    }
+
+    getAnnexOperatorsByCountry(countryId: string): Promise<AnnexOperator[]> {
+      return this.datastoreService.query(AnnexOperator, { country: countryId, page: { size: 10000 } }).toPromise();
+    }
+
+    getAnnexOperatorById(annexOperatorId: string): Promise<AnnexOperator> {
+      return this.datastoreService.findRecord(AnnexOperator, annexOperatorId).toPromise();
+    }
+
+    deleteAnnexOperator(annexOperator: AnnexOperator): Promise<any>{
+      return this.datastoreService.deleteRecord(AnnexOperator, annexOperator.id).toPromise();
+    }
+
+    updateAnnexOperator(annexOperator: AnnexOperator): Promise<any> {
+      const payload = {
+        annex_operator: {
+          illegality: annexOperator.illegality,
+          country_id: annexOperator.country ? annexOperator.country.id : '',
+          details: annexOperator.details,
+          law_ids: annexOperator.laws ? annexOperator.laws : ''
+        }
+      };
+
+      debugger;
+
+      return this.http.patch(`${environment.apiUrl}/annex_operators/${annexOperator.id}`, payload)
         .map(response => response.json())
         .toPromise();
     }

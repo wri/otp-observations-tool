@@ -20,7 +20,11 @@ export class OperatorListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.operators = this.operatorsService.getAll();
+    this.operatorsService.getAll().then(
+      data => {
+        this.operators = data;
+      }
+    );
   }
 
   triggerNewOperator(): void{

@@ -40,7 +40,9 @@ export class SpeciesService {
           sub_species: species.sub_species,
           cites_status: species.cites_status,
           cites_id: species.cites_id,
-          iucn_status: species.iucn_status
+          iucn_status: species.iucn_status,
+          species_kingdom: species.species_kingdom,
+          species_family: species.species_family
         }
       };
 
