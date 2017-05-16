@@ -37,7 +37,6 @@ export class OperatorsService {
           details: operator.details
         }
       };
-      debugger;
       return this.http.patch(`${environment.apiUrl}/operators/${operator.id}`, payload)
         .map(response => response.json())
         .toPromise();

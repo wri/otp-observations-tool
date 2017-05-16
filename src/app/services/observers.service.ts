@@ -27,7 +27,7 @@ export class ObserversService {
 
     updateObserver(observer: Observer): Promise<any> {
       const payload = { observer: {
-          country_id: observer.country.id,
+          country_id: observer.country ? observer.country.id : '',
           name: observer.name,
           organization: observer.organization,
           observer_type: observer.observer_type,

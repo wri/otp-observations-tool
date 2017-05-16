@@ -61,6 +61,9 @@ export class LawDetailComponent implements OnInit {
     this.lawsService.getById(this.lawId).then(
       data => {
         this.law = data;
+        if (!this.law.country) {
+          this.law.country = new Country(null, null);
+        }
         this.loading = false;
       }
     ).catch( error => alert(error));
@@ -87,6 +90,8 @@ export class LawDetailComponent implements OnInit {
         this.loading = false;
       });
     } else {
+      this.law;
+      debugger;
       this.lawsService.updateLaw(this.law).then(
         data => {
           alert('Law updated successfully!');

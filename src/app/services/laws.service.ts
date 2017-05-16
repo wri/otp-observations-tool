@@ -30,8 +30,9 @@ export class LawsService {
     }
 
     updateLaw(law: Law): Promise<any> {
+      debugger;
       const payload = { law: {
-          country_id: law.country.id,
+          country_id: law.country ? law.country.id : '',
           legal_reference: law.legal_reference,
           vpa_indicator: law.vpa_indicator,
           legal_penalty: law.legal_penalty,
