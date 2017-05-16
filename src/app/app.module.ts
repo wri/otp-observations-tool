@@ -1,3 +1,7 @@
+import { EqualToValidatorDirective } from 'app/directives/equal-to.directive';
+import { EmailValidatorDirective } from 'app/directives/email.directive';
+import { NumberValidatorDirective } from 'app/directives/number.directive';
+import { ResponsiveService } from 'app/services/responsive.service';
 import { ObservationDetailEditComponent } from 'app/pages/observations/observation-detail-edit.component';
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { IconComponent } from 'app/shared/icons/icon.component';
@@ -54,12 +58,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JsonApiModule } from 'angular2-jsonapi';
 import { HttpModule, RequestOptions } from '@angular/http';
-import { CustomFormsModule } from 'ng2-validation';
 import { SpinnerModule } from 'angular2-spinner/dist';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DatePickerModule } from 'ng2-datepicker';
-import { ResponsiveModule } from 'ng2-responsive';
 import { ObservationsService } from 'app/services/observations.service';
+import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsive.directive';
 
 
 @NgModule({
@@ -99,7 +102,12 @@ import { ObservationsService } from 'app/services/observations.service';
     AnnexOperatorListComponent,
     AnnexGovernanceDetailComponent,
     AnnexGovernanceListComponent,
-    IconComponent
+    IconComponent,
+    MaxTabletDirective,
+    MinTabletDirective,
+    NumberValidatorDirective,
+    EmailValidatorDirective,
+    EqualToValidatorDirective,
   ],
   imports: [
     JsonApiModule,
@@ -107,10 +115,8 @@ import { ObservationsService } from 'app/services/observations.service';
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    CustomFormsModule,
     SpinnerModule,
     NgxDatatableModule,
-    ResponsiveModule,
     DatePickerModule
   ],
   providers: [
@@ -128,6 +134,7 @@ import { ObservationsService } from 'app/services/observations.service';
     SpeciesService,
     LawsService,
     CategoriesService,
+    ResponsiveService,
     { provide: RequestOptions, useClass: OauthRequestOptions }
   ],
   bootstrap: [AppComponent]
