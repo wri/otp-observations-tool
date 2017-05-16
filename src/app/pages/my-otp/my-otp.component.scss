@@ -1,0 +1,59 @@
+@import 'src/settings.scss';
+
+:host {
+  display: block;
+  padding-bottom: 20px;
+
+  > .mobile-navigation {
+    margin-bottom: 35px;
+    transform: translate(0, 0); // Needed for the fixed otp-navigation componnent
+
+    &:before,
+    &:after {
+      display: block;
+      position: fixed;
+      top: 0;
+      width: 10px;
+      height: calc(100% - 1px); // 1px for the border-bottom
+      z-index: 1;
+      content: '';
+    }
+
+    &:before {
+      left: 0;
+      background: linear-gradient(to left, rgba($light-grey, 0), $light-grey 90%);
+    }
+
+    &:after {
+      right: 0;
+      background: linear-gradient(to right, rgba($light-grey, 0), $light-grey 90%);
+    }
+
+    > otp-navigation {
+      width: 100%;
+      background-color: $light-grey;
+      border-bottom: 1px solid $lighter-grey;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  otp-navigation {
+    display: block;
+
+    @media screen and (min-width: $break-tablet) {
+      width: auto;
+      background-color: transparent;
+      border-bottom: 0;
+
+      position: relative;
+      left: -10px; // Compensate the left padding
+      flex-basis: 250px;
+      flex-shrink: 0;
+    }
+  }
+
+  .content {
+    flex-grow: 1;
+  }
+}

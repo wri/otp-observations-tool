@@ -57,7 +57,8 @@ export class ObservationDetailEditComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/private/observations']);
+    // Without relativeTo, the navigation doesn't work properly
+    this.router.navigate(['../..'], { relativeTo: this.route });
   }
 
   onSubmit(formValues, event): void {
@@ -67,7 +68,8 @@ export class ObservationDetailEditComponent implements OnInit {
       data => {
         alert('Observation updated successfully!');
         this.loading = false;
-        this.router.navigate(['private/observations']);
+        // Without relativeTo, the navigation doesn't work properly
+        this.router.navigate(['../..'], { relativeTo: this.route });
       }
     ).catch( error => alert(error));
   }

@@ -1,3 +1,5 @@
+import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
+import { OrganizationProfileComponent } from 'app/pages/my-otp/profile/organization-profile.component';
 import { EqualToValidatorDirective } from 'app/directives/equal-to.directive';
 import { EmailValidatorDirective } from 'app/directives/email.directive';
 import { NumberValidatorDirective } from 'app/directives/number.directive';
@@ -108,6 +110,8 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     NumberValidatorDirective,
     EmailValidatorDirective,
     EqualToValidatorDirective,
+    MyOTPComponent,
+    OrganizationProfileComponent,
   ],
   imports: [
     JsonApiModule,
