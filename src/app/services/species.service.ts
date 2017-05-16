@@ -18,8 +18,8 @@ export class SpeciesService {
       return this.datastoreService.query(Species, { page: { size: 100 } }).toPromise();
     }
 
-    getById(species: Species): Promise<Species> {
-      return this.datastoreService.findRecord(Species, species.id).toPromise();
+    getById(speciesId: string): Promise<Species> {
+      return this.datastoreService.findRecord(Species, speciesId).toPromise();
     }
 
     createSpecies(formValues): Promise<any> {
@@ -30,6 +30,7 @@ export class SpeciesService {
     }
 
     updateSpecies(species: Species): Promise<any> {
+      debugger;
       const payload = {
         species: {
           name: species.name,

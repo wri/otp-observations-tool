@@ -1,6 +1,6 @@
 import { Species } from 'app/models/species.model';
 import { SpeciesService } from 'app/services/species.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
 import { Component, OnInit } from '@angular/core';
@@ -18,11 +18,15 @@ export class SpeciesDetailComponent implements OnInit {
   titleText: string;
   submitButtonText: string;
   loading = false;
+  public mode = 'new';
+  speciesId: string;
+  species: Species;
 
   constructor(
     private countriesService: CountriesService,
     private speciesService: SpeciesService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.countries = new Array<Country>();
     this.countriesDropdownSettings = {
@@ -30,6 +34,24 @@ export class SpeciesDetailComponent implements OnInit {
       enableSearchFilter: true
     };
     this.countriesDropdownData = [];
+
+    if (this.router.url.match(/\/edit\/[0-9]+$/)) {
+      this.setMode('edit');
+    } else {
+      this.setMode('new');
+    }
+  }
+
+  setMode(value: string): void {
+    this.mode = value;
+    if (this.mode === 'edit') {
+      this.titleText = 'Edit species';
+      this.submitButtonText = 'Update';
+      this.speciesId = this.route.snapshot.params['id'];
+    } else if (this.mode === 'new') {
+      this.titleText = 'New species';
+      this.submitButtonText = 'Create';
+    }
   }
 
   ngOnInit(): void {
@@ -41,15 +63,29 @@ export class SpeciesDetailComponent implements OnInit {
          });
       }
     );
+    if (this.mode === 'edit') {
+      this.loadSpecies();
+    }
   }
 
-  onCancel(): void{
+  loadSpecies(): void {
+    this.loading = true;
+    this.speciesService.getById(this.speciesId).then(
+      data => {
+        this.species = data;
+        this.loading = false;
+      }
+    ).catch( error => alert(error));
+  }
+
+  onCancel(): void {
     this.router.navigate(['/private/fields/species']);
   }
 
   onSubmit(formValues):void {
     this.loading = true;
-    this.speciesService.createSpecies(formValues).then(
+    if (this.mode === 'new') {
+      this.speciesService.createSpecies(formValues).then(
         data => {
           alert('Species created successfully!');
           this.loading = false;
@@ -60,6 +96,20 @@ export class SpeciesDetailComponent implements OnInit {
         alert(errorMessage);
         this.loading = false;
       });
+    } else {
+      this.speciesService.updateSpecies(this.species).then(
+        data => {
+          alert('Species updated successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/species']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
+    }
+
   }
 
 }
