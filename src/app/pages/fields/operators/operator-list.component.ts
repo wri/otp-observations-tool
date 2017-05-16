@@ -32,7 +32,7 @@ export class OperatorListComponent implements OnInit {
   }
 
   onEdit(row): void {
-
+    this.router.navigate([`private/fields/operators/edit/${row.id}`]);
   }
 
   onDelete(operator: Operator): void {

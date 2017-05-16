@@ -73,7 +73,7 @@ export class AnnexOperatorDetailComponent implements OnInit {
     this.subCategoriesService.getAnnexOperatorById(this.annexOperatorId).then(
       data => {
         this.annexOperator = data;
-        setTimeout(() => this.updateLawSelector(), 1000);
+        setTimeout(() => this.updateLawSelector(), 500);
       }
     ).catch( error => alert(error));
   }

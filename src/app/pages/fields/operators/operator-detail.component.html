@@ -6,18 +6,19 @@
         <h2>{{titleText}}</h2>
         <div class="c-button-container -j-end form-group" *showItSizes="{min: 768}">
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
         </div>
       </div>
 
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
           <label for="name">Name</label>
-          <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
+          <input id="name" type="text" class="form-control" name="name"
+            [(ngModel)]="operator && operator.name" #name="ngModel" required />
           <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
       </div>
       <div class="form-group">
           <label for="operator_type">Operator type
-            <select name="operator_type" ngModel #operator_type="ngModel" required>
+            <select name="operator_type" [(ngModel)]="operator && operator.operator_type" #operator_type="ngModel" required>
                 <option selected [value]="'Logging'">Logging</option>
                 <option [value]="'Company'">Company</option>
                 <option [value]="'Artisanal'">Artisanal</option>
@@ -33,34 +34,31 @@
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
           <label for="country_id">Country
-            <select name="country_id" ngModel #country_id="ngModel">
+            <select name="country_id" [(ngModel)]="operator && operator.country" #country_id="ngModel">
               <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
             </select>
           </label>
       </div>
       <div class="form-group">
           <label for="concession">Concession</label>
-          <input id="concession" type="text" class="form-control" name="concession" ngModel #concession="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="country_centroid">Country centroid</label>
-          <input id="country_centroid" type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
+          <input id="concession" type="text" class="form-control" name="concession"
+            [(ngModel)]="operator && operator.concession" #concession="ngModel" />
       </div>
       <div class="form-group">
           <label for="active">Active</label>
-          <input id="active" type="checkbox" name="active" ngModel #active="ngModel" />
+          <input id="active" type="checkbox" name="active" [(ngModel)]="operator && operator.is_active" #active="ngModel" />
       </div>
 
       <div class="c-container -j-end -t-d-column -t-a-start" *showItSizes="{min: 768}">
         <div class="c-button-container -j-end form-group">
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
         </div>
       </div>
 
       <otp-action-bar *xs>
         <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+        <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
       </otp-action-bar>
     </form>
   </div>
