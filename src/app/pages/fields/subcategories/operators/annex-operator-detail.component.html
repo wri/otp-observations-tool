@@ -1,7 +1,7 @@
 <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
 <div class="row">
   <div class="large-10 columns">
-    <form name="form" (ngSubmit)="f.valid && onSubmit(f.value, $event)" #f="ngForm" novalidate>
+    <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
       <div class="c-container -j-between -t-d-column -t-a-start">
         <h2>{{titleText}}</h2>
         <div class="c-button-container -j-end form-group" *showItSizes="{min: 768}">
@@ -18,22 +18,23 @@
       </div>
       <div class="form-group">
           <label for="country_id">Country
-            <select name="country_id" [(ngModel)]="annexOperator && annexOperator.country"
+            <select name="country_id" [(ngModel)]="annexOperator && annexOperator.country && annexOperator.country.id"
               #country_id="ngModel">
-              <option *ngFor="let country of countries" [value]="country">{{ country.name }}</option>
+              <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
             </select>
           </label>
       </div>
       <div class="form-group">
           <label for="law_ids">Law references
-            <select multiple name="law_ids" [(ngModel)]="annexOperator && annexOperator.law" #law_ids="ngModel">
+            <select multiple (change)="onLawSelectionChange($event.target)" name="law_ids" #law_ids>
               <option *ngFor="let law of laws" [value]="law.id">{{ law.legal_reference }}</option>
             </select>
           </label>
       </div>
       <div class="form-group">
           <label for="details">Details</label>
-          <input id="details" type="text" class="form-control" name="details" ngModel #details="ngModel" />
+          <input id="details" type="text" class="form-control" name="details"
+            [(ngModel)]="annexOperator && annexOperator.details" #details="ngModel" />
       </div>
 
       <div class="c-container -j-end -t-d-column -t-a-start" *showItSizes="{min: 768}">

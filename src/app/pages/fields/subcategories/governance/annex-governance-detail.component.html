@@ -22,6 +22,14 @@
             [(ngModel)]="annexGovernance && annexGovernance.governance_problem" #governance_problem="ngModel" required />
           <div *ngIf="f.submitted && !governance_problem.valid" class="help-text">Governance problem is required</div>
       </div>
+      <!--<div class="form-group">
+          <label for="country_id">Country
+            <select name="country_id" [(ngModel)]="annexGovernance && annexGovernance.country && annexGovernance.country.id"
+              #country_id="ngModel">
+              <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+            </select>
+          </label>
+      </div>-->
       <div class="form-group">
           <label for="details">Details</label>
           <input id="details" type="text" class="form-control" name="details"

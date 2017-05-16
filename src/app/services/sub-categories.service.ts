@@ -39,7 +39,7 @@ export class SubCategoriesService {
           governance_pillar: annexGovernance.governance_pillar,
           governance_problem: annexGovernance.governance_problem,
           details: annexGovernance.details,
-          category_ids: annexGovernance.categories
+          country_id: annexGovernance.country ? annexGovernance.country.id : ''
         }
       };
 
@@ -82,8 +82,6 @@ export class SubCategoriesService {
           law_ids: annexOperator.laws ? annexOperator.laws : ''
         }
       };
-
-      debugger;
 
       return this.http.patch(`${environment.apiUrl}/annex_operators/${annexOperator.id}`, payload)
         .map(response => response.json())

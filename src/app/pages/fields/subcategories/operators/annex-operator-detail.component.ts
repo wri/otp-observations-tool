@@ -5,7 +5,7 @@ import { LawsService } from 'app/services/laws.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'otp-annex-operator-detail',
@@ -14,6 +14,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnnexOperatorDetailComponent implements OnInit {
 
+  @ViewChild('law_ids') lawSelectorRef;
   countries: Country[] = [];
   laws: Law[] = [];
   titleText: string;
@@ -72,9 +73,20 @@ export class AnnexOperatorDetailComponent implements OnInit {
     this.subCategoriesService.getAnnexOperatorById(this.annexOperatorId).then(
       data => {
         this.annexOperator = data;
-        this.loading = false;
+        setTimeout(() => this.updateLawSelector(), 1000);
       }
     ).catch( error => alert(error));
+  }
+
+  updateLawSelector(): void {
+    const options = this.lawSelectorRef.nativeElement.options;
+    for ( let i = 0; i < options.length ; i++) {
+      const element = options[i];
+      element.selected = this.annexOperator.laws.find( elem => {
+         return elem.id === element.value;
+      });
+    }
+    this.loading = false;
   }
 
 
@@ -82,8 +94,7 @@ export class AnnexOperatorDetailComponent implements OnInit {
     this.router.navigate(['/private/fields/subcategories/operators']);
   }
 
-  onSubmit(formValues, event): void {
-    event.preventDefault();
+  onSubmit(formValues): void {
     this.loading = true;
     if (this.mode === 'new') {
       this.subCategoriesService.createAnnexOperator(formValues).then(
@@ -112,5 +123,11 @@ export class AnnexOperatorDetailComponent implements OnInit {
     }
   }
 
-
+  onLawSelectionChange(target): void {
+    const selectedLaws = [];
+    for ( let i = 0; i < target.selectedOptions.length ; i++ ) {
+      selectedLaws.push(target.selectedOptions[i].value);
+    }
+    this.annexOperator.laws = selectedLaws;
+  }
 }
