@@ -197,32 +197,27 @@
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_title.valid }">
                   <label for="past_project_1_title">Project title</label>
-                  <input type="text" id="past_project_1_title" name="past_project_1_title" ngModel #past_project_1_title="ngModel" required />
-                  <div *ngIf="f.submitted && past_project_1_title.errors?.required" class="help-text">Project title is required</div>
+                  <input type="text" id="past_project_1_title" name="past_project_1_title" ngModel #past_project_1_title="ngModel" />
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_organization.valid }">
                   <label for="past_project_1_organization">Lead organization</label>
-                  <input type="text" id="past_project_1_organization" name="past_project_1_organization" ngModel #past_project_1_organization="ngModel" required />
-                  <div *ngIf="f.submitted && past_project_1_organization.errors?.required" class="help-text">Lead organization is required</div>
+                  <input type="text" id="past_project_1_organization" name="past_project_1_organization" ngModel #past_project_1_organization="ngModel" />
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_start_date.valid }">
                   <label for="past_project_1_start_date">Start date</label>
-                  <otp-datepicker [id]="'past_project_1_start_date'" [name]="'past_project_1_start_date'" ngModel #past_project_1_start_date="ngModel" required></otp-datepicker>
-                  <div *ngIf="f.submitted && !past_project_1_start_date.errors?.required" class="help-text">Start date is required</div>
+                  <otp-datepicker [id]="'past_project_1_start_date'" [name]="'past_project_1_start_date'" ngModel #past_project_1_start_date="ngModel"></otp-datepicker>
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_duration.valid }">
                   <label for="past_project_1_duration">Project duration (years)</label>
-                  <input type="number" id="past_project_1_duration" name="past_project_1_duration" ngModel #past_project_1_duration="ngModel" required />
-                  <div *ngIf="f.submitted && past_project_1_duration.errors?.required" class="help-text">Project duration is required</div>
+                  <input type="number" id="past_project_1_duration" name="past_project_1_duration" ngModel #past_project_1_duration="ngModel" />
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_donors.valid }">
                   <label for="past_project_1_donors">Donor(s)</label>
-                  <input type="text" id="past_project_1_donors" name="past_project_1_donors" ngModel #past_project_1_donors="ngModel" required />
-                  <div *ngIf="f.submitted && past_project_1_donors.errors?.required" class="help-text">Donor(s) is required</div>
+                  <input type="text" id="past_project_1_donors" name="past_project_1_donors" ngModel #past_project_1_donors="ngModel" />
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_website.valid }">
@@ -247,32 +242,27 @@
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_title.valid }">
                   <label for="past_project_2_title">Project title</label>
-                  <input type="text" id="past_project_2_title" name="past_project_2_title" ngModel #past_project_2_title="ngModel" required />
-                  <div *ngIf="f.submitted && past_project_2_title.errors?.required" class="help-text">Project title is required</div>
+                  <input type="text" id="past_project_2_title" name="past_project_2_title" ngModel #past_project_2_title="ngModel" />
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_organization.valid }">
                   <label for="past_project_2_organization">Lead organization</label>
-                  <input type="text" id="past_project_2_organization" name="past_project_2_organization" ngModel #past_project_2_organization="ngModel" required />
-                  <div *ngIf="f.submitted && past_project_2_organization.errors?.required" class="help-text">Lead organization is required</div>
+                  <input type="text" id="past_project_2_organization" name="past_project_2_organization" ngModel #past_project_2_organization="ngModel" />
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_start_date.valid }">
                   <label for="past_project_2_start_date">Start date</label>
-                  <otp-datepicker [id]="'past_project_2_start_date'" [name]="'past_project_2_start_date'" ngModel #past_project_2_start_date="ngModel" required></otp-datepicker>
-                  <div *ngIf="f.submitted && !past_project_2_start_date.errors?.required" class="help-text">Start date is required</div>
+                  <otp-datepicker [id]="'past_project_2_start_date'" [name]="'past_project_2_start_date'" ngModel #past_project_2_start_date="ngModel"></otp-datepicker>
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_duration.valid }">
                   <label for="past_project_2_duration">Project duration (years)</label>
-                  <input type="number" id="past_project_2_duration" name="past_project_2_duration" ngModel #past_project_2_duration="ngModel" required />
-                  <div *ngIf="f.submitted && past_project_2_duration.errors?.required" class="help-text">Project duration is required</div>
+                  <input type="number" id="past_project_2_duration" name="past_project_2_duration" ngModel #past_project_2_duration="ngModel" />
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_donors.valid }">
                   <label for="past_project_2_donors">Donor(s)</label>
-                  <input type="text" id="past_project_2_donors" name="past_project_2_donors" ngModel #past_project_2_donors="ngModel" required />
-                  <div *ngIf="f.submitted && past_project_2_donors.errors?.required" class="help-text">Donor(s) is required</div>
+                  <input type="text" id="past_project_2_donors" name="past_project_2_donors" ngModel #past_project_2_donors="ngModel" />
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_website.valid }">
