@@ -1,3 +1,4 @@
+import { DatepickerComponent } from 'app/shared/datepicker/datepicker.component';
 import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
 import { OrganizationProfileComponent } from 'app/pages/my-otp/profile/organization-profile.component';
 import { EqualToValidatorDirective } from 'app/directives/equal-to.directive';
@@ -112,6 +113,7 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     EqualToValidatorDirective,
     MyOTPComponent,
     OrganizationProfileComponent,
+    DatepickerComponent,
   ],
   imports: [
     JsonApiModule,

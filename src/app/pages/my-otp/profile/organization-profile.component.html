@@ -125,8 +125,8 @@
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !project_start_date.valid }">
             <label for="project_start_date">Start date</label>
-            <ng2-datepicker id="project_start_date" name="project_start_date" #project_start_date="ngModel" ngModel required></ng2-datepicker>
-            <div *ngIf="f.submitted && !project_start_date.valid" class="help-text">Start date is required</div>
+            <otp-datepicker [id]="'project_start_date'" [name]="'project_start_date'" ngModel #project_start_date="ngModel" required></otp-datepicker>
+            <div *ngIf="f.submitted && project_start_date.errors?.required" class="help-text">Start date is required</div>
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !project_duration.valid }">
@@ -209,8 +209,8 @@
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_start_date.valid }">
                   <label for="past_project_1_start_date">Start date</label>
-                  <ng2-datepicker id="past_project_1_start_date" name="past_project_1_start_date" #past_project_1_start_date="ngModel" ngModel required></ng2-datepicker>
-                  <div *ngIf="f.submitted && !past_project_1_start_date.valid" class="help-text">Start date is required</div>
+                  <otp-datepicker [id]="'past_project_1_start_date'" [name]="'past_project_1_start_date'" ngModel #past_project_1_start_date="ngModel" required></otp-datepicker>
+                  <div *ngIf="f.submitted && !past_project_1_start_date.errors?.required" class="help-text">Start date is required</div>
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_duration.valid }">
@@ -259,8 +259,8 @@
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_start_date.valid }">
                   <label for="past_project_2_start_date">Start date</label>
-                  <ng2-datepicker id="past_project_2_start_date" name="past_project_2_start_date" #past_project_2_start_date="ngModel" ngModel required></ng2-datepicker>
-                  <div *ngIf="f.submitted && !past_project_2_start_date.valid" class="help-text">Start date is required</div>
+                  <otp-datepicker [id]="'past_project_2_start_date'" [name]="'past_project_2_start_date'" ngModel #past_project_2_start_date="ngModel" required></otp-datepicker>
+                  <div *ngIf="f.submitted && !past_project_2_start_date.errors?.required" class="help-text">Start date is required</div>
                 </div>
 
                 <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_duration.valid }">

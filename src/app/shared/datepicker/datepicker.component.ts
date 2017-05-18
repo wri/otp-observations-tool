@@ -1,0 +1,111 @@
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
+import { DateModel } from 'ng2-datepicker';
+
+const REQUIRED_VALIDATOR: any = {
+  provide: NG_VALIDATORS,
+  useExisting: forwardRef(() => DatepickerComponent),
+  multi: true
+};
+
+const VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => DatepickerComponent),
+  multi: true
+};
+
+@Component({
+  selector: 'otp-datepicker',
+  templateUrl: './datepicker.component.html',
+  styleUrls: ['./datepicker.component.scss'],
+  providers: [REQUIRED_VALIDATOR, VALUE_ACCESSOR]
+})
+export class DatepickerComponent implements Validator, ControlValueAccessor {
+
+  @Input() id: string;
+  @Input() name: string;
+
+  @Input()
+  get required(): boolean|string { return this._required; }
+
+  set required(value: boolean|string) {
+    this._required = value != null && value !== false && `${value}` !== 'false';
+  }
+
+  date: Date; // Value of the external model
+  private _date: string; // Value of the internal native model
+  private _dateModel: DateModel; // Value of the internal custom modal
+  private _required = false; // Is the input required?
+  private validatorCallback: () => void;
+  private modelCallback: (date: Date) => void;
+  private touchCallback: (date: Date) => void;
+
+  get nativeValue(): string {
+    return this._date;
+  }
+
+  set nativeValue(value: string) {
+    if (/^\d{4}\-\d{2}\-\d{2}$/.test(value)) {
+      const values = value.split('-');
+      this.date = new Date(Date.UTC(+values[0], +values[1] - 1, +values[2]));
+    } else {
+      this.date = null;
+    }
+
+    this._date = value;
+    this.propagateChange();
+  }
+
+  get customValue (): DateModel {
+    return this._dateModel;
+  }
+
+  set customValue(value: DateModel) {
+    this._dateModel = value;
+    this.date = new Date(Date.UTC(+value.year, +value.month, +value.day));
+    this.propagateChange();
+  }
+
+  writeValue(date: Date): void {
+    this.date = date;
+  }
+
+  registerOnChange(fn: any): void {
+    this.modelCallback = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.touchCallback = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {}
+
+  validate(c: AbstractControl): ValidationErrors {
+    if (this.date || !this.required) {
+      return null;
+    }
+
+    return {
+      required: true
+    };
+  }
+
+  registerOnValidatorChange(fn: () => void): void {
+    this.validatorCallback = fn;
+  }
+
+  propagateChange() {
+    if (this.validatorCallback) {
+      this.validatorCallback();
+    }
+
+    if (this.modelCallback) {
+      this.modelCallback(this.date);
+    }
+
+    if (this.touchCallback) {
+      this.touchCallback(this.date);
+    }
+  }
+
+}
