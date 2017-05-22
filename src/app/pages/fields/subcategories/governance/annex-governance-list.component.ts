@@ -20,7 +20,11 @@ export class AnnexGovernanceListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.annexGovernances = this.subCategoriesService.getAllAnnexGovernances();
+    this.subCategoriesService.getAllAnnexGovernances().then(
+      data => {
+        this.annexGovernances = data;
+      }
+     );
   }
 
   triggerNewAnnexGovernance(): void {
@@ -28,7 +32,7 @@ export class AnnexGovernanceListComponent implements OnInit {
   }
 
   onEdit(row): void {
-
+    this.router.navigate([`private/fields/subcategories/governance/edit/${row.id}`]);
   }
 
   onDelete(annexGovernance: AnnexGovernance): void {

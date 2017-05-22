@@ -13,7 +13,7 @@ export class Observer extends JsonApiModel {
   @Attribute() is_active?: boolean;
   @Attribute() logo?: any;
 
-  @BelongsTo() country: Country;
+  @BelongsTo() country?: Country;
   @BelongsTo() users: User[];
 
 }

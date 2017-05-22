@@ -30,8 +30,8 @@ export class SpeciesListComponent implements OnInit {
     this.router.navigate(['private/fields/species/new']);
   }
 
-  onEdit(row): void{
-
+  onEdit(row): void {
+    this.router.navigate([`private/fields/species/edit/${row.id}`]);
   }
 
    /**

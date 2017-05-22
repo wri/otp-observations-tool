@@ -1,5 +1,6 @@
+import { Operator } from 'app/models/operator.model';
 import { OperatorsService } from 'app/services/operators.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,14 +13,36 @@ import { Component, OnInit } from '@angular/core';
 export class OperatorDetailComponent implements OnInit {
 
   countries: Country[] = [];
-  titleText: String = 'New Operator';
+  titleText: string;
   loading: boolean;
+  submitButtonText: string;
+  public mode = 'new';
+  operatorId: string;
+  operator: Operator;
 
   constructor(
     private countriesService: CountriesService,
     private operatorsService: OperatorsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
+    if (this.router.url.match(/\/edit\/[0-9]+$/)) {
+      this.setMode('edit');
+    } else {
+      this.setMode('new');
+    }
+  }
+
+  setMode(value: string): void {
+    this.mode = value;
+    if (this.mode === 'edit') {
+      this.titleText = 'Edit AnnexOperator';
+      this.submitButtonText = 'Update';
+      this.operatorId = this.route.snapshot.params['id'];
+    } else if (this.mode === 'new') {
+      this.titleText = 'New AnnexOperator';
+      this.submitButtonText = 'Create';
+    }
   }
 
   ngOnInit(): void {
@@ -28,6 +51,20 @@ export class OperatorDetailComponent implements OnInit {
          this.countries = data;
       }
     );
+
+    if (this.mode === 'edit') {
+      this.loadOperator();
+    }
+  }
+
+  loadOperator(): void {
+    this.loading = true;
+    this.operatorsService.getById(this.operatorId).then(
+      data => {
+        this.operator = data;
+        this.loading = false;
+      }
+    ).catch( error => alert(error));
   }
 
   onCancel(): void{
@@ -36,7 +73,8 @@ export class OperatorDetailComponent implements OnInit {
 
   onSubmit(formValues):void {
     this.loading = true;
-    this.operatorsService.createOperator(formValues).then(
+    if (this.mode === 'new') {
+      this.operatorsService.createOperator(formValues).then(
         data => {
           alert('Operator created successfully!');
           this.loading = false;
@@ -47,6 +85,20 @@ export class OperatorDetailComponent implements OnInit {
         alert(errorMessage);
         this.loading = false;
       });
+    } else {
+      this.operatorsService.updateOperator(this.operator).then(
+        data => {
+          alert('Operator updated successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/operators']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
+    }
+
   }
 
 

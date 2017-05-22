@@ -24,7 +24,23 @@ export class CategoriesService {
         .toPromise();
     }
 
+    updateCategory(category: Category): Promise<any> {
+      const payload = {
+        category: {
+          name: category.name
+        }
+      };
+
+      return this.http.patch(`${environment.apiUrl}/category/${category.id}`, payload)
+        .map(response => response.json())
+        .toPromise();
+    }
+
     deleteCategory(category: Category): Promise<any> {
       return this.datastoreService.deleteRecord(Category, category.id).toPromise();
+    }
+
+    getById(categoryId: string): Promise<Category> {
+      return this.datastoreService.findRecord(Category, categoryId).toPromise();
     }
 }

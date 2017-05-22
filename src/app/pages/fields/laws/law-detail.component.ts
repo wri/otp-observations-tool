@@ -1,5 +1,6 @@
+import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
 import { Component, OnInit } from '@angular/core';
@@ -11,16 +12,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LawDetailComponent implements OnInit {
 
+  law: Law;
   countries: Country[];
-  titleText: String = 'New Law';
+  titleText: string;
+  submitButtonText: string;
   loading = false;
+  public mode = 'new';
+  lawId: number;
 
   constructor(
     private countriesService: CountriesService,
     private lawsService: LawsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    this.countries = new Array<Country>();
+    if (this.router.url.match(/\/edit\/[0-9]+$/)) {
+      this.setMode('edit');
+    } else {
+      this.setMode('new');
+    }
+  }
+
+  setMode(value: string): void {
+    this.mode = value;
+    if (this.mode === 'edit') {
+      this.titleText = 'Edit law';
+      this.submitButtonText = 'Update';
+      this.lawId = +this.route.snapshot.params['id'];
+    } else if (this.mode === 'new') {
+      this.titleText = 'New law';
+      this.submitButtonText = 'Create';
+    }
   }
 
   ngOnInit(): void {
@@ -29,16 +51,34 @@ export class LawDetailComponent implements OnInit {
          this.countries = data;
       }
     );
+    if (this.mode === 'edit') {
+      this.loadLaw();
+    }
+  }
+
+  loadLaw(): void {
+    this.loading = true;
+    this.lawsService.getById(this.lawId).then(
+      data => {
+        this.law = data;
+        if (!this.law.country) {
+          this.law.country = new Country(null, null);
+        }
+        this.loading = false;
+      }
+    ).catch( error => alert(error));
   }
 
   onCancel(): void{
     this.router.navigate(['/private/fields/laws']);
   }
 
-  onSubmit(formValues):void {
+  onSubmit(formValues): void {
 
     this.loading = true;
-    this.lawsService.createLaw(formValues).then(
+
+    if (this.mode === 'new') {
+      this.lawsService.createLaw(formValues).then(
         data => {
           alert('Law created successfully!');
           this.loading = false;
@@ -49,6 +89,21 @@ export class LawDetailComponent implements OnInit {
         alert(errorMessage);
         this.loading = false;
       });
+    } else {
+      this.law;
+      debugger;
+      this.lawsService.updateLaw(this.law).then(
+        data => {
+          alert('Law updated successfully!');
+          this.loading = false;
+          this.router.navigate(['/private/fields/laws']);
+        }
+      ).catch(error => {
+        const errorMessage = error.json().errors[0].title;
+        alert(errorMessage);
+        this.loading = false;
+      });
+    }
   }
 
 

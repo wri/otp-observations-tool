@@ -131,6 +131,10 @@ const routes: Routes = [
             path: 'categories/new',
             component: CategoryDetailComponent
           },
+          {
+            path: 'categories/edit/:id',
+            component: CategoryDetailComponent
+          },
           // --------------SUB-CATEGORIES--------------
           {
             path: 'subcategories',
@@ -150,6 +154,10 @@ const routes: Routes = [
                 path: 'operators/new',
                 component: AnnexOperatorDetailComponent
               },
+              {
+                path: 'operators/edit/:id',
+                component: AnnexOperatorDetailComponent
+              },
               // ----------GOVERNANCE----------
               {
                 path: 'governance',
@@ -157,6 +165,10 @@ const routes: Routes = [
               },
               {
                 path: 'governance/new',
+                component: AnnexGovernanceDetailComponent
+              },
+              {
+                path: 'governance/edit/:id',
                 component: AnnexGovernanceDetailComponent
               },
             ]
@@ -170,6 +182,10 @@ const routes: Routes = [
             path: 'governments/new',
             component: GovernmentDetailComponent
           },
+          {
+            path: 'governments/edit/:id',
+            component: GovernmentDetailComponent
+          },
           // --------------LAWS-----------------
           {
             path: 'laws',
@@ -177,6 +193,10 @@ const routes: Routes = [
           },
           {
             path: 'laws/new',
+            component: LawDetailComponent
+          },
+          {
+            path: 'laws/edit/:id',
             component: LawDetailComponent
           },
           // --------------OBSERVERS-----------------
@@ -188,6 +208,10 @@ const routes: Routes = [
             path: 'observers/new',
             component: ObserverDetailComponent
           },
+          {
+            path: 'observers/edit/:id',
+            component: ObserverDetailComponent
+          },
           // --------------SPECIES-----------------
           {
             path: 'species',
@@ -195,6 +219,10 @@ const routes: Routes = [
           },
           {
             path: 'species/new',
+            component: SpeciesDetailComponent
+          },
+          {
+            path: 'species/edit/:id',
             component: SpeciesDetailComponent
           },
           // --------------COUNTRIES-----------------
@@ -206,6 +234,10 @@ const routes: Routes = [
             path: 'countries/new',
             component: CountryDetailComponent
           },
+          {
+            path: 'countries/edit/:id',
+            component: CountryDetailComponent
+          },
           // --------------OPERATORS-----------------
           {
             path: 'operators',
@@ -213,6 +245,10 @@ const routes: Routes = [
           },
           {
             path: 'operators/new',
+            component: OperatorDetailComponent
+          },
+          {
+            path: 'operators/edit/:id',
             component: OperatorDetailComponent
           }
         ]

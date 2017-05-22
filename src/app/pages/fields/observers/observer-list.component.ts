@@ -22,15 +22,15 @@ export class ObserverListComponent implements OnInit {
   ngOnInit(): void {
     this.observersService.getAll().then((data) => {
       this.observers = data;
-    });
+    }).catch( error => alert(error));
   }
 
-  triggerNewObserver(): void{
+  triggerNewObserver(): void {
     this.router.navigate(['private/fields/observers/new']);
   }
 
-  onEdit(row): void{
-
+  onEdit(row): void {
+    this.router.navigate([`private/fields/observers/edit/${row.id}`]);
   }
 
   /**

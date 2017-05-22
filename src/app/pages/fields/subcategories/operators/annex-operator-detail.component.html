@@ -6,44 +6,47 @@
         <h2>{{titleText}}</h2>
         <div class="c-button-container -j-end form-group" *otpMinTablet>
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
         </div>
       </div>
 
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !illegality.valid }">
           <label for="illegality">Name</label>
-          <input id="illegality" type="text" class="form-control" name="illegality" ngModel #illegality="ngModel" required />
+          <input id="illegality" type="text" class="form-control" name="illegality"
+            [(ngModel)]="annexOperator && annexOperator.illegality" #illegality="ngModel" required />
           <div *ngIf="f.submitted && !illegality.valid" class="help-text">Name is required</div>
       </div>
       <div class="form-group">
           <label for="country_id">Country
-            <select name="country_id" ngModel #country_id="ngModel">
+            <select name="country_id" [(ngModel)]="annexOperator && annexOperator.country && annexOperator.country.id"
+              #country_id="ngModel">
               <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
             </select>
           </label>
       </div>
       <div class="form-group">
           <label for="law_ids">Law references
-            <select multiple name="law_ids" ngModel #law_ids="ngModel">
+            <select multiple (change)="onLawSelectionChange($event.target)" name="law_ids" #law_ids>
               <option *ngFor="let law of laws" [value]="law.id">{{ law.legal_reference }}</option>
             </select>
           </label>
       </div>
       <div class="form-group">
           <label for="details">Details</label>
-          <input id="details" type="text" class="form-control" name="details" ngModel #details="ngModel" />
+          <input id="details" type="text" class="form-control" name="details"
+            [(ngModel)]="annexOperator && annexOperator.details" #details="ngModel" />
       </div>
 
       <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
         <div class="c-button-container -j-end form-group">
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
         </div>
       </div>
 
       <otp-action-bar *otpMaxTablet>
         <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+        <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
       </otp-action-bar>
     </form>
   </div>

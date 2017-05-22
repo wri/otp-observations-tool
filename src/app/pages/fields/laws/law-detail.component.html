@@ -6,18 +6,19 @@
         <h2>{{titleText}}</h2>
         <div class="c-button-container -j-end form-group" *otpMinTablet>
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
         </div>
       </div>
 
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !legal_reference.valid }">
           <label for="legal_reference">Legal reference</label>
-          <input id="legal_reference" type="text" class="form-control" name="legal_reference" ngModel #legal_reference="ngModel" required />
+          <input id="legal_reference" type="text" class="form-control" name="legal_reference"
+            [(ngModel)]="law && law.legal_reference" #legal_reference="ngModel" required />
           <div *ngIf="f.submitted && !legal_reference.valid" class="help-text">Legal reference is required</div>
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
           <label for="country_id">Country
-            <select name="country_id" ngModel #country_id="ngModel" required>
+            <select name="country_id" [(ngModel)]="law && law.country && law.country.id" #country_id="ngModel" required>
               <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
             </select>
           </label>
@@ -25,23 +26,25 @@
       </div>
       <div class="form-group">
           <label for="vpa_indicator">VPA indicator</label>
-          <input id="vpa_indicator" type="text" class="form-control" name="vpa_indicator" ngModel #vpa_indicator="ngModel" />
+          <input id="vpa_indicator" type="text" class="form-control" name="vpa_indicator"
+            [(ngModel)]="law && law.vpa_indicator" #vpa_indicator="ngModel" />
       </div>
       <div class="form-group">
           <label for="legal_penalty">Legal penalty</label>
-          <input id="legal_penalty" type="text" class="form-control" name="legal_penalty" ngModel #legal_penalty="ngModel" />
+          <input id="legal_penalty" type="text" class="form-control" name="legal_penalty"
+            [(ngModel)]="law && law.legal_penalty" #legal_penalty="ngModel" />
       </div>
 
       <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
         <div class="c-button-container -j-end form-group">
           <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
+          <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
         </div>
       </div>
 
       <otp-action-bar *otpMaxTablet>
         <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+        <button disable="loading" type="submit" class="c-button -primary">{{ submitButtonText }}</button>
       </otp-action-bar>
     </form>
   </div>

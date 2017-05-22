@@ -14,8 +14,12 @@ export class LawsService {
 
     }
 
-    getAll(){
+    getAll(): Promise<Law[]> {
         return this.datastoreService.query(Law, { page: { size: 100 }}).toPromise();
+    }
+
+    getById(lawId): Promise<Law> {
+      return this.datastoreService.findRecord(Law, lawId).toPromise();
     }
 
     createLaw(formValues): Promise<any> {
@@ -25,8 +29,24 @@ export class LawsService {
         .toPromise();
     }
 
+    updateLaw(law: Law): Promise<any> {
+      debugger;
+      const payload = { law: {
+          country_id: law.country ? law.country.id : '',
+          legal_reference: law.legal_reference,
+          vpa_indicator: law.vpa_indicator,
+          legal_penalty: law.legal_penalty,
+        }
+      };
+
+      return this.http.patch(`${environment.apiUrl}/laws/${law.id}`, payload)
+        .map(response => response.json())
+        .toPromise();
+    }
+
     deleteLaw(law:Law): Promise<any>{
       return this.datastoreService.deleteRecord(Law, law.id)
         .toPromise();
     }
+
 }

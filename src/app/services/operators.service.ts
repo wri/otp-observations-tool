@@ -14,12 +14,32 @@ export class OperatorsService {
 
     }
 
-    getAll(): Operator[] {
-      return this.datastoreService.peekAll(Operator);
+    getAll(): Promise<Operator[]> {
+      return this.datastoreService.query(Operator).toPromise();
+    }
+
+    getById(id): Promise<Operator> {
+      return this.datastoreService.findRecord(Operator, id).toPromise();
     }
 
     getByCountry(countryId): Promise<Operator[]> {
       return this.datastoreService.query(Operator, { countr_id: countryId, page: { size: 10000 }}).toPromise();
+    }
+
+    updateOperator(operator: Operator): Promise<any> {
+      const payload = {
+        operator: {
+          name: operator.name,
+          operator_type: operator.operator_type,
+          country_id: operator.country ? operator.country.id : '',
+          concession: operator.concession,
+          is_active: operator.is_active,
+          details: operator.details
+        }
+      };
+      return this.http.patch(`${environment.apiUrl}/operators/${operator.id}`, payload)
+        .map(response => response.json())
+        .toPromise();
     }
 
     createOperator(formValues): Promise<any> {

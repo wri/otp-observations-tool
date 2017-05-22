@@ -20,7 +20,11 @@ export class OperatorListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.operators = this.operatorsService.getAll();
+    this.operatorsService.getAll().then(
+      data => {
+        this.operators = data;
+      }
+    );
   }
 
   triggerNewOperator(): void{
@@ -28,7 +32,7 @@ export class OperatorListComponent implements OnInit {
   }
 
   onEdit(row): void {
-
+    this.router.navigate([`private/fields/operators/edit/${row.id}`]);
   }
 
   onDelete(operator: Operator): void {

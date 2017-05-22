@@ -20,15 +20,19 @@ export class AnnexOperatorListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.annexOperators = this.subCategoriesService.getAllAnnexOperators();
+    this.subCategoriesService.getAllAnnexOperators().then(
+      data => {
+        this.annexOperators = data;
+      }
+    );
   }
 
-  triggerNewAnnexOperator(): void{
+  triggerNewAnnexOperator(): void {
     this.router.navigate(['private/fields/subcategories/operators/new']);
   }
 
-  onEdit(row): void{
-
+  onEdit(row): void {
+    this.router.navigate([`private/fields/subcategories/operators/edit/${row.id}`]);
   }
 
   onDelete(annexOperator: AnnexOperator): void {
