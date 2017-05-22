@@ -1,0 +1,13 @@
+@import 'src/settings';
+
+:host {
+  display: block;
+
+  @media screen and (min-width: $break-tablet) {
+    padding-top: 25px;
+  }
+
+  > .l-wrapper {
+    padding: 0;
+  }
+}

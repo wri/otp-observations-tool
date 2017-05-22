@@ -1,6 +1,6 @@
 import { ObservationsService } from 'app/services/observations.service';
 import { Severity } from './../../models/severity.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Operator } from 'app/models/operator.model';
 import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
@@ -47,6 +47,7 @@ export class ObservationDetailComponent implements OnInit {
     private operatorsService: OperatorsService,
     private observationsService: ObservationsService,
     private router: Router,
+    private route: ActivatedRoute,
     private http: Http
   ) {
       this.dateOptions = new DatePickerOptions();
@@ -54,7 +55,7 @@ export class ObservationDetailComponent implements OnInit {
       this.governanceSelected = false;
   }
 
-  onTypeChange(event): void{
+  onTypeChange(event): void {
     this.type = event.target.value;
     this.governanceSelected = this.type === 'AnnexGovernance';
     if (this.selectedCountry) {
@@ -62,10 +63,12 @@ export class ObservationDetailComponent implements OnInit {
     }
   }
 
-  onCancel(): void{
-    this.router.navigate(['/private/observations']);
+  onCancel(): void {
+    // Without relativeTo, the navigation doesn't work properly
+    this.router.navigate(['..'], { relativeTo: this.route });
   }
-  onSubmit(formValues): void{
+
+  onSubmit(formValues): void {
     const formattedDate = formValues.publication_date.formatted;
     const valuesUpdated = formValues;
     delete valuesUpdated.publication_date;
@@ -76,7 +79,8 @@ export class ObservationDetailComponent implements OnInit {
         data => {
           alert('Observation created successfully!');
           this.loading = false;
-          this.router.navigate(['/private/observations']);
+          // Without relativeTo, the navigation doesn't work properly
+          this.router.navigate(['..'], { relativeTo: this.route });
         }
       ).catch(error => {
         const errorMessage = error.json().errors[0].title;

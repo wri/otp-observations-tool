@@ -1,6 +1,6 @@
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
@@ -16,8 +16,8 @@ export class ObservationListComponent implements OnInit {
 
   private observations: Observation[] = [];
   navigationItems: NavigationItem[] = [
-      { name: 'Operators', url: '/private/observations/operators' },
-      { name: 'Governance', url: '/private/observations/governance' }
+      { name: 'Operators', url: '../operators' },
+      { name: 'Governance', url: '../governance' }
     ];
   private selected = [];
   private editURL: string;
@@ -28,23 +28,23 @@ export class ObservationListComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private observationsService: ObservationsService,
     private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     const url = this.router.url;
-    if (url.endsWith('operators')) {
-      this.observationsService.getByType('operator')
-        .then(observations => this.observations = observations);
-    } else if (url.endsWith('governance')) {
-      this.observationsService.getByType('governance')
-        .then(observations => this.observations = observations);
-    }
+    const isMyOTP = /my\-otp/.test(url);
+    const observationType = url.endsWith('operators') ? 'operators' : 'governance';
+
+    this.observationsService[isMyOTP ? 'getByTypeAndUser' : 'getByType'](observationType)
+      .then(observations => this.observations = observations);
   }
 
   onEdit(row): void {
-    this.router.navigate([`/private/observations/edit/${row.id}`]);
+    // Without relativeTo, the navigation doesn't work properly
+    this.router.navigate([`../edit/${row.id}`], { relativeTo: this.route });
   }
 
   onDelete(row): void {

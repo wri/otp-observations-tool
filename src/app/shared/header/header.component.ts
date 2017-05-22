@@ -13,6 +13,7 @@ export class HeaderComponent {
   isLogged = false;
 
   private _navigationItems: NavigationItem[] = [
+    { name: 'My OTP', url: '/private/my-otp'},
     { name: 'Observations', url: '/private/observations' },
     { name: 'Observation fields', url: '/private/fields' },
     { name: 'Users', url: '/private/users' },
@@ -21,7 +22,7 @@ export class HeaderComponent {
   get navigationItems(): NavigationItem[] {
     return this.isAdmin
       ? this._navigationItems
-      : this._navigationItems.slice(0, 2);
+      : this._navigationItems.slice(0, 3);
   }
 
   constructor (private authService: AuthService) {

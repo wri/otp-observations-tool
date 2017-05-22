@@ -1,0 +1,83 @@
+@import 'src/settings';
+
+.c-form {
+  .form-container {
+
+    @media screen and (min-width: $break-tablet) {
+      padding: 20px;
+      background-color: $lighter-grey-2;
+      border-radius: 2px;
+      border: 1px solid $lighter-grey;
+    }
+
+    .form-group,
+    fieldset {
+      & + .form-group:not(.-inline),
+      & + fieldset {
+        margin-top: 20px;
+      }
+    }
+
+    .form-group {
+      label {
+        font-size: $font-size-default;
+        font-weight: $font-weight-default;
+        text-transform: uppercase;
+      }
+
+      input,
+      select {
+        margin: 0;
+      }
+
+      .help-text {
+        margin: 5px 0 0;
+        font-size: 0.8125rem;
+        font-style: italic;
+        color: $color-error;
+      }
+
+      &.-inline {
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+
+        label {
+          flex-shrink: 0;
+          margin-right: 20px;
+          font-size: 0.875rem;
+          text-transform: none;
+        }
+      }
+    }
+
+    fieldset {
+      legend {
+        font-size: $font-size-default;
+        font-weight: $font-weight-default;
+        text-transform: uppercase;
+      }
+
+      .fieldset-container {
+        padding: 10px;
+        border: 1px solid $lighter-grey;
+
+        @media screen and (min-width: $break-tablet) {
+          padding: 20px;
+        }
+      }
+    }
+  }
+
+  .form-footer {
+    margin: 30px 0 0;
+
+    @media screen and (min-width: $break-tablet) {
+      margin: 50px 0;
+    }
+
+    .c-button-container {
+      margin: 0;
+    }
+  }
+}

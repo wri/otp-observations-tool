@@ -31,7 +31,33 @@ import { Routes, RouterModule } from '@angular/router';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
+import { OrganizationProfileComponent } from 'app/pages/my-otp/profile/organization-profile.component';
+import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
 
+
+const observationsChildren = [
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'operators'
+  },
+  {
+    path: 'operators',
+    component: ObservationListComponent
+  },
+  {
+    path: 'governance',
+    component: ObservationListComponent
+  },
+  {
+    path: 'new',
+    component: ObservationDetailComponent
+  },
+  {
+    path: 'edit/:id',
+    component: ObservationDetailEditComponent
+  },
+];
 
 const routes: Routes = [
   {
@@ -48,36 +74,30 @@ const routes: Routes = [
     path: 'private',
     canActivate: [AuthGuard],
     children: [
-      // -------------OBSERVATIONS------------------
+      // -------------MY OTP------------------
       {
-        path: 'observations',
+        path: 'my-otp',
+        component: MyOTPComponent,
         children: [
           {
             path: '',
             pathMatch: 'full',
-            redirectTo: 'operators'
+            redirectTo: 'profile'
           },
           {
-            path: 'operators',
-            component: ObservationListComponent
+            path: 'profile',
+            component: OrganizationProfileComponent
           },
           {
-            path: 'governance',
-            component: ObservationListComponent
-          },
-          {
-            path: 'new',
-            component: ObservationDetailComponent
-          },
-          {
-            path: 'edit/:id',
-            component: ObservationDetailEditComponent
-          },
-          {
-            path: 'delete/:id',
-            component: ObservationDetailComponent
-          },
+            path: 'observations',
+            children: observationsChildren
+          }
         ]
+      },
+      // -------------OBSERVATIONS------------------
+      {
+        path: 'observations',
+        children: observationsChildren
       },
       // ----------------USERS----------------------
       {
