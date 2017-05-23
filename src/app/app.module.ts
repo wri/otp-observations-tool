@@ -1,3 +1,6 @@
+import { TableColumnCellDirective } from 'app/shared/table/directives/column/column-cell.directive';
+import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
+import { TableComponent } from 'app/shared/table/table.component';
 import { DatepickerComponent } from 'app/shared/datepicker/datepicker.component';
 import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
 import { OrganizationProfileComponent } from 'app/pages/my-otp/profile/organization-profile.component';
@@ -114,6 +117,9 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     MyOTPComponent,
     OrganizationProfileComponent,
     DatepickerComponent,
+    TableComponent,
+    TableColumnDirective,
+    TableColumnCellDirective,
   ],
   imports: [
     JsonApiModule,
