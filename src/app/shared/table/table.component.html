@@ -6,15 +6,19 @@
     </ng-template>
   </caption>
 
+  <ng-template [ngIf]="loading">
+    Loading...
+  </ng-template>
+
   <thead>
     <tr role="row" aria-rowindex="1">
       <th
         *ngFor="let column of columns"
-        [attr.class]="sortColumn === column ? ('-order-' + sortOrder) : ''"
+        [attr.class]="(sortColumn === column ? ('-order-' + sortOrder) : '') + (!column.prop ? ' -no-sortable' : '')"
         [attr.aria-sort]="sortColumn === column ? sortOrder : 'none'"
         [tabindex]="sortColumn === column ? 0 : -1"
         role="columnheader"
-        (click)="sortByColumn(column)"
+        (click)="column.prop && sortByColumn(column)"
       >
         {{column.name || column.prop}}
       </th>

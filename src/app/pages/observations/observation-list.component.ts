@@ -5,14 +5,14 @@ import { Component, OnInit } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { Tab } from 'app/shared/tabs/tabs.component';
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 
 @Component({
   selector: 'otp-observation-list',
   templateUrl: './observation-list.component.html',
   styleUrls: ['./observation-list.component.scss']
 })
-export class ObservationListComponent implements OnInit {
-
+export class ObservationListComponent extends TableFilterBehavior implements OnInit {
 
   private observations: Observation[] = [];
   navigationItems: NavigationItem[] = [
@@ -26,20 +26,26 @@ export class ObservationListComponent implements OnInit {
     return this.observations;
   }
 
+  get observationType (): string {
+    return this.router.url.endsWith('operators') ? 'operators' : 'governance';
+  }
+
+  get isMyOTP(): boolean {
+    return /my\-otp/.test(this.router.url);
+  }
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private observationsService: ObservationsService,
+    protected service: ObservationsService,
     private authService: AuthService
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    const url = this.router.url;
-    const isMyOTP = /my\-otp/.test(url);
-    const observationType = url.endsWith('operators') ? 'operators' : 'governance';
-
-    this.observationsService[isMyOTP ? 'getByTypeAndUser' : 'getByType'](observationType)
-      .then(observations => this.observations = observations);
+    // this.service[this.isMyOTP ? 'getByTypeAndUser' : 'getByType'](this.observationType)
+    //   .then(observations => this.observations = observations);
   }
 
   onEdit(row): void {
@@ -49,7 +55,7 @@ export class ObservationListComponent implements OnInit {
 
   onDelete(row): void {
     if(confirm(`Are you sure to delete the observation with details: ${row.details}?`)) {
-      this.observationsService.deleteObservationWithId(row.id).then(
+      this.service.deleteObservationWithId(row.id).then(
         data => {
           alert(data.messages[0].title);
           this.ngOnInit();
@@ -66,15 +72,5 @@ export class ObservationListComponent implements OnInit {
     return observation.user
       ? observation.user.id === this.authService.userId
       : this.authService.userRole === 'admin';
-  }
-
-  getCategory(row): string {
-    if (row.annex_operator) {
-      return row.annex_operator.illegality;
-    } else if (row.annex_governance) {
-      return row.annex_governance.governance_pillar;
-    } else {
-      return '';
-    }
   }
 }

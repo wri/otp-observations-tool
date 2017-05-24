@@ -59,6 +59,10 @@
         &.-order-desc::after {
           transform: translateY(calc(-3px - 50%)) rotate(-135deg);
         }
+
+        &.-no-sortable {
+          cursor: initial;
+        }
       }
     }
 

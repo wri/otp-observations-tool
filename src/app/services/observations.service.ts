@@ -1,16 +1,23 @@
+///<reference path="../../../node_modules/reflect-metadata/reflect-metadata.d.ts"/>"
+
 import { environment } from './../../environments/environment';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Observation } from 'app/models/observation.model';
+import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
 
 @Injectable()
-export class ObservationsService {
+export class ObservationsService extends JsonApiService<Observation> {
+
+  model = Observation;
 
   constructor (
-    private datastoreService: DatastoreService,
-    private http: Http
-  ) {}
+    protected datastoreService: DatastoreService,
+    protected http: Http
+  ) {
+    super();
+  }
 
   getAll(): Promise<Observation[]> {
     return this.datastoreService.query(Observation).toPromise();

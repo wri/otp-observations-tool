@@ -1,5 +1,12 @@
-import { Component, Input, QueryList, ContentChildren } from '@angular/core';
+import { Component, Input, QueryList, ContentChildren, EventEmitter, Output } from '@angular/core';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
+
+export interface TableState {
+  page: number;
+  perPage: number;
+  sortColumn: string;
+  sortOrder: number;
+}
 
 @Component({
   selector: 'otp-table',
@@ -8,11 +15,14 @@ import { TableColumnDirective } from 'app/shared/table/directives/column/column.
 })
 export class TableComponent {
 
-  @Input() rows: any[];
-  @Input() rowCount: number; // Number of total rows (total results)
+  public rows: any[] = [];
+  public rowCount: number; // Number of total rows (total results)
   @Input() caption: string;
   @Input() perPage = 10;
 
+  @Output() change = new EventEmitter<void>();
+
+  loading = false;
   columns: any[] = [];
   sortColumn: any; // Column used for sorting the table
   sortOrder: 'asc'|'desc'; // Sort order
@@ -83,7 +93,11 @@ export class TableComponent {
   }
 
   get lastPage(): number {
-    return Math.floor(this.rows.length / this.perPage) + (this.rows.length % this.perPage > 0 ? 1 : 0);
+    if (!this.rows.length) {
+      return 1;
+    }
+
+    return Math.floor(this.rowCount / this.perPage) + (this.rowCount % this.perPage > 0 ? 1 : 0);
   }
 
   get currentPage(): number {
@@ -92,6 +106,7 @@ export class TableComponent {
 
   set currentPage(page: number) {
     this._paginationIndex = page - 1;
+    this.change.emit();
   }
 
   get previousPage(): number|null {
@@ -102,11 +117,17 @@ export class TableComponent {
     return this.currentPage === this.lastPage ? null : this.currentPage + 1;
   }
 
+  get state(): TableState {
+    return {
+      page: this.currentPage,
+      perPage: this.perPage,
+      sortColumn: this.sortColumn && this.sortColumn.prop,
+      sortOrder: this.sortOrder && this.sortOrder === 'asc' ? 1 : -1
+    };
+  }
+
   get renderableRows(): any[] {
-    const start = this.perPage * this.paginationIndex;
-    const end = this.perPage * (this.paginationIndex + 1);
     return this.rows
-      .slice(start, end)
       .map((row, index) => {
         row.__index__ = this.perPage * this.paginationIndex + index + 2;
         return row;
@@ -127,6 +148,9 @@ export class TableComponent {
     }
 
     this.sortColumn = column;
+
+    // We emit a state change
+    this.change.emit();
   }
 
 }

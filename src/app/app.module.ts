@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { TableColumnCellDirective } from 'app/shared/table/directives/column/column-cell.directive';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
 import { TableComponent } from 'app/shared/table/table.component';
