@@ -13,6 +13,8 @@ export interface JsonApiParams {
   };
 
   sort?: string;
+
+  [str: string]: any;
 }
 
 export interface JsonApiResponse<T extends JsonApiModel> {

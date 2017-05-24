@@ -19,7 +19,7 @@ export class TableFilterBehavior implements AfterViewInit {
     this.loadData();
   }
 
-  public loadData() {
+  public getTableApiParams(): JsonApiParams {
     const params: JsonApiParams = {
       page: {
         size: this.tableState.perPage,
@@ -31,10 +31,14 @@ export class TableFilterBehavior implements AfterViewInit {
       params.sort = `${this.tableState.sortOrder < 0 ? '-' : ''}${this.tableState.sortColumn}`;
     }
 
+    return params;
+  }
+
+  public loadData() {
     this.table.loading = true;
 
     const requestID = ++this.latestRequestID;
-    this.service.get(params)
+    this.service.get(this.getTableApiParams())
       .then(res => {
         if (this.latestRequestID === requestID) {
           this.table.rows = res.data;
