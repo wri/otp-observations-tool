@@ -1,7 +1,8 @@
+import { JsonApiParams } from 'app/services/json-api.service';
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { Tab } from 'app/shared/tabs/tabs.component';
@@ -12,9 +13,8 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
   templateUrl: './observation-list.component.html',
   styleUrls: ['./observation-list.component.scss']
 })
-export class ObservationListComponent extends TableFilterBehavior implements OnInit {
+export class ObservationListComponent extends TableFilterBehavior {
 
-  private observations: Observation[] = [];
   navigationItems: NavigationItem[] = [
       { name: 'Operators', url: '../operators' },
       { name: 'Governance', url: '../governance' }
@@ -22,16 +22,23 @@ export class ObservationListComponent extends TableFilterBehavior implements OnI
   private selected = [];
   private editURL: string;
 
-  get rows () {
-    return this.observations;
-  }
-
-  get observationType (): string {
+  get observationType(): string {
     return this.router.url.endsWith('operators') ? 'operators' : 'governance';
   }
 
   get isMyOTP(): boolean {
     return /my\-otp/.test(this.router.url);
+  }
+
+  public getTableApiParams(): JsonApiParams {
+    const params = super.getTableApiParams();
+    params.type = this.observationType;
+
+    if (this.isMyOTP) {
+      params.user = 'current';
+    }
+
+    return params;
   }
 
   constructor(
@@ -41,11 +48,6 @@ export class ObservationListComponent extends TableFilterBehavior implements OnI
     private authService: AuthService
   ) {
     super();
-  }
-
-  ngOnInit(): void {
-    // this.service[this.isMyOTP ? 'getByTypeAndUser' : 'getByType'](this.observationType)
-    //   .then(observations => this.observations = observations);
   }
 
   onEdit(row): void {
@@ -58,7 +60,7 @@ export class ObservationListComponent extends TableFilterBehavior implements OnI
       this.service.deleteObservationWithId(row.id).then(
         data => {
           alert(data.messages[0].title);
-          this.ngOnInit();
+          this.loadData();
         });
     }
   }

@@ -1,16 +1,15 @@
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { Router } from '@angular/router';
 import { User } from 'app/models/user.model';
 import { UsersService } from 'app/services/users.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'otp-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent implements OnInit {
-
-  users: User[] = [];
+export class UserListComponent extends TableFilterBehavior {
 
   columns = [
     { name: 'Name' },
@@ -19,18 +18,14 @@ export class UserListComponent implements OnInit {
   ];
 
   constructor(
-    private userService: UsersService,
+    protected service: UsersService,
     private router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   triggerNewUser(): void{
     this.router.navigate(['private/users/new']);
-  }
-
-  ngOnInit(): void {
-    this.userService.getAll().then((data) => {
-      this.users = data;
-    });
   }
 
   /**
@@ -40,8 +35,8 @@ export class UserListComponent implements OnInit {
    */
   onDelete(user: User): void {
     if(confirm(`Are you sure to delete the user with name: ${user.name}?`)) {
-      this.userService.deleteUser(user)
-      .then(() => this.ngOnInit())
+      this.service.deleteUser(user)
+      .then(() => this.loadData())
       .catch((e) => alert('Unable to delete the user'));
     }
   }

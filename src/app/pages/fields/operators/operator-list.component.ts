@@ -1,26 +1,21 @@
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { OperatorsService } from 'app/services/operators.service';
 import { Operator } from 'app/models/operator.model';
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'otp-operator-list',
   templateUrl: './operator-list.component.html',
   styleUrls: ['./operator-list.component.scss']
 })
-export class OperatorListComponent implements OnInit {
-
-  operators: Operator[];
+export class OperatorListComponent extends TableFilterBehavior {
 
   constructor(
-    private operatorsService: OperatorsService,
+    protected service: OperatorsService,
     private router: Router
   ) {
-    this.operators = [];
-  }
-
-  ngOnInit(): void {
-    this.operators = this.operatorsService.getAll();
+    super();
   }
 
   triggerNewOperator(): void{
@@ -33,10 +28,10 @@ export class OperatorListComponent implements OnInit {
 
   onDelete(operator: Operator): void {
     if (confirm(`Are you sure to delete the operator with name: ${operator.name}?`)) {
-      this.operatorsService.deleteOperator(operator).then(
+      this.service.deleteOperator(operator).then(
         data => {
           alert(data.json().messages[0].title);
-          this.ngOnInit();
+          this.loadData();
         });
     }
   }

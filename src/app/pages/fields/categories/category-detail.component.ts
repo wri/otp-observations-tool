@@ -25,7 +25,7 @@ export class CategoryDetailComponent {
 
   onSubmit(formValues):void {
     this.loading = true;
-    this.categoriesService.crateCategory(formValues).then(
+    this.categoriesService.createCategory(formValues).then(
         data => {
           alert('Category created successfully!');
           this.loading = false;

@@ -1,29 +1,20 @@
 <div class="c-container -j-between -t-d-column -t-a-start">
-  <h2>Operators ({{operators.length}})</h2>
   <div class="c-button-container -j-end">
     <button (click)="triggerNewOperator()" class="c-button -primary">
       New Operator
     </button>
   </div>
 </div>
-<ngx-datatable class="wri"
-  #table
-  [rows]="operators"
-  columnMode="force"
-  headerHeight=false
->
-  <ngx-datatable-column prop="name" name="Name">
-  </ngx-datatable-column>
-  <ngx-datatable-column prop="operator_type" name="Type">
-  </ngx-datatable-column>
-  <ngx-datatable-column prop="concession" name="Concession">
-  </ngx-datatable-column>
-  <ngx-datatable-column prop="is_active" name="Active">
-  </ngx-datatable-column>
-  <ngx-datatable-column name="Actions">
-     <ng-template let-row="row" ngx-datatable-cell-template>
+
+<otp-table caption="Operators">
+  <otp-table-column prop="name" name="Name"></otp-table-column>
+  <otp-table-column prop="operator_type" name="Type"></otp-table-column>
+  <otp-table-column prop="concession" name="Concession"></otp-table-column>
+  <otp-table-column prop="is_active" name="Active"></otp-table-column>
+  <otp-table-column name="Actions">
+     <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
        <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
      </ng-template>
-  </ngx-datatable-column>
-</ngx-datatable>
+  </otp-table-column>
+</otp-table>

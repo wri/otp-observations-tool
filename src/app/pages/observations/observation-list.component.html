@@ -1,7 +1,6 @@
 <div class="l-wrapper">
   <div class="c-container -j-between -t-d-column -t-a-start">
     <div class="c-container -j-start -t-d-column -t-a-start">
-      <h2>Observations ({{rows.length}})</h2>
       <otp-navigation
         layout="mini"
         [items]="navigationItems"
@@ -30,38 +29,4 @@
      </ng-template>
     </otp-table-column>
   </otp-table>
-
-  <!--
-  <ngx-datatable
-    class="wri"
-    [rows]="rows"
-    [rowHeight]="'auto'"
-    columnMode="force"
-    headerHeight=false
-    *ngIf="rows"
-  >
-    <ngx-datatable-column prop="publication_date" name="Date" maxWidth="100">
-      <ng-template let-value="value" ngx-datatable-cell-template>
-        {{value | date:'MM/dd/yy'}}
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column prop="country.iso" name="Country" maxWidth="100"></ngx-datatable-column>
-    <ngx-datatable-column prop="operator.name" name="Operator"></ngx-datatable-column>
-    <ngx-datatable-column name="Category">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-       {{getCategory(row)}}
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column prop="details" name="Observation"></ngx-datatable-column>
-    <ngx-datatable-column prop="severity.level" name="Severity" maxWidth="100"></ngx-datatable-column>
-    <ngx-datatable-column name="Actions" maxWidth="100">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        <ng-template [ngIf]="canEdit(row)">
-          <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
-          <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
-        </ng-template>
-     </ng-template>
-    </ngx-datatable-column>
-  </ngx-datatable>
-  -->
 </div>

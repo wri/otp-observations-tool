@@ -1,43 +1,36 @@
 import { Category } from './../../../models/category.model';
 import { CategoriesService } from 'app/services/categories.service';
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 
 @Component({
   selector: 'otp-category-list',
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss']
 })
-export class CategoryListComponent implements OnInit {
-
-  categories: Category[];
+export class CategoryListComponent extends TableFilterBehavior {
 
   constructor(
-    private categoriesService: CategoriesService,
+    protected service: CategoriesService,
     private router: Router
   ) {
-    this.categories = [];
+    super();
   }
 
-  ngOnInit(): void {
-    this.categoriesService.getAll().then((data) => {
-      this.categories = data;
-    });
-  }
-
-  triggerNewCategory(): void{
+  triggerNewCategory(): void {
     this.router.navigate(['private/fields/categories/new']);
   }
 
-  onEdit(row): void{
+  onEdit(row): void {
 
   }
 
   private onDelete(category: Category): void {
     if (confirm(`Are you sure to delete the category: ${category.name}?`) ) {
-      this.categoriesService.deleteCategory(category)
+      this.service.deleteCategory(category)
       .then((data) => {
-        this.ngOnInit();
+        this.loadData();
         alert(data.json().messages[0].title);
       })
       .catch((e) => alert('Unable to delete the category: ${category.name} '));

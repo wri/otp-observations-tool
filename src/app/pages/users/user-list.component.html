@@ -1,6 +1,5 @@
 <div class="l-wrapper">
   <div class="c-container -j-between">
-    <h2>Users ({{users.length}})</h2>
     <div class="c-button-container -j-end">
       <button (click)="triggerNewUser()" class="c-button -primary">
         New user
@@ -8,22 +7,15 @@
     </div>
   </div>
 
-  <ngx-datatable
-    class="wri"
-    #table
-    [rows]="users"
-    [columns]="columns"
-    columnMode="force"
-    headerHeight=false
-  >
-    <ngx-datatable-column name="Name"></ngx-datatable-column>
-    <ngx-datatable-column name="Username" prop="nickname"></ngx-datatable-column>
-    <ngx-datatable-column name="Email"></ngx-datatable-column>
-    <ngx-datatable-column name="Actions">
-     <ng-template let-row="row" ngx-datatable-cell-template>
+  <otp-table caption="Users">
+    <otp-table-column name="Name" prop="name"></otp-table-column>
+    <otp-table-column name="Username" prop="nickname"></otp-table-column>
+    <otp-table-column name="Email" prop="email"></otp-table-column>
+    <otp-table-column name="Actions">
+     <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
        <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
      </ng-template>
-    </ngx-datatable-column>
-  </ngx-datatable>
+    </otp-table-column>
+  </otp-table>
 </div>

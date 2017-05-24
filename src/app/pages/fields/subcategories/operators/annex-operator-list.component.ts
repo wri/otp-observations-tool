@@ -1,42 +1,37 @@
-import { SubCategoriesService } from 'app/services/sub-categories.service';
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { AnnexOperator } from 'app/models/annex-operator.model';
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { AnnexOperatorsService } from 'app/services/annex-operators.service';
 
 @Component({
   selector: 'otp-annex-operator-list',
   templateUrl: './annex-operator-list.component.html',
   styleUrls: ['./annex-operator-list.component.scss']
 })
-export class AnnexOperatorListComponent implements OnInit {
-
-  annexOperators: AnnexOperator[];
+export class AnnexOperatorListComponent extends TableFilterBehavior {
 
   constructor(
-    private subCategoriesService: SubCategoriesService,
+    protected service: AnnexOperatorsService,
     private router: Router
   ) {
-    this.annexOperators = [];
+    super();
   }
 
-  ngOnInit(): void {
-    this.annexOperators = this.subCategoriesService.getAllAnnexOperators();
-  }
-
-  triggerNewAnnexOperator(): void{
+  triggerNewAnnexOperator(): void {
     this.router.navigate(['private/fields/subcategories/operators/new']);
   }
 
-  onEdit(row): void{
+  onEdit(row): void {
 
   }
 
   onDelete(annexOperator: AnnexOperator): void {
     if (confirm(`Are you sure to delete the AnnexOperator with name: ${annexOperator.illegality}?`)) {
-      this.subCategoriesService.deleteAnnexOperator(annexOperator).then(
+      this.service.deleteAnnexOperator(annexOperator).then(
         data => {
           alert(data.json().messages[0].title);
-          this.ngOnInit();
+          this.loadData();
         });
     }
   }

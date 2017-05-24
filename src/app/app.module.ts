@@ -1,4 +1,6 @@
 import 'reflect-metadata';
+import { AnnexGovernanceService } from 'app/services/annex-governance.service';
+import { AnnexOperatorsService } from 'app/services/annex-operators.service';
 import { TableColumnCellDirective } from 'app/shared/table/directives/column/column-cell.directive';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
 import { TableComponent } from 'app/shared/table/table.component';
@@ -37,7 +39,6 @@ import { GovernmentListComponent } from 'app/pages/fields/governments/government
 import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
-import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 import { HeaderComponent } from 'app/shared/header/header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
@@ -141,7 +142,8 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     DatastoreService,
     UsersService,
     ObservationsService,
-    SubCategoriesService,
+    AnnexOperatorsService,
+    AnnexGovernanceService,
     ObserversService,
     OperatorsService,
     SpeciesService,

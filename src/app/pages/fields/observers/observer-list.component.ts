@@ -1,31 +1,24 @@
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { ObserversService } from './../../../services/observers.service';
 import { Observer } from './../../../models/observer.model';
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'otp-observer-list',
   templateUrl: './observer-list.component.html',
   styleUrls: ['./observer-list.component.scss']
 })
-export class ObserverListComponent implements OnInit {
-
-  observers: Observer[];
+export class ObserverListComponent extends TableFilterBehavior {
 
   constructor(
-    private observersService: ObserversService,
+    protected service: ObserversService,
     private router: Router
   ) {
-    this.observers = [];
+    super();
   }
 
-  ngOnInit(): void {
-    this.observersService.getAll().then((data) => {
-      this.observers = data;
-    });
-  }
-
-  triggerNewObserver(): void{
+  triggerNewObserver(): void {
     this.router.navigate(['private/fields/observers/new']);
   }
 
@@ -40,9 +33,9 @@ export class ObserverListComponent implements OnInit {
    */
   private onDelete(observer: Observer): void {
     if (confirm(`Are you sure to delete the observer: ${observer.name}?`) ) {
-      this.observersService.deleteObserver(observer)
+      this.service.deleteObserver(observer)
       .then((data) => {
-        this.ngOnInit();
+        this.loadData();
         alert(data.json().messages[0].title);
       })
       .catch((e) => alert('Unable to delete the observer: ${observer.name} '));

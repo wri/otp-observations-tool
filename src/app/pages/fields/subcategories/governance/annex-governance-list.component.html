@@ -1,25 +1,18 @@
 <div class="c-container -j-between -t-d-column -t-a-start">
-  <h2>Annex Governances ({{annexGovernances.length}})</h2>
   <div class="c-button-container -j-end">
     <button (click)="triggerNewAnnexGovernance()" class="c-button -primary">
       New Annex Governance
     </button>
   </div>
 </div>
-<ngx-datatable class="wri"
-  #table
-  [rows]="annexGovernances"
-  columnMode="force"
-  headerHeight=false
->
-  <ngx-datatable-column prop="governance_pillar" name="Governance Pillar">
-  </ngx-datatable-column>
-  <ngx-datatable-column prop="governance_problem" name="Governance Problem">
-  </ngx-datatable-column>
-  <ngx-datatable-column name="Actions">
-     <ng-template let-row="row" ngx-datatable-cell-template>
+
+<otp-table caption="Sub-categories (Governance)">
+  <otp-table-column prop="governance_pillar" name="Governance Pillar"></otp-table-column>
+  <otp-table-column prop="governance_problem" name="Governance Problem"></otp-table-column>
+  <otp-table-column name="Actions">
+     <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
        <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
      </ng-template>
-  </ngx-datatable-column>
-</ngx-datatable>
+  </otp-table-column>
+</otp-table>
