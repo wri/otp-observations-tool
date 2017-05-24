@@ -67,7 +67,6 @@ import { FormsModule } from '@angular/forms';
 import { JsonApiModule } from 'angular2-jsonapi';
 import { HttpModule, RequestOptions } from '@angular/http';
 import { SpinnerModule } from 'angular2-spinner/dist';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DatePickerModule } from 'ng2-datepicker';
 import { ObservationsService } from 'app/services/observations.service';
 import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsive.directive';
@@ -130,7 +129,6 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     HttpModule,
     AppRoutingModule,
     SpinnerModule,
-    NgxDatatableModule,
     DatePickerModule
   ],
   providers: [
