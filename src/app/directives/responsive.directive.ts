@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 const TABLET_BREAKPOINT = 768;
 
-class ResponsiveDirective implements OnInit, OnDestroy {
+export class ResponsiveDirective implements OnInit, OnDestroy {
 
   private subscribtion: Subscription;
   protected isVisible = true;
