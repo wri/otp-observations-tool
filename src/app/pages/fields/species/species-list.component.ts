@@ -1,36 +1,29 @@
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { SpeciesService } from 'app/services/species.service';
 import { Species } from 'app/models/species.model';
 import { Router } from '@angular/router';
 import { LawsService } from 'app/services/laws.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'otp-species-list',
   templateUrl: './species-list.component.html',
   styleUrls: ['./species-list.component.scss']
 })
-export class SpeciesListComponent implements OnInit {
-
-  species: Species[];
+export class SpeciesListComponent extends TableFilterBehavior {
 
   constructor(
-    private speciesService: SpeciesService,
+    protected service: SpeciesService,
     private router: Router
   ) {
-    this.species = [];
+    super();
   }
 
-  ngOnInit(): void {
-    this.speciesService.getAll().then((data) => {
-      this.species = data;
-    });
-  }
-
-  triggerNewSpecies(): void{
+  triggerNewSpecies(): void {
     this.router.navigate(['private/fields/species/new']);
   }
 
-  onEdit(row): void{
+  onEdit(row): void {
 
   }
 
@@ -41,9 +34,9 @@ export class SpeciesListComponent implements OnInit {
    */
   private onDelete(species: Species): void {
     if (confirm(`Are you sure to delete the species: ${species.name}?`) ) {
-      this.speciesService.deleteSpecies(species)
+      this.service.deleteSpecies(species)
       .then((data) => {
-        this.ngOnInit();
+        this.loadData();
         alert(data.json().messages[0].title);
       })
       .catch((e) => alert('Unable to delete the species: ${species.name} '));

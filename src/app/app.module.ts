@@ -1,3 +1,9 @@
+import 'reflect-metadata';
+import { AnnexGovernanceService } from 'app/services/annex-governance.service';
+import { AnnexOperatorsService } from 'app/services/annex-operators.service';
+import { TableColumnCellDirective } from 'app/shared/table/directives/column/column-cell.directive';
+import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
+import { TableComponent } from 'app/shared/table/table.component';
 import { DatepickerComponent } from 'app/shared/datepicker/datepicker.component';
 import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
 import { OrganizationProfileComponent } from 'app/pages/my-otp/profile/organization-profile.component';
@@ -33,7 +39,6 @@ import { GovernmentListComponent } from 'app/pages/fields/governments/government
 import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { GovernmentsService } from 'app/services/governments.service';
-import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 import { HeaderComponent } from 'app/shared/header/header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
@@ -62,7 +67,6 @@ import { FormsModule } from '@angular/forms';
 import { JsonApiModule } from 'angular2-jsonapi';
 import { HttpModule, RequestOptions } from '@angular/http';
 import { SpinnerModule } from 'angular2-spinner/dist';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DatePickerModule } from 'ng2-datepicker';
 import { ObservationsService } from 'app/services/observations.service';
 import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsive.directive';
@@ -114,6 +118,9 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     MyOTPComponent,
     OrganizationProfileComponent,
     DatepickerComponent,
+    TableComponent,
+    TableColumnDirective,
+    TableColumnCellDirective,
   ],
   imports: [
     JsonApiModule,
@@ -122,7 +129,6 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     HttpModule,
     AppRoutingModule,
     SpinnerModule,
-    NgxDatatableModule,
     DatePickerModule
   ],
   providers: [
@@ -134,7 +140,8 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     DatastoreService,
     UsersService,
     ObservationsService,
-    SubCategoriesService,
+    AnnexOperatorsService,
+    AnnexGovernanceService,
     ObserversService,
     OperatorsService,
     SpeciesService,

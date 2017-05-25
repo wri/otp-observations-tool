@@ -1,0 +1,61 @@
+<table role="grid" aria-readonly="true" [attr.aria-rowcount]="rowCount">
+  <caption>
+    {{caption || 'Undefined table'}}
+    <ng-template [ngIf]="sortColumn">
+      , sorted by {{sortColumn.name || sortColumn.prop}}: {{sortOrder}}
+    </ng-template>
+  </caption>
+
+  <ng-template [ngIf]="loading">
+    Loading...
+  </ng-template>
+
+  <thead>
+    <tr role="row" aria-rowindex="1">
+      <th
+        *ngFor="let column of columns"
+        [attr.class]="(sortColumn === column ? ('-order-' + sortOrder) : '') + (!column.prop ? ' -no-sortable' : '')"
+        [attr.aria-sort]="sortColumn === column ? sortOrder : 'none'"
+        [tabindex]="sortColumn === column ? 0 : -1"
+        role="columnheader"
+        (click)="column.prop && sortByColumn(column)"
+      >
+        {{column.name || column.prop}}
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngIf="!rows || !rows.length" class="no-data" role="row">
+      <td role="gridcell" [attr.colspan]="columns.length">No data</td>
+    </tr>
+
+    <tr *ngFor="let row of renderableRows" role="row" [attr.aria-rowindex]="row.__index__">
+      <td *ngFor="let column of columns" role="gridcell" [attr.aria-rowindex]="row.__index__">
+        <span class="column-name">{{column.name || column.prop}}</span>
+        <ng-template [ngIf]="!column.cellTemplate">{{column.getValue(row)}}</ng-template>
+        <ng-template
+          [ngIf]="column.cellTemplate"
+          [ngTemplateOutlet]="column.cellTemplate"
+          [ngOutletContext]="{ value: column.getValue(row), row: row, column: column }"
+        >
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+
+</table>
+
+<div *ngIf="perPage" class="paginator">
+  <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage">Previous</button>
+  <ul>
+    <li *ngIf="currentPage > firstPage + 1"><button type="button" [attr.aria-label]="'Page ' + firstPage" (click)="currentPage = firstPage">{{firstPage}}</button></li>
+    <li *ngIf="currentPage > firstPage + 2">...</li>
+    <li *ngIf="previousPage"><button type="button" [attr.aria-label]="'Page ' + previousPage" (click)="currentPage = previousPage">{{previousPage}}</button></li>
+    <li class="-active"><button type="button" [attr.aria-label]="'Page ' + currentPage">{{currentPage}}</button></li>
+    <li *ngIf="nextPage"><button type="button" [attr.aria-label]="'Page ' + nextPage" (click)="currentPage = nextPage">{{nextPage}}</button></li>
+    <li *ngIf="currentPage < lastPage - 2">...</li>
+    <li *ngIf="currentPage < lastPage - 1"><button type="button" [attr.aria-label]="'Page ' + lastPage" (click)="currentPage = lastPage">{{lastPage}}</button></li>
+  </ul>
+  <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage">Next</button>
+</div>

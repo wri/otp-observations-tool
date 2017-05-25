@@ -1,5 +1,4 @@
 <div class="c-container -j-between -t-d-column -t-a-start">
-  <h2>Laws ({{laws.length}})</h2>
   <div class="c-button-container -j-end">
     <button (click)="triggerNewLaw()" class="c-button -primary">
       New law
@@ -7,22 +6,17 @@
   </div>
 </div>
 
-<ngx-datatable class="wri"
-  #table
-  [rows]="laws"
-  columnMode="force"
-  headerHeight=false
->
-  <ngx-datatable-column prop="legal_reference" name="Legal Reference">
-  </ngx-datatable-column>
-  <ngx-datatable-column prop="legal_penalty" name="Legal Penalty">
-  </ngx-datatable-column>
-  <ngx-datatable-column prop="vpa_indicator" name="VPA indicator">
-  </ngx-datatable-column>
-  <ngx-datatable-column name="Actions">
-     <ng-template let-row="row" ngx-datatable-cell-template>
+<otp-table caption="Laws">
+  <otp-table-column prop="legal_reference" name="Legal Reference">
+  </otp-table-column>
+  <otp-table-column prop="legal_penalty" name="Legal Penalty">
+  </otp-table-column>
+  <otp-table-column prop="vpa_indicator" name="VPA indicator">
+  </otp-table-column>
+  <otp-table-column name="Actions">
+     <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
        <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
      </ng-template>
-  </ngx-datatable-column>
-</ngx-datatable>
+  </otp-table-column>
+</otp-table>

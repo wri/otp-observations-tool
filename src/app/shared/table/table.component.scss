@@ -1,0 +1,231 @@
+@import 'src/settings.scss';
+
+:host {
+  table {
+    width: 100%;
+    font-size: $font-size-default;
+    color: $grey-2;
+    border-spacing: 0;
+
+    @media screen and (min-width: $break-tablet) {
+      padding-bottom: 15px;
+    }
+
+    caption {
+      display: none;
+    }
+
+    thead {
+      display: none;
+      background-color: transparent;
+
+      @media screen and (min-width: $break-tablet) {
+        display: table-header-group;
+      }
+
+      th {
+        position: relative;
+        padding: 5px 25px 5px 10px;
+        color: $grey-2;
+        font-weight: $font-weight-default;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05),
+                    0 2px 0 0 rgba(0, 0, 0, .03),
+                    0 3px 0 0 rgba(0, 0, 0, .03),
+                    0 4px 0 0 rgba(0, 0, 0, .03);
+        cursor: pointer;
+
+        &:first-of-type { padding-left: 20px; }
+        &:last-of-type { padding-right: 20px; }
+
+        &.-order-asc::after,
+        &.-order-desc::after {
+          position: absolute;
+          top: 50%;
+          right: 5px;
+          display: block;
+          width: 6px;
+          height: 6px;
+          border-top: 2px solid currentColor;
+          border-left: 2px solid currentColor;
+          content: '';
+        }
+
+        &.-order-asc::after {
+          transform: translateY(-50%) rotate(45deg);
+        }
+
+        &.-order-desc::after {
+          transform: translateY(calc(-3px - 50%)) rotate(-135deg);
+        }
+
+        &.-no-sortable {
+          cursor: initial;
+        }
+      }
+    }
+
+    tbody {
+      @media screen and (min-width: $break-tablet) {
+        transform: translateY(15px);
+      }
+
+      tr {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        background-color: $white;
+
+        @media screen and (min-width: $break-tablet) {
+          display: table-row;
+        }
+
+        td {
+          display: flex;
+          align-items: stretch;
+          padding: 5px 10px;
+          vertical-align: top;
+          border-left: 1px solid $lighter-grey;
+          border-right: 1px solid $lighter-grey;
+
+          @media screen and (min-width: $break-tablet) {
+            display: table-cell;
+            padding: 20px 10px;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: 1px solid rgba($lighter-grey, .5);
+          }
+
+          &:first-of-type {
+            padding-top: 20px;
+
+            @media screen and (min-width: $break-tablet) {
+              border-left: 1px solid $lighter-grey;
+              padding-left: 20px;
+            }
+          }
+
+          &:last-of-type {
+            padding-bottom: 20px;
+            border-bottom: 1px solid $lighter-grey;
+
+            @media screen and (min-width: $break-tablet) {
+              border-bottom: 1px solid rgba($lighter-grey, .5);
+              border-right: 1px solid $lighter-grey;
+              padding-right: 20px;
+            }
+          }
+
+          .column-name {
+            flex-basis: 100px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-right: 10px;
+            text-align: right;
+            color: rgba($grey-2, .5);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+
+            @media screen and (min-width: $break-tablet) {
+              display: none;
+            }
+          }
+        }
+
+        &:first-of-type td {
+          &:first-of-type {
+            border-top: 1px solid $lighter-grey;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+          }
+
+          @media screen and (min-width: $break-tablet) {
+            border-top: 1px solid $lighter-grey;
+
+            &:first-of-type {
+              border-top-left-radius: 3px;
+              border-top-right-radius: 0;
+            }
+
+            &:last-of-type { border-top-right-radius: 3px; }
+          }
+        }
+
+        &:last-of-type td {
+          &:last-of-type {
+            border-bottom: 1px solid $lighter-grey;
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+          }
+
+          @media screen and (min-width: $break-tablet) {
+            border-bottom: 1px solid $lighter-grey;
+            &:first-of-type { border-bottom-left-radius: 3px; }
+            &:last-of-type { border-bottom-right-radius: 3px; }
+          }
+        }
+      }
+
+      /deep/ button.action {
+        margin-right: 12px;
+        cursor: pointer;
+
+        &:last-of-type { margin-right: 0; }
+
+        svg {
+          width: 15px;
+          height: 15px;
+          fill: rgba($black, .5);
+        }
+      }
+    }
+  }
+
+  .paginator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+
+    ul {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+
+      li {
+        display: block;
+        margin-right: 10px;
+        color: rgba($dark-grey, .5);
+
+        &:last-of-type { margin-right: 0; }
+
+        button {
+          padding: 0 2px;
+          color: rgba($dark-grey, .5);
+          cursor: pointer;
+        }
+
+        &.-active {
+          position: relative;
+          color: $dark-grey;
+
+          button {
+            color: $dark-grey;
+          }
+
+          &::after {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: $color-primary;
+            content: '';
+          }
+        }
+      }
+    }
+  }
+}

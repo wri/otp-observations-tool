@@ -1,26 +1,21 @@
+import { AnnexGovernanceService } from 'app/services/annex-governance.service';
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { AnnexGovernance } from 'app/models/annex-governance.model';
-import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'otp-annex-governance-list',
   templateUrl: './annex-governance-list.component.html',
   styleUrls: ['./annex-governance-list.component.scss']
 })
-export class AnnexGovernanceListComponent implements OnInit {
-
-  annexGovernances: AnnexGovernance[];
+export class AnnexGovernanceListComponent extends TableFilterBehavior {
 
   constructor(
-    private subCategoriesService: SubCategoriesService,
+    protected service: AnnexGovernanceService,
     private router: Router
   ) {
-    this.annexGovernances = [];
-  }
-
-  ngOnInit(): void {
-    this.annexGovernances = this.subCategoriesService.getAllAnnexGovernances();
+    super();
   }
 
   triggerNewAnnexGovernance(): void {
@@ -33,10 +28,10 @@ export class AnnexGovernanceListComponent implements OnInit {
 
   onDelete(annexGovernance: AnnexGovernance): void {
     if (confirm(`Are you sure to delete the AnnexGovernance with name: ${annexGovernance.governance_pillar}?`)) {
-      this.subCategoriesService.deleteAnnexGovernance(annexGovernance).then(
+      this.service.deleteAnnexGovernance(annexGovernance).then(
         data => {
           alert(data.json().messages[0].title);
-          this.ngOnInit();
+          this.loadData();
         });
     }
   }

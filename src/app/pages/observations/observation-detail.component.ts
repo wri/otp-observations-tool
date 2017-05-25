@@ -1,5 +1,7 @@
+import { AnnexGovernanceService } from 'app/services/annex-governance.service';
+import { AnnexOperatorsService } from 'app/services/annex-operators.service';
 import { ObservationsService } from 'app/services/observations.service';
-import { Severity } from './../../models/severity.model';
+import { Severity } from 'app/models/severity.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Operator } from 'app/models/operator.model';
 import { OperatorsService } from 'app/services/operators.service';
@@ -9,7 +11,6 @@ import { Government } from 'app/models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
 import { AnnexGovernance } from 'app/models/annex-governance.model';
 import { AnnexOperator } from 'app/models/annex-operator.model';
-import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
@@ -41,7 +42,8 @@ export class ObservationDetailComponent implements OnInit {
 
   constructor(
     private countriesService: CountriesService,
-    private subCategoriesService: SubCategoriesService,
+    private annexOperatorsService: AnnexOperatorsService,
+    private annexGovernanceService: AnnexGovernanceService,
     private governmentsService: GovernmentsService,
     private observersService: ObserversService,
     private operatorsService: OperatorsService,
@@ -111,13 +113,13 @@ export class ObservationDetailComponent implements OnInit {
 
   loadSubcategories(countryId): void {
     if (this.governanceSelected) {
-      this.subCategoriesService.getAnnexGovernancesByCountry(countryId).then(
+      this.annexGovernanceService.getAnnexGovernancesByCountry(countryId).then(
         data => {
           this.annexGovernances = data;
         }
       );
     } else if(this.type === 'AnnexGovernance') {
-      this.subCategoriesService.getAnnexOperatorsByCountry(countryId).then(
+      this.annexOperatorsService.getAnnexOperatorsByCountry(countryId).then(
         data => {
           this.annexOperators = data;
         }

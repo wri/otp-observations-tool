@@ -1,28 +1,21 @@
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { Government } from './../../../models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'otp-government-list',
   templateUrl: './government-list.component.html',
   styleUrls: ['./government-list.component.scss']
 })
-export class GovernmentListComponent implements OnInit {
-
-  governments: Government[];
+export class GovernmentListComponent extends TableFilterBehavior {
 
   constructor(
-    private router: Router,
-    private governmentsService: GovernmentsService
+    protected service: GovernmentsService,
+    private router: Router
   ) {
-    this.governments = [];
-  }
-
-  ngOnInit(): void {
-    this.governmentsService.getAll().then((data) => {
-      this.governments = data;
-    });
+    super();
   }
 
   triggerNewGovernment(): void {
@@ -36,9 +29,9 @@ export class GovernmentListComponent implements OnInit {
    */
   private onDelete(government: Government): void {
     if (confirm(`Are you sure to delete the government: ${government.government_entity}?`) ) {
-      this.governmentsService.deleteGovernment(government)
+      this.service.deleteGovernment(government)
       .then((data) => {
-        this.ngOnInit();
+        this.loadData();
         alert(data.json().messages[0].title);
       })
       .catch((e) => alert('Unable to delete the government: ${government.government_entity} '));

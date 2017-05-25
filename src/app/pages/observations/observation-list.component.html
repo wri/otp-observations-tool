@@ -1,7 +1,6 @@
 <div class="l-wrapper">
   <div class="c-container -j-between -t-d-column -t-a-start">
     <div class="c-container -j-start -t-d-column -t-a-start">
-      <h2>Observations ({{rows.length}})</h2>
       <otp-navigation
         layout="mini"
         [items]="navigationItems"
@@ -11,35 +10,23 @@
       <a class="c-button -primary" routerLink="../new">New observation</a>
     </div>
   </div>
-  <ngx-datatable
-    class="wri"
-    [rows]="rows"
-    [rowHeight]="'auto'"
-    columnMode="force"
-    headerHeight=false
-    *ngIf="rows"
-  >
-    <ngx-datatable-column prop="publication_date" name="Date" maxWidth=100>
-      <ng-template let-value="value" ngx-datatable-cell-template>
-        {{value | date:'MM/dd/yy'}}
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column prop="country.iso" name="Country"></ngx-datatable-column>
-    <ngx-datatable-column prop="operator.name" name="Operator"></ngx-datatable-column>
-    <ngx-datatable-column name="Category">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-       {{getCategory(row)}}
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column prop="details" name="Observation"></ngx-datatable-column>
-    <ngx-datatable-column prop="severity.level" name="Severity"></ngx-datatable-column>
-    <ngx-datatable-column name="Actions">
-      <ng-template let-row="row" ngx-datatable-cell-template>
+
+  <otp-table caption="Observations">
+    <otp-table-column name="Date" prop="publication_date">
+      <ng-template let-value="value" table-cell-template>{{value | date:'MM/dd/yy'}}</ng-template>
+    </otp-table-column>
+    <otp-table-column name="Country" prop="country.iso"></otp-table-column>
+    <otp-table-column name="Operator" prop="operator.name"></otp-table-column>
+    <otp-table-column name="Category" [prop]="this.observationType === 'operators' ? 'annex_operator.illegality' : 'annex_governance.governance_pillar'"></otp-table-column>
+    <otp-table-column name="Observation" prop="details"></otp-table-column>
+    <otp-table-column name="Severity" prop="severity.level"></otp-table-column>
+    <otp-table-column name="Actions">
+      <ng-template let-row="row" table-cell-template>
         <ng-template [ngIf]="canEdit(row)">
-          <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
-          <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
+          <button class="action" (click)="onEdit(row)" aria-label="Edit"><otp-icon name="#icon-edit"></otp-icon></button>
+          <button class="action" (click)="onDelete(row)" aria-label="Delete"><otp-icon name="#icon-delete"></otp-icon></button>
         </ng-template>
      </ng-template>
-    </ngx-datatable-column>
-  </ngx-datatable>
+    </otp-table-column>
+  </otp-table>
 </div>

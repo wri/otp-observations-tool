@@ -1,4 +1,6 @@
-import { AnnexGovernance } from './../../models/annex-governance.model';
+import { AnnexGovernanceService } from 'app/services/annex-governance.service';
+import { AnnexOperatorsService } from 'app/services/annex-operators.service';
+import { AnnexGovernance } from 'app/models/annex-governance.model';
 import { Observation } from 'app/models/observation.model';
 import { ObservationsService } from 'app/services/observations.service';
 import { Severity } from 'app/models/severity.model';
@@ -10,7 +12,6 @@ import { Observer } from 'app/models/observer.model';
 import { Government } from 'app/models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
 import { AnnexOperator } from 'app/models/annex-operator.model';
-import { SubCategoriesService } from 'app/services/sub-categories.service';
 import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
@@ -42,7 +43,8 @@ export class ObservationDetailEditComponent implements OnInit {
 
   constructor(
     private countriesService: CountriesService,
-    private subCategoriesService: SubCategoriesService,
+    private annexOperatorsService: AnnexOperatorsService,
+    private annexGovernanceService: AnnexGovernanceService,
     private governmentsService: GovernmentsService,
     private observersService: ObserversService,
     private operatorsService: OperatorsService,
@@ -106,7 +108,7 @@ export class ObservationDetailEditComponent implements OnInit {
 
   loadSubcategories(): void {
     if (this.isGovernance) {
-      this.subCategoriesService.getAnnexGovernancesByCountry(this.observation.country.id).then(
+      this.annexGovernanceService.getAnnexGovernancesByCountry(this.observation.country.id).then(
         data => {
           this.annexGovernances = data;
           this.loadSeverities();
@@ -115,7 +117,7 @@ export class ObservationDetailEditComponent implements OnInit {
           this.loading = false;
       }).catch( error => alert(error));
     } else {
-      this.subCategoriesService.getAnnexOperatorsByCountry(this.observation.country.id).then(
+      this.annexOperatorsService.getAnnexOperatorsByCountry(this.observation.country.id).then(
         data => {
           this.annexOperators = data;
           this.loadSeverities();

@@ -1,4 +1,4 @@
-import { SubCategoriesService } from 'app/services/sub-categories.service';
+import { AnnexGovernanceService } from 'app/services/annex-governance.service';
 import { Router } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
@@ -17,7 +17,7 @@ export class AnnexGovernanceDetailComponent implements OnInit {
 
   constructor(
     private countriesService: CountriesService,
-    private subCategoriesService: SubCategoriesService,
+    private annexGovernanceService: AnnexGovernanceService,
     private router: Router
   ) {
 
@@ -37,7 +37,7 @@ export class AnnexGovernanceDetailComponent implements OnInit {
 
   onSubmit(formValues): void {
     this.loading = true;
-    this.subCategoriesService.createAnnexGovernance(formValues).then(
+    this.annexGovernanceService.createAnnexGovernance(formValues).then(
         data => {
           alert('AnnexGovernance created successfully!');
           this.loading = false;

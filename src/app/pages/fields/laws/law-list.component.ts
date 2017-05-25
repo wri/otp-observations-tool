@@ -1,35 +1,28 @@
+import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { Router } from '@angular/router';
 import { LawsService } from './../../../services/laws.service';
 import { Law } from 'app/models/law.model';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'otp-law-list',
   templateUrl: './law-list.component.html',
   styleUrls: ['./law-list.component.scss']
 })
-export class LawListComponent implements OnInit {
-
-  laws: Law[];
+export class LawListComponent extends TableFilterBehavior {
 
   constructor(
-    private lawsService: LawsService,
+    protected service: LawsService,
     private router: Router
   ) {
-    this.laws = [];
+    super();
   }
 
-  ngOnInit(): void {
-    this.lawsService.getAll().then((data) => {
-      this.laws = data;
-    });
-  }
-
-  triggerNewLaw(): void{
+  triggerNewLaw(): void {
     this.router.navigate(['private/fields/laws/new']);
   }
 
-  onEdit(row): void{
+  onEdit(row): void {
 
   }
 
@@ -40,8 +33,8 @@ export class LawListComponent implements OnInit {
    */
   private onDelete(law: Law): void {
     if(confirm(`Are you sure to delete the law: ${law.legal_reference}?`)) {
-      this.lawsService.deleteLaw(law)
-      .then(() => this.ngOnInit())
+      this.service.deleteLaw(law)
+      .then(() => this.loadData())
       .catch((e) => alert('Unable to delete the law: ${law.legal_reference} '));
     }
   }
