@@ -1,3 +1,4 @@
+import { TABLET_BREAKPOINT } from 'app/directives/responsive.directive';
 import { Component, Input, QueryList, ContentChildren, EventEmitter, Output } from '@angular/core';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
 
@@ -107,6 +108,10 @@ export class TableComponent {
   set currentPage(page: number) {
     this._paginationIndex = page - 1;
     this.change.emit();
+
+    if (window.innerWidth < TABLET_BREAKPOINT) {
+      this.scrollToTop();
+    }
   }
 
   get previousPage(): number|null {
@@ -151,6 +156,35 @@ export class TableComponent {
 
     // We emit a state change
     this.change.emit();
+  }
+
+  scrollToTop() {
+    const scrollY = window.scrollY;
+    const duration = 500;
+    const frame = 16; // We assume a 60FPS animation
+    let time = 0;
+    const iterations = Math.ceil(duration / frame);
+
+    const scrollToTop = () => {
+      time += frame;
+
+      if (duration - time > frame) {
+        const posY = this.easeOut(time, scrollY, -scrollY, duration);
+        window.scrollTo(0, posY);
+        requestAnimationFrame(scrollToTop);
+      } else {
+        window.scrollTo(0, 0);
+      }
+    };
+
+    requestAnimationFrame(scrollToTop);
+  }
+
+  easeOut(t: number, b: number, c: number, d: number): number {
+    t /= d / 2;
+    if (t < 1) { return c / 2 * t * t + b; }
+    t--;
+    return -c / 2 * (t * (t - 2) - 1) + b;
   }
 
 }

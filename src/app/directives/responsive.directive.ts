@@ -2,7 +2,7 @@ import { Directive, OnInit, OnDestroy, TemplateRef, ViewContainerRef, ChangeDete
 import { ResponsiveService } from 'app/services/responsive.service';
 import { Subscription } from 'rxjs/Subscription';
 
-const TABLET_BREAKPOINT = 768;
+export const TABLET_BREAKPOINT = 768;
 
 export class ResponsiveDirective implements OnInit, OnDestroy {
 

@@ -1,6 +1,44 @@
 @import 'src/settings.scss';
 
 :host {
+  display: block;
+  position: relative;
+
+  .overlay {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 59px);
+    background-color: $white;
+    border-radius: 3px;
+    opacity: .7;
+    z-index: 1;
+
+    @media screen and (min-width: $break-tablet) {
+      top: 45px;
+      height: calc(100% - 59px - 45px);
+    }
+  }
+
+  otp-loader {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 13px);
+    z-index: 1;
+
+    &.-has-data {
+      transform: translate(-50%, 50px);
+    }
+
+    @media screen and (min-width: $break-tablet) {
+      top: 45px;
+    }
+  }
+
   table {
     width: 100%;
     font-size: $font-size-default;

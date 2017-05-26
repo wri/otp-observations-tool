@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { LoaderComponent } from 'app/shared/loader/loader.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { AnnexGovernanceService } from 'app/services/annex-governance.service';
 import { AnnexOperatorsService } from 'app/services/annex-operators.service';
@@ -76,6 +77,7 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
 @NgModule({
   declarations: [
     AppComponent,
+    LoaderComponent,
     LoginComponent,
     ObservationsComponent,
     ObservationListComponent,

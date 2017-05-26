@@ -1,3 +1,5 @@
+<div class="overlay" *ngIf="loading"></div>
+<otp-loader *ngIf="loading" [attr.class]="rows && rows.length && rows.length > 1 ? '-has-data' : ''"></otp-loader>
 <table role="grid" aria-readonly="true" [attr.aria-rowcount]="rowCount">
   <caption>
     {{caption || 'Undefined table'}}
@@ -5,10 +7,6 @@
       , sorted by {{sortColumn.name || sortColumn.prop}}: {{sortOrder}}
     </ng-template>
   </caption>
-
-  <ng-template [ngIf]="loading">
-    Loading...
-  </ng-template>
 
   <thead>
     <tr role="row" aria-rowindex="1">
