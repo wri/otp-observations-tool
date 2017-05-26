@@ -11,23 +11,21 @@
           </div>
         </div>
         <div class="form-group">
-            <label for="observation_type">TYPE
-              <select disabled id="observation_type" name="observation_type"
-                [(ngModel)]="observation && observation.observation_type" #observation_type="ngModel">
-                 <option selected value="AnnexOperator">Operator</option>
-                 <option value="AnnexGovernance">Governance</option>
-              </select>
-            </label>
+            <label for="observation_type">Type</label>
+            <select disabled id="observation_type" name="observation_type"
+              [(ngModel)]="observation && observation.observation_type" #observation_type="ngModel">
+                <option selected value="AnnexOperator">Operator</option>
+                <option value="AnnexGovernance">Governance</option>
+            </select>
         </div>
 
         <div class="white-card">
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
-              <label for="country_id">Country
-                <select id="country_id" (change)="onCountryChange(country_id.value)" name="country_id"
-                  [(ngModel)]="observation && observation.country.id" #country_id="ngModel" required>
-                  <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
-                </select>
-              </label>
+              <label for="country_id">Country</label>
+              <select id="country_id" (change)="onCountryChange(country_id.value)" name="country_id"
+                [(ngModel)]="observation && observation.country.id" #country_id="ngModel" required>
+                <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+              </select>
               <p *ngIf="f.submitted && !country_id.valid" class="help-text">Please select a country</p>
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !latitude.valid }">
@@ -48,30 +46,27 @@
             >
           </div>-->
           <div *ngIf="isGovernance" class="form-group" [ngClass]="{ 'has-error': f.submitted && !annex_governance_id.valid }">
-              <label for="annex_governance_id">Sub-category
-                <select id="annex_governance_id" (change)="onAnnexGovernanceChange(annex_governance_id.value)" name="annex_governance_id"
-                  [(ngModel)]="observation && observation.annex_governance.id" #annex_governance_id="ngModel" required>
-                  <option *ngFor="let annexGovernance of annexGovernances" [value]="annexGovernance.id">{{ annexGovernance.governance_problem }}</option>
-                </select>
-              </label>
+              <label for="annex_governance_id">Sub-category</label>
+              <select id="annex_governance_id" (change)="onAnnexGovernanceChange(annex_governance_id.value)" name="annex_governance_id"
+                [(ngModel)]="observation && observation.annex_governance.id" #annex_governance_id="ngModel" required>
+                <option *ngFor="let annexGovernance of annexGovernances" [value]="annexGovernance.id">{{ annexGovernance.governance_problem }}</option>
+              </select>
               <p *ngIf="f.submitted && !annex_governance_id.valid" class="help-text">Please select a sub-category</p>
           </div>
           <div *ngIf="!isGovernance" class="form-group" [ngClass]="{ 'has-error': f.submitted && !annex_operator_id.valid }">
-              <label for="annex_operator_id">Sub-category
-                <select id="annex_operator_id" (change)="onAnnexOperatorChange(annex_operator_id.value)" name="annex_operator_id"
-                  [(ngModel)]="observation && observation.annex_operator.id" #annex_operator_id="ngModel" required>
-                  <option *ngFor="let annexOperator of annexOperators" [value]="annexOperator.id">{{ annexOperator.illegality }}</option>
-                </select>
-              </label>
+              <label for="annex_operator_id">Sub-category</label>
+              <select id="annex_operator_id" (change)="onAnnexOperatorChange(annex_operator_id.value)" name="annex_operator_id"
+                [(ngModel)]="observation && observation.annex_operator.id" #annex_operator_id="ngModel" required>
+                <option *ngFor="let annexOperator of annexOperators" [value]="annexOperator.id">{{ annexOperator.illegality }}</option>
+              </select>
               <p *ngIf="f.submitted && !annex_operator_id.valid" class="help-text">Please select a sub-category</p>
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
-              <label for="severity_id">Severity
-                <select id="severity_id" name="severity_id" [(ngModel)]="observation && observation.severity && observation.severity.id"
-                  #severity_id="ngModel" required>
-                  <option *ngFor="let severity of severities" [value]="severity.id">{{ severity.level }} - {{ severity.details }}</option>
-                </select>
-              </label>
+              <label for="severity_id">Severity</label>
+              <select id="severity_id" name="severity_id" [(ngModel)]="observation && observation.severity && observation.severity.id"
+                #severity_id="ngModel" required>
+                <option *ngFor="let severity of severities" [value]="severity.id">{{ severity.level }} - {{ severity.details }}</option>
+              </select>
               <p *ngIf="f.submitted && !severity_id.valid" class="help-text">Please select a severity</p>
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
@@ -81,11 +76,10 @@
               <div *ngIf="f.submitted && !publication_date.valid" class="help-text">Publication date is required</div>
           </div>
           <div *ngIf="isGovernance" class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
-              <label for="government_id">Government Entity
-                <select id="government_id" name="government_id" [(ngModel)]="observation && observation.government && observation.government.id" #government_id="ngModel" required>
-                  <option *ngFor="let government of governments" [value]="government.id">{{ government.government_entity }}</option>
-                </select>
-              </label>
+              <label for="government_id">Government Entity</label>
+              <select id="government_id" name="government_id" [(ngModel)]="observation && observation.government && observation.government.id" #government_id="ngModel" required>
+                <option *ngFor="let government of governments" [value]="government.id">{{ government.government_entity }}</option>
+              </select>
               <p *ngIf="f.submitted && !government_id.valid" class="help-text">Please select a government entity</p>
           </div>
           <div *ngIf="!isGovernance" class="form-group">
@@ -103,19 +97,17 @@
                 [(ngModel)]="observation && observation.litigation_status" #litigation_status="ngModel"  />
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !observer_id.valid }">
-              <label for="observer_id">Monitor
-                <select id="observer_id" name="observer_id" [(ngModel)]="observation && observation.observer.id" #observer_id="ngModel" required>
-                  <option *ngFor="let observer of observers" [value]="observer.id">{{ observer.name }}</option>
-                </select>
-              </label>
+              <label for="observer_id">Monitor</label>
+              <select id="observer_id" name="observer_id" [(ngModel)]="observation && observation.observer.id" #observer_id="ngModel" required>
+                <option *ngFor="let observer of observers" [value]="observer.id">{{ observer.name }}</option>
+              </select>
               <p *ngIf="f.submitted && !observer_id.valid" class="help-text">Please select an observer</p>
           </div>
           <div *ngIf="!isGovernance" class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
-              <label for="operator_id">Operator
-                <select id="operator_id" name="operator_id" [(ngModel)]="observation && observation.operator && observation.operator.id" #operator_id="ngModel" required>
-                  <option *ngFor="let operator of operators" [value]="operator.id">{{ operator.name }}</option>
-                </select>
-              </label>
+              <label for="operator_id">Operator</label>
+              <select id="operator_id" name="operator_id" [(ngModel)]="observation && observation.operator && observation.operator.id" #operator_id="ngModel" required>
+                <option *ngFor="let operator of operators" [value]="operator.id">{{ operator.name }}</option>
+              </select>
               <p *ngIf="f.submitted && !operator_id.valid" class="help-text">Please select an operator</p>
           </div>
           <div class="form-group">

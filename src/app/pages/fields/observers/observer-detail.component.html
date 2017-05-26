@@ -17,7 +17,7 @@
       </div>
       <div class="form-group">
           <label for="observer_type">Observer type
-            <select name="observer_type" ngModel #observer_type="ngModel" required>
+            <select id="observer_type" name="observer_type" ngModel #observer_type="ngModel" required>
                 <option selected [value]="'Mandated'">Mandated</option>
                 <option [value]="'SemiMandated'">SemiMandated</option>
                 <option [value]="'External'">External</option>
@@ -28,7 +28,7 @@
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
           <label for="country_id">Country
-            <select name="country_id" ngModel #country_id="ngModel">
+            <select id="country_id" name="country_id" ngModel #country_id="ngModel">
               <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
             </select>
           </label>
