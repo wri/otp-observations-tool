@@ -1,33 +1,32 @@
 <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
-<div class="row">
-  <div class="large-10 columns">
-
-    <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
-      <div class="c-container -j-between -t-d-column -t-a-start">
-        <h2>{{titleText}}</h2>
-        <div class="c-button-container -j-end form-group" *otpMinTablet>
-          <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
-        </div>
-      </div>
-
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-        <label for="name">Name</label>
-        <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
-        <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
-      </div>
-
-      <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
-        <div class="c-button-container -j-end form-group">
-          <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
-        </div>
-      </div>
-
-      <otp-action-bar *otpMaxTablet>
-        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
-      </otp-action-bar>
-    </form>
+<div class="c-container -j-between -t-d-column -t-a-start">
+  <h2>{{titleText}}</h2>
+  <div class="c-button-container -j-end form-group" *otpMinTablet>
+    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+    <button disable="loading" type="submit" class="c-button -primary">Create</button>
   </div>
 </div>
+
+<form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+  <div class="form-container">
+    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
+      <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+      <div class="c-button-container -j-end form-group">
+        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+      </div>
+    </div>
+
+    <otp-action-bar *otpMaxTablet>
+      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+      <button disable="loading" type="submit" class="c-button -primary">Create</button>
+    </otp-action-bar>
+  </div>
+</form>

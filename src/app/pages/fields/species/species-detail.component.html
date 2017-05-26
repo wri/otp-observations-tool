@@ -1,67 +1,77 @@
 <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
-<div class="row">
-  <div class="large-10 columns">
-    <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
-      <div class="c-container -j-between -t-d-column -t-a-start">
-        <h2>{{titleText}}</h2>
-        <div class="c-button-container -j-end form-group" *otpMinTablet>
-          <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
-        </div>
-      </div>
 
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-          <label for="name">Name</label>
-          <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
-          <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
-      </div>
-      <div class="form-group">
-          <label for="common_name">Common name</label>
-          <input id="common_name" type="text" class="form-control" name="common_name" ngModel #common_name="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="scientific_name">Scientific name</label>
-          <input id="scientific_name" type="text" class="form-control" name="scientific_name" ngModel #scientific_name="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="species_class">Species class</label>
-          <input id="species_class" type="text" class="form-control" name="species_class" ngModel #species_class="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="sub_species">Sub species</label>
-          <input id="sub_species" type="text" class="form-control" name="sub_species" ngModel #sub_species="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="species_family">Species family</label>
-          <input id="species_family" type="text" class="form-control" name="species_family" ngModel #species_family="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="kingdom">Kingdom</label>
-          <input id="kingdom" type="text" class="form-control" name="kingdom" ngModel #kingdom="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="cites_status">CITES status</label>
-          <input id="cites_status" type="text" class="form-control" name="cites_status" ngModel #cites_status="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="iucn_status">IUCN status</label>
-          <input id="iucn_status" type="text" class="form-control" name="iucn_status" ngModel #iucn_status="ngModel" />
-      </div>
-      <!--
-        TODO:  A MULTI SELECTOR OF COUNTRIES HAS TO BE ADDED HERE
-        -->
-
-      <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
-        <div class="c-button-container -j-end form-group">
-          <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
-        </div>
-      </div>
-
-      <otp-action-bar *otpMaxTablet>
-        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
-      </otp-action-bar>
-    </form>
+<div class="c-container -j-between -t-d-column -t-a-start">
+  <h2>{{titleText}}</h2>
+  <div class="c-button-container -j-end form-group" *otpMinTablet>
+    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+    <button disable="loading" type="submit" class="c-button -primary">Create</button>
   </div>
 </div>
+
+<form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+  <div class="form-container">
+    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
+      <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
+    </div>
+
+    <div class="form-group">
+      <label for="common_name">Common name</label>
+      <input id="common_name" type="text" class="form-control" name="common_name" ngModel #common_name="ngModel" />
+    </div>
+
+    <div class="form-group">
+      <label for="scientific_name">Scientific name</label>
+      <input id="scientific_name" type="text" class="form-control" name="scientific_name" ngModel #scientific_name="ngModel" />
+    </div>
+
+    <div class="form-group">
+      <label for="species_class">Species class</label>
+      <input id="species_class" type="text" class="form-control" name="species_class" ngModel #species_class="ngModel" />
+    </div>
+
+    <div class="form-group">
+      <label for="sub_species">Sub species</label>
+      <input id="sub_species" type="text" class="form-control" name="sub_species" ngModel #sub_species="ngModel" />
+    </div>
+
+    <div class="form-group">
+      <label for="species_family">Species family</label>
+      <input id="species_family" type="text" class="form-control" name="species_family" ngModel #species_family="ngModel" />
+    </div>
+
+    <div class="form-group">
+      <label for="kingdom">Kingdom</label>
+      <input id="kingdom" type="text" class="form-control" name="kingdom" ngModel #kingdom="ngModel" />
+    </div>
+
+    <div class="form-group">
+      <label for="cites_status">CITES status</label>
+      <input id="cites_status" type="text" class="form-control" name="cites_status" ngModel #cites_status="ngModel" />
+    </div>
+
+    <div class="form-group">
+      <label for="iucn_status">IUCN status</label>
+      <input id="iucn_status" type="text" class="form-control" name="iucn_status" ngModel #iucn_status="ngModel" />
+    </div>
+
+    <!--
+      TODO:  A MULTI SELECTOR OF COUNTRIES HAS TO BE ADDED HERE
+      -->
+  </div>
+
+  <div class="form-footer">
+    <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+      <div class="c-button-container -j-end form-group">
+        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+      </div>
+    </div>
+
+    <otp-action-bar *otpMaxTablet>
+      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+      <button disable="loading" type="submit" class="c-button -primary">Create</button>
+    </otp-action-bar>
+  </div>
+</form>

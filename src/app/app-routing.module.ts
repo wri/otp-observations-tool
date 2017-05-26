@@ -33,6 +33,7 @@ import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 import { OrganizationProfileComponent } from 'app/pages/my-otp/profile/organization-profile.component';
 import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
+import { ObservationsComponent } from 'app/pages/observations/observations.component';
 
 
 const observationsChildren = [
@@ -97,6 +98,7 @@ const routes: Routes = [
       // -------------OBSERVATIONS------------------
       {
         path: 'observations',
+        component: ObservationsComponent,
         children: observationsChildren
       },
       // ----------------USERS----------------------

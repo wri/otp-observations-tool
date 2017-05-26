@@ -1,11 +1,12 @@
 <div class="mobile-navigation" *otpMaxTablet>
   <otp-navigation [items]="navigationItems" layout="horizontal"></otp-navigation>
 </div>
+
 <div class="l-wrapper">
   <div class="c-container -j-start -a-start">
     <otp-navigation *otpMinTablet [items]="navigationItems" layout="vertical"></otp-navigation>
     <div class="content">
-      <router-outlet ></router-outlet>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

@@ -1,67 +1,72 @@
 <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
-<div class="row">
-  <div class="large-10 columns">
-    <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
-      <div class="c-container -j-between -t-d-column -t-a-start">
-        <h2>{{titleText}}</h2>
-        <div class="c-button-container -j-end form-group" *otpMinTablet>
-          <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
-        </div>
-      </div>
-
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-          <label for="name">Name</label>
-          <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
-          <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
-      </div>
-      <div class="form-group">
-          <label for="operator_type">Operator type
-            <select id="operator_type" name="operator_type" ngModel #operator_type="ngModel" required>
-                <option selected [value]="'Logging'">Logging</option>
-                <option [value]="'Company'">Company</option>
-                <option [value]="'Artisanal'">Artisanal</option>
-                <option [value]="'Sawmill'">Sawmill</option>
-                <option [value]="'CommunityForest'">Community Forest</option>
-                <option [value]="'ARB1327'">ARB1327</option>
-                <option [value]="'PalmOil'">Palm Oil</option>
-                <option [value]="'Trader'">Trader</option>
-                <option [value]="'Company'">Company</option>
-            </select>
-          </label>
-          <p *ngIf="f.submitted && !operator_type.valid" class="help-text">Please select a operator_type</p>
-      </div>
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
-          <label for="country_id">Country
-            <select id="country_id" name="country_id" ngModel #country_id="ngModel">
-              <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
-            </select>
-          </label>
-      </div>
-      <div class="form-group">
-          <label for="concession">Concession</label>
-          <input id="concession" type="text" class="form-control" name="concession" ngModel #concession="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="country_centroid">Country centroid</label>
-          <input id="country_centroid" type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
-      </div>
-      <div class="form-group">
-          <label for="active">Active</label>
-          <input id="active" type="checkbox" name="active" ngModel #active="ngModel" />
-      </div>
-
-      <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
-        <div class="c-button-container -j-end form-group">
-          <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-          <button disable="loading" type="submit" class="c-button -primary">Create</button>
-        </div>
-      </div>
-
-      <otp-action-bar *otpMaxTablet>
-        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
-      </otp-action-bar>
-    </form>
+<div class="c-container -j-between -t-d-column -t-a-start">
+  <h2>{{titleText}}</h2>
+  <div class="c-button-container -j-end form-group" *otpMinTablet>
+    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+    <button disable="loading" type="submit" class="c-button -primary">Create</button>
   </div>
 </div>
+
+<form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+  <div class="form-container">
+    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+      <label for="name">Name</label>
+      <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
+      <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
+    </div>
+
+    <div class="form-group">
+      <label for="operator_type">Operator type
+        <select id="operator_type" name="operator_type" ngModel #operator_type="ngModel" required>
+            <option selected [value]="'Logging'">Logging</option>
+            <option [value]="'Company'">Company</option>
+            <option [value]="'Artisanal'">Artisanal</option>
+            <option [value]="'Sawmill'">Sawmill</option>
+            <option [value]="'CommunityForest'">Community Forest</option>
+            <option [value]="'ARB1327'">ARB1327</option>
+            <option [value]="'PalmOil'">Palm Oil</option>
+            <option [value]="'Trader'">Trader</option>
+            <option [value]="'Company'">Company</option>
+        </select>
+      </label>
+      <div *ngIf="f.submitted && !operator_type.valid" class="help-text">Please select a operator_type</div>
+    </div>
+
+    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
+      <label for="country_id">Country
+        <select id="country_id" name="country_id" ngModel #country_id="ngModel">
+          <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="concession">Concession</label>
+      <input id="concession" type="text" class="form-control" name="concession" ngModel #concession="ngModel" />
+    </div>
+
+    <div class="form-group">
+      <label for="country_centroid">Country centroid</label>
+      <input id="country_centroid" type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
+    </div>
+
+    <div class="form-group">
+      <label for="active">Active</label>
+      <input id="active" type="checkbox" name="active" ngModel #active="ngModel" />
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+      <div class="c-button-container -j-end form-group">
+        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+      </div>
+    </div>
+
+    <otp-action-bar *otpMaxTablet>
+      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
+      <button disable="loading" type="submit" class="c-button -primary">Create</button>
+    </otp-action-bar>
+  </div>
+</form>

@@ -1,7 +1,8 @@
+@import 'src/settings.scss';
+
 :host {
   display: block;
   margin-top: 20px;
-  padding-bottom: 58px;
 
   .actions {
     display: flex;

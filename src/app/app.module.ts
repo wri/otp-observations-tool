@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { AnnexGovernanceService } from 'app/services/annex-governance.service';
 import { AnnexOperatorsService } from 'app/services/annex-operators.service';
 import { TableColumnCellDirective } from 'app/shared/table/directives/column/column-cell.directive';
@@ -76,6 +77,7 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
   declarations: [
     AppComponent,
     LoginComponent,
+    ObservationsComponent,
     ObservationListComponent,
     ObservationDetailComponent,
     ObservationDetailEditComponent,
