@@ -15,7 +15,6 @@ import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component, OnInit } from '@angular/core';
-import { DatePickerOptions } from 'ng2-datepicker';
 
 @Component({
   selector: 'otp-observation-detail',
@@ -35,7 +34,6 @@ export class ObservationDetailComponent implements OnInit {
   annexGovernances: AnnexGovernance[];
   annexOperators: AnnexOperator[];
   severities: Severity[];
-  dateOptions: DatePickerOptions;
   type: String;
   governanceSelected: boolean;
   private selectedCountry: string;
@@ -52,7 +50,6 @@ export class ObservationDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private http: Http
   ) {
-      this.dateOptions = new DatePickerOptions();
       this.type = 'operator';
       this.governanceSelected = false;
   }

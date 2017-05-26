@@ -16,7 +16,6 @@ import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component, OnInit } from '@angular/core';
-import { DatePickerOptions } from 'ng2-datepicker';
 
 @Component({
   selector: 'otp-observation-detail-edit',
@@ -35,7 +34,6 @@ export class ObservationDetailEditComponent implements OnInit {
   annexGovernances: AnnexGovernance[];
   annexOperators: AnnexOperator[];
   severities: Severity[];
-  dateOptions: DatePickerOptions;
   isGovernance: boolean;
   governmentsLoaded = false;
   subcategoriesLoaded = false;
@@ -53,7 +51,6 @@ export class ObservationDetailEditComponent implements OnInit {
     private route: ActivatedRoute,
     private http: Http
   ) {
-    this.dateOptions = new DatePickerOptions();
     // -- Get observation ID from URL---
     this.observationId = this.route.snapshot.params.id;
   }
@@ -101,6 +98,11 @@ export class ObservationDetailEditComponent implements OnInit {
     this.observationsService.getById(this.observationId).then(
       data => {
         this.observation = data;
+
+        // For some reasons angular2-json-api does not convert the string to a Date object
+        // despite what's written in its documentation
+        this.observation.publication_date = new Date(this.observation.publication_date);
+
         this.isGovernance = this.observation.observation_type === 'AnnexGovernance';
         this.loadSubcategories();
     }).catch(error => alert(error));

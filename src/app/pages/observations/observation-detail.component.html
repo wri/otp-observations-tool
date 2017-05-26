@@ -67,8 +67,7 @@
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
               <label for="publication_date">Publication date</label>
-              <ng2-datepicker id="publication_date" name="publication_date" #publication_date="ngModel" [options]="dateOptions"
-                ngModel required></ng2-datepicker>
+              <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" ngModel #publication_date="ngModel" required></otp-datepicker>
               <div *ngIf="f.submitted && !publication_date.valid" class="help-text">Publication date is required</div>
           </div>
           <div *ngIf="governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">

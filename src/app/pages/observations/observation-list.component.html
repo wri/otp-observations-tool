@@ -13,7 +13,7 @@
 
   <otp-table caption="Observations">
     <otp-table-column name="Date" prop="publication_date">
-      <ng-template let-value="value" table-cell-template>{{value | date:'MM/dd/yy'}}</ng-template>
+      <ng-template let-value="value" table-cell-template>{{getFormatedDate(value)}}</ng-template>
     </otp-table-column>
     <otp-table-column name="Country" prop="country.iso"></otp-table-column>
     <otp-table-column name="Operator" prop="operator.name"></otp-table-column>

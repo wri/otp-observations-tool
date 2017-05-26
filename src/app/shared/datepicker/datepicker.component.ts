@@ -1,6 +1,8 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, forwardRef, Input, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import { DateModel } from 'ng2-datepicker';
+import { format } from 'date-fns';
+import { IDatePickerOptions, IDateModel } from 'ng2-datepicker/lib-dist/ng2-datepicker.component';
 
 const REQUIRED_VALIDATOR: any = {
   provide: NG_VALIDATORS,
@@ -33,6 +35,7 @@ export class DatepickerComponent implements Validator, ControlValueAccessor {
   }
 
   date: Date; // Value of the external model
+  datepickerInputEvents = new EventEmitter<{ type: string, data: Date }>();
   private _date: string; // Value of the internal native model
   private _dateModel: DateModel; // Value of the internal custom modal
   private _required = false; // Is the input required?
@@ -67,7 +70,16 @@ export class DatepickerComponent implements Validator, ControlValueAccessor {
   }
 
   writeValue(date: Date): void {
-    this.date = date;
+    if (date !== null && date !== undefined && typeof date === 'object') {
+      this.date = date;
+
+      // We also update the native input
+      this._date = format(date, 'YYYY-MM-DD');
+
+      // We set the initial date for the custom one
+      const dateModel = new DateModel(<IDateModel>{ day: format(date, 'DD'), month: format(date, 'MM'), year: format(date, 'YYYY') });
+      this.datepickerInputEvents.emit({ type: 'setDate', data: date });
+    }
   }
 
   registerOnChange(fn: any): void {

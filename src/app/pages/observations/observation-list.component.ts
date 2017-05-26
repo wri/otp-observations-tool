@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { JsonApiParams } from 'app/services/json-api.service';
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
@@ -48,6 +49,10 @@ export class ObservationListComponent extends TableFilterBehavior {
     private authService: AuthService
   ) {
     super();
+  }
+
+  getFormatedDate(date: Date|string): string {
+    return format(date, 'MM/DD/YYYY');
   }
 
   onEdit(row): void {
