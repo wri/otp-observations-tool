@@ -1,0 +1,25 @@
+@import 'src/settings.scss';
+
+:host {
+
+  h1 {
+    margin: 0 0 10px;
+    font-size: $font-size-huge;
+  }
+
+  p {
+    margin: 0 0 40px;
+    font-size: $font-size-default;
+  }
+
+  .container {
+    max-width: 420px;
+    margin: 0 auto;
+    margin-top: 50px;
+
+    @media screen and (min-width: $break-tablet) {
+      margin-top: 100px;
+    }
+  }
+
+}

@@ -1,3 +1,4 @@
+import { PageNotFoundComponent } from 'app/pages/page-not-found/page-not-found.component';
 import { ObservationDetailEditComponent } from 'app/pages/observations/observation-detail-edit.component';
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
@@ -224,6 +225,10 @@ const routes: Routes = [
         component: ProfileComponent
       }
     ]
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent
   }
 ];
 

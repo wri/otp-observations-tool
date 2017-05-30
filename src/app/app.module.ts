@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { PageNotFoundComponent } from 'app/pages/page-not-found/page-not-found.component';
 import { LoaderComponent } from 'app/shared/loader/loader.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { AnnexGovernanceService } from 'app/services/annex-governance.service';
@@ -125,6 +126,7 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     TableComponent,
     TableColumnDirective,
     TableColumnCellDirective,
+    PageNotFoundComponent,
   ],
   imports: [
     JsonApiModule,
