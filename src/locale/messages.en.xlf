@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="aa112aafab99fca60e770e78dcc5d3c27f8ec4f4" datatype="html">
+        <source>404. Page not found</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/page-not-found/page-not-found.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="b66a22023a03f8985f17e59380711f3b5a099e53" datatype="html">
+        <source>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/page-not-found/page-not-found.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="641c31c001d58979956c8cb20082d85f6d8ae541" datatype="html">
+        <source>Go to my OTP</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/page-not-found/page-not-found.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ef691d3c76b2fa1584de7943391598624e64e1bc" datatype="html">
+        <source>Go to login page</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/page-not-found/page-not-found.component.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

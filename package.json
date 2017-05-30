@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod-build": "ng build --prod --aot --extract-css --base-href '/observations-tool'",
+    "prod-build": "for lang in en fr; do ng build --output-path=dist/$lang --base-href=/observations-tool --aot -prod --i18n-file=src/locale/messages.$lang.xlf --i18n-format=xlf --locale=$lang; done",
+    "i18n": "for lang in en fr; do ng xi18n --output-path ./src/locale/ --out-file messages.$lang.xlf --progress --locale en; done",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
