@@ -10,7 +10,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prod-build": "for lang in en fr; do ng build --output-path=dist/$lang --base-href=/observations-tool --aot -prod --i18n-file=src/locale/messages.$lang.xlf --i18n-format=xlf --locale=$lang; done",
-    "i18n": "for lang in en fr; do ng xi18n --output-path ./src/locale/ --out-file messages.$lang.xlf --progress --locale en; done",
+    "extract-i18n": "ng xi18n --output-path src/locale/ --locale en && xliffmerge --profile xliffmerge.json en fr",
+    "start-en": "ng serve --aot --i18n-file=src/locale/messages.en.xlf --locale=en --i18n-format=xlf",
+    "start-fr": "ng serve --aot --i18n-file=src/locale/messages.fr.xlf --locale=fr --i18n-format=xlf",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
@@ -49,6 +51,7 @@
     "karma-coverage-istanbul-reporter": "^0.2.0",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ngx-i18nsupport": "^0.6.1",
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
