@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod-build": "ng build --prod --aot --extract-css",
+    "prod-build": "ng build --prod --aot --extract-css --base-href '/observations-tool'",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
