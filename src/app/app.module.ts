@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { NavigationItemDirective } from 'app/shared/navigation/directives/item/item.directive';
 import { PageNotFoundComponent } from 'app/pages/page-not-found/page-not-found.component';
 import { LoaderComponent } from 'app/shared/loader/loader.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
@@ -93,6 +94,7 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     FieldDetailComponent,
     TabsComponent,
     NavigationComponent,
+    NavigationItemDirective,
     HeaderComponent,
     GovernmentListComponent,
     GovernmentDetailComponent,

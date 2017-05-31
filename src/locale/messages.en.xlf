@@ -80,6 +80,34 @@
         <note priority="1" from="description">Next page button</note>
         <note priority="1" from="meaning">Table paginator</note>
       </trans-unit>
+      <trans-unit id="65701e62f4eb6566c62a6088842f6f95fa8ef48e" datatype="html">
+        <source>Organization profile</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/my-otp/my-otp.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/my-otp/my-otp.component.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;My OTP&apos; page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="fb32420414820f45d127a9e6f51985800d930fbb" datatype="html">
+        <source>My observations</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/my-otp/my-otp.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/my-otp/my-otp.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;My OTP&apos; page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
       <trans-unit id="fa9b7116761f013fe509c7646dee9d1e9c3cc31a" datatype="html">
         <source>Name of the organization</source>
         <target/>
@@ -1692,6 +1720,42 @@
         <note priority="1" from="description">Label for the details field</note>
         <note priority="1" from="meaning">Operator sub-category creation/edition</note>
       </trans-unit>
+      <trans-unit id="ad9508c67f58f44fd3b4d73925e50fa53de76fb7" datatype="html">
+        <source>Operators</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/subcategories/subcategories.component.ts</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;Sub-categories&apos; list page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="cefad27e0f05695d2e7d84403f5370fa0ac85c5f" datatype="html">
+        <source>Governance</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/subcategories/subcategories.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;Sub-categories&apos; list page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
       <trans-unit id="85afe36487fab2e70904c3d796f0ea2f7a5a90a9" datatype="html">
         <source>New category</source>
         <target/>
@@ -2844,6 +2908,58 @@
         </context-group>
         <note priority="1" from="description">Log out button</note>
       </trans-unit>
+      <trans-unit id="791b002647a2f49818c508b2860c68e7f23b17b6" datatype="html">
+        <source>My OTP</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/header/header.component.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Main navigation menu (desktop)</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="831b9ec431d2a93a412ef510bd1fae36c721400a" datatype="html">
+        <source>Observations</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/header/header.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">Main navigation menu (desktop)</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="dbe0f319ddd1cc5c17d1a4e9585996c89fd2d05c" datatype="html">
+        <source>Observation fields</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/header/header.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Main navigation menu (desktop)</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="74b0fac259eeefc9f20aeb6a1bd08931012390c9" datatype="html">
+        <source>Users</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/header/header.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Main navigation menu (desktop)</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
       <trans-unit id="1ae1df848c628a7a059c1ff57be3449ecacc5c91" datatype="html">
         <source>New user</source>
         <target/>
@@ -3052,6 +3168,104 @@
         <note priority="1" from="description">Error message if the type isn&apos;t supplied (the user will have to user between some options)</note>
         <note priority="1" from="meaning">Observation creation/edition</note>
       </trans-unit>
+      <trans-unit id="5c50b2cbccccfacca324cac86084eea6dca8a9b6" datatype="html">
+        <source>Categories</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;Observations fields&apos; page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="c5c1ede612299da54bd1911c2afff91164c6d67d" datatype="html">
+        <source>Sub-categories</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;Observations fields&apos; page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="c61f95bc9d62cf3b27e0de4d2ccafdec84025876" datatype="html">
+        <source>Species</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;Observations fields&apos; page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="cbaa4c8a4a07ae77d139bdffb581d89f19f40380" datatype="html">
+        <source>Countries</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;Observations fields&apos; page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="cc1f09ccc4db74d6d42f5dd647f061d86d857c60" datatype="html">
+        <source>Governments</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;Observations fields&apos; page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="d46cab8761b81984adf73aa599930ae8b5a4c1ed" datatype="html">
+        <source>Monitors</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;Observations fields&apos; page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
+      <trans-unit id="8617e06849d42c1b655ebff3a0f213a0b7c5e6f3" datatype="html">
+        <source>Laws</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <note priority="1" from="description">Menu located on the &apos;Observations fields&apos; page</note>
+        <note priority="1" from="meaning">Menu item</note>
+      </trans-unit>
       <trans-unit id="1a6f616703d75ae22ef5f11706c3815ca04888c5" datatype="html">
         <source>
         New user
@@ -3110,42 +3324,17 @@
           <context context-type="sourcefile">app/pages/users/user-list.component.ts</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
         <note priority="1" from="description">Caption for the table which lists the users</note>
       </trans-unit>
-      <trans-unit id="30e10cd5f105624805db7f96287a3b7edd5fff9c" datatype="html">
-        <source>My OTP</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <note priority="1" from="description">My OTP menu option</note>
-      </trans-unit>
-      <trans-unit id="4b8c7b2a240e413c2c1eb4a69abf371ac5c5742e" datatype="html">
-        <source>Observations</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <note priority="1" from="description">Observations menu option</note>
-      </trans-unit>
-      <trans-unit id="faf74edc4404313eeb85945cc1a99cc4ff4a6fd6" datatype="html">
+      <trans-unit id="d8ce6578695232c810274be36568aee8217d9e12" datatype="html">
         <source>Fields</source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <note priority="1" from="description">Fields menu option</note>
+        <note priority="1" from="description">Main navigation menu (mobile)</note>
+        <note priority="1" from="meaning">Menu item</note>
       </trans-unit>
       <trans-unit id="099668cc93fe681254739694dc7d662069a8b659" datatype="html">
         <source>Register</source>
@@ -3401,6 +3590,15 @@
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of observations</note>
+      </trans-unit>
+      <trans-unit id="4b8c7b2a240e413c2c1eb4a69abf371ac5c5742e" datatype="html">
+        <source>Observations</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Caption for the table which lists the observations</note>
       </trans-unit>
       <trans-unit id="8d68caf60e263e599e86d21321e1939323492821" datatype="html">
         <source>Login</source>

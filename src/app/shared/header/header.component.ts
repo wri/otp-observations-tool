@@ -12,19 +12,6 @@ export class HeaderComponent {
   private isAdmin = false;
   isLogged = false;
 
-  private _navigationItems: NavigationItem[] = [
-    { name: 'My OTP', url: '/private/my-otp'},
-    { name: 'Observations', url: '/private/observations' },
-    { name: 'Observation fields', url: '/private/fields' },
-    { name: 'Users', url: '/private/users' },
-  ];
-
-  get navigationItems(): NavigationItem[] {
-    return this.isAdmin
-      ? this._navigationItems
-      : this._navigationItems.slice(0, 3);
-  }
-
   constructor (private authService: AuthService) {
     // Each time the status of the login change, we update some variables
     this.authService.loginStatus.subscribe(isLogged => {

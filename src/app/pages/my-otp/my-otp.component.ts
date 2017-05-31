@@ -6,11 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './my-otp.component.html',
   styleUrls: ['./my-otp.component.scss']
 })
-export class MyOTPComponent {
-
-  navigationItems: NavigationItem[] = [
-    { name: 'Organization profile', url: 'profile' },
-    { name: 'My observations', url: 'observations' },
-  ]
-
-}
+export class MyOTPComponent {}

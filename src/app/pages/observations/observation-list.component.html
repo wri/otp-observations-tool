@@ -1,9 +1,9 @@
 <div class="c-container -j-between -t-d-column -t-a-start">
   <div class="c-container -j-start -t-d-column -t-a-start">
-    <otp-navigation
-      layout="mini"
-      [items]="navigationItems"
-    ></otp-navigation>
+    <otp-navigation layout="mini">
+      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations' list page" name="Operators" url="../operators"></otp-navigation-item>
+      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations' list page" name="Governance" url="../governance"></otp-navigation-item>
+    </otp-navigation>
   </div>
   <div class="c-button-container -j-end">
     <a class="c-button -primary" routerLink="../new" i18n="Button to create a new observation">New observation</a>
