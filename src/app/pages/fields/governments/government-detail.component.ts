@@ -12,7 +12,7 @@ import { Component, OnInit } from '@angular/core';
 export class GovernmentDetailComponent implements OnInit {
 
   countries: Country[] = [];
-  titleText: String = 'New Government';
+  mode: String = 'new';
   loading = false;
 
   constructor(

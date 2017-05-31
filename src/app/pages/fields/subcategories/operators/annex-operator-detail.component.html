@@ -1,36 +1,39 @@
 <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
 <div class="c-container -j-between -t-d-column -t-a-start">
-  <h2>{{titleText}}</h2>
+  <h2>
+    <ng-template [ngIf]="mode === 'new'" i18n="Operator sub-category creation|Title of the page">New operator sub-category</ng-template>
+    <ng-template [ngIf]="mode !== 'new'" i18n="Operator sub-category edition|Title of the page">Update operator sub-category</ng-template>
+  </h2>
   <div class="c-button-container -j-end form-group" *otpMinTablet>
-    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-    <button disable="loading" type="submit" class="c-button -primary">Create</button>
+    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+    <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
   </div>
 </div>
 
 <form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
   <div class="form-container">
     <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !illegality.valid }">
-      <label for="illegality">Name</label>
+      <label for="illegality" i18n="Operator sub-category creation/edition|Label for the name field">Name</label>
       <input id="illegality" type="text" class="form-control" name="illegality" ngModel #illegality="ngModel" required />
-      <div *ngIf="f.submitted && !illegality.valid" class="help-text">Name is required</div>
+      <div *ngIf="f.submitted && !illegality.valid" class="help-text" i18n="Operator sub-category creation/edition|Error message if the name isn't supplied">Name is required</div>
     </div>
 
     <div class="form-group">
-      <label for="country_id">Country</label>
+      <label for="country_id" i18n="Operator sub-category creation/edition|Label for the country field">Country</label>
       <select id="country_id" name="country_id" ngModel #country_id="ngModel">
         <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label for="law_ids">Law references</label>
+      <label for="law_ids" i18n="Operator sub-category creation/edition|Label for the law references field">Law references</label>
       <select multiple id="law_ids" name="law_ids" ngModel #law_ids="ngModel">
         <option *ngFor="let law of laws" [value]="law.id">{{ law.legal_reference }}</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label for="details">Details</label>
+      <label for="details" i18n="Operator sub-category creation/edition|Label for the details field">Details</label>
       <input id="details" type="text" class="form-control" name="details" ngModel #details="ngModel" />
     </div>
   </div>
@@ -38,14 +41,14 @@
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+        <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-      <button disable="loading" type="submit" class="c-button -primary">Create</button>
+      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+      <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
     </otp-action-bar>
   </div>
 </form>

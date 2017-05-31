@@ -15,7 +15,7 @@ export class AnnexOperatorDetailComponent implements OnInit {
 
   countries: Country[] = [];
   laws: Law[] = [];
-  titleText: String = 'New Annex Operator';
+  mode: String = 'new';
   loading = false;
 
   constructor(

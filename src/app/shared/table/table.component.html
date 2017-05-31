@@ -2,9 +2,10 @@
 <otp-loader *ngIf="loading" [attr.class]="rows && rows.length && rows.length > 1 ? '-has-data' : ''"></otp-loader>
 <table role="grid" aria-readonly="true" [attr.aria-rowcount]="rowCount">
   <caption>
-    {{caption || 'Undefined table'}}
+    <ng-template [ngIf]="caption">{{caption}}</ng-template>
+    <ng-template [ngIf]="!caption" i18n="Default caption for the tables">Undefined table</ng-template>
     <ng-template [ngIf]="sortColumn">
-      , sorted by {{sortColumn.name || sortColumn.prop}}: {{sortOrder}}
+      <span i18n="Complementary caption information">, sorted by</span> {{sortColumn.name || sortColumn.prop}}: {{sortOrder}}
     </ng-template>
   </caption>
 
@@ -45,7 +46,7 @@
 </table>
 
 <div *ngIf="perPage" class="paginator">
-  <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage">Previous</button>
+  <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage" i18n="Table paginator|Previous page button">Previous</button>
   <ul>
     <li *ngIf="currentPage > firstPage + 1"><button type="button" [attr.aria-label]="'Page ' + firstPage" (click)="currentPage = firstPage">{{firstPage}}</button></li>
     <li *ngIf="currentPage > firstPage + 2">...</li>
@@ -55,5 +56,5 @@
     <li *ngIf="currentPage < lastPage - 2">...</li>
     <li *ngIf="currentPage < lastPage - 1"><button type="button" [attr.aria-label]="'Page ' + lastPage" (click)="currentPage = lastPage">{{lastPage}}</button></li>
   </ul>
-  <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage">Next</button>
+  <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage" i18n="Table paginator|Next page button">Next</button>
 </div>

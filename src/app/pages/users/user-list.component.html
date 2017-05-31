@@ -1,17 +1,17 @@
 <div class="l-wrapper">
   <div class="c-container -j-between">
     <div class="c-button-container -j-end">
-      <button (click)="triggerNewUser()" class="c-button -primary">
+      <button (click)="triggerNewUser()" class="c-button -primary" i18n="Button to create a new user">
         New user
       </button>
     </div>
   </div>
 
-  <otp-table caption="Users">
-    <otp-table-column name="Name" prop="name"></otp-table-column>
-    <otp-table-column name="Username" prop="nickname"></otp-table-column>
-    <otp-table-column name="Email" prop="email"></otp-table-column>
-    <otp-table-column name="Actions">
+  <otp-table i18n-caption="Caption for the table which lists the users" caption="Users">
+    <otp-table-column i18n-name="Table of users|Name of the column corresponding to the name of the users" name="Name" prop="name"></otp-table-column>
+    <otp-table-column i18n-name="Table of users|Name of the column corresponding to the username/nickname of the users"  name="Username" prop="nickname"></otp-table-column>
+    <otp-table-column i18n-name="Table of users|Name of the column corresponding to the email of the users" name="Email" prop="email"></otp-table-column>
+    <otp-table-column i18n-name="Table of users|Name of the actions columns (containing the edit and delete button)" name="Actions">
      <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
        <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>

@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 })
 export class CountryDetailComponent {
 
-  titleText: String = 'New Country';
+  mode: String = 'new';
   loading = false;
 
   constructor(

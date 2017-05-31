@@ -1,48 +1,51 @@
 <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
 <div class="c-container -j-between -t-d-column -t-a-start">
-  <h2>{{titleText}}</h2>
+  <h2>
+    <ng-template [ngIf]="mode === 'new'" i18n="Country creation|Title of the page">New country</ng-template>
+    <ng-template [ngIf]="mode !== 'new'" i18n="Country edition|Title of the page">Update country</ng-template>
+  </h2>
   <div class="c-button-container -j-end form-group" *otpMinTablet>
-    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-    <button disable="loading" type="submit" class="c-button -primary">Create</button>
+    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+    <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
   </div>
 </div>
 
 <form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
   <div class="form-container">
     <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-      <label for="name">Name</label>
+      <label for="name" i18n="Country creation/edition|Label for the name field">Name</label>
       <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
-      <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
+      <div *ngIf="f.submitted && !name.valid" class="help-text" i18n="Country creation/edition|Error message if the name isn't supplied">Name is required</div>
     </div>
 
     <div class="form-group">
-      <label for="region_name">Region name</label>
+      <label for="region_name" i18n="Country creation/edition|Label for the region name field">Region name</label>
       <input id="region_name" type="text" class="form-control" name="region_name" ngModel #region_name="ngModel" />
     </div>
 
     <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !iso.valid }">
-      <label for="iso">ISO</label>
+      <label for="iso" i18n="Country creation/edition|Label for the ISO code field">ISO</label>
       <input id="iso" type="text" class="form-control" name="iso" ngModel #iso="ngModel" required />
-      <div *ngIf="f.submitted && !iso.valid" class="help-text">ISO is required</div>
+      <div *ngIf="f.submitted && !iso.valid" class="help-text" i18n="Country creation/edition|Error message if the ISO code isn't supplied">ISO is required</div>
     </div>
 
     <div class="form-group">
-      <label for="region_iso">Region ISO</label>
+      <label for="region_iso" i18n="Country creation/edition|Label for the region ISO code field">Region ISO</label>
       <input id="region_iso" type="text" class="form-control" name="region_iso" ngModel #region_iso="ngModel" />
     </div>
 
     <div class="form-group">
-      <label for="country_centroid">Country centroid</label>
+      <label for="country_centroid" i18n="Country creation/edition|Label for the country centroid field">Country centroid</label>
       <input id="country_centroid" type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
     </div>
 
     <div class="form-group">
-      <label for="region_centroid">Region centroid</label>
+      <label for="region_centroid" i18n="Country creation/edition|Label for the region centroid field">Region centroid</label>
       <input id="region_centroid" type="text" class="form-control" name="region_centroid" ngModel #region_centroid="ngModel" />
     </div>
 
     <div class="form-group">
-      <label for="is_active">Available for observations?</label>
+      <label for="is_active" i18n="Country creation/edition|Label for the field that let the user select if the country will be available for observations">Available for observations?</label>
       <input id="is_active" type="checkbox" name="is_active" ngModel #is_active="ngModel" />
     </div>
   </div>
@@ -50,14 +53,14 @@
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+        <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-      <button disable="loading" type="submit" class="c-button -primary">Create</button>
+      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+      <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
     </otp-action-bar>
   </div>
 </form>

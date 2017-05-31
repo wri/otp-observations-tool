@@ -1,16 +1,16 @@
 <div class="c-container -j-between -t-d-column -t-a-start">
   <div class="c-button-container -j-end">
-    <button (click)="triggerNewSpecies()" class="c-button -primary">
+    <button (click)="triggerNewSpecies()" class="c-button -primary" i18n="Button to create a new species">
       New species
     </button>
   </div>
 </div>
 
-<otp-table caption="Species">
-  <otp-table-column prop="name" name="Name"></otp-table-column>
-  <otp-table-column prop="species_class" name="Species Class"></otp-table-column>
-  <otp-table-column prop="scientific_name" name="Scientific Name"></otp-table-column>
-  <otp-table-column name="Actions">
+<otp-table i18n-caption="Caption for the table which lists the species" caption="Species">
+  <otp-table-column i18n-name="Table of species|Name of the column corresponding to the name of the species" prop="name" name="Name"></otp-table-column>
+  <otp-table-column i18n-name="Table of species|Name of the column corresponding to the species class of the species" prop="species_class" name="Species class"></otp-table-column>
+  <otp-table-column i18n-name="Table of species|Name of the column corresponding to the scientific name of the species" prop="scientific_name" name="Scientific name"></otp-table-column>
+  <otp-table-column i18n-name="Table of species|Name of the actions columns (containing the edit and delete button)" name="Actions">
      <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
        <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>

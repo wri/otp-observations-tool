@@ -24,7 +24,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ObservationDetailEditComponent implements OnInit {
 
-  titleText: String = 'Edit observation';
   observation: Observation;
   loading = false;
   countries: Country[];
