@@ -60,12 +60,40 @@
         </context-group>
         <note priority="1" from="description">Complementary caption information</note>
       </trans-unit>
+      <trans-unit id="6e0fa4af5418a615a1a09c67e32682e6b69c0f79" datatype="html">
+        <source>ascendent</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/table/table.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Sort order of the table</note>
+      </trans-unit>
+      <trans-unit id="547d6a7a6de920a2aefc34eeec1b9fc3d393bbb8" datatype="html">
+        <source>descendent</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/table/table.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Sort order of the table</note>
+      </trans-unit>
+      <trans-unit id="6219cbb729e72ee75b30c2ce46d7959d1d09aa8d" datatype="html">
+        <source>Page</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/table/table.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <note priority="1" from="description">Page of a table</note>
+        <note priority="1" from="meaning">Table paginator</note>
+      </trans-unit>
       <trans-unit id="e3706b34167ca5b613defa8be3a5d4c6316741e5" datatype="html">
         <source>Previous</source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/table/table.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <note priority="1" from="description">Previous page button</note>
         <note priority="1" from="meaning">Table paginator</note>
@@ -75,7 +103,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/table/table.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <note priority="1" from="description">Next page button</note>
         <note priority="1" from="meaning">Table paginator</note>
