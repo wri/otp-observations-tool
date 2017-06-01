@@ -1,48 +1,49 @@
 <spinner *ngIf="loading" [tickness]="1" [size]="20"></spinner>
 
 <div class="c-container -j-between -t-d-column -t-a-start">
-  <h2>{{titleText}}</h2>
+  <h2>
+    <ng-template [ngIf]="mode === 'new'" i18n="Monitor creation|Title of the page">New monitor</ng-template>
+    <ng-template [ngIf]="mode !== 'new'" i18n="Monitor edition|Title of the page">Update monitor</ng-template>
+  </h2>
   <div class="c-button-container -j-end form-group" *otpMinTablet>
-    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-    <button disable="loading" type="submit" class="c-button -primary">Create</button>
+    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+    <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
   </div>
 </div>
 
 <form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
   <div class="form-container">
     <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-      <label for="name">Name</label>
+      <label for="name" i18n="Monitor creation/edition|Label for the name field">Name</label>
       <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
-      <div *ngIf="f.submitted && !name.valid" class="help-text">Name is required</div>
+      <div *ngIf="f.submitted && !name.valid" class="help-text" i18n="Monitor creation/edition|Error message if the name isn't supplied">Name is required</div>
     </div>
 
     <div class="form-group">
-      <label for="observer_type">Observer type
-        <select id="observer_type" name="observer_type" ngModel #observer_type="ngModel" required>
-            <option selected [value]="'Mandated'">Mandated</option>
-            <option [value]="'SemiMandated'">SemiMandated</option>
-            <option [value]="'External'">External</option>
-            <option [value]="'Government'">Government</option>
-        </select>
-      </label>
-      <div *ngIf="f.submitted && !observer_type.valid" class="help-text">Please select a observer_type</div>
+      <label for="observer_type" i18n="Monitor creation/edition|Label for the monitor type field">Monitor type</label>
+      <select id="observer_type" name="observer_type" ngModel #observer_type="ngModel" required>
+        <option selected value="Mandated" i18n="Type of monitor">Mandated</option>
+        <option value="SemiMandated" i18n="Type of monitor">Semi mandated</option>
+        <option value="External" i18n="Type of monitor">External</option>
+        <option value="Government" i18n="Type of monitor">Government</option>
+      </select>
+      <div *ngIf="f.submitted && !observer_type.valid" class="help-text" i18n="Monitor creation/edition|Error message if the monitor type isn't supplied (the user will have to choose between some options)">Please select a type of monitor</div>
     </div>
 
     <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
-      <label for="country_id">Country
-        <select id="country_id" name="country_id" ngModel #country_id="ngModel">
-          <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
-        </select>
-      </label>
+      <label for="country_id" i18n="Monitor creation/edition|Label for the country field">Country</label>
+      <select id="country_id" name="country_id" ngModel #country_id="ngModel">
+        <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+      </select>
     </div>
 
     <div class="form-group">
-      <label for="organization">Organization</label>
+      <label for="organization" i18n="Monitor creation/edition|Label for the organization's name field">Organization</label>
       <input id="organization" type="text" class="form-control" name="organization" ngModel #organization="ngModel" />
     </div>
 
     <div class="form-group">
-      <label for="active">Active</label>
+      <label for="active" i18n="Monitor creation/edition|Label for the field to tell whether the monitor is active or not">Active</label>
       <input id="active" type="checkbox" name="active" ngModel #active="ngModel" />
     </div>
   </div>
@@ -50,14 +51,14 @@
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary">Create</button>
+        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+        <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary">Cancel</button>
-      <button disable="loading" type="submit" class="c-button -primary">Create</button>
+      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+      <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
     </otp-action-bar>
   </div>
 </form>

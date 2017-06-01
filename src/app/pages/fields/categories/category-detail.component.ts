@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 })
 export class CategoryDetailComponent {
 
-  titleText: String = 'New Category';
+  mode: String = 'new';
   loading = false;
 
   constructor(

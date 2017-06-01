@@ -1,5 +1,6 @@
+import { NavigationItemDirective } from './directives/item/item.directive';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ContentChildren, QueryList, AfterContentInit } from '@angular/core';
 
 export interface NavigationItem {
   name: string;
@@ -14,17 +15,19 @@ export interface NavigationItem {
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements AfterContentInit {
 
   @Input() private activeItem: NavigationItem;
-  @Input() items: NavigationItem[] = [];
   @Input() layout: 'mini'|'horizontal'|'vertical' = 'horizontal';
   @Output() private change = new EventEmitter();
+
+  @ContentChildren(NavigationItemDirective)
+  items: QueryList<NavigationItemDirective>;
 
   // Whether or not the component should manage which item is active
   // If not, the router will automatically determine it
   private get manageActiveItem(): boolean {
-    return this.items.reduce((res, item) => res || !item.url, false);
+    return this.items.toArray().reduce((res, item) => res || !item.url, false);
   }
 
   constructor (
@@ -32,10 +35,10 @@ export class NavigationComponent implements OnInit {
     private activedRoute: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
+  ngAfterContentInit(): void {
     // We always set a default active item
-    if (this.manageActiveItem && !this.activeItem && this.items.length) {
-      this.activeItem = this.items[0];
+    if (this.manageActiveItem && !this.activeItem && this.items.toArray().length) {
+      this.activeItem = this.items.first;
     }
   }
 
@@ -46,7 +49,7 @@ export class NavigationComponent implements OnInit {
    */
   private onClick(item: NavigationItem): void {
     if (this.manageActiveItem) {
-      this.activeItem = this.items.find(i => {
+      this.activeItem = this.items.toArray().find(i => {
         return i === item;
       });
     }

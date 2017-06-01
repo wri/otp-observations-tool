@@ -16,10 +16,6 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 })
 export class ObservationListComponent extends TableFilterBehavior {
 
-  navigationItems: NavigationItem[] = [
-      { name: 'Operators', url: '../operators' },
-      { name: 'Governance', url: '../governance' }
-    ];
   private selected = [];
   private editURL: string;
 

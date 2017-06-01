@@ -12,7 +12,7 @@ import { Component, OnInit } from '@angular/core';
 export class AnnexGovernanceDetailComponent implements OnInit {
 
   private countries: Country[] = [];
-  titleText: String = 'New Annex Governance';
+  mode: String = 'new';
   loading = false;
 
   constructor(

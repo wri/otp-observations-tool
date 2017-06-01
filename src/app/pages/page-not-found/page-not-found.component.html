@@ -1,8 +1,8 @@
 <div class="l-wrapper">
   <div class="container">
-    <h1>404. Page not found</h1>
-    <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
-    <a routerLink="/private/my-otp" class="c-button -primary" *ngIf="isLogged">Go to my OTP</a>
-    <a routerLink="/" class="c-button -primary" *ngIf="!isLogged">Go to login page</a>
+    <h1 i18n="404 page|Title of the page">404. Page not found</h1>
+    <p i18n="404 page|Description of the error">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+    <a routerLink="/private/my-otp" class="c-button -primary" *ngIf="isLogged" i18n="404 page|Button to suggest the user to go to the 'My OTP' page">Go to my OTP</a>
+    <a routerLink="/" class="c-button -primary" *ngIf="!isLogged" i18n="404 page|Button to suggest the user to go to the login page">Go to login page</a>
   </div>
 </div>

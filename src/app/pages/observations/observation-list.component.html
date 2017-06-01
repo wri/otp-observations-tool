@@ -1,25 +1,25 @@
 <div class="c-container -j-between -t-d-column -t-a-start">
   <div class="c-container -j-start -t-d-column -t-a-start">
-    <otp-navigation
-      layout="mini"
-      [items]="navigationItems"
-    ></otp-navigation>
+    <otp-navigation layout="mini">
+      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations' list page" name="Operators" url="../operators"></otp-navigation-item>
+      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations' list page" name="Governance" url="../governance"></otp-navigation-item>
+    </otp-navigation>
   </div>
   <div class="c-button-container -j-end">
-    <a class="c-button -primary" routerLink="../new">New observation</a>
+    <a class="c-button -primary" routerLink="../new" i18n="Button to create a new observation">New observation</a>
   </div>
 </div>
 
-<otp-table caption="Observations">
-  <otp-table-column name="Date" prop="publication_date">
+<otp-table i18n-caption="Caption for the table which lists the observations" caption="Observations">
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the date of the observations" name="Date" prop="publication_date">
     <ng-template let-value="value" table-cell-template>{{getFormatedDate(value)}}</ng-template>
   </otp-table-column>
-  <otp-table-column name="Country" prop="country.iso"></otp-table-column>
-  <otp-table-column name="Operator" prop="operator.name"></otp-table-column>
-  <otp-table-column name="Category" [prop]="this.observationType === 'operators' ? 'annex_operator.illegality' : 'annex_governance.governance_pillar'"></otp-table-column>
-  <otp-table-column name="Observation" prop="details"></otp-table-column>
-  <otp-table-column name="Severity" prop="severity.level"></otp-table-column>
-  <otp-table-column name="Actions">
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the country of the observations" name="Country" prop="country.iso"></otp-table-column>
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the operator name of the observations" name="Operator" prop="operator.name"></otp-table-column>
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the category of the observations" name="Category" [prop]="this.observationType === 'operators' ? 'annex_operator.illegality' : 'annex_governance.governance_pillar'"></otp-table-column>
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the details of the observations" name="Observation" prop="details"></otp-table-column>
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the severity of the observations" name="Severity" prop="severity.level"></otp-table-column>
+  <otp-table-column i18n-name="Table of observations|Name of the actions columns (containing the edit and delete button)" name="Actions">
     <ng-template let-row="row" table-cell-template>
       <ng-template [ngIf]="canEdit(row)">
         <button class="action" (click)="onEdit(row)" aria-label="Edit"><otp-icon name="#icon-edit"></otp-icon></button>

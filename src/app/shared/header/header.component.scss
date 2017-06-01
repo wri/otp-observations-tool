@@ -19,12 +19,14 @@
       list-style: none;
 
       li {
-        margin-right: 10px;
         padding: 0 10px;
         color: $grey;
 
+        @media screen and (min-width: $break-tablet) {
+          padding: 0 20px;
+        }
+
         &:last-of-type {
-          margin-right: 0;
           padding-right: 0;
           cursor: pointer;
         }
@@ -35,6 +37,14 @@
           font-size: inherit;
         }
       }
+    }
+
+    select {
+      margin: 0;
+      padding: 0 10px 0 0;
+      border: 0;
+      box-shadow: none;
+      background-position: right -10px center;
     }
   }
 

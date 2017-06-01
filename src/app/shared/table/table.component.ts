@@ -1,5 +1,5 @@
 import { TABLET_BREAKPOINT } from 'app/directives/responsive.directive';
-import { Component, Input, QueryList, ContentChildren, EventEmitter, Output } from '@angular/core';
+import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ElementRef, AfterContentInit, ViewChild } from '@angular/core';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
 
 export interface TableState {
@@ -14,7 +14,7 @@ export interface TableState {
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent {
+export class TableComponent implements AfterContentInit {
 
   public rows: any[] = [];
   public rowCount: number; // Number of total rows (total results)
@@ -27,6 +27,7 @@ export class TableComponent {
   columns: any[] = [];
   sortColumn: any; // Column used for sorting the table
   sortOrder: 'asc'|'desc'; // Sort order
+  pageWord: string; // Word to say page in the current language
 
   private _columnTemplates: QueryList<TableColumnDirective>;
   private _paginationIndex = 0; // Zero-based number of the page
@@ -75,6 +76,13 @@ export class TableComponent {
         }
       }
     }
+  }
+
+  @ViewChild('pageWordTranslation', { read: ElementRef })
+  pageTranslationNode: ElementRef;
+
+  ngAfterContentInit(): void {
+    this.pageWord = this.pageTranslationNode.nativeElement.textContent;
   }
 
   get columnTemplates(): QueryList<TableColumnDirective> {

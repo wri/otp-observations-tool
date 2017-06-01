@@ -1,15 +1,15 @@
 <div class="c-container -j-between -t-d-column -t-a-start">
   <div class="c-button-container -j-end">
-    <button (click)="triggerNewAnnexGovernance()" class="c-button -primary">
-      New Annex Governance
+    <button (click)="triggerNewAnnexGovernance()" class="c-button -primary" i18n="Button to create a governance sub-category">
+      New governance sub-category
     </button>
   </div>
 </div>
 
-<otp-table caption="Sub-categories (Governance)">
-  <otp-table-column prop="governance_pillar" name="Governance Pillar"></otp-table-column>
-  <otp-table-column prop="governance_problem" name="Governance Problem"></otp-table-column>
-  <otp-table-column name="Actions">
+<otp-table i18n-caption="Caption for the table which lists the governance sub-categories" caption="Sub-categories (Governance)">
+  <otp-table-column i18n-name="Table of governance sub-categories|Name of the column corresponding to the governance pillar of the governance sub-categories" prop="governance_pillar" name="Governance Pillar"></otp-table-column>
+  <otp-table-column i18n-name="Table of governance sub-categories|Name of the column corresponding to the governance problem of the governance sub-categories" prop="governance_problem" name="Governance Problem"></otp-table-column>
+  <otp-table-column i18n-name="Table of governance sub-categories|Name of the actions columns (containing the edit and delete button)" name="Actions">
      <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
        <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>

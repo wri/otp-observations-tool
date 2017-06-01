@@ -12,7 +12,7 @@ import { Component, OnInit } from '@angular/core';
 export class ObserverDetailComponent implements OnInit {
 
   countries: Country[] = [];
-  titleText: String = 'New Monitor';
+  mode: String = 'new';
   loading: boolean;
 
   constructor(

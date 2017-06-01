@@ -22,8 +22,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./observation-detail.component.scss']
 })
 export class ObservationDetailComponent implements OnInit {
-
-  titleText: String = 'New observation';
   private model: any = {};
   loading = false;
   private returnUrl: string;

@@ -1,12 +1,22 @@
 <div class="l-wrapper">
   <div class="menu">
-    <img src="assets/OTP-logo.svg" alt="Open Timber Portal" />
+    <img src="assets/OTP-logo.svg" i18n-alt="Name of the app" alt="Open Timber Portal" />
     <ul>
-      <li>English</li>
-      <li *ngIf="isLogged"><button type="button" (click)="logout()">Log out</button></li>
+      <li>
+        <select [(ngModel)]="lang" (change)="onChangeLanguage()">
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+        </select>
+      </li>
+      <li *ngIf="isLogged"><button type="button" (click)="logout()" i18n="Log out button">Log out</button></li>
     </ul>
   </div>
   <ng-template [ngIf]="isLogged">
-    <otp-navigation [items]="navigationItems" (change)="onChange($event)" *otpMinTablet></otp-navigation>
+    <otp-navigation (change)="onChange($event)" *otpMinTablet>
+      <otp-navigation-item i18n-name="Menu item|Main navigation menu (desktop)" name="My OTP" url="/private/my-otp"></otp-navigation-item>
+      <otp-navigation-item i18n-name="Menu item|Main navigation menu (desktop)" name="Observations" url="/private/observations"></otp-navigation-item>
+      <otp-navigation-item i18n-name="Menu item|Main navigation menu (desktop)" name="Observation fields" url="/private/fields"></otp-navigation-item>
+      <otp-navigation-item i18n-name="Menu item|Main navigation menu (desktop)" name="Users" url="/private/users" *ngIf="isAdmin"></otp-navigation-item>
+    </otp-navigation>
   </ng-template>
 </div>

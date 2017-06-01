@@ -1,21 +1,21 @@
 <div class="l-wrapper">
   <div class="login-container">
-    <h2>Login</h2>
+    <h2 i18n="Login page|Title of the page">Login</h2>
     <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-        <label for="username">Email</label>
+        <label for="username" i18n="Login page|Label for the email field">Email</label>
         <input type="email" id="username" class="form-control" name="username" [(ngModel)]="model.username" #username="ngModel" required email />
-        <div *ngIf="f.submitted && username.errors?.required" class="help-text">Email is required</div>
-        <p *ngIf="f.submitted && username.errors?.email && !username.errors?.required" class="help-text">Please enter an email address</p>
+        <div *ngIf="f.submitted && username.errors?.required" class="help-text" i18n="Login page|Error message if the email isn't supplied">Email is required</div>
+        <p *ngIf="f.submitted && username.errors?.email && !username.errors?.required" class="help-text" i18n="Login page|Error message if the email isn't valid">Please enter an email address</p>
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-        <label for="password">Password</label>
+        <label for="password" i18n="Login page|Label for the password field">Password</label>
         <input type="password" id="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
-        <div *ngIf="f.submitted && !password.valid" class="help-text">Password is required</div>
+        <div *ngIf="f.submitted && !password.valid" class="help-text" i18n="Login page|Error message if the password isn't supplied">Password is required</div>
       </div>
       <div class="c-button-container form-group">
-        <button type="button" (click)="triggerRegister()" class="c-button -secondary">Register</button>
-        <button [disabled]="loading" class="c-button -primary">Login</button>
+        <button type="button" (click)="triggerRegister()" class="c-button -secondary" i18n="Button to register">Register</button>
+        <button [disabled]="loading" class="c-button -primary" i18n="Button to log in">Login</button>
         <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
       </div>
     </form>

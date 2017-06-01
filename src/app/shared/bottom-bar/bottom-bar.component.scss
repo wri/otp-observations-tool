@@ -4,7 +4,7 @@
   position: fixed;
   display: flex;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 10px;
   width: 100%;
   overflow: hidden;
   bottom: 0;
@@ -16,8 +16,8 @@
     position: relative;
     height: $bottom-bar-height;
     color: $black;
-    margin-bottom: 0;
-    font-size: $font-size-default;
+    margin: 0 10px 0 0;
+    font-size: $font-size-small;
     text-decoration: none;
     line-height: $bottom-bar-height;
     text-align: center;
@@ -33,6 +33,10 @@
       height: 6px;
       background-color: $color-primary;
       content: '';
+    }
+
+    &:last-of-type {
+      margin-right: 0;
     }
   }
 }
