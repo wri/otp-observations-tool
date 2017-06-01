@@ -2,7 +2,12 @@
   <div class="menu">
     <img src="assets/OTP-logo.svg" i18n-alt="Name of the app" alt="Open Timber Portal" />
     <ul>
-      <li>English</li>
+      <li>
+        <select [(ngModel)]="lang" (change)="onChangeLanguage()">
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+        </select>
+      </li>
       <li *ngIf="isLogged"><button type="button" (click)="logout()" i18n="Log out button">Log out</button></li>
     </ul>
   </div>
