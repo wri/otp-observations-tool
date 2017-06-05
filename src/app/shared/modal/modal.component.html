@@ -1,0 +1,8 @@
+<div class="overlay" tabindex="-1" (click)="closeable && close()"></div>
+
+<div class="content" role="dialog" [attr.aria-label]="title" aria-hidden="true">
+  <div role="document">
+    <ng-content></ng-content>
+  </div>
+  <button type="button" *ngIf="closeable" class="close-button" i18n-aria-label="Modal" aria-label="Close this dialog window" (click)="close()">&times;</button>
+</div>

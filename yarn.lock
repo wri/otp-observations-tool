@@ -150,6 +150,10 @@
   version "0.1.29"
   resolved "https://registry.yarnpkg.com/@types/xmldom/-/xmldom-0.1.29.tgz#c4428b0ca86d3b881475726fd94980b38a27c381"
 
+a11y-dialog@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-3.0.0.tgz#d596f454d03794e372da0aea39468f12d2e41b55"
+
 abbrev@1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.0.tgz#d0554c2256636e2f56e7c2e5ad183f859428d81f"

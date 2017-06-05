@@ -1,4 +1,7 @@
 import 'reflect-metadata';
+import { ModalComponent } from 'app/shared/modal/modal.component';
+import { FiltersComponent } from 'app/shared/filters/filters.component';
+import { FilterDirective } from 'app/shared/filters/directives/filter.directive';
 import { NavigationItemDirective } from 'app/shared/navigation/directives/item/item.directive';
 import { PageNotFoundComponent } from 'app/pages/page-not-found/page-not-found.component';
 import { LoaderComponent } from 'app/shared/loader/loader.component';
@@ -129,6 +132,9 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     TableColumnDirective,
     TableColumnCellDirective,
     PageNotFoundComponent,
+    FiltersComponent,
+    FilterDirective,
+    ModalComponent,
   ],
   imports: [
     JsonApiModule,

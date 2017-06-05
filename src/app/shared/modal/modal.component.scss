@@ -1,0 +1,57 @@
+@import 'src/settings.scss';
+
+:host {
+  &[aria-hidden='true'] {
+    display: none;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(#000, .5);
+    z-index: 2;
+  }
+
+  .content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    padding: 10px;
+    padding-bottom: $bottom-bar-height;
+    background-color: $lighter-grey-2;
+    z-index: 3;
+
+    @media screen and (min-width: $break-tablet) {
+      top: 50%;
+      left: 50%;
+      height: auto;
+      max-width: 620px;
+      padding: 50px;
+      transform: translate(-50%, -50%);
+    }
+
+    [role='document'] {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  .close-button {
+    display: none;
+
+    @media screen and (min-width: $break-tablet) {
+      display: block;
+      position: absolute;
+      top: -40px;
+      right: 0px;
+      font-size: $font-size-huge;
+      color: $white;
+      cursor: pointer;
+    }
+  }
+}
