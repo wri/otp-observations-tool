@@ -1,9 +1,10 @@
-<div class="c-container -j-between -t-d-column -t-a-start">
-  <div class="c-button-container -j-end">
-    <button (click)="triggerNewCountry()" class="c-button -primary" i18n="Button to create a new country">
-      New Country
-    </button>
-  </div>
+<div class="c-table-header">
+  <otp-filters>
+    <otp-filter i18n-name="Table of countries|Name of a filter" name="Region Name" prop="region_name"></otp-filter>
+  </otp-filters>
+  <button (click)="triggerNewCountry()" class="c-button -primary" i18n="Button to create a new country">
+    New Country
+  </button>
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the countries" caption="Countries">

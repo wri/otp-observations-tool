@@ -44,11 +44,7 @@ const observationsChildren = [
     redirectTo: 'operators'
   },
   {
-    path: 'operators',
-    component: ObservationListComponent
-  },
-  {
-    path: 'governance',
+    path: '',
     component: ObservationListComponent
   },
   {

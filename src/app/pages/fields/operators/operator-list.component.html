@@ -1,9 +1,11 @@
-<div class="c-container -j-between -t-d-column -t-a-start">
-  <div class="c-button-container -j-end">
-    <button (click)="triggerNewOperator()" class="c-button -primary" i18n="Button to create a new operator">
-      New Operator
-    </button>
-  </div>
+<div class="c-table-header">
+  <otp-filters>
+    <otp-filter i18n-name="Table of operators|Name of a filter" name="Type" prop="operator_type"></otp-filter>
+    <otp-filter i18n-name="Table of operators|Name of a filter" name="Active" prop="is_active" [values]="[true, false]"></otp-filter>
+  </otp-filters>
+  <button (click)="triggerNewOperator()" class="c-button -primary" i18n="Button to create a new operator">
+    New Operator
+  </button>
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the operators" caption="Operators">

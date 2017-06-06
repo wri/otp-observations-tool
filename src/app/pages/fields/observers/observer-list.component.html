@@ -1,9 +1,11 @@
-<div class="c-container -j-between -t-d-column -t-a-start">
-  <div class="c-button-container -j-end">
-    <button (click)="triggerNewObserver()" class="c-button -primary" i18n="Button to create a new monitor">
-      New Monitor
-    </button>
-  </div>
+<div class="c-table-header">
+  <otp-filters>
+    <otp-filter i18n-name="Table of monitors|Name of a filter" name="Type" prop="observer_type"></otp-filter>
+    <otp-filter i18n-name="Table of monitors|Name of a filter" name="Active" prop="is_active" [values]="[true, false]"></otp-filter>
+  </otp-filters>
+  <button (click)="triggerNewObserver()" class="c-button -primary" i18n="Button to create a new monitor">
+    New Monitor
+  </button>
 </div>
 
 <otp-table caption="Monitors">

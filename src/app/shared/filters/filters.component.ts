@@ -4,8 +4,8 @@ import { Component, ContentChildren, QueryList, Output, EventEmitter } from '@an
 export interface Filter {
   name: string;
   prop: string;
-  values: string[];
-  selected?: string;
+  values: (string|number|boolean)[];
+  selected?: string|number|boolean;
   required: boolean;
   visible: boolean;
 }
@@ -52,6 +52,14 @@ export class FiltersComponent {
   onDone() {
     this.modalOpen = false;
     this.change.emit();
+  }
+
+  hasValue(filter: Filter): boolean {
+    if (typeof filter.selected === 'string') {
+      return !!filter.selected.length;
+    }
+
+    return filter.selected !== undefined && filter.selected !== null;
   }
 
 }

@@ -1,9 +1,8 @@
-<div class="c-container -j-between -t-d-column -t-a-start">
-  <div class="c-button-container -j-end">
-    <button (click)="triggerNewGovernment()" class="c-button -primary" i18n="Button to create a new government unit">
-      New government unit
-    </button>
-  </div>
+<div class="c-table-header">
+  <otp-filters></otp-filters>
+  <button (click)="triggerNewGovernment()" class="c-button -primary" i18n="Button to create a new government unit">
+    New government unit
+  </button>
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the governments" caption="Governments">
