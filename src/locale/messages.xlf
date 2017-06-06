@@ -2,6 +2,86 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="e6d7fefab35d9bc8d70354d015d8aa0d8b6c857b" datatype="html">
+        <source>Close this dialog window</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/modal.component.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">Modal</note>
+      </trans-unit>
+      <trans-unit id="2cd8f17b5eff79a9d199e271891346f1828a11a8" datatype="html">
+        <source>Add filter</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/filters/filters.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">Button to open the list of filters</note>
+        <note priority="1" from="meaning">Table filters</note>
+      </trans-unit>
+      <trans-unit id="49f33ab0a10387961143efd56ab84b4f65737ec4" datatype="html">
+        <source>Remove filter</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/filters/filters.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <note priority="1" from="description">Table filters</note>
+      </trans-unit>
+      <trans-unit id="a9d805cecaee920384d385b8920379b7c304f22d" datatype="html">
+        <source>Filter by</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/filters/filters.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Table filters</note>
+      </trans-unit>
+      <trans-unit id="f6d2891bba6305aa22ff1990f45bcf99ff32210b" datatype="html">
+        <source>Not filtering</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/filters/filters.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Table filters</note>
+      </trans-unit>
+      <trans-unit id="2d9d55f1b70142ff4597ba32179d16888fd9c6b2" datatype="html">
+        <source>Reset filters</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/filters/filters.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/filters/filters.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <note priority="1" from="description">Table filters</note>
+      </trans-unit>
+      <trans-unit id="8dd413cee2228118c536f503709329a4d1a395e2" datatype="html">
+        <source>Done</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/filters/filters.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/filters/filters.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <note priority="1" from="description">Done button</note>
+      </trans-unit>
+      <trans-unit id="1dad7c76d6a97132a7dc2a428a65bbb92090b98e" datatype="html">
+        <source>Table filters</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/filters/filters.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="4f7091778907548985c8b4a592fa68e0f4c3368e" datatype="html">
         <source>404. Page not found</source>
         <target/>
@@ -1371,10 +1451,10 @@
         <note priority="1" from="description">Label for the evidence field</note>
         <note priority="1" from="meaning">Observation creation/edition</note>
       </trans-unit>
-      <trans-unit id="536f971e3d6c6ed722df6f46081168ddd2d2aa5d" datatype="html">
+      <trans-unit id="68e1c78b0aca990496d3d75f9c70d4dd59738302" datatype="html">
         <source>
-      New governance sub-category
-    </source>
+    New governance sub-category
+  </source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/governance/annex-governance-list.component.ts</context>
@@ -1387,7 +1467,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/governance/annex-governance-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the governance pillar of the governance sub-categories</note>
         <note priority="1" from="meaning">Table of governance sub-categories</note>
@@ -1397,7 +1477,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/governance/annex-governance-list.component.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the governance problem of the governance sub-categories</note>
         <note priority="1" from="meaning">Table of governance sub-categories</note>
@@ -1407,7 +1487,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/governance/annex-governance-list.component.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of governance sub-categories</note>
@@ -1417,7 +1497,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/governance/annex-governance-list.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <note priority="1" from="description">Caption for the table which lists the governance sub-categories</note>
       </trans-unit>
@@ -1628,10 +1708,10 @@
         <note priority="1" from="description">Label for the details field</note>
         <note priority="1" from="meaning">Governance sub-category creation/edition</note>
       </trans-unit>
-      <trans-unit id="609e416695033263472042503c888c0461e7bf99" datatype="html">
+      <trans-unit id="8e2ee1241cdc535ef14b7db8a42e9334bf3420e3" datatype="html">
         <source>
-      New operator sub-category
-    </source>
+    New operator sub-category
+  </source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/operators/annex-operator-list.component.ts</context>
@@ -1644,7 +1724,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/operators/annex-operator-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the name of the operator sub-categories</note>
         <note priority="1" from="meaning">Table of operator sub-categories</note>
@@ -1654,7 +1734,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/operators/annex-operator-list.component.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the detail of the operator sub-categories</note>
         <note priority="1" from="meaning">Table of operator sub-categories</note>
@@ -1664,7 +1744,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/operators/annex-operator-list.component.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of operator sub-categories</note>
@@ -1674,7 +1754,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/operators/annex-operator-list.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <note priority="1" from="description">Caption for the table which lists the operator sub-categories</note>
       </trans-unit>
@@ -1763,10 +1843,6 @@
           <context context-type="sourcefile">app/pages/fields/field-list.component.ts</context>
           <context context-type="linenumber">21</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
         <note priority="1" from="description">Menu located on the &apos;Sub-categories&apos; list page</note>
         <note priority="1" from="meaning">Menu item</note>
       </trans-unit>
@@ -1776,10 +1852,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/subcategories/subcategories.component.ts</context>
           <context context-type="linenumber">3</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
-          <context context-type="linenumber">5</context>
         </context-group>
         <note priority="1" from="description">Menu located on the &apos;Sub-categories&apos; list page</note>
         <note priority="1" from="meaning">Menu item</note>
@@ -1824,14 +1896,42 @@
         <note priority="1" from="description">Error message if the name isn&apos;t supplied</note>
         <note priority="1" from="meaning">Category creation/edition</note>
       </trans-unit>
-      <trans-unit id="d3392cb23bca77d1014e89b5e8aefcfb4ccad87b" datatype="html">
-        <source>
-      New Operator
-    </source>
+      <trans-unit id="60a3c060cf7bbe40ffbfc35b0b3bb691a789a4e7" datatype="html">
+        <source>Type</source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of operators</note>
+      </trans-unit>
+      <trans-unit id="b029eee35172b814101cf828fb5f9a61e1391c0f" datatype="html">
+        <source>Active</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of operators</note>
+      </trans-unit>
+      <trans-unit id="15acb3dae54a069f0890be14b9b4f834b5c6020c" datatype="html">
+        <source>
+    New Operator
+  </source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <note priority="1" from="description">Button to create a new operator</note>
       </trans-unit>
@@ -1840,23 +1940,13 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the name of the operators</note>
-        <note priority="1" from="meaning">Table of operators</note>
-      </trans-unit>
-      <trans-unit id="60a3c060cf7bbe40ffbfc35b0b3bb691a789a4e7" datatype="html">
-        <source>Type</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the type of the operators</note>
         <note priority="1" from="meaning">Table of operators</note>
       </trans-unit>
       <trans-unit id="4f00329eba86dfea8ce882af55cbe475c00c1036" datatype="html">
@@ -1864,19 +1954,9 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the concession of the operators</note>
-        <note priority="1" from="meaning">Table of operators</note>
-      </trans-unit>
-      <trans-unit id="b029eee35172b814101cf828fb5f9a61e1391c0f" datatype="html">
-        <source>Active</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the whether or not the operators are active</note>
         <note priority="1" from="meaning">Table of operators</note>
       </trans-unit>
       <trans-unit id="39ffe1e95aa519b9645e62af04ed0a3cfa032b42" datatype="html">
@@ -1884,7 +1964,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of operators</note>
@@ -1894,7 +1974,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/operators/operator-list.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Caption for the table which lists the operators</note>
       </trans-unit>
@@ -2079,14 +2159,28 @@
         <note priority="1" from="description">Label for the field to tell whether the operator is active or not</note>
         <note priority="1" from="meaning">Operator creation/edition</note>
       </trans-unit>
-      <trans-unit id="2f4c185a5507bc6ff049778effdc2ca682aab774" datatype="html">
-        <source>
-      New Country
-    </source>
+      <trans-unit id="902f1ade07cad3f447858b17c2da63e8f7e26ce8" datatype="html">
+        <source>Region Name</source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/countries/country-list.component.ts</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/countries/country-list.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of countries</note>
+      </trans-unit>
+      <trans-unit id="f6cce08c792f12fb76fed5193a1dd263a2673067" datatype="html">
+        <source>
+    New Country
+  </source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/countries/country-list.component.ts</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <note priority="1" from="description">Button to create a new country</note>
       </trans-unit>
@@ -2095,7 +2189,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/countries/country-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the name of the countries</note>
         <note priority="1" from="meaning">Table of countries</note>
@@ -2105,19 +2199,9 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/countries/country-list.component.ts</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the ISO code of the countries</note>
-        <note priority="1" from="meaning">Table of countries</note>
-      </trans-unit>
-      <trans-unit id="902f1ade07cad3f447858b17c2da63e8f7e26ce8" datatype="html">
-        <source>Region Name</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/fields/countries/country-list.component.ts</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the region name of the countries</note>
+        <note priority="1" from="description">Name of the column corresponding to the ISO code of the countries</note>
         <note priority="1" from="meaning">Table of countries</note>
       </trans-unit>
       <trans-unit id="6bb7c94296bdb62165caa3ed3e9151390c0811f9" datatype="html">
@@ -2125,7 +2209,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/countries/country-list.component.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to whether or not the countries are active</note>
         <note priority="1" from="meaning">Table of countries</note>
@@ -2135,7 +2219,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/countries/country-list.component.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of countries</note>
@@ -2145,7 +2229,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/countries/country-list.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Caption for the table which lists the countries</note>
       </trans-unit>
@@ -2259,14 +2343,54 @@
         <note priority="1" from="description">Label for the field that let the user select if the country will be available for observations</note>
         <note priority="1" from="meaning">Country creation/edition</note>
       </trans-unit>
-      <trans-unit id="ca902a857f64589071e0712f19210e799ee0fba4" datatype="html">
-        <source>
-      New species
-    </source>
+      <trans-unit id="06e6cae436673da39804ebbbfbd62b2eca4952fc" datatype="html">
+        <source>Class</source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of species</note>
+      </trans-unit>
+      <trans-unit id="ff4df29ee645b23ac03a1980256399e8bc4d1ecf" datatype="html">
+        <source>Sub-species</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of species</note>
+      </trans-unit>
+      <trans-unit id="9eb1524f23bc70a7f923966744381c8a33eecb9f" datatype="html">
+        <source>Family</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of species</note>
+      </trans-unit>
+      <trans-unit id="fea2a14f678fc4ee02d08c7655c4cd0fc8a52c50" datatype="html">
+        <source>Kingdom</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of species</note>
+      </trans-unit>
+      <trans-unit id="818c14efbf812c2bb4831dc21de760ccdc0fee16" datatype="html">
+        <source>
+    New species
+  </source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <note priority="1" from="description">Button to create a new species</note>
       </trans-unit>
@@ -2275,7 +2399,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the name of the species</note>
         <note priority="1" from="meaning">Table of species</note>
@@ -2285,7 +2409,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the species class of the species</note>
         <note priority="1" from="meaning">Table of species</note>
@@ -2295,7 +2419,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the scientific name of the species</note>
         <note priority="1" from="meaning">Table of species</note>
@@ -2305,7 +2429,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of species</note>
@@ -2315,18 +2439,46 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/species/species-list.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Caption for the table which lists the species</note>
       </trans-unit>
-      <trans-unit id="eb53d60e9bf9ae875707a6941231e2a21c7f1120" datatype="html">
-        <source>
-      New Monitor
-    </source>
+      <trans-unit id="b2ef1717958c380c23c8921591715b7fbaf91cb8" datatype="html">
+        <source>Type</source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of monitors</note>
+      </trans-unit>
+      <trans-unit id="b4237c13c658454f4a55897e4a3cf73c30a80e0e" datatype="html">
+        <source>Active</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of monitors</note>
+      </trans-unit>
+      <trans-unit id="27a3b55abc8f381cbd2d095382b1b191fd146527" datatype="html">
+        <source>
+    New Monitor
+  </source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <note priority="1" from="description">Button to create a new monitor</note>
       </trans-unit>
@@ -2335,7 +2487,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the date of the monitors</note>
         <note priority="1" from="meaning">Table of monitors</note>
@@ -2345,19 +2497,9 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the name of the monitors</note>
-        <note priority="1" from="meaning">Table of monitors</note>
-      </trans-unit>
-      <trans-unit id="b2ef1717958c380c23c8921591715b7fbaf91cb8" datatype="html">
-        <source>Type</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the type of monitors</note>
         <note priority="1" from="meaning">Table of monitors</note>
       </trans-unit>
       <trans-unit id="b1d9f070c335abb9c7877c5effde44fc31d7346c" datatype="html">
@@ -2365,19 +2507,9 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the organizations of the monitors</note>
-        <note priority="1" from="meaning">Table of monitors</note>
-      </trans-unit>
-      <trans-unit id="b4237c13c658454f4a55897e4a3cf73c30a80e0e" datatype="html">
-        <source>Active</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the whether the monitors are active or not</note>
         <note priority="1" from="meaning">Table of monitors</note>
       </trans-unit>
       <trans-unit id="53e3ce2b1d00ae0c8f1f2d8cabbab9cfd91c67ff" datatype="html">
@@ -2385,15 +2517,15 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/observers/observer-list.component.ts</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of monitors</note>
       </trans-unit>
-      <trans-unit id="258847bc2f56543f10b58ce2f85c72994567bcb6" datatype="html">
+      <trans-unit id="3e1819c4ac49bebab64c1a583e11f949f77c0f88" datatype="html">
         <source>
-      New law
-    </source>
+    New law
+  </source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/laws/law-list.component.ts</context>
@@ -2406,7 +2538,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/laws/law-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the legal reference of the laws</note>
         <note priority="1" from="meaning">Table of laws</note>
@@ -2416,7 +2548,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/laws/law-list.component.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the legal penalty of the laws</note>
         <note priority="1" from="meaning">Table of laws</note>
@@ -2426,7 +2558,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/laws/law-list.component.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the VPA indicator of the laws</note>
         <note priority="1" from="meaning">Table of laws</note>
@@ -2436,7 +2568,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/laws/law-list.component.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <note priority="1" from="description">Name of the actions (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of laws</note>
@@ -2446,7 +2578,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/laws/law-list.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <note priority="1" from="description">Caption for the table which lists the laws</note>
       </trans-unit>
@@ -2828,10 +2960,10 @@
         <note priority="1" from="description">Label for the details field</note>
         <note priority="1" from="meaning">Government creation/edition</note>
       </trans-unit>
-      <trans-unit id="263deacc741fd6429b2a1fd3719ded604f0799d0" datatype="html">
+      <trans-unit id="a848a437c636bfa0289a2e9434b6a581e9f186e3" datatype="html">
         <source>
-      New government unit
-    </source>
+    New government unit
+  </source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/governments/government-list.component.ts</context>
@@ -2844,7 +2976,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/governments/government-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the name of the governments</note>
         <note priority="1" from="meaning">Table of governments</note>
@@ -2854,7 +2986,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/governments/government-list.component.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the details of the governments</note>
         <note priority="1" from="meaning">Table of governments</note>
@@ -2864,7 +2996,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/governments/government-list.component.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of governments</note>
@@ -2874,14 +3006,12 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/governments/government-list.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <note priority="1" from="description">Caption for the table which lists the governments</note>
       </trans-unit>
-      <trans-unit id="bf0b87b1211a6459b83e5f3774a659e5d2e77b9f" datatype="html">
-        <source>
-      New Category
-    </source>
+      <trans-unit id="291b0c98e9ac5257135050714f03547883a8880a" datatype="html">
+        <source>New Category</source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/categories/category-list.component.ts</context>
@@ -2894,7 +3024,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/categories/category-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">7</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the name of the categories</note>
         <note priority="1" from="meaning">Table of categories</note>
@@ -2904,7 +3034,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/categories/category-list.component.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of categories</note>
@@ -2914,7 +3044,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/fields/categories/category-list.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <note priority="1" from="description">Caption for the table which lists the categories</note>
       </trans-unit>
@@ -2932,7 +3062,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/header/header.component.ts</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Log out button</note>
       </trans-unit>
@@ -2941,7 +3071,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/header/header.component.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
@@ -2955,7 +3085,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/header/header.component.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
@@ -2969,7 +3099,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/header/header.component.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">18</context>
         </context-group>
         <note priority="1" from="description">Main navigation menu (desktop)</note>
         <note priority="1" from="meaning">Menu item</note>
@@ -2979,7 +3109,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/header/header.component.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/bottom-bar/bottom-bar.component.ts</context>
@@ -3294,14 +3424,22 @@
         <note priority="1" from="description">Menu located on the &apos;Observations fields&apos; page</note>
         <note priority="1" from="meaning">Menu item</note>
       </trans-unit>
-      <trans-unit id="1a6f616703d75ae22ef5f11706c3815ca04888c5" datatype="html">
-        <source>
-        New user
-      </source>
+      <trans-unit id="76577982f3684b7e249fb901b1ad8d78da061aa2" datatype="html">
+        <source>Active</source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/users/user-list.component.ts</context>
           <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of users</note>
+      </trans-unit>
+      <trans-unit id="34a99ddfd42f243b1c50c2753e83e866f40b4597" datatype="html">
+        <source>New user</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/users/user-list.component.ts</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <note priority="1" from="description">Button to create a new user</note>
       </trans-unit>
@@ -3310,7 +3448,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/users/user-list.component.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the name of the users</note>
         <note priority="1" from="meaning">Table of users</note>
@@ -3320,7 +3458,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/users/user-list.component.ts</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the username/nickname of the users</note>
         <note priority="1" from="meaning">Table of users</note>
@@ -3330,7 +3468,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/users/user-list.component.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the email of the users</note>
         <note priority="1" from="meaning">Table of users</note>
@@ -3340,7 +3478,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/users/user-list.component.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <note priority="1" from="description">Name of the actions columns (containing the edit and delete button)</note>
         <note priority="1" from="meaning">Table of users</note>
@@ -3350,7 +3488,7 @@
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/users/user-list.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <note priority="1" from="description">Caption for the table which lists the users</note>
       </trans-unit>
@@ -3540,12 +3678,78 @@
         </context-group>
         <note priority="1" from="description">Button to register</note>
       </trans-unit>
+      <trans-unit id="90d3552505b8ec6653fa451128a05a3341ca800d" datatype="html">
+        <source>Type</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of observations</note>
+      </trans-unit>
+      <trans-unit id="645872c938ac5195a4906afa0f6118cc9b52771b" datatype="html">
+        <source>Country</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of observations</note>
+      </trans-unit>
+      <trans-unit id="0ea6d0e3424fa1ffdb64a3b98a9815c98b595435" datatype="html">
+        <source>Operator</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of observations</note>
+      </trans-unit>
+      <trans-unit id="be0139f1cf8e5feab4a5b691287c7c0d9c74fc86" datatype="html">
+        <source>Category</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of observations</note>
+      </trans-unit>
+      <trans-unit id="a8a36702a876525737fdbabb99b6f5bceac167a6" datatype="html">
+        <source>Severity</source>
+        <target/>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <note priority="1" from="description">Name of a filter</note>
+        <note priority="1" from="meaning">Table of observations</note>
+      </trans-unit>
       <trans-unit id="229210ea5aded39aacf9e7d79e1658b32ca104f6" datatype="html">
         <source>New observation</source>
         <target/>
         <context-group purpose="location">
           <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">Button to create a new observation</note>
       </trans-unit>
@@ -3559,36 +3763,6 @@
         <note priority="1" from="description">Name of the column corresponding to the date of the observations</note>
         <note priority="1" from="meaning">Table of observations</note>
       </trans-unit>
-      <trans-unit id="645872c938ac5195a4906afa0f6118cc9b52771b" datatype="html">
-        <source>Country</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the country of the observations</note>
-        <note priority="1" from="meaning">Table of observations</note>
-      </trans-unit>
-      <trans-unit id="0ea6d0e3424fa1ffdb64a3b98a9815c98b595435" datatype="html">
-        <source>Operator</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the operator name of the observations</note>
-        <note priority="1" from="meaning">Table of observations</note>
-      </trans-unit>
-      <trans-unit id="be0139f1cf8e5feab4a5b691287c7c0d9c74fc86" datatype="html">
-        <source>Category</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
-          <context context-type="linenumber">19</context>
-        </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the category of the observations</note>
-        <note priority="1" from="meaning">Table of observations</note>
-      </trans-unit>
       <trans-unit id="788391ad82018522ef4162b47fb8e81f00217bd6" datatype="html">
         <source>Observation</source>
         <target/>
@@ -3597,16 +3771,6 @@
           <context context-type="linenumber">20</context>
         </context-group>
         <note priority="1" from="description">Name of the column corresponding to the details of the observations</note>
-        <note priority="1" from="meaning">Table of observations</note>
-      </trans-unit>
-      <trans-unit id="a8a36702a876525737fdbabb99b6f5bceac167a6" datatype="html">
-        <source>Severity</source>
-        <target/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/pages/observations/observation-list.component.ts</context>
-          <context context-type="linenumber">21</context>
-        </context-group>
-        <note priority="1" from="description">Name of the column corresponding to the severity of the observations</note>
         <note priority="1" from="meaning">Table of observations</note>
       </trans-unit>
       <trans-unit id="f988c370ec8c750c0b84a0c412e440d53cee631d" datatype="html">
