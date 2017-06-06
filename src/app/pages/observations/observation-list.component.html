@@ -2,7 +2,8 @@
   <otp-filters>
     <otp-filter name="Type" prop="type" [values]="['operators', 'governance']" default="operators" [required]="true"></otp-filter>
     <otp-filter name="Country" prop="country.iso"></otp-filter>
-    <otp-filter name="Category" [prop]="this.observationType === 'operators' ? 'annex_operator.illegality' : 'annex_governance.governance_pillar'"></otp-filter>
+    <otp-filter name="Operator" prop="operator.name"></otp-filter>
+    <otp-filter name="Category" [prop]="observationType === 'operators' ? 'annex_operator.illegality' : 'annex_governance.governance_pillar'"></otp-filter>
     <otp-filter name="Severity" prop="severity.level"></otp-filter>
   </otp-filters>
 
