@@ -1,0 +1,35 @@
+<button type="button" *ngIf="filters.length" class="c-button -secondary add-filter" i18n="Table filters|Button to open the list of filters" (click)="modalOpen = true">Add filter</button>
+
+<ng-container *ngFor="let filter of filters">
+  <div class="filter" *ngIf="hasValue(filter)">
+    <select [attr.aria-label]="filter.name" [(ngModel)]="filter.selected" (change)="change.emit()">
+      <option value="" disabled>{{filter.name}}</option>
+      <option *ngFor="let value of filter.values" [value]="value">{{value}}</option>
+      <option value="" i18n="Table filters" [disabled]="filter.required">Remove filter</option>
+    </select>
+  </div>
+</ng-container>
+
+<otp-modal i18n-title title="Table filters" [opened]="modalOpen" [closeable]="false" (onClose)="modalOpen = false">
+  <h2 i18n="Table filters">Filter by</h2>
+
+  <div class="filters">
+    <div *ngFor="let filter of filters">
+      <label [for]="'filter-modal-' + filter.prop">{{filter.name}}</label>
+      <select [id]="'filter-modal-' + filter.prop" [(ngModel)]="filter.selected">
+        <option value="" i18n="Table filters" [disabled]="filter.required">Not filtering</option>
+        <option *ngFor="let value of filter.values" [value]="value">{{value}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div *otpMinTablet class="c-container -j-between">
+    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Table filters">Reset filters</button>
+    <button disable="loading" type="submit" (click)="onDone()" class="c-button -primary" i18n="Done button">Done</button>
+  </div>
+
+  <otp-action-bar *otpMaxTablet>
+    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Table filters">Reset filters</button>
+    <button disable="loading" type="submit" (click)="onDone()" class="c-button -primary" i18n="Done button">Done</button>
+  </otp-action-bar>
+</otp-modal>

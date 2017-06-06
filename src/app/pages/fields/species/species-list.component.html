@@ -1,9 +1,13 @@
-<div class="c-container -j-between -t-d-column -t-a-start">
-  <div class="c-button-container -j-end">
-    <button (click)="triggerNewSpecies()" class="c-button -primary" i18n="Button to create a new species">
-      New species
-    </button>
-  </div>
+<div class="c-table-header">
+  <otp-filters>
+    <otp-filter i18n-name="Table of species|Name of a filter" name="Class" prop="species_class"></otp-filter>
+    <otp-filter i18n-name="Table of species|Name of a filter" name="Sub-species" prop="sub_species"></otp-filter>
+    <otp-filter i18n-name="Table of species|Name of a filter" name="Family" prop="species_family"></otp-filter>
+    <otp-filter i18n-name="Table of species|Name of a filter" name="Kingdom" prop="species_kingdom"></otp-filter>
+  </otp-filters>
+  <button (click)="triggerNewSpecies()" class="c-button -primary" i18n="Button to create a new species">
+    New species
+  </button>
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the species" caption="Species">

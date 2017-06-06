@@ -1,0 +1,102 @@
+@import 'src/settings.scss';
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  .add-filter {
+    display: inline-block;
+    position: relative;
+    flex-shrink: 0;
+    padding-right: 30px;
+    margin-right: 10px;
+
+    &::after {
+      display: block;
+      position: absolute;
+      top: 50%;
+      right: 13px;
+      transform: translateY(-50%);
+      font-size: $font-size-big;
+      content: '+';
+    }
+  }
+
+  .filter {
+    position: relative;
+    margin-bottom: 10px;
+
+    @media screen and (min-width: $break-tablet) {
+      margin-right: 10px;
+    }
+
+    &:last-of-type {
+      @media screen and (min-width: $break-tablet) {
+        margin-right: 0;
+      }
+    }
+
+    &::after {
+      position: absolute;
+      top: 50%;
+      right: 17px;
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-top: 2px solid currentColor;
+      border-left: 2px solid currentColor;
+      transform: translateY(calc(-2px - 50%)) rotate(-135deg);
+      content: '';
+    }
+
+    select {
+      margin-bottom: 0;
+      padding: 0 25px 0 15px;
+      text-transform: capitalize;
+      background: transparent;
+      border: 1px solid $lighter-grey;
+      border-radius: 4px;
+      box-shadow: none;
+      font-size: $font-size-default;
+      font-weight: bold;
+      color: $dark-grey;
+    }
+  }
+
+  otp-modal {
+    h2 {
+      margin-bottom: 10px;
+      font-size: $font-size-huge;
+      font-weight: $font-weight-thin;
+    }
+
+    .filters {
+      @media screen and (min-width: $break-tablet) {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      > div {
+        @media screen and (min-width: $break-tablet) {
+          flex-basis: calc(50% - 10px);
+        }
+      }
+    }
+
+    label {
+      font-size: $font-size-default;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    select {
+      text-transform: capitalize;
+    }
+
+    .c-container {
+      margin-top: 30px;
+    }
+  }
+}

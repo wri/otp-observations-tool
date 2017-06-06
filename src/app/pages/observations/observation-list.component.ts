@@ -20,7 +20,8 @@ export class ObservationListComponent extends TableFilterBehavior {
   private editURL: string;
 
   get observationType(): string {
-    return this.router.url.endsWith('operators') ? 'operators' : 'governance';
+    const filters = super.getFiltersApiParams();
+    return filters.type || 'operators';
   }
 
   get isMyOTP(): boolean {
@@ -29,7 +30,6 @@ export class ObservationListComponent extends TableFilterBehavior {
 
   public getTableApiParams(): JsonApiParams {
     const params = super.getTableApiParams();
-    params.type = this.observationType;
 
     if (this.isMyOTP) {
       params.user = 'current';

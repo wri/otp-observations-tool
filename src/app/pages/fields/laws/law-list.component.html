@@ -1,9 +1,8 @@
-<div class="c-container -j-between -t-d-column -t-a-start">
-  <div class="c-button-container -j-end">
-    <button (click)="triggerNewLaw()" class="c-button -primary" i18n="Button to create a new law">
-      New law
-    </button>
-  </div>
+<div class="c-table-header">
+  <otp-filters></otp-filters>
+  <button (click)="triggerNewLaw()" class="c-button -primary" i18n="Button to create a new law">
+    New law
+  </button>
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the laws" caption="Laws">

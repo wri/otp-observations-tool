@@ -1,6 +1,7 @@
 import { ViewChild, AfterViewInit } from '@angular/core';
 import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
 import { TableComponent, TableState } from 'app/shared/table/table.component';
+import { FiltersComponent, Filter } from 'app/shared/filters/filters.component';
 
 export class TableFilterBehavior implements AfterViewInit {
 
@@ -10,16 +11,24 @@ export class TableFilterBehavior implements AfterViewInit {
   @ViewChild(TableComponent)
   private table: TableComponent;
 
+  @ViewChild(FiltersComponent)
+  private filters: FiltersComponent;
+
   private get tableState(): TableState {
     return this.table.state;
   }
 
+  private get filtersState(): Filter[] {
+    return this.filters.filters || [];
+  }
+
   ngAfterViewInit(): void {
     this.table.change.subscribe(() => this.loadData());
+    this.filters.change.subscribe(() => this.loadData());
     this.loadData();
   }
 
-  public getTableApiParams(): JsonApiParams {
+  getTableApiParams(): JsonApiParams {
     const params: JsonApiParams = {
       page: {
         size: this.tableState.perPage,
@@ -34,11 +43,29 @@ export class TableFilterBehavior implements AfterViewInit {
     return params;
   }
 
+  getFiltersApiParams(): JsonApiParams {
+    return this.filtersState
+      .filter(filter => {
+        if (typeof filter.selected === 'string') {
+          return !!filter.selected.length;
+        }
+
+        return filter.selected !== undefined && filter.selected !== null;
+      })
+      .reduce((res, filter) => {
+        return Object.assign({}, res, {
+          [filter.prop]: filter.selected
+        });
+      }, {});
+  }
+
   public loadData() {
     this.table.loading = true;
 
+    const params = Object.assign({}, this.getFiltersApiParams(), this.getTableApiParams());
     const requestID = ++this.latestRequestID;
-    this.service.get(this.getTableApiParams())
+
+    this.service.get(params)
       .then(res => {
         if (this.latestRequestID === requestID) {
           this.table.rows = res.data;

@@ -1,13 +1,13 @@
-<div class="c-container -j-between -t-d-column -t-a-start">
-  <div class="c-container -j-start -t-d-column -t-a-start">
-    <otp-navigation layout="mini">
-      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations' list page" name="Operators" url="../operators"></otp-navigation-item>
-      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations' list page" name="Governance" url="../governance"></otp-navigation-item>
-    </otp-navigation>
-  </div>
-  <div class="c-button-container -j-end">
-    <a class="c-button -primary" routerLink="../new" i18n="Button to create a new observation">New observation</a>
-  </div>
+<div class="c-table-header">
+  <otp-filters>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Type" prop="type" [values]="['operators', 'governance']" default="operators" [required]="true"></otp-filter>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Country" prop="country.iso"></otp-filter>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Operator" prop="operator.name"></otp-filter>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Category" [prop]="observationType === 'operators' ? 'annex_operator.illegality' : 'annex_governance.governance_pillar'"></otp-filter>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Severity" prop="severity.level"></otp-filter>
+  </otp-filters>
+
+  <a class="c-button -primary" routerLink="../new" i18n="Button to create a new observation">New observation</a>
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the observations" caption="Observations">
