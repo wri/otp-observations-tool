@@ -82,7 +82,6 @@ export class AuthService {
         .map(data => data.included)
         .toPromise();
 
-      debugger;
       this.userRole = response.length && response[0].attributes['user-role'];
       this.triggerLoginStatus(!!response);
       return !!response;
