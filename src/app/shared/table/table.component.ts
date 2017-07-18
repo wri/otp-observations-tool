@@ -7,6 +7,7 @@ export interface TableState {
   perPage: number;
   sortColumn: string;
   sortOrder: number;
+  include: string[];
 }
 
 @Component({
@@ -135,7 +136,8 @@ export class TableComponent implements AfterContentInit {
       page: this.currentPage,
       perPage: this.perPage,
       sortColumn: this.sortColumn && this.sortColumn.prop,
-      sortOrder: this.sortOrder && this.sortOrder === 'asc' ? 1 : -1
+      sortOrder: this.sortOrder && this.sortOrder === 'asc' ? 1 : -1,
+      include: this.columns.filter(col => col.include).map(col => col.prop.split('.')[0])
     };
   }
 

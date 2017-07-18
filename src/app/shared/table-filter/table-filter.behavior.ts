@@ -33,7 +33,8 @@ export class TableFilterBehavior implements AfterViewInit {
       page: {
         size: this.tableState.perPage,
         number: this.tableState.page
-      }
+      },
+      include: this.tableState.include.join(',')
     };
 
     if (this.tableState.sortColumn) {
@@ -54,7 +55,7 @@ export class TableFilterBehavior implements AfterViewInit {
       })
       .reduce((res, filter) => {
         return Object.assign({}, res, {
-          [filter.prop]: filter.selected
+          [`filter[${filter.prop}]`]: filter.selected
         });
       }, {});
   }

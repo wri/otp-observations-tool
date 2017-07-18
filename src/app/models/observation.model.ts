@@ -8,8 +8,7 @@ import { Comment } from 'app/models/comment.model';
 import { Observer } from 'app/models/observer.model';
 import { Operator } from 'app/models/operator.model';
 import { Government } from 'app/models/government.model';
-import { AnnexOperator } from 'app/models/annex-operator.model';
-import { AnnexGovernance } from 'app/models/annex-governance.model';
+import { Subcategory } from 'app/models/subcategory.model';
 import { Severity } from 'app/models/severity.model';
 
 @JsonApiModelConfig({
@@ -29,8 +28,7 @@ export class Observation extends JsonApiModel {
   @Attribute() lng?: string;
 
   @BelongsTo() country: Country;
-  @BelongsTo() annex_operator?: AnnexOperator;
-  @BelongsTo() annex_governance?: AnnexGovernance;
+  @BelongsTo() subcategory?: Subcategory;
   @BelongsTo() severity: Severity;
   @BelongsTo() user?: User;
   @BelongsTo() observer?: Observer;

@@ -1,6 +1,6 @@
 <div class="c-table-header">
   <otp-filters>
-    <otp-filter i18n-name="Table of observations|Name of a filter" name="Type" prop="type" [values]="['operators', 'governance']" default="operators" [required]="true"></otp-filter>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Type" prop="observation_type" [values]="['operator', 'government']" default="operator" [required]="true"></otp-filter>
     <otp-filter i18n-name="Table of observations|Name of a filter" name="Country" prop="country.iso"></otp-filter>
     <otp-filter i18n-name="Table of observations|Name of a filter" name="Operator" prop="operator.name"></otp-filter>
     <otp-filter i18n-name="Table of observations|Name of a filter" name="Category" [prop]="observationType === 'operators' ? 'annex_operator.illegality' : 'annex_governance.governance_pillar'"></otp-filter>
@@ -11,14 +11,14 @@
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the observations" caption="Observations">
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the date of the observations" name="Date" prop="publication_date">
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the date of the observations" name="Date" prop="publication-date">
     <ng-template let-value="value" table-cell-template>{{getFormatedDate(value)}}</ng-template>
   </otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the country of the observations" name="Country" prop="country.iso"></otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the operator name of the observations" name="Operator" prop="operator.name"></otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the category of the observations" name="Category" [prop]="this.observationType === 'operators' ? 'annex_operator.illegality' : 'annex_governance.governance_pillar'"></otp-table-column>
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the country of the observations" name="Country" prop="country.iso" [include]="true"></otp-table-column>
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the operator name of the observations" name="Operator" prop="operator.name" [include]="true"></otp-table-column>
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the category of the observations" name="Sub-category" prop="subcategory.name" [include]="true"></otp-table-column>
   <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the details of the observations" name="Observation" prop="details"></otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the severity of the observations" name="Severity" prop="severity.level"></otp-table-column>
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the severity of the observations" name="Severity" prop="severity.level" [include]="true"></otp-table-column>
   <otp-table-column i18n-name="Table of observations|Name of the actions columns (containing the edit and delete button)" name="Actions">
     <ng-template let-row="row" table-cell-template>
       <ng-template [ngIf]="canEdit(row)">

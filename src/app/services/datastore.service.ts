@@ -11,6 +11,7 @@ import { Government } from 'app/models/government.model';
 import { Comment } from 'app/models/comment.model';
 import { Law } from 'app/models/law.model';
 import { Category } from 'app/models/category.model';
+import { Subcategory } from 'app/models/subcategory.model';
 import { Severity } from 'app/models/severity.model';
 import { Country } from 'app/models/country.model';
 import { environment } from 'environments/environment';
@@ -34,6 +35,7 @@ import { Observation } from 'app/models/observation.model';
     operators: Operator,
     species: Species,
     users: User,
+    subcategories: Subcategory,
     annex_governances: AnnexGovernance,
     annex_operators: AnnexOperator,
     documents: Document,
