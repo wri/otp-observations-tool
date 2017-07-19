@@ -70,7 +70,7 @@ export class TableFilterBehavior implements AfterViewInit {
       .then(res => {
         if (this.latestRequestID === requestID) {
           this.table.rows = res.data;
-          this.table.rowCount = res.meta.total_items;
+          this.table.rowCount = res.meta['record-count'];
         }
       })
       .catch(() => console.log('Error loading the table data'))
