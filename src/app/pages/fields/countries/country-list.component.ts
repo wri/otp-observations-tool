@@ -2,7 +2,6 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 import { Country } from './../../../models/country.model';
 import { CountriesService } from './../../../services/countries.service';
 import { Router } from '@angular/router';
-import { LawsService } from './../../../services/laws.service';
 import { Component } from '@angular/core';
 
 @Component({

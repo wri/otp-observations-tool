@@ -21,6 +21,7 @@ export class TableComponent implements AfterContentInit {
   public rowCount: number; // Number of total rows (total results)
   @Input() caption: string;
   @Input() perPage = 10;
+  @Input() include: string[] = []; // Include param for the query
 
   @Output() change = new EventEmitter<void>();
 
@@ -132,12 +133,17 @@ export class TableComponent implements AfterContentInit {
   }
 
   get state(): TableState {
+    const include = [
+      ...this.columns.filter(col => col.include).map(col => col.prop.split('.')[0]),
+      ...this.include
+    ];
+
     return {
       page: this.currentPage,
       perPage: this.perPage,
       sortColumn: this.sortColumn && this.sortColumn.prop,
       sortOrder: this.sortOrder && this.sortOrder === 'asc' ? 1 : -1,
-      include: this.columns.filter(col => col.include).map(col => col.prop.split('.')[0])
+      include
     };
   }
 

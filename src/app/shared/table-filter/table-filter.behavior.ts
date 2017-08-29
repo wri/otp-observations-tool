@@ -33,9 +33,12 @@ export class TableFilterBehavior implements AfterViewInit {
       page: {
         size: this.tableState.perPage,
         number: this.tableState.page
-      },
-      include: this.tableState.include.join(',')
+      }
     };
+
+    if (this.tableState.include.length) {
+      params.include = this.tableState.include.join(',');
+    }
 
     if (this.tableState.sortColumn) {
       params.sort = `${this.tableState.sortOrder < 0 ? '-' : ''}${this.tableState.sortColumn}`;

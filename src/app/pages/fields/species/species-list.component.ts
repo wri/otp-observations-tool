@@ -2,7 +2,6 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 import { SpeciesService } from 'app/services/species.service';
 import { Species } from 'app/models/species.model';
 import { Router } from '@angular/router';
-import { LawsService } from 'app/services/laws.service';
 import { Component } from '@angular/core';
 
 @Component({

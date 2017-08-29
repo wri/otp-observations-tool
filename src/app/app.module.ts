@@ -6,6 +6,7 @@ import { NavigationItemDirective } from 'app/shared/navigation/directives/item/i
 import { PageNotFoundComponent } from 'app/pages/page-not-found/page-not-found.component';
 import { LoaderComponent } from 'app/shared/loader/loader.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
+import { SubcategoriesService } from 'app/services/subcategories.service';
 import { AnnexGovernanceService } from 'app/services/annex-governance.service';
 import { AnnexOperatorsService } from 'app/services/annex-operators.service';
 import { TableColumnCellDirective } from 'app/shared/table/directives/column/column-cell.directive';
@@ -21,6 +22,7 @@ import { ResponsiveService } from 'app/services/responsive.service';
 import { ObservationDetailEditComponent } from 'app/pages/observations/observation-detail-edit.component';
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { IconComponent } from 'app/shared/icons/icon.component';
+import { SubcategoryListComponent } from 'app/pages/fields/subcategories/subcategory-list.component';
 import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
 import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
 import { AnnexOperatorListComponent } from 'app/pages/fields/subcategories/operators/annex-operator-list.component';
@@ -35,12 +37,9 @@ import { CountryDetailComponent } from 'app/pages/fields/countries/country-detai
 import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
 import { SpeciesService } from 'app/services/species.service';
 import { ObserverListComponent } from 'app/pages/fields/observers/observer-list.component';
-import { LawsService } from 'app/services/laws.service';
-import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { ActionBarComponent } from 'app/shared/action-bar/action-bar.component';
 import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
 import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
-import { LawDetailComponent } from 'app/pages/fields/laws/law-detail.component';
 import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
 import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
 import { OperatorsService } from 'app/services/operators.service';
@@ -101,8 +100,6 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     HeaderComponent,
     GovernmentListComponent,
     GovernmentDetailComponent,
-    LawDetailComponent,
-    LawListComponent,
     ObserverDetailComponent,
     ObserverListComponent,
     SpeciesDetailComponent,
@@ -114,6 +111,7 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     CountryListComponent,
     OperatorDetailComponent,
     OperatorListComponent,
+    SubcategoryListComponent,
     SubcategoriesComponent,
     AnnexOperatorDetailComponent,
     AnnexOperatorListComponent,
@@ -154,12 +152,12 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     DatastoreService,
     UsersService,
     ObservationsService,
+    SubcategoriesService,
     AnnexOperatorsService,
     AnnexGovernanceService,
     ObserversService,
     OperatorsService,
     SpeciesService,
-    LawsService,
     CategoriesService,
     ResponsiveService,
     { provide: RequestOptions, useClass: OauthRequestOptions }

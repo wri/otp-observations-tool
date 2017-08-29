@@ -1,9 +1,9 @@
 <div class="c-table-header">
   <otp-filters>
-    <otp-filter i18n-name="Table of species|Name of a filter" name="Class" prop="species_class"></otp-filter>
-    <otp-filter i18n-name="Table of species|Name of a filter" name="Sub-species" prop="sub_species"></otp-filter>
-    <otp-filter i18n-name="Table of species|Name of a filter" name="Family" prop="species_family"></otp-filter>
-    <otp-filter i18n-name="Table of species|Name of a filter" name="Kingdom" prop="species_kingdom"></otp-filter>
+    <otp-filter i18n-name="Table of species|Name of a filter" name="Class" prop="species-class"></otp-filter>
+    <otp-filter i18n-name="Table of species|Name of a filter" name="Sub-species" prop="sub-species"></otp-filter>
+    <otp-filter i18n-name="Table of species|Name of a filter" name="Family" prop="species-family"></otp-filter>
+    <otp-filter i18n-name="Table of species|Name of a filter" name="Kingdom" prop="species-kingdom"></otp-filter>
   </otp-filters>
   <button (click)="triggerNewSpecies()" class="c-button -primary" i18n="Button to create a new species">
     New species
@@ -12,8 +12,8 @@
 
 <otp-table i18n-caption="Caption for the table which lists the species" caption="Species">
   <otp-table-column i18n-name="Table of species|Name of the column corresponding to the name of the species" prop="name" name="Name"></otp-table-column>
-  <otp-table-column i18n-name="Table of species|Name of the column corresponding to the species class of the species" prop="species_class" name="Species class"></otp-table-column>
-  <otp-table-column i18n-name="Table of species|Name of the column corresponding to the scientific name of the species" prop="scientific_name" name="Scientific name"></otp-table-column>
+  <otp-table-column i18n-name="Table of species|Name of the column corresponding to the species class of the species" prop="species-class" name="Species class"></otp-table-column>
+  <otp-table-column i18n-name="Table of species|Name of the column corresponding to the scientific name of the species" prop="scientific-name" name="Scientific name"></otp-table-column>
   <otp-table-column i18n-name="Table of species|Name of the actions columns (containing the edit and delete button)" name="Actions">
      <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>

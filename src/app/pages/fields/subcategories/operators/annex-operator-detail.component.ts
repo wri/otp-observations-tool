@@ -1,6 +1,4 @@
 import { AnnexOperatorsService } from 'app/services/annex-operators.service';
-import { Law } from 'app/models/law.model';
-import { LawsService } from 'app/services/laws.service';
 import { Router } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
@@ -14,13 +12,11 @@ import { Component, OnInit } from '@angular/core';
 export class AnnexOperatorDetailComponent implements OnInit {
 
   countries: Country[] = [];
-  laws: Law[] = [];
   mode: String = 'new';
   loading = false;
 
   constructor(
     private countriesService: CountriesService,
-    private lawsService: LawsService,
     private annexOperatorsService: AnnexOperatorsService,
     private router: Router
   ) {
@@ -31,11 +27,6 @@ export class AnnexOperatorDetailComponent implements OnInit {
     this.countriesService.getAll().then(
       data => {
          this.countries = data;
-      }
-    );
-    this.lawsService.getAll().then(
-      data => {
-         this.laws = data;
       }
     );
   }
