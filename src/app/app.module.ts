@@ -7,8 +7,6 @@ import { PageNotFoundComponent } from 'app/pages/page-not-found/page-not-found.c
 import { LoaderComponent } from 'app/shared/loader/loader.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { SubcategoriesService } from 'app/services/subcategories.service';
-import { AnnexGovernanceService } from 'app/services/annex-governance.service';
-import { AnnexOperatorsService } from 'app/services/annex-operators.service';
 import { TableColumnCellDirective } from 'app/shared/table/directives/column/column-cell.directive';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
 import { TableComponent } from 'app/shared/table/table.component';
@@ -23,10 +21,6 @@ import { ObservationDetailEditComponent } from 'app/pages/observations/observati
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { IconComponent } from 'app/shared/icons/icon.component';
 import { SubcategoryListComponent } from 'app/pages/fields/subcategories/subcategory-list.component';
-import { AnnexGovernanceListComponent } from 'app/pages/fields/subcategories/governance/annex-governance-list.component';
-import { AnnexGovernanceDetailComponent } from 'app/pages/fields/subcategories/governance/annex-governance-detail.component';
-import { AnnexOperatorListComponent } from 'app/pages/fields/subcategories/operators/annex-operator-list.component';
-import { AnnexOperatorDetailComponent } from 'app/pages/fields/subcategories/operators/annex-operator-detail.component';
 import { SubcategoriesComponent } from 'app/pages/fields/subcategories/subcategories.component';
 import { CategoriesService } from 'app/services/categories.service';
 import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
@@ -113,10 +107,6 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     OperatorListComponent,
     SubcategoryListComponent,
     SubcategoriesComponent,
-    AnnexOperatorDetailComponent,
-    AnnexOperatorListComponent,
-    AnnexGovernanceDetailComponent,
-    AnnexGovernanceListComponent,
     IconComponent,
     MaxTabletDirective,
     MinTabletDirective,
@@ -153,8 +143,6 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     UsersService,
     ObservationsService,
     SubcategoriesService,
-    AnnexOperatorsService,
-    AnnexGovernanceService,
     ObserversService,
     OperatorsService,
     SpeciesService,

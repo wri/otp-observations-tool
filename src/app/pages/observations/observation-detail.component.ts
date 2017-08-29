@@ -1,5 +1,3 @@
-import { AnnexGovernanceService } from 'app/services/annex-governance.service';
-import { AnnexOperatorsService } from 'app/services/annex-operators.service';
 import { ObservationsService } from 'app/services/observations.service';
 import { Severity } from 'app/models/severity.model';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -9,8 +7,6 @@ import { ObserversService } from 'app/services/observers.service';
 import { Observer } from 'app/models/observer.model';
 import { Government } from 'app/models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
-import { AnnexGovernance } from 'app/models/annex-governance.model';
-import { AnnexOperator } from 'app/models/annex-operator.model';
 import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
@@ -29,8 +25,6 @@ export class ObservationDetailComponent implements OnInit {
   governments: Government[];
   observers: Observer[];
   operators: Operator[];
-  annexGovernances: AnnexGovernance[];
-  annexOperators: AnnexOperator[];
   severities: Severity[];
   type: String;
   governanceSelected: boolean;
@@ -38,8 +32,6 @@ export class ObservationDetailComponent implements OnInit {
 
   constructor(
     private countriesService: CountriesService,
-    private annexOperatorsService: AnnexOperatorsService,
-    private annexGovernanceService: AnnexGovernanceService,
     private governmentsService: GovernmentsService,
     private observersService: ObserversService,
     private operatorsService: OperatorsService,
@@ -107,19 +99,19 @@ export class ObservationDetailComponent implements OnInit {
   }
 
   loadSubcategories(countryId): void {
-    if (this.governanceSelected) {
-      this.annexGovernanceService.getAnnexGovernancesByCountry(countryId).then(
-        data => {
-          this.annexGovernances = data;
-        }
-      );
-    } else if(this.type === 'AnnexGovernance') {
-      this.annexOperatorsService.getAnnexOperatorsByCountry(countryId).then(
-        data => {
-          this.annexOperators = data;
-        }
-      );
-    }
+    // if (this.governanceSelected) {
+    //   this.annexGovernanceService.getAnnexGovernancesByCountry(countryId).then(
+    //     data => {
+    //       this.annexGovernances = data;
+    //     }
+    //   );
+    // } else if(this.type === 'AnnexGovernance') {
+    //   this.annexOperatorsService.getAnnexOperatorsByCountry(countryId).then(
+    //     data => {
+    //       this.annexOperators = data;
+    //     }
+    //   );
+    // }
   }
 
   loadGovernments(countryId): void {
@@ -139,15 +131,15 @@ export class ObservationDetailComponent implements OnInit {
   }
 
   loadSeverities(subcategory): void {
-    if (this.governanceSelected) {
-      this.severities = this.annexGovernances.find((val) => {
-        return val.id === subcategory;
-      }).severities;
-    } else {
-      this.severities = this.annexOperators.find((val) => {
-        return val.id === subcategory;
-      }).severities;
-    }
+    // if (this.governanceSelected) {
+    //   this.severities = this.annexGovernances.find((val) => {
+    //     return val.id === subcategory;
+    //   }).severities;
+    // } else {
+    //   this.severities = this.annexOperators.find((val) => {
+    //     return val.id === subcategory;
+    //   }).severities;
+    // }
   }
 
   onCountryChange(value) {
