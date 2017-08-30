@@ -18,6 +18,22 @@ export class SubcategoriesService extends JsonApiService<Subcategory> {
   }
 
   getAll() {
-    return this.datastoreService.query(Subcategory, { page: { size: 100 } }).toPromise();
+    return this.datastoreService.query(Subcategory, { page: { size: 3000 } }).toPromise();
+  }
+
+  /**
+   * Return the subcategories that match the type
+   *
+   * @param {('operator'|'government')} type - Type of the subcategories to load
+   * @param {*} [params={}] - Custom params for the query (such as "include")
+   * @returns {Promise<Subcategory[]>}
+   */
+  getByType(type: 'operator'|'government', params: any = {}): Promise<Subcategory[]> {
+    return this.datastoreService.query(Subcategory, Object.assign({}, {
+      page: { size: 3000 },
+      filter: {
+        'subcategory-type': type
+      }
+    }, params)).toPromise();
   }
 }

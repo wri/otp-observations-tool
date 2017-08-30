@@ -17,8 +17,8 @@ export class OperatorsService extends JsonApiService<Operator> {
     super();
   }
 
-  getAll(): Operator[] {
-    return this.datastoreService.peekAll(Operator);
+  getAll(): Promise<Operator[]> {
+    return this.datastoreService.query(Operator, { page: { size: 3000 }}).toPromise();
   }
 
   getByCountry(countryId): Promise<Operator[]> {

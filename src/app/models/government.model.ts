@@ -7,7 +7,7 @@ import { User } from 'app/models/user.model';
 })
 export class Government extends JsonApiModel {
 
-  @Attribute() government_entity: string;
+  @Attribute() 'government-entity': string;
   @Attribute() details?: string;
 
   @BelongsTo() country: Country;

@@ -1,5 +1,5 @@
 <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
-<form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+<form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 i18n="Observation creation|Title of the page">New observation</h2>
     <div class="c-button-container -j-end form-group" *otpMinTablet>
@@ -11,121 +11,253 @@
   <div class="form-header">
     <div class="form-group">
       <label for="observation_type" i18n="Observation creation/edition|Label for the type field">Type</label>
-      <select id="observation_type" (change)="onTypeChange($event)" name="observation_type" ngModel #observation_type="ngModel" required>
-          <option selected value="AnnexOperator" i18n="Observation type">Operator</option>
-          <option value="AnnexGovernance" i18n="Observation type">Governance</option>
+      <select id="observation_type" name="observation_type" [(ngModel)]="type" #observation_type="ngModel" required>
+        <option [value]="null" disabled i18n="Observation creation/edition">Select an observation type</option>
+        <option value="operator" i18n="Observation type">Operator</option>
+        <option value="government" i18n="Observation type">Government</option>
       </select>
-      <div *ngIf="f.submitted && !observation_type.valid" class="help-text" i18n="Observation creation/edition|Error message if the type isn't supplied (the user will have to user between some options)">Please select a observation type</div>
+      <div *ngIf="f.submitted && !observation_type.valid" class="help-text" i18n="Observation creation/edition|Error message if the type isn't supplied (the user will have to user between some options)">Please select an observation type</div>
     </div>
   </div>
 
-  <div class="form-container">
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
+  <div class="form-container" *ngIf="type === 'operator'">
+    <!-- 1. Report -->
+    <fieldset>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Report</legend>
+      <div class="fieldset-container">
+      </div>
+    </fieldset>
+
+    <!-- 2. Country -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
       <label for="country_id" i18n="Observation creation/edition|Label for the country field">Country</label>
-      <select id="country_id" (change)="onCountryChange(country_id.value)" name="country_id" ngModel #country_id="ngModel" required>
-        <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+      <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required>
+        <option [value]="null" disabled i18n="Observation creation/edition">Select a country</option>
+        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
       <div *ngIf="f.submitted && !country_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the country isn't supplied (the user will have to user between some options)">Please select a country</div>
     </div>
 
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !latitude.valid }">
-        <label for="latitude" i18n="Observation creation/edition|Label for the latitude field">Latitude</label>
-        <input id="latitude" type="text" class="form-control" name="latitude" ngModel #latitude="ngModel" required number/>
-        <div *ngIf="f.submitted && latitude.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the latitude isn't supplied">Latitude is required</div>
-        <div *ngIf="f.submitted && latitude.errors?.number && !latitude.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the latitude isn't valid">Please enter a valid number</div>
-    </div>
-
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !longitude.valid }">
-      <label for="longitude" i18n="Observation creation/edition|Label for the longitude field">Longitude</label>
-      <input id="longitude" type="text" class="form-control" name="longitude" ngModel #longitude="ngModel" required number/>
-      <div *ngIf="f.submitted && longitude.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the longitude isn't supplied">Longitude is required</div>
-      <div *ngIf="f.submitted && longitude.errors?.number && !longitude.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the longitude isn't valid">Please enter a valid number</div>
-    </div>
-
-    <div *ngIf="governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !annex_governance_id.valid }">
-      <label for="annex_governance_id" i18n="Observation creation/edition|Label for the sub-category field">Sub-category</label>
-      <select id="annex_governance_id" (change)="onSubCategoryChange(annex_governance_id.value)" name="annex_governance_id"
-        [(ngModel)]="observation && observation.annex_governance.id" #annex_governance_id="ngModel" required>
-        <option *ngFor="let annexGovernance of annexGovernances" [value]="annexGovernance.id">{{ annexGovernance.governance_problem }}</option>
-      </select>
-      <div *ngIf="f.submitted && !annex_governance_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the sub-category isn't supplied (the user will have to user between some options)">Please select a sub-category</div>
-    </div>
-
-    <div *ngIf="!governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !annex_operator_id.valid }">
-      <label for="annex_operator_id" i18n="Observation creation/edition|Label for the country field">Sub-category</label>
-      <select id="annex_operator_id" (change)="onSubCategoryChange(annex_operator_id.value)" name="annex_operator_id"
-        [(ngModel)]="observation && observation.annex_operator.id" #annex_operator_id="ngModel" required>
-        <option *ngFor="let annexOperator of annexOperators" [value]="annexOperator.id">{{ annexOperator.illegality }}</option>
-      </select>
-      <div *ngIf="f.submitted && !annex_operator_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the sub-category isn't supplied (the user will have to user between some options)">Please select a sub-category</div>
-    </div>
-
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
-      <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
-      <select id="severity_id" name="severity_id" ngModel #severity_id="ngModel" required>
-        <option *ngFor="let severity of severities" [value]="severity.id">{{ severity.level }} - {{ severity.details }}</option>
-      </select>
-      <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
-    </div>
-
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
-      <label for="publication_date" i18n="Observation creation/edition|Label for the publication date field">Publication date</label>
-      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" ngModel #publication_date="ngModel" required></otp-datepicker>
-      <div *ngIf="f.submitted && !publication_date.valid" class="help-text" i18n="Observation creation/edition|Error message if the publication date isn't supplied">Publication date is required</div>
-    </div>
-
-    <div *ngIf="governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
-      <label for="government_id" i18n="Observation creation/edition|Label for the government entity field">Government Entity</label>
-      <select id="government_id" name="government_id" ngModel #government_id="ngModel" required>
-        <option *ngFor="let government of governments" [value]="government.id">{{ government.government_entity }}</option>
-      </select>
-      <div *ngIf="f.submitted && !government_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the government entity isn't supplied (the user will have to user between some options)">Please select a government entity</div>
-    </div>
-
-    <div *ngIf="!governanceSelected" class="form-group">
-      <label for="pv" i18n="Observation creation/edition|Label for the PV field">PV</label>
-      <input id="pv" type="text" class="form-control" name="pv" ngModel #pv="ngModel"  />
-    </div>
-
-    <div *ngIf="!governanceSelected" class="form-group">
-      <label for="concern_opinion" i18n="Observation creation/edition|Label for the opinion of operator field">Opinion of operator</label>
-      <input id="concern_opinion" type="text" class="form-control" name="concern_opinion" ngModel #concern_opinion="ngModel"  />
-    </div>
-
-    <div *ngIf="!governanceSelected" class="form-group">
-      <label for="litigation_status" i18n="Observation creation/edition|Label for the litigation status field">Litigation status</label>
-      <input id="litigation_status" type="text" class="form-control" name="litigation_status" ngModel #litigation_status="ngModel"  />
-    </div>
-
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !observer_id.valid }">
-      <label for="observer_id" i18n="Observation creation/edition|Label for the monitor field">Monitor</label>
-      <select id="observer_id" name="observer_id" ngModel #observer_id="ngModel" required>
-        <option *ngFor="let observer of observers" [value]="observer.id">{{ observer.name }}</option>
-      </select>
-      <div *ngIf="f.submitted && !observer_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the monitor isn't supplied (the user will have to user between some options)">Please select a monitor</div>
-    </div>
-
-    <div *ngIf="!governanceSelected" class="form-group" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
+    <!-- 3. Operator -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
       <label for="operator_id" i18n="Observation creation/edition|Label for the operator field">Operator</label>
-      <select id="operator_id" name="operator_id" ngModel #operator_id="ngModel" required>
-        <option *ngFor="let operator of operators" [value]="operator.id">{{ operator.name }}</option>
+      <select id="operator_id" name="operator_id" [(ngModel)]="operator" #operator_id="ngModel" required>
+        <option [value]="null" disabled i18n="Observation creation/edition">Select an operator</option>
+        <option *ngFor="let operator of operators" [ngValue]="operator">{{ operator.name }}</option>
       </select>
       <div *ngIf="f.submitted && !operator_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the operator isn't supplied (the user will have to user between some options)">Please select an operator</div>
     </div>
 
+    <!-- 4. Location -->
+    <fieldset>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Location</legend>
+      <div class="fieldset-container">
+
+        <!-- 4.1. Forest management unit -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the forest management unit field">Forest management unit</label>
+        </div>
+
+        <!-- 4.2. GPS coordinates -->
+        <fieldset>
+          <legend i18n="Observation creation/edition|Title of a section of the form">GPS coordinates</legend>
+          <div class="fieldset-container">
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !latitude_field.valid }">
+              <label for="latitude_field" i18n="Observation creation/edition|Label for the latitude field">Latitude</label>
+              <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" number/>
+              <div *ngIf="f.submitted && latitude_field.errors?.number" class="help-text" i18n="Observation creation/edition|Error message if the latitude isn't valid">Please enter a valid number</div>
+            </div>
+
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !longitude_field.valid }">
+              <label for="longitude_field" i18n="Observation creation/edition|Label for the longitude field">Longitude</label>
+              <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" number/>
+              <div *ngIf="f.submitted && longitude_field.errors?.number" class="help-text" i18n="Observation creation/edition|Error message if the longitude isn't valid">Please enter a valid number</div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </fieldset>
+
+    <!-- 5. Observation according to legal text -->
     <div class="form-group">
-      <label for="active" i18n="Observation creation/edition|Label for the active field">Active</label>
-      <input id="active" type="checkbox" name="active" ngModel #active="ngModel" />
+      <label i18n="Observation creation/edition|Label for the observation according to legal text field">Observation according to legal text</label>
     </div>
 
-    <div class="form-group">
-      <label for="details" i18n="Observation creation/edition|Label for the details field">Details</label>
-      <textarea id="details" name="details" ngModel #details="ngModel"></textarea>
+    <!-- 6. Observation category -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
+      <label for="subcategory_id" i18n="Observation creation/edition|Label for the observation category field">Observation category</label>
+      <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required>
+        <option [value]="null" disabled i18n="Observation creation/edition">Select an observation category</option>
+        <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
+      </select>
+      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the observation category isn't supplied (the user will have to user between some options)">Please select an observation category</div>
     </div>
 
+    <!-- 7. Observation details -->
     <div class="form-group">
-      <label for="evidence" i18n="Observation creation/edition|Label for the evidence field">Evidence</label>
-      <input id="evidence" type="text" class="form-control" name="evidence" ngModel #evidence="ngModel"  />
+      <label for="details_field" i18n="Observation creation/edition|Label for the observation details field">Observation details</label>
+      <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
+    </div>
+
+    <!-- 8. Due dilegence category -->
+    <div class="form-group">
+      <label i18n="Observation creation/edition|Label for the due diligence category field">Due diligence category</label>
+    </div>
+
+    <!-- 9. Evidence -->
+    <fieldset>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Evidence</legend>
+      <div class="fieldset-container">
+      </div>
+    </fieldset>
+
+    <!-- 10. Severity -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
+      <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
+      <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
+        <option [value]="null" disabled i18n="Observation creation/edition">Select a severity</option>
+        <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }}</option>
+      </select>
+      <div *ngIf="severity" class="note">{{ severity.details }}</div>
+      <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
+    </div>
+
+    <!-- 11. Opinion of the operator -->
+    <div class="form-group">
+      <label for="concern_opinion" i18n="Observation creation/edition|Label for the opinion of the operator field">Opinion of the operator</label>
+      <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel"></textarea>
+    </div>
+
+    <!-- 12. Law enforcement -->
+    <fieldset>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Law enforcement</legend>
+      <div class="fieldset-container">
+        <!-- 12.1. Status -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the status field">Status</label>
+        </div>
+
+        <!-- 12.2. Citation -->
+        <div class="form-group">
+          <label for="pv_field" i18n="Observation creation/edition|Label for the PV field">PV</label>
+          <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" />
+        </div>
+
+        <!-- 12.3. Details -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the details field">Details</label>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- 13. Legal -->
+    <fieldset>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Legal</legend>
+      <div class="fieldset-container">
+        <!-- 13.1. Legal reference (infraction) -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the legal reference (infraction) field">Legal reference (infraction)</label>
+        </div>
+
+        <!-- 13.2. Legal reference (sanction) -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the legal reference (sanction) field">Legal reference (sanction)</label>
+        </div>
+
+        <!-- 13.3. Minimum fine -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the minimum fine field">Minimum fine</label>
+        </div>
+
+        <!-- 13.4. Maximum fine -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the maximum fine field">Maximum fine</label>
+        </div>
+
+        <!-- 13.5. Penal servitude -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the penal servitude field">Penal servitude</label>
+        </div>
+
+        <!-- 13.6. Other penalties -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the other penalties field">Other penalties</label>
+        </div>
+
+        <!-- 13.7. FLEGT indicator -->
+        <div class="form-group">
+          <label i18n="Observation creation/edition|Label for the FLEGT indicator field">FLEGT indicator</label>
+        </div>
+      </div>
+    </fieldset>
+
+  </div>
+
+  <div class="form-container" *ngIf="type === 'government'">
+    <!-- 1. Report -->
+    <fieldset>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Report</legend>
+      <div class="fieldset-container">
+      </div>
+    </fieldset>
+
+    <!-- 2. Country -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
+      <label for="country_id" i18n="Observation creation/edition|Label for the country field">Country</label>
+      <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required>
+        <option [value]="null" disabled i18n="Observation creation/edition">Select a country</option>
+        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
+      </select>
+      <div *ngIf="f.submitted && !country_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the country isn't supplied (the user will have to user between some options)">Please select a country</div>
+    </div>
+
+    <!-- 3. Government entity -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
+      <label for="government_id" i18n="Observation creation/edition|Label for the government entity field">Government entity</label>
+      <select id="government_id" name="government_id" [(ngModel)]="government" #government_id="ngModel" required>
+        <option [value]="null" disabled i18n="Observation creation/edition">Select a government entity</option>
+        <option *ngFor="let government of governments" [ngValue]="government">{{ government['government-entity'] }}</option>
+      </select>
+      <div *ngIf="f.submitted && !government_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the government entity isn't supplied (the user will have to user between some options)">Please select a government entity</div>
+    </div>
+
+    <!-- 4. Governance problem -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
+      <label for="subcategory_id" i18n="Observation creation/edition|Label for the governance problem field">Governance problem</label>
+      <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required>
+        <option [value]="null" disabled i18n="Observation creation/edition">Select a governance problem</option>
+        <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
+      </select>
+      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the governance problem isn't supplied (the user will have to user between some options)">Please select a governance problem</div>
+    </div>
+
+    <!-- 5. Description -->
+    <div class="form-group">
+      <label for="details_field" i18n="Observation creation/edition|Label for the description field">Description</label>
+      <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
+    </div>
+
+    <!-- 6. Evidence -->
+    <fieldset>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Evidence</legend>
+      <div class="fieldset-container">
+      </div>
+    </fieldset>
+
+    <!-- 7. Severity -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
+      <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
+      <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
+        <option [value]="null" disabled i18n="Observation creation/edition">Select a severity</option>
+        <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }}</option>
+      </select>
+      <div *ngIf="severity" class="note">{{ severity.details }}</div>
+      <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
+    </div>
+
+    <!-- 8. Actions taken by government -->
+    <div class="form-group">
+      <label i18n="Observation creation/edition|Label for the actions taken by government field">Actions taken by government</label>
     </div>
   </div>
 

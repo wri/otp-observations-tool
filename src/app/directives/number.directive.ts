@@ -11,7 +11,7 @@ import { Validator, NG_VALIDATORS, AbstractControl, ValidationErrors } from '@an
 export class NumberValidatorDirective implements Validator {
 
   validate(c: AbstractControl): ValidationErrors {
-    if (/^-?[0-9]*(\.[0-9]+)?$/.test(c.value)) {
+    if (c.value === null || c.value === undefined || /^-?[0-9]*(\.[0-9]+)?$/.test(c.value)) {
       return null;
     }
 

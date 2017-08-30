@@ -19,6 +19,15 @@
     }
 
     .form-group {
+
+      &.-required {
+        label {
+          &::after {
+            content: ' *';
+          }
+        }
+      }
+
       label {
         font-size: $font-size-default;
         font-weight: $font-weight-default;
@@ -30,9 +39,13 @@
         margin: 0;
       }
 
-      .help-text {
+      .help-text,
+      .note {
         margin: 5px 0 0;
         font-size: 0.8125rem;
+      }
+
+      .help-text {
         font-style: italic;
         color: $color-error;
       }

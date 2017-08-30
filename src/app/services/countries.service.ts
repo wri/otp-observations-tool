@@ -19,12 +19,13 @@ export class CountriesService extends JsonApiService<Country> {
 
   /**
    * Return the list of all the countries
+   * @params {*} [params={}] Additional params for the query
    * @returns {Promise<Country[]>}
    */
-  getAll(): Promise<Country[]> {
-      return this.datastoreService
-        .query(Country, { page: { size: 10000 } })
-        .toPromise();
+  getAll(params: any = {}): Promise<Country[]> {
+    return this.datastoreService
+      .query(Country, Object.assign({}, { page: { size: 3000 } }, params))
+      .toPromise();
   }
 
   createCountry(formValues): Promise<any> {

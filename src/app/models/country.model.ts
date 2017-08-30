@@ -1,4 +1,5 @@
-import { JsonApiModel, JsonApiModelConfig, Attribute } from 'angular2-jsonapi';
+import { Government } from 'app/models/government.model';
+import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany } from 'angular2-jsonapi';
 
 @JsonApiModelConfig({
   type: 'countries'
@@ -13,4 +14,5 @@ export class Country extends JsonApiModel {
   @Attribute() region_centroid?: any;
   @Attribute() is_active?: boolean;
 
+  @HasMany() governments: Government[];
 }
