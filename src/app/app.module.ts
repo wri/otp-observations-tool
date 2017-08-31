@@ -17,7 +17,6 @@ import { EqualToValidatorDirective } from 'app/directives/equal-to.directive';
 import { EmailValidatorDirective } from 'app/directives/email.directive';
 import { NumberValidatorDirective } from 'app/directives/number.directive';
 import { ResponsiveService } from 'app/services/responsive.service';
-import { ObservationDetailEditComponent } from 'app/pages/observations/observation-detail-edit.component';
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { IconComponent } from 'app/shared/icons/icon.component';
 import { SubcategoryListComponent } from 'app/pages/fields/subcategories/subcategory-list.component';
@@ -80,7 +79,6 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     ObservationsComponent,
     ObservationListComponent,
     ObservationDetailComponent,
-    ObservationDetailEditComponent,
     RegisterComponent,
     BottombarComponent,
     UserListComponent,

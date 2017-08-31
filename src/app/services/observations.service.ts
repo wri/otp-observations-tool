@@ -21,8 +21,15 @@ export class ObservationsService extends JsonApiService<Observation> {
     return this.datastoreService.query(Observation).toPromise();
   }
 
-  getById(id: string): Promise<Observation> {
-    return this.datastoreService.findRecord(Observation, id).toPromise();
+  /**
+   * Get an observation by its ID
+   * @param {string} id - ID of the observation
+   * @param {*} [params={}] Additional params for the request
+   * @returns {Promise<Observation>}
+   */
+  getById(id: string, params: any = {}): Promise<Observation> {
+    return this.datastoreService.findRecord(Observation, id, params)
+      .toPromise();
   }
 
   createObservation(formValues): Promise<any> {
