@@ -27,7 +27,7 @@
     "@angular/router": "^4.0.0",
     "@asymmetrik/angular2-leaflet": "^2.1.4",
     "a11y-dialog": "^3.0.0",
-    "angular2-jsonapi": "^3.4.0",
+    "angular2-jsonapi": "^3.6.0",
     "angular2-spinner": "^1.0.10",
     "core-js": "^2.4.1",
     "date-fns": "^1.28.5",

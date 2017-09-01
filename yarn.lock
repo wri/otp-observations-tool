@@ -142,6 +142,10 @@
   version "0.0.32"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-0.0.32.tgz#bd284e57c84f1325da702babfc82a5328190c0c5"
 
+"@types/qs@^6.5.0":
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.5.0.tgz#14514e8ee24a4d0672c0c0da5e01a4f11da60d71"
+
 "@types/selenium-webdriver@^2.53.35", "@types/selenium-webdriver@~2.53.39":
   version "2.53.42"
   resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-2.53.42.tgz#74cb77fb6052edaff2a8984ddafd88d419f25cac"
@@ -225,12 +229,14 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-angular2-jsonapi@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/angular2-jsonapi/-/angular2-jsonapi-3.4.0.tgz#cb96f666f619e5a0972b7fbc67e78ecb4015309d"
+angular2-jsonapi@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/angular2-jsonapi/-/angular2-jsonapi-3.6.0.tgz#494ced609408d28737a5323941d9884b22533f5e"
   dependencies:
+    "@types/qs" "^6.5.0"
     lodash "^4.16.4"
     moment "^2.15.2"
+    qs "^6.5.0"
 
 angular2-spinner@^1.0.10:
   version "1.0.10"
@@ -3995,6 +4001,10 @@ qjobs@^1.1.4:
 qs@6.4.0, qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
+
+qs@^6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.0.tgz#8d04954d364def3efc55b5a0793e1e2c8b1e6e49"
 
 query-string@^4.1.0:
   version "4.3.4"

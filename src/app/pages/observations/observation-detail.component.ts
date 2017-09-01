@@ -238,8 +238,7 @@ export class ObservationDetailComponent {
           this.observation = observation;
 
           // FIXME: angular2-jsonapi should return a Date object but instead return
-          // a string
-          // We need to update the library to the latest version
+          // a string for some reason
           this.observation['publication-date'] = new Date(this.observation['publication-date']);
 
           // We force some of the attributes to execute the setters
