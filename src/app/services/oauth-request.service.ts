@@ -29,6 +29,7 @@ export class OauthRequestOptions extends RequestOptions {
       }
 
       options.search['locale'] = this.locale.slice(0, 2);
+      options.search['app'] = 'observations-tool';
     }
 
     return super.merge(options);
