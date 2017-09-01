@@ -1,6 +1,6 @@
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { SubcategoriesService } from 'app/services/subcategories.service';
-import { Subcategory } from 'app/models/Subcategory.model';
+import { Subcategory } from 'app/models/subcategory.model';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 
