@@ -193,6 +193,13 @@
       </div>
     </fieldset>
 
+    <!-- 14. Publication date -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
+      <label for="publication_date" i18n="Observation creation/edition|Label for the publication date field">Publication date</label>
+      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required></otp-datepicker>
+      <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the publication date of a project isn't supplied">Publication date is required</div>
+    </div>
+
   </div>
 
   <div class="form-container" *ngIf="type === 'government'">
@@ -260,6 +267,13 @@
     <!-- 8. Actions taken by government -->
     <div class="form-group">
       <label i18n="Observation creation/edition|Label for the actions taken by government field">Actions taken by government</label>
+    </div>
+
+    <!-- 9. Publication date -->
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
+      <label for="publication_date" i18n="Observation creation/edition|Label for the publication date field">Publication date</label>
+      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required></otp-datepicker>
+      <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the publication date of a project isn't supplied">Publication date is required</div>
     </div>
   </div>
 

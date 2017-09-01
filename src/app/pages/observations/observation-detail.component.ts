@@ -36,6 +36,7 @@ export class ObservationDetailComponent {
   _details: string;
   _severity: Severity = null;
   _subcategory: Subcategory = null;
+  _publicationDate: Date;
   _operator: Operator = null; // Only for type operator
   _opinion: string; // Only for type operator
   _pv: string; // Only for type operator
@@ -58,6 +59,7 @@ export class ObservationDetailComponent {
       this.opinion = null;
       this.pv = null;
       this.government = null;
+      this.publicationDate = null;
     }
 
     // When the type change we load the necessary additional information
@@ -209,6 +211,15 @@ export class ObservationDetailComponent {
     }
   }
 
+  get publicationDate() { return this.observation ? this.observation['publication-date'] : this._publicationDate; }
+  set publicationDate(publicationDate) {
+    if (this.observation) {
+      this.observation['publication-date'] = publicationDate;
+    } else {
+      this._publicationDate = publicationDate;
+    }
+  }
+
   constructor(
     private observationsService: ObservationsService,
     private countriesService: CountriesService,
@@ -225,6 +236,11 @@ export class ObservationDetailComponent {
       this.observationsService.getById(this.route.snapshot.params.id, { include: 'country,operator,subcategory,severity'})
         .then((observation) => {
           this.observation = observation;
+
+          // FIXME: angular2-jsonapi should return a Date object but instead return
+          // a string
+          // We need to update the library to the latest version
+          this.observation['publication-date'] = new Date(this.observation['publication-date']);
 
           // We force some of the attributes to execute the setters
           this.type = this.observation['observation-type'];
