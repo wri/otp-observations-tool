@@ -6,4 +6,11 @@
   @media screen and (min-width: $break-tablet) {
     margin-top: 20px;
   }
+
+  .map {
+    height: 200px;
+    width: 100%;
+    border-radius: 3px;
+    z-index: 1; // Needed for the border-radius to apply
+  }
 }

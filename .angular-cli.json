@@ -17,7 +17,12 @@
         "favicon-16x16.png",
         "favicon-32x32.png",
         "mstile-150x150.png",
-        "safari-pinned-tab.svg"
+        "safari-pinned-tab.svg",
+        {
+          "glob": "**/*",
+          "input": "../node_modules/leaflet/dist/images",
+          "output": "./assets/"
+        }
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -27,7 +32,8 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "otp",
       "styles": [
-        "styles.scss"
+        "styles.scss",
+        "../node_modules/leaflet/dist/leaflet.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

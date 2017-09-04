@@ -15,6 +15,18 @@ import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component } from '@angular/core';
+import * as L from 'leaflet';
+
+// Fix issues witht the icons of the Leaflet's markers
+const DefaultIcon = L.icon({
+    iconSize: [25, 41],
+    iconAnchor:  [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+    iconUrl: 'assets/marker-icon.png',
+    shadowUrl: 'assets/marker-shadow.png'
+});
+L.Marker.prototype.options.icon = DefaultIcon;
 
 @Component({
   selector: 'otp-observation-detail',
@@ -29,6 +41,20 @@ export class ObservationDetailComponent {
   severities: Severity[] = [];
   operators: Operator[] = [];
   governments: Government[] = [];
+
+  map: L.Map;
+  mapOptions = {
+    center: [10, 0],
+    zoom: 1,
+    layers: [
+      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
+          &copy;<a href="https://carto.com/attribution">CARTO</a>`
+      })
+    ]
+  };
+  mapLayers = [];
 
   // User selection
   _type: string = null;
@@ -164,6 +190,13 @@ export class ObservationDetailComponent {
     } else {
       this._latitude = latitude;
     }
+
+    // We add a marker to the map if possible
+    if (latitude && this.longitude) {
+      this.mapLayers = [L.marker([latitude, this.longitude])];
+    } else {
+      this.mapLayers = [];
+    }
   }
 
   get longitude() { return this.observation ? this.observation.lng : this._longitude; }
@@ -172,6 +205,13 @@ export class ObservationDetailComponent {
       this.observation.lng = longitude;
     } else {
       this._longitude = longitude;
+    }
+
+    // We add a marker to the map if possible
+    if (longitude && this.latitude) {
+      this.mapLayers = [L.marker([this.latitude, longitude])];
+    } else {
+      this.mapLayers = [];
     }
   }
 
@@ -247,6 +287,24 @@ export class ObservationDetailComponent {
         .catch((err) => console.error(err)) // TODO: visual feedback
         .then(() => this.loading = false);
     }
+  }
+
+  /**
+   * Event handler executed when the map is initialized
+   * @param {L.Map} map - Instance of the map
+   */
+  onMapReady(map: L.Map) {
+    this.map = map;
+    this.map.on('click', this.onClickMap.bind(this));
+  }
+
+  /**
+   * Event handler executed when the user clicks on the map
+   * @param {any} e
+   */
+  onClickMap(e: any) {
+    this.latitude = e.latlng.lat;
+    this.longitude = e.latlng.lng;
   }
 
   onCancel(): void {
