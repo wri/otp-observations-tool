@@ -64,6 +64,12 @@
         <fieldset>
           <legend i18n="Observation creation/edition|Title of a section of the form">GPS coordinates</legend>
           <div class="fieldset-container">
+            <!-- 4.2.0. Map -->
+            <div class="form-group">
+              <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="mapLayers" (leafletMapReady)="onMapReady($event)" class="map">
+              </div>
+            </div>
+
             <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !latitude_field.valid }">
               <label for="latitude_field" i18n="Observation creation/edition|Label for the latitude field">Latitude</label>
               <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" number/>

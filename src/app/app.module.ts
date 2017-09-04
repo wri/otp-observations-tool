@@ -69,7 +69,7 @@ import { SpinnerModule } from 'angular2-spinner/dist';
 import { DatePickerModule } from 'ng2-datepicker';
 import { ObservationsService } from 'app/services/observations.service';
 import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsive.directive';
-
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   declarations: [
@@ -129,7 +129,8 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
     HttpModule,
     AppRoutingModule,
     SpinnerModule,
-    DatePickerModule
+    DatePickerModule,
+    LeafletModule.forRoot()
   ],
   providers: [
     TokenService,
