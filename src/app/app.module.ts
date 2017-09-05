@@ -70,6 +70,7 @@ import { DatePickerModule } from 'ng2-datepicker';
 import { ObservationsService } from 'app/services/observations.service';
 import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsive.directive';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 @NgModule({
   declarations: [
@@ -130,7 +131,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     AppRoutingModule,
     SpinnerModule,
     DatePickerModule,
-    LeafletModule.forRoot()
+    LeafletModule.forRoot(),
+    MultiselectDropdownModule
   ],
   providers: [
     TokenService,

@@ -50,7 +50,13 @@
       <div *ngIf="f.submitted && !operator_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the operator isn't supplied (the user will have to user between some options)">Please select an operator</div>
     </div>
 
-    <!-- 4. Location -->
+    <!-- 4. Additional monitors -->
+    <div class="form-group">
+      <label i18n="Observation creation/edition|Label for the additional monitors field">Additional monitors</label>
+      <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers"></ss-multiselect-dropdown>
+    </div>
+
+    <!-- 5. Location -->
     <fieldset>
       <legend i18n="Observation creation/edition|Title of a section of the form">Location</legend>
       <div class="fieldset-container">
@@ -86,12 +92,12 @@
       </div>
     </fieldset>
 
-    <!-- 5. Observation according to legal text -->
+    <!-- 6. Observation according to legal text -->
     <div class="form-group">
       <label i18n="Observation creation/edition|Label for the observation according to legal text field">Observation according to legal text</label>
     </div>
 
-    <!-- 6. Observation category -->
+    <!-- 7. Observation category -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
       <label for="subcategory_id" i18n="Observation creation/edition|Label for the observation category field">Observation category</label>
       <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required>
@@ -101,25 +107,25 @@
       <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the observation category isn't supplied (the user will have to user between some options)">Please select an observation category</div>
     </div>
 
-    <!-- 7. Observation details -->
+    <!-- 8. Observation details -->
     <div class="form-group">
       <label for="details_field" i18n="Observation creation/edition|Label for the observation details field">Observation details</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
     </div>
 
-    <!-- 8. Due dilegence category -->
+    <!-- 9. Due dilegence category -->
     <div class="form-group">
       <label i18n="Observation creation/edition|Label for the due diligence category field">Due diligence category</label>
     </div>
 
-    <!-- 9. Evidence -->
+    <!-- 10. Evidence -->
     <fieldset>
       <legend i18n="Observation creation/edition|Title of a section of the form">Evidence</legend>
       <div class="fieldset-container">
       </div>
     </fieldset>
 
-    <!-- 10. Severity -->
+    <!-- 11. Severity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
       <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
@@ -130,81 +136,105 @@
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
     </div>
 
-    <!-- 11. Opinion of the operator -->
+    <!-- 12. Actions taken by operator -->
+    <div class="form-group">
+      <label for="actions_taken" i18n="Observation creation/edition|Label for the actions taken by operator field">Actions taken by operator</label>
+      <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel"></textarea>
+    </div>
+
+    <!-- 13. Opinion of the operator -->
     <div class="form-group">
       <label for="concern_opinion" i18n="Observation creation/edition|Label for the opinion of the operator field">Opinion of the operator</label>
       <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel"></textarea>
     </div>
 
-    <!-- 12. Law enforcement -->
+    <!-- 14. Law enforcement -->
     <fieldset>
       <legend i18n="Observation creation/edition|Title of a section of the form">Law enforcement</legend>
       <div class="fieldset-container">
-        <!-- 12.1. Status -->
+        <!-- 14.1. Status -->
         <div class="form-group">
           <label i18n="Observation creation/edition|Label for the status field">Status</label>
         </div>
 
-        <!-- 12.2. Citation -->
+        <!-- 14.2. Citation -->
         <div class="form-group">
           <label for="pv_field" i18n="Observation creation/edition|Label for the PV field">PV</label>
           <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" />
         </div>
 
-        <!-- 12.3. Details -->
+        <!-- 14.3. Details -->
         <div class="form-group">
           <label i18n="Observation creation/edition|Label for the details field">Details</label>
         </div>
       </div>
     </fieldset>
 
-    <!-- 13. Legal -->
+    <!-- 15. Legal -->
     <fieldset>
       <legend i18n="Observation creation/edition|Title of a section of the form">Legal</legend>
       <div class="fieldset-container">
-        <!-- 13.1. Legal reference (infraction) -->
+        <!-- 15.1. Legal reference (infraction) -->
         <div class="form-group">
           <label i18n="Observation creation/edition|Label for the legal reference (infraction) field">Legal reference (infraction)</label>
         </div>
 
-        <!-- 13.2. Legal reference (sanction) -->
+        <!-- 15.2. Legal reference (sanction) -->
         <div class="form-group">
           <label i18n="Observation creation/edition|Label for the legal reference (sanction) field">Legal reference (sanction)</label>
         </div>
 
-        <!-- 13.3. Minimum fine -->
+        <!-- 15.3. Minimum fine -->
         <div class="form-group">
           <label i18n="Observation creation/edition|Label for the minimum fine field">Minimum fine</label>
         </div>
 
-        <!-- 13.4. Maximum fine -->
+        <!-- 15.4. Maximum fine -->
         <div class="form-group">
           <label i18n="Observation creation/edition|Label for the maximum fine field">Maximum fine</label>
         </div>
 
-        <!-- 13.5. Penal servitude -->
+        <!-- 15.5. Penal servitude -->
         <div class="form-group">
           <label i18n="Observation creation/edition|Label for the penal servitude field">Penal servitude</label>
         </div>
 
-        <!-- 13.6. Other penalties -->
+        <!-- 15.6. Other penalties -->
         <div class="form-group">
           <label i18n="Observation creation/edition|Label for the other penalties field">Other penalties</label>
         </div>
 
-        <!-- 13.7. FLEGT indicator -->
+        <!-- 15.7. FLEGT indicator -->
         <div class="form-group">
           <label i18n="Observation creation/edition|Label for the FLEGT indicator field">FLEGT indicator</label>
         </div>
       </div>
     </fieldset>
 
-    <!-- 14. Publication date -->
+    <!-- 16. Publication date -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
       <label for="publication_date" i18n="Observation creation/edition|Label for the publication date field">Publication date</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required></otp-datepicker>
       <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the publication date of a project isn't supplied">Publication date is required</div>
     </div>
+
+    <!-- 17. Metadata -->
+    <fieldset *ngIf="observation">
+      <legend i18n="Observation creation/edition|Title of a section of the form">Metadata</legend>
+      <div class="fieldset-container">
+        <!-- 17.1. Last modification by -->
+        <div class="form-group">
+          <label for="last_modification_by" i18n="Observation creation/edition|Label for the last modification by field">Last modification by</label>
+          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'].name" #last_modification_by="ngModel" disabled />
+        </div>
+
+        <!-- 17.1. Last modified on -->
+        <div class="form-group">
+          <label for="last_modified_on" i18n="Observation creation/edition|Label for the last modified on field">Last modified on</label>
+          <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>
+        </div>
+      </div>
+    </fieldset>
 
   </div>
 
@@ -246,20 +276,26 @@
       <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the governance problem isn't supplied (the user will have to user between some options)">Please select a governance problem</div>
     </div>
 
-    <!-- 5. Description -->
+    <!-- 5. Additional monitors -->
+    <div class="form-group">
+      <label i18n="Observation creation/edition|Label for the additional monitors field">Additional monitors</label>
+      <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers"></ss-multiselect-dropdown>
+    </div>
+
+    <!-- 6. Description -->
     <div class="form-group">
       <label for="details_field" i18n="Observation creation/edition|Label for the description field">Description</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
     </div>
 
-    <!-- 6. Evidence -->
+    <!-- 7. Evidence -->
     <fieldset>
       <legend i18n="Observation creation/edition|Title of a section of the form">Evidence</legend>
       <div class="fieldset-container">
       </div>
     </fieldset>
 
-    <!-- 7. Severity -->
+    <!-- 8. Severity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
       <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
@@ -270,17 +306,36 @@
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
     </div>
 
-    <!-- 8. Actions taken by government -->
+    <!-- 9. Actions taken by government -->
     <div class="form-group">
-      <label i18n="Observation creation/edition|Label for the actions taken by government field">Actions taken by government</label>
+      <label for="actions_taken" i18n="Observation creation/edition|Label for the actions taken by government field">Actions taken by government</label>
+      <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel"></textarea>
     </div>
 
-    <!-- 9. Publication date -->
+    <!-- 10. Publication date -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
       <label for="publication_date" i18n="Observation creation/edition|Label for the publication date field">Publication date</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required></otp-datepicker>
       <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the publication date of a project isn't supplied">Publication date is required</div>
     </div>
+
+    <!-- 11. Metadata -->
+    <fieldset *ngIf="observation">
+      <legend i18n="Observation creation/edition|Title of a section of the form">Metadata</legend>
+      <div class="fieldset-container">
+        <!-- 11.1. Last modification by -->
+        <div class="form-group">
+          <label for="last_modification_by" i18n="Observation creation/edition|Label for the last modification by field">Last modification by</label>
+          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'].name" #last_modification_by="ngModel" disabled />
+        </div>
+
+        <!-- 11.1. Last modified on -->
+        <div class="form-group">
+          <label for="last_modified_on" i18n="Observation creation/edition|Label for the last modified on field">Last modified on</label>
+          <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>
+        </div>
+      </div>
+    </fieldset>
   </div>
 
   <div class="form-footer">

@@ -1,3 +1,4 @@
+import { AuthService } from 'app/services/auth.service';
 import { Observation } from './../../models/observation.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { SubcategoriesService } from 'app/services/subcategories.service';
@@ -16,6 +17,7 @@ import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component } from '@angular/core';
 import * as L from 'leaflet';
+import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -41,7 +43,9 @@ export class ObservationDetailComponent {
   severities: Severity[] = [];
   operators: Operator[] = [];
   governments: Government[] = [];
+  observers: Observer[] = []; // Ordered by name
 
+  // Map related
   map: L.Map;
   mapOptions = {
     center: [10, 0],
@@ -56,6 +60,10 @@ export class ObservationDetailComponent {
   };
   mapLayers = [];
 
+  // Monitors multi-select related
+  additionalObserversOptions: IMultiSelectOption[] = [];
+  _additionalObserversSelection: number[] = [];
+
   // User selection
   _type: string = null;
   _country: Country = null;
@@ -69,6 +77,7 @@ export class ObservationDetailComponent {
   _latitude: number; // Only for type operator
   _longitude: number; // Only for type operator
   _government: Government = null; // Only for type government
+  _actions: string;
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -86,6 +95,8 @@ export class ObservationDetailComponent {
       this.pv = null;
       this.government = null;
       this.publicationDate = null;
+      this._additionalObserversSelection = [];
+      this.actions = null;
     }
 
     // When the type change we load the necessary additional information
@@ -260,7 +271,18 @@ export class ObservationDetailComponent {
     }
   }
 
+  get actions() { return this.observation ? this.observation['actions-taken'] : this._actions; }
+  set actions(actions) {
+    if (this.observation) {
+      this.observation['actions-taken'] = actions;
+    } else {
+      this._actions = actions;
+    }
+  }
+
   constructor(
+    private authService: AuthService,
+    private observersService: ObserversService,
     private observationsService: ObservationsService,
     private countriesService: CountriesService,
     private subcategoriesService: SubcategoriesService,
@@ -269,22 +291,47 @@ export class ObservationDetailComponent {
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.observersService.getAll({ sort: 'name' })
+      .then((observers) => {
+        this.observers = observers;
+
+        // We update the list of options for the additional observers field
+        this.additionalObserversOptions = observers
+          .filter(observer => observer.id !== this.authService.userObserverId)
+          .map((observer, index) => ({ id: index, name: observer.name }));
+      })
+      .catch((err) => console.error(err)); // TODO: visual feedback
+
     // If we edit an existing observation, we have a bit of
     // code to execute
     if (this.route.snapshot.params.id) {
       this.loading = true;
-      this.observationsService.getById(this.route.snapshot.params.id, { include: 'country,operator,subcategory,severity'})
-        .then((observation) => {
+      this.observationsService.getById(this.route.snapshot.params.id, {
+        include: 'country,operator,subcategory,severity,observers,government,modified-user'
+      }).then((observation) => {
           this.observation = observation;
 
           // FIXME: angular2-jsonapi should return a Date object but instead return
           // a string for some reason
           this.observation['publication-date'] = new Date(this.observation['publication-date']);
+          this.observation['created-at'] = new Date(this.observation['created-at']);
+          this.observation['updated-at'] = new Date(this.observation['updated-at']);
+
+          // We set the list of additional observer ids for the additional observers field
+          const additionalObserversIds = this.observation.observers.map(o => o.id); // TODO: remove user observer
+          this._additionalObserversSelection = this.observers.map((observer, index) => {
+            return additionalObserversIds.indexOf(observer.id) !== -1 ? index : null;
+          }).filter(v => v !== null);
 
           // We force some of the attributes to execute the setters
           this.type = this.observation['observation-type'];
         })
-        .catch((err) => console.error(err)) // TODO: visual feedback
+        .catch(() => {
+          // The only reason the request should fail is that the user
+          // don't have the permission to edit this observation
+          // In such a case, we redirect them to the 404 page
+          this.router.navigate(['/', '404']);
+        })
         .then(() => this.loading = false);
     }
   }
@@ -307,6 +354,17 @@ export class ObservationDetailComponent {
     this.longitude = e.latlng.lng;
   }
 
+  /**
+   * Event handler executed when the user changes the list of additional observers
+   * NOTE: we can't use a getter/setter model as we do with the other fields because
+   * the library doesn't support it:
+   * https://github.com/softsimon/angular-2-dropdown-multiselect/issues/273
+   * @param {number[]} options
+   */
+  onChangeAdditionalObserversOptions(options: number[]) {
+    this._additionalObserversSelection = options;
+  }
+
   onCancel(): void {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate([this.observation ? '../..' : '..'], { relativeTo: this.route });
@@ -321,11 +379,12 @@ export class ObservationDetailComponent {
       const model: any = {
         'observation-type': this.type,
         'publication-date': new Date(),
-        'is-active': true,
         country: this.country,
         subcategory: this.subcategory,
         details: this.details,
-        severity: this.severity
+        severity: this.severity,
+        observers: this.observers.filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1),
+        'actions-taken': this.actions
       };
 
       if (this.type === 'operator') {

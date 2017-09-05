@@ -1,10 +1,10 @@
 <div class="c-table-header">
   <otp-filters>
-    <otp-filter i18n-name="Table of observations|Name of a filter" name="Type" prop="observation_type" [values]="['operator', 'government']" default="operator" [required]="true"></otp-filter>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Type" prop="observation-type" [values]="['operator', 'government']" default="operator" [required]="true"></otp-filter>
     <otp-filter i18n-name="Table of observations|Name of a filter" name="Country" prop="country.iso"></otp-filter>
     <otp-filter i18n-name="Table of observations|Name of a filter" name="Operator" prop="operator.name"></otp-filter>
     <otp-filter i18n-name="Table of observations|Name of a filter" name="Category" [prop]="observationType === 'operators' ? 'annex_operator.illegality' : 'annex_governance.governance_pillar'"></otp-filter>
-    <otp-filter i18n-name="Table of observations|Name of a filter" name="Severity" prop="severity.level"></otp-filter>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Severity" prop="severity.level" [values]="[0, 1, 2, 3]"></otp-filter>
   </otp-filters>
 
   <a class="c-button -primary" routerLink="../new" i18n="Button to create a new observation">New observation</a>
@@ -25,7 +25,8 @@
       <ng-template [ngIf]="!row['is-active']">Pending</ng-template>
     </ng-template>
   </otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the actions columns (containing the edit and delete button)" name="Actions">
+  <!-- We need the user info for canEdit -->
+  <otp-table-column i18n-name="Table of observations|Name of the actions columns (containing the edit and delete button)" name="Actions" prop="user" [include]="true">
     <ng-template let-row="row" table-cell-template>
       <ng-template [ngIf]="canEdit(row)">
         <button class="action" (click)="onEdit(row)" aria-label="Edit"><otp-icon name="#icon-edit"></otp-icon></button>

@@ -6,12 +6,14 @@ import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Observer } from 'app/models/observer.model';
 
 @Injectable()
 export class AuthService {
 
   public userId: string;
   public userRole: string;
+  public userObserverId: string;
   // Observable of the login status of the user
   private logged$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -77,15 +79,17 @@ export class AuthService {
     }
 
     try {
-      const response = await this.http.get(`${environment.apiUrl}/users/current-user?include=user-permission`)
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user?include=user-permission,observer`)
         .map(data => data.json())
-        .map(data => data.included)
         .toPromise();
 
-      this.userRole = response.length && response[0].attributes['user-role'];
+      this.userId = response.data.id;
+      this.userRole = response.included.length && response.included[0].attributes['user-role'];
+      this.userObserverId = response.included.length > 1 && response.included[1].id;
       this.triggerLoginStatus(!!response);
       return !!response;
     } catch (e) {
+      console.error(e);
       this.triggerLoginStatus(false);
       return false;
     }

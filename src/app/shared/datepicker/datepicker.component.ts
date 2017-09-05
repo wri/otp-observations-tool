@@ -28,6 +28,13 @@ export class DatepickerComponent implements Validator, ControlValueAccessor {
   @Input() name: string;
 
   @Input()
+  get disabled(): boolean|string { return this._disabled; }
+
+  set disabled(value: boolean|string) {
+    this._disabled = value != null && value !== false && `${value}` !== 'false';
+  }
+
+  @Input()
   get required(): boolean|string { return this._required; }
 
   set required(value: boolean|string) {
@@ -39,6 +46,7 @@ export class DatepickerComponent implements Validator, ControlValueAccessor {
   private _date: string; // Value of the internal native model
   private _dateModel: DateModel; // Value of the internal custom modal
   private _required = false; // Is the input required?
+  private _disabled = false; // Is the input disabled?
   private validatorCallback: () => void;
   private modelCallback: (date: Date) => void;
   private touchCallback: (date: Date) => void;

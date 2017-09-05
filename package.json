@@ -29,6 +29,7 @@
     "@asymmetrik/ngx-leaflet": "^2.4.0",
     "@types/leaflet": "^1.2.0",
     "a11y-dialog": "^3.0.0",
+    "angular-2-dropdown-multiselect": "^1.5.4",
     "angular2-jsonapi": "^3.6.0",
     "angular2-spinner": "^1.0.10",
     "core-js": "^2.4.1",
