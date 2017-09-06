@@ -57,7 +57,7 @@ export class ObservationListComponent extends TableFilterBehavior {
   }
 
   onDelete(row): void {
-    if(confirm(`Are you sure to delete the observation with details: ${row.details}?`)) {
+    if (confirm(`Are you sure you want to delete the observation?`)) {
       this.service.deleteObservationWithId(row.id).then(
         data => {
           alert('The observation has been deleted.');
