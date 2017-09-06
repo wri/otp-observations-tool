@@ -4,9 +4,6 @@
 // FOUNDATION 6
 @import '~foundation-sites/scss/foundation';
 
-// LEAFLET
-@import '~leaflet/dist/leaflet.css';
-
 @include foundation-global-styles;
 @include foundation-grid;
 @include foundation-flex-grid;

@@ -1,3 +1,4 @@
+import { Fmu } from 'app/models/fmu.model';
 import { UserPermission } from 'app/models/user_permission.model';
 import { Document } from 'app/models/document.model';
 import { TokenService } from 'app/services/token.service';
@@ -33,7 +34,8 @@ import { Observation } from 'app/models/observation.model';
     users: User,
     subcategories: Subcategory,
     documents: Document,
-    user_permissions: UserPermission
+    user_permissions: UserPermission,
+    fmus: Fmu
   }
 })
 export class DatastoreService extends JsonApiDatastore {

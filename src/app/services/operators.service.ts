@@ -17,8 +17,28 @@ export class OperatorsService extends JsonApiService<Operator> {
     super();
   }
 
-  getAll(): Promise<Operator[]> {
-    return this.datastoreService.query(Operator, { page: { size: 3000 }}).toPromise();
+  /**
+   * Return the list of operators
+   * @param {any} [params={}] Additional params for the query
+   * @returns {Promise<Operator[]>}
+   */
+  getAll(params = {}): Promise<Operator[]> {
+    return this.datastoreService.query(Operator, Object.assign(
+      {},
+      { page: { size: 3000 }},
+      params
+    )).toPromise();
+  }
+
+  /**
+   * Return the operator designated by its id
+   * @param {string} id - Id of the operator
+   * @param {any} [params={}] - Additional params for the query
+   * @returns {Promise<Operator[]>}
+   */
+  getById(id: string, params = {}): Promise<Operator> {
+    return this.datastoreService.findRecord(Operator, id, params)
+      .toPromise();
   }
 
   getByCountry(countryId): Promise<Operator[]> {

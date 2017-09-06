@@ -1,3 +1,4 @@
+import { Fmu } from 'app/models/fmu.model';
 import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from 'angular2-jsonapi';
 import { Country } from 'app/models/country.model';
 import { Species } from 'app/models/species.model';
@@ -30,6 +31,7 @@ export class Observation extends JsonApiModel {
   @Attribute() 'updated-at'?: Date;
   @Attribute() 'actions-taken'?: string;
 
+  @BelongsTo() fmu?: Fmu;
   @BelongsTo() country: Country;
   @BelongsTo() subcategory?: Subcategory;
   @BelongsTo() severity: Severity;

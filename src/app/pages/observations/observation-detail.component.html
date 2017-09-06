@@ -63,7 +63,11 @@
 
         <!-- 4.1. Forest management unit -->
         <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the forest management unit field">Forest management unit</label>
+          <label for="fmu_field" i18n="Observation creation/edition|Label for the forest management unit field">Forest management unit</label>
+          <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel">
+            <option [value]="null" disabled i18n="Observation creation/edition">Select a FMU</option>
+            <option *ngFor="let fmu of fmus" [ngValue]="fmu">{{ fmu.name }}</option>
+          </select>
         </div>
 
         <!-- 4.2. GPS coordinates -->

@@ -1,3 +1,4 @@
+import { Fmu } from 'app/models/fmu.model';
 import { AuthService } from 'app/services/auth.service';
 import { Observation } from './../../models/observation.model';
 import { DatastoreService } from 'app/services/datastore.service';
@@ -18,6 +19,7 @@ import { Country } from 'app/models/country.model';
 import { Component } from '@angular/core';
 import * as L from 'leaflet';
 import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import { GeoJsonObject } from 'geojson';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -41,9 +43,10 @@ export class ObservationDetailComponent {
   countries: Country[] = [];
   subcategories: Subcategory[] = [];
   severities: Severity[] = [];
-  operators: Operator[] = [];
+  operators: Operator[] = []; // Ordered by name
   governments: Government[] = [];
   observers: Observer[] = []; // Ordered by name
+  fmus: Fmu[] = [];
 
   // Map related
   map: L.Map;
@@ -58,7 +61,8 @@ export class ObservationDetailComponent {
       })
     ]
   };
-  mapLayers = [];
+  _mapMarker = null; // Layer with the marker
+  _mapFmu = null; // Layer with the FMU
 
   // Monitors multi-select related
   additionalObserversOptions: IMultiSelectOption[] = [];
@@ -76,6 +80,7 @@ export class ObservationDetailComponent {
   _pv: string; // Only for type operator
   _latitude: number; // Only for type operator
   _longitude: number; // Only for type operator
+  _fmu: Fmu = null; // Only for type operator
   _government: Government = null; // Only for type government
   _actions: string;
 
@@ -124,7 +129,7 @@ export class ObservationDetailComponent {
       .catch((err) => console.error(err)); // TODO: visual feedback
 
     if (type === 'operator') {
-      this.operatorsService.getAll()
+      this.operatorsService.getAll({ sort: 'name' })
         .then(operators => this.operators = operators)
         .then(() => {
           // If we're editing an observation, the object Operator of the observation won't
@@ -165,6 +170,53 @@ export class ObservationDetailComponent {
     } else {
       this._operator = operator;
     }
+
+    if (operator) {
+      this.operatorsService.getById(operator.id, { include: 'fmus' })
+        .then((op) => {
+          this.fmus = op.fmus ? op.fmus : [];
+
+          // If we can restore the FMU of the observation, we do it,
+          // otherwise we just reset the fmu each time the user
+          // update the operator
+          if (this.observation && this.observation.operator.id !== operator.id && this.observation.fmu) {
+            this.fmu = this.operator.fmus.find(fmu => fmu.id === this.observation.fmu.id);
+          } else {
+            this.fmu = null;
+          }
+        })
+        .catch(err => console.error(err)); // TODO: visual feedback
+    }
+  }
+
+  get fmu() { return this.observation ? this.observation.fmu : this._fmu; }
+  set fmu(fmu) {
+    // We create the map layer for the FMU and store it
+    // NOTE: we can't generate it in the mapLayers getter
+    // because:
+    //  1. It's not performant
+    //  2. The references get lost with the event handlers
+    //     and we're enable to attach a click event
+    if (fmu && fmu.geojson) {
+      const layer = L.geoJSON(<GeoJsonObject>fmu.geojson);
+      this._mapFmu = layer;
+
+      // We zoom onto the FMU in two cases:
+      //  1. There wasn't any FMU displayed before (and now
+      //     there is one)
+      //  2. The user changed the FMU
+      if (((!this._fmu || !this._fmu.geojson) || this.fmu.id !== fmu.id) && this.map) {
+        this.map.fitBounds(layer.getBounds());
+      }
+    } else {
+      this._mapFmu = null;
+    }
+
+    if (this.observation) {
+      this.observation.fmu = fmu;
+    } else {
+      this._fmu = fmu;
+    }
   }
 
   get subcategory() { return this.observation ? this.observation.subcategory : this._subcategory; }
@@ -202,11 +254,11 @@ export class ObservationDetailComponent {
       this._latitude = latitude;
     }
 
-    // We add a marker to the map if possible
-    if (latitude && this.longitude) {
-      this.mapLayers = [L.marker([latitude, this.longitude])];
+    // We create a layer with the marker
+    if (this.latitude && this.longitude) {
+      this._mapMarker = L.marker([this.latitude, this.longitude]);
     } else {
-      this.mapLayers = [];
+      this._mapMarker = null;
     }
   }
 
@@ -218,11 +270,11 @@ export class ObservationDetailComponent {
       this._longitude = longitude;
     }
 
-    // We add a marker to the map if possible
-    if (longitude && this.latitude) {
-      this.mapLayers = [L.marker([this.latitude, longitude])];
+    // We create a layer with the marker
+    if (this.latitude && this.longitude) {
+      this._mapMarker = L.marker([this.latitude, this.longitude]);
     } else {
-      this.mapLayers = [];
+      this._mapMarker = null;
     }
   }
 
@@ -280,6 +332,20 @@ export class ObservationDetailComponent {
     }
   }
 
+  get mapLayers(): any[] {
+    const layers = [];
+
+    if (this._mapFmu) {
+      layers.push(this._mapFmu);
+    }
+
+    if (this._mapMarker) {
+      layers.push(this._mapMarker);
+    }
+
+    return layers;
+  }
+
   constructor(
     private authService: AuthService,
     private observersService: ObserversService,
@@ -325,6 +391,8 @@ export class ObservationDetailComponent {
 
           // We force some of the attributes to execute the setters
           this.type = this.observation['observation-type'];
+          this.latitude = this.observation.lat;
+          this.longitude = this.observation.lng;
         })
         .catch(() => {
           // The only reason the request should fail is that the user
@@ -393,6 +461,7 @@ export class ObservationDetailComponent {
         model.lng = this.longitude;
         model['concern-opinion'] = this.opinion;
         model.pv = this.pv;
+        model.fmu = this.fmu;
       } else {
         model.government = this.government;
       }
