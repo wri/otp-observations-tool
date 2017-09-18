@@ -11,7 +11,7 @@ export class Observer extends JsonApiModel {
   @Attribute() observer_type?: ['Mandated', 'SemiMandated', 'External', 'Government'];
   @Attribute() organization?: string;
   @Attribute() is_active?: boolean;
-  @Attribute() logo?: any;
+  @Attribute() logo?: string;
 
   @BelongsTo() country: Country;
   @BelongsTo() users: User[];
