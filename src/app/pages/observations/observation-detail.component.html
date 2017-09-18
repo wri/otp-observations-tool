@@ -18,7 +18,7 @@
         <option value="operator" i18n="Observation type">Operator</option>
         <option value="government" i18n="Observation type">Government</option>
       </select>
-      <div *ngIf="f.submitted && !observation_type.valid" class="help-text" i18n="Observation creation/edition|Error message if the type isn't supplied (the user will have to user between some options)">Please select an observation type</div>
+      <div *ngIf="f.submitted && observation_type.invalid" class="help-text" i18n="Observation creation/edition|Error message if the type isn't supplied (the user will have to user between some options)">Please select an observation type</div>
     </div>
   </div>
 
