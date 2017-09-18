@@ -384,7 +384,9 @@ export class ObservationDetailComponent {
           this.observation['updated-at'] = new Date(this.observation['updated-at']);
 
           // We set the list of additional observer ids for the additional observers field
-          const additionalObserversIds = this.observation.observers.map(o => o.id); // TODO: remove user observer
+          const additionalObserversIds = this.observation.observers
+            .filter(observer => observer.id !== this.authService.userObserverId)
+            .map(o => o.id);
           this._additionalObserversSelection = this.observers.map((observer, index) => {
             return additionalObserversIds.indexOf(observer.id) !== -1 ? index : null;
           }).filter(v => v !== null);
@@ -443,6 +445,12 @@ export class ObservationDetailComponent {
     let observation: Observation;
 
     if (this.observation) {
+      // We update the list of observers
+      // NOTE: we make sure to add our own observer
+      this.observation.observers = this.observers
+        .filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1)
+        .concat([this.observers.find(o => o.id === this.authService.userObserverId)]);
+
       observation = this.observation;
     } else {
       const model: any = {
