@@ -179,8 +179,8 @@ export class ObservationDetailComponent {
           // If we can restore the FMU of the observation, we do it,
           // otherwise we just reset the fmu each time the user
           // update the operator
-          if (this.observation && this.observation.operator.id !== operator.id && this.observation.fmu) {
-            this.fmu = this.operator.fmus.find(fmu => fmu.id === this.observation.fmu.id);
+          if (this.observation && this.observation.operator.id === operator.id && this.observation.fmu) {
+            this.fmu = this.fmus.find(fmu => fmu.id === this.observation.fmu.id);
           } else {
             this.fmu = null;
           }
@@ -373,7 +373,7 @@ export class ObservationDetailComponent {
     if (this.route.snapshot.params.id) {
       this.loading = true;
       this.observationsService.getById(this.route.snapshot.params.id, {
-        include: 'country,operator,subcategory,severity,observers,government,modified-user'
+        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu'
       }).then((observation) => {
           this.observation = observation;
 
@@ -393,6 +393,7 @@ export class ObservationDetailComponent {
           this.type = this.observation['observation-type'];
           this.latitude = this.observation.lat;
           this.longitude = this.observation.lng;
+          this.operator = this.observation.operator;
         })
         .catch(() => {
           // The only reason the request should fail is that the user
@@ -478,8 +479,7 @@ export class ObservationDetailComponent {
           alert('The observation has been submitted and is awaiting approval.');
         }
 
-        // Without relativeTo, the navigation doesn't work properly
-        this.router.navigate(['..'], { relativeTo: this.route });
+        this.router.navigate(['/', 'private', 'observations']);
       })
       .catch((err) => {
         if (this.observation) {
