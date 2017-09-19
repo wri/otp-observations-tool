@@ -1,3 +1,4 @@
+import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
 import { UserPermission } from 'app/models/user_permission.model';
 import { Document } from 'app/models/document.model';
@@ -35,7 +36,8 @@ import { Observation } from 'app/models/observation.model';
     subcategories: Subcategory,
     documents: Document,
     user_permissions: UserPermission,
-    fmus: Fmu
+    fmus: Fmu,
+    'observation-reports': ObservationReport
   }
 })
 export class DatastoreService extends JsonApiDatastore {

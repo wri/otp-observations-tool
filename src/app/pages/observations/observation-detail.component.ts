@@ -1,3 +1,4 @@
+import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
 import { AuthService } from 'app/services/auth.service';
 import { Observation } from './../../models/observation.model';
@@ -20,6 +21,7 @@ import { Component } from '@angular/core';
 import * as L from 'leaflet';
 import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import { GeoJsonObject } from 'geojson';
+import { ObservationReportsService } from 'app/services/observation-reports.service';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -47,6 +49,7 @@ export class ObservationDetailComponent {
   governments: Government[] = [];
   observers: Observer[] = []; // Ordered by name
   fmus: Fmu[] = [];
+  reports: ObservationReport[] = []; // Ordered by title
 
   // Map related
   map: L.Map;
@@ -83,6 +86,10 @@ export class ObservationDetailComponent {
   _fmu: Fmu = null; // Only for type operator
   _government: Government = null; // Only for type government
   _actions: string;
+  // Report to upload
+  report: ObservationReport = this.datastoreService.createRecord(ObservationReport, {});
+  // Report choosed between options
+  _reportChoice: ObservationReport = null;
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -346,10 +353,39 @@ export class ObservationDetailComponent {
     return layers;
   }
 
+  get reportAttachment() { return this.report.attachment; }
+  set reportAttachment(attachment) {
+    this.report.attachment = attachment;
+
+    // If the user uploads a file, the selected
+    // report is discarded
+    if (this.reportChoice) {
+      this.reportChoice = null;
+    }
+  }
+
+  get reportChoice() { return this.observation ? this.observation['observation-report'] : this._reportChoice; }
+  set reportChoice(reportChoice) {
+    if (this.observation) {
+      this.observation['observation-report'] = reportChoice;
+    } else {
+      this._reportChoice = reportChoice;
+    }
+
+    // If the user selects a report, then the uploaded
+    // file is discarded
+    if (reportChoice !== null) {
+      this.report.attachment = null;
+      this.report.title = null;
+      this.report['publication-date'] = null;
+    }
+  }
+
   constructor(
     private authService: AuthService,
     private observersService: ObserversService,
     private observationsService: ObservationsService,
+    private observationReportsService: ObservationReportsService,
     private countriesService: CountriesService,
     private subcategoriesService: SubcategoriesService,
     private operatorsService: OperatorsService,
@@ -368,12 +404,27 @@ export class ObservationDetailComponent {
       })
       .catch((err) => console.error(err)); // TODO: visual feedback
 
+    // We load the list of reports we can use
+    this.observationReportsService.getAll({
+      sort: 'title',
+      filter: {observer_id: this.authService.userObserverId }
+    }).then(reports => this.reports = reports)
+      .then(() => {
+          // If we're editing an observation, the object ObservationReport of the observation won't
+          // match any of the objects of this.reports, so we search for the "same" model
+          // and set it
+          if (this.observation) {
+            this.reportChoice = this.reports.find((report) => report.id === this.observation['observation-report'].id);
+          }
+      })
+      .catch(err => console.error(err)); // TODO: visual feedback
+
     // If we edit an existing observation, we have a bit of
     // code to execute
     if (this.route.snapshot.params.id) {
       this.loading = true;
       this.observationsService.getById(this.route.snapshot.params.id, {
-        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu'
+        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report'
       }).then((observation) => {
           this.observation = observation;
 
@@ -441,6 +492,26 @@ export class ObservationDetailComponent {
     this.router.navigate([this.observation ? '../..' : '..'], { relativeTo: this.route });
   }
 
+  /**
+   * Upload the report, if any
+   * @returns {Promise<{}>}
+   */
+  uploadReport(): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      // If the user doesn't want to upload a report,
+      // we just resolve
+      if (!this.report.attachment) {
+        resolve();
+      } else {
+        // Otherwise, we upload the report first
+        this.report.save()
+          .toPromise()
+          .then(resolve)
+          .catch(reject);
+      }
+    });
+  }
+
   onSubmit(): void {
     let observation: Observation;
 
@@ -478,8 +549,16 @@ export class ObservationDetailComponent {
       observation = this.datastoreService.createRecord(Observation, model);
     }
 
-    observation.save()
-      .toPromise()
+    this.uploadReport()
+      .then(() => {
+        // If we created a report, we link it to the observation
+        if (this.report.id) {
+          observation['observation-report'] = this.report;
+        } else {
+          observation['observation-report'] = this.reportChoice;
+        }
+      })
+      .then(() => observation.save().toPromise())
       .then(() => {
         if (this.observation) {
           alert('The observation has been successfully updated.');

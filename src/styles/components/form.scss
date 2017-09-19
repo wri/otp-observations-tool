@@ -43,6 +43,13 @@
         text-align: center;
       }
 
+      input[type="file"] {
+        &::-webkit-file-upload-button {
+          @extend .c-button;
+          @extend .c-button.-secondary;
+        }
+      }
+
       .help-text,
       .note {
         margin: 5px 0 0;
@@ -81,6 +88,47 @@
 
         @media screen and (min-width: $break-tablet) {
           padding: 20px;
+        }
+      }
+
+      .fieldset-description {
+        margin: 0 0 20px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid $lighter-grey;
+      }
+
+      // We remove the paddings on each side of the row
+      // to align the content with the rest of the form
+      .row {
+        > div:first-of-type {
+          padding-left: 0;
+          padding-right: 0;
+          padding-bottom: 15px;
+          // We assume only two columns will be used
+          border-bottom: 1px solid $lighter-grey;
+        }
+
+        > div:last-of-type {
+          padding-top: 15px;
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        @media screen and (min-width: $break-tablet) {
+          > div:first-of-type {
+            padding-left: 0;
+            padding-right: #{map-get($grid-column-gutter, small)};
+            padding-bottom: 0;
+            // We assume only two columns will be used
+            border-bottom: 0;
+            border-right: 1px solid $lighter-grey;
+          }
+
+          > div:last-of-type {
+            padding-top: 0;
+            padding-left: #{map-get($grid-column-gutter, small)};
+            padding-right: 0;
+          }
         }
       }
     }

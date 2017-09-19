@@ -78,7 +78,15 @@ export class DatepickerComponent implements Validator, ControlValueAccessor {
   }
 
   writeValue(date: Date): void {
-    if (date !== null && date !== undefined && typeof date === 'object') {
+    if (date === null || date === undefined) {
+      this.date = null;
+      this._date = null;
+
+      // Hack to remove the date from the UI
+      if (this.customValue && this.customValue.formatted) {
+        this.customValue.formatted = '';
+      }
+    } else if (typeof date === 'object') {
       this.date = date;
 
       // We also update the native input

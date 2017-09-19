@@ -27,6 +27,7 @@
   &.-secondary {
     border-color: $color-primary;
     color: $dark-grey;
+    background: transparent;
 
     &:hover,
     &:focus {

@@ -32,8 +32,7 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
   private base64: string;
   private conversionError: boolean;
 
-  constructor(el: ElementRef, private webWorkerService: WebWorkerService) {
-    el.nativeElement.style.color = 'red';
+  constructor(private el: ElementRef, private webWorkerService: WebWorkerService) {
   }
 
   /**
@@ -88,7 +87,7 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
    * @returns {ValidationErrors}
    */
   validate(c: AbstractControl): ValidationErrors {
-    if (!this.file) {
+    if (!this.file || this.isSizeValid(this.file)) {
       return null;
     }
 
@@ -117,16 +116,18 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
   }
 
   /**
-   * Method executed by the outside world when the input recieves a value
+   * Method executed by the outside world when the input receives a value
    * @param {*} obj
    */
   writeValue(obj: any): void {
-    if (!obj) {
-      return;
+    if (obj === null || obj === undefined) {
+      this.base64 = null;
+      this.el.nativeElement.value = '';
+    } else {
+      // NOTE: obj must be a base64 string here
+      this.base64 = obj;
     }
 
-    // NOTE: obj must be a base64 string here
-    this.base64 = obj;
   }
 
   /**

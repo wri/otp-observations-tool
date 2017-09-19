@@ -1,3 +1,4 @@
+import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
 import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from 'angular2-jsonapi';
 import { Country } from 'app/models/country.model';
@@ -40,6 +41,7 @@ export class Observation extends JsonApiModel {
   @HasMany() observers?: Observer[]; // Should be a BelongsTo but not working with array
   @BelongsTo() operator?: Operator;
   @BelongsTo() government?: Government;
+  @BelongsTo() 'observation-report'?: ObservationReport;
 
   @HasMany() species: Species[];
   @HasMany() comments: Comment[];
