@@ -13,4 +13,29 @@
     border-radius: 3px;
     z-index: 1; // Needed for the border-radius to apply
   }
+
+  .documents-list {
+    padding: 0;
+    border-top: 1px solid $lighter-grey;
+    border-bottom: 1px solid $lighter-grey;
+
+    > li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 10px;
+
+      &:not(:last-of-type) {
+        border-bottom: 1px solid $lighter-grey;
+      }
+
+      .title {
+        font-weight: $font-weight-medium;
+      }
+
+      .status {
+        font-size: 0.8125rem;
+      }
+    }
+  }
 }

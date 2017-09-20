@@ -1,4 +1,4 @@
-<spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
+<otp-loader *ngIf="loading" overlay fixed></otp-loader>
 <form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 *ngIf="!observation" i18n="Observation creation|Title of the page">New observation</h2>
@@ -50,7 +50,7 @@
             <!-- 1.2.A File -->
             <div class="form-group">
               <label for="report_file" i18n="Observation creation/edition|Label for the report file field">File</label>
-              <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="5242880" />
+              <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
               <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text" i18n="Observation creation/edition|Error message if the report exceed the maximum size">The file should weight less than 5MB</div>
               <div *ngIf="f.submitted && !report_file.valid" class="help-text" i18n="Observation creation/edition|Error message if the report file is not valid">The file is not valid</div>
             </div>
@@ -167,8 +167,49 @@
 
     <!-- 10. Evidence -->
     <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Evidence</legend>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Evidences</legend>
       <div class="fieldset-container">
+        <div class="row">
+          <div class="small-12 medium-6 columns">
+            <!-- 10.1 Current evidences -->
+            <h3 i18n="Observation creation/edition|Title of a section of the form">Current evidences</h3>
+            <ul class="documents-list" *ngIf="documents.length">
+              <li *ngFor="let document of documents">
+                <div class="content">
+                  <div class="title">{{document.name}}</div>
+                  <div class="status" *ngIf="document.id" i18n="Observation creation/edition|Status of an evidence">Already uploaded</div>
+                  <div class="status" *ngIf="!document.id" i18n="Observation creation/edition|Status of an evidence">To upload</div>
+                </div>
+                <div class="actions">
+                  <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)" i18n="Delete button">Delete</button>
+                </div>
+              </li>
+            </ul>
+            <p *ngIf="!documents.length" i18n="Observation creation/edition|Text message when no evidence has been uploaded">No evidence</p>
+          </div>
+          <div class="small-12 medium-6 columns">
+            <!-- 10.2.1 Evidence -->
+            <p i18n="Observation creation/edition|Description of a section of the form">When you upload a new evidence, it will appear in the list of current evidences.</p>
+            <div class="form-group">
+              <label for="evidence_field" i18n="Observation creation/edition|Label for the upload evidence field">Evidence</label>
+              <input id="evidence_field" type="file" class="form-control" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
+              <div *ngIf="evidence_field.errors?.maxSize" class="help-text" i18n="Observation creation/edition|Error message if the evidence exceed the maximum size">The file should weight less than 5MB</div>
+              <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence file is not valid">The file is not valid</div>
+            </div>
+
+            <!-- 10.2.2 Title -->
+            <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment }">
+              <label for="evidence_title" i18n="Observation creation/edition|Label for the report title field">Title</label>
+              <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment" />
+              <div *ngIf="!evidence_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence title isn't supplied">Please enter the title</div>
+            </div>
+
+            <!-- 10.2.3 Add to list -->
+            <div class="form-group">
+              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()" i18n="Add to list button">Add to list</button>
+            </div>
+          </div>
+        </div>
       </div>
     </fieldset>
 
@@ -313,7 +354,7 @@
             <!-- 1.2.A File -->
             <div class="form-group">
               <label for="report_file" i18n="Observation creation/edition|Label for the report file field">File</label>
-              <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="5242880" />
+              <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
               <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text" i18n="Observation creation/edition|Error message if the report exceed the maximum size">The file should weight less than 5MB</div>
               <div *ngIf="f.submitted && !report_file.valid" class="help-text" i18n="Observation creation/edition|Error message if the report file is not valid">The file is not valid</div>
             </div>
@@ -378,10 +419,51 @@
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
     </div>
 
-    <!-- 7. Evidence -->
+    <!-- 7. Evidences -->
     <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Evidence</legend>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Evidences</legend>
       <div class="fieldset-container">
+        <div class="row">
+          <div class="small-12 medium-6 columns">
+            <!-- 7.1 Current evidences -->
+            <h3 i18n="Observation creation/edition|Title of a section of the form">Current evidences</h3>
+            <ul class="documents-list" *ngIf="documents.length">
+              <li *ngFor="let document of documents">
+                <div class="content">
+                  <div class="title">{{document.name}}</div>
+                  <div class="status" *ngIf="document.id" i18n="Observation creation/edition|Status of an evidence">Already uploaded</div>
+                  <div class="status" *ngIf="!document.id" i18n="Observation creation/edition|Status of an evidence">To upload</div>
+                </div>
+                <div class="actions">
+                  <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)" i18n="Delete button">Delete</button>
+                </div>
+              </li>
+            </ul>
+            <p *ngIf="!documents.length" i18n="Observation creation/edition|Text message when no evidence has been uploaded">No evidence</p>
+          </div>
+          <div class="small-12 medium-6 columns">
+            <!-- 7.2.1 Evidence -->
+            <p i18n="Observation creation/edition|Description of a section of the form">When you upload a new evidence, it will appear in the list of current evidences.</p>
+            <div class="form-group">
+              <label for="evidence_field" i18n="Observation creation/edition|Label for the upload evidence field">Evidence</label>
+              <input id="evidence_field" type="file" class="form-control" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
+              <div *ngIf="evidence_field.errors?.maxSize" class="help-text" i18n="Observation creation/edition|Error message if the evidence exceed the maximum size">The file should weight less than 5MB</div>
+              <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence file is not valid">The file is not valid</div>
+            </div>
+
+            <!-- 7.2.2 Title -->
+            <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment }">
+              <label for="evidence_title" i18n="Observation creation/edition|Label for the report title field">Title</label>
+              <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment" />
+              <div *ngIf="!evidence_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence title isn't supplied">Please enter the title</div>
+            </div>
+
+            <!-- 7.2.3 Add to list -->
+            <div class="form-group">
+              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()" i18n="Add to list button">Add to list</button>
+            </div>
+          </div>
+        </div>
       </div>
     </fieldset>
 
