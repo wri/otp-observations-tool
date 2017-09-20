@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep';
+import { ObservationDocument } from 'app/models/observation_document';
 import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
 import { AuthService } from 'app/services/auth.service';
@@ -22,6 +24,7 @@ import * as L from 'leaflet';
 import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
+import { ObservationDocumentsService } from 'app/services/observation-documents.service';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -50,6 +53,10 @@ export class ObservationDetailComponent {
   observers: Observer[] = []; // Ordered by name
   fmus: Fmu[] = [];
   reports: ObservationReport[] = []; // Ordered by title
+  documents: ObservationDocument[] = []; // Sorted by name initially
+  documentsToDelete: ObservationDocument[] = []; // Existing document to delete
+  documentsToUpload: ObservationDocument[] = []; // New document to upload
+  evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, {});
 
   // Map related
   map: L.Map;
@@ -386,6 +393,7 @@ export class ObservationDetailComponent {
     private observersService: ObserversService,
     private observationsService: ObservationsService,
     private observationReportsService: ObservationReportsService,
+    private observationDocumentsService: ObservationDocumentsService,
     private countriesService: CountriesService,
     private subcategoriesService: SubcategoriesService,
     private operatorsService: OperatorsService,
@@ -423,6 +431,7 @@ export class ObservationDetailComponent {
     // code to execute
     if (this.route.snapshot.params.id) {
       this.loading = true;
+
       this.observationsService.getById(this.route.snapshot.params.id, {
         include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report'
       }).then((observation) => {
@@ -455,6 +464,13 @@ export class ObservationDetailComponent {
           this.router.navigate(['/', '404']);
         })
         .then(() => this.loading = false);
+
+      // We load the list of documents
+      this.observationDocumentsService.getAll({
+        sort: 'name',
+        filter: { observation_id: this.route.snapshot.params.id }
+      }).then(documents => this.documents = documents)
+        .catch(err => console.error(err)); // TODO: visual feedback
     }
   }
 
@@ -487,6 +503,52 @@ export class ObservationDetailComponent {
     this._additionalObserversSelection = options;
   }
 
+  /**
+   * Event handler executed when the user clicks the "Add evidence" button
+   */
+  onClickAddEvidence() {
+    const evidence = this.datastoreService.createRecord(ObservationDocument, {
+      name: this.evidence.name,
+      attachment: this.evidence.attachment
+    });
+
+    // We push the evidence to the array of documents
+    this.documents.push(evidence);
+    this.documentsToUpload.push(evidence);
+
+    // We reset the model used for the uploading
+    // NOTE: we need to create a new model instead of modifying
+    // the existing one otherwise evidence will "suffer" the same
+    // changes
+    this.evidence = this.datastoreService.createRecord(ObservationDocument, {});
+  }
+
+  /**
+   * Event handler executed when the user clicks the delete button
+   * of an evidence
+   * @param {ObservationDocument} document Document from this.document
+   */
+  onClickDeleteDocument(document: ObservationDocument) {
+    let documentIndex = this.documents.findIndex(d => d === document);
+
+    // We remove the document from the list displayed
+    // in the UI
+    this.documents.splice(documentIndex, 1);
+
+    if (document.id) {
+      // If the document is an existing one, we add it
+      // to the list of documents to delete
+      this.documentsToDelete.push(cloneDeep(document));
+    } else {
+      // We get the index of the document within this.documentsToUpload
+      documentIndex = this.documentsToUpload.findIndex((d) => {
+        return d.name === document.name && d.attachment === document.attachment;
+      });
+
+      this.documentsToUpload.splice(documentIndex, 1);
+    }
+  }
+
   onCancel(): void {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate([this.observation ? '../..' : '..'], { relativeTo: this.route });
@@ -512,7 +574,31 @@ export class ObservationDetailComponent {
     });
   }
 
+  /**
+   * Upload and delete documents according to the
+   * user choice
+   * @param {Observation} observation Existing observation in the database
+   * @returns {Promise<{}>}
+   */
+  updateDocuments(observation: Observation): Promise<{}> {
+    // We create an array of the documents to delete
+    const deletePromises = this.documentsToDelete.map((d) => {
+      return this.datastoreService.deleteRecord(ObservationDocument, d.id)
+        .toPromise();
+    });
+
+    // We create an array of the documents to upload
+    const uploadPromises = this.documentsToUpload.map((d) => {
+      d.observation = observation; // We link the document to the observation
+      return d.save().toPromise();
+    });
+
+    return Promise.all(deletePromises.concat(<any>uploadPromises));
+  }
+
   onSubmit(): void {
+    this.loading = true;
+
     let observation: Observation;
 
     if (this.observation) {
@@ -559,6 +645,7 @@ export class ObservationDetailComponent {
         }
       })
       .then(() => observation.save().toPromise())
+      .then(() => this.updateDocuments(observation))
       .then(() => {
         if (this.observation) {
           alert('The observation has been successfully updated.');
@@ -575,7 +662,8 @@ export class ObservationDetailComponent {
           alert('The creation of the observation has been unsuccessful.');
         }
         console.error(err);
-      });
+      })
+      .then(() => this.loading = false);
   }
 
 }
