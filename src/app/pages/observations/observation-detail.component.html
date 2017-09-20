@@ -84,14 +84,51 @@
     </div>
 
     <!-- 3. Operator -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
-      <label for="operator_id" i18n="Observation creation/edition|Label for the operator field">Operator</label>
-      <select id="operator_id" name="operator_id" [(ngModel)]="operator" #operator_id="ngModel" required>
-        <option [value]="null" disabled i18n="Observation creation/edition">Select an operator</option>
-        <option *ngFor="let operator of operators" [ngValue]="operator">{{ operator.name }}</option>
-      </select>
-      <div *ngIf="f.submitted && !operator_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the operator isn't supplied (the user will have to user between some options)">Please select an operator</div>
-    </div>
+    <fieldset>
+      <legend i18n="Observation creation/edition|Title of a section of the form">Operator</legend>
+      <div class="fieldset-container">
+        <p class="fieldset-description" *otpMaxTablet i18n="Observation creation/edition|Description of a section of the form">
+          Select one of the two options below: use an existing operator or create a new one.
+        </p>
+        <div class="row">
+          <div class="small-12 medium-6 columns">
+            <!-- 3.1 Select operator -->
+            <h3 i18n="Observation creation/edition|Title of a section of the form">Existing operator</h3>
+            <p i18n="Observation creation/edition|Description of a section of the form">Select an operator from the list below.</p>
+            <div [ngClass]="{ 'form-group': true,  '-required': !operator.name }" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
+              <label for="operator_id" i18n="Observation creation/edition|Label for the operator field">Operator</label>
+              <select id="operator_id" name="operator_id" [(ngModel)]="operatorChoice" #operator_id="ngModel" [required]="!operator.name">
+                <option [value]="null" disabled i18n="Observation creation/edition">Select an operator</option>
+                <option *ngFor="let operator of operators" [ngValue]="operator">{{ operator.name }}</option>
+              </select>
+              <div *ngIf="f.submitted && !operator_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the operator isn't supplied (the user will have to user between some options)">Please select an operator</div>
+            </div>
+          </div>
+          <div class="small-12 medium-6 columns">
+            <!-- 3.2 New operator -->
+            <h3 i18n="Observation creation/edition|Title of a section of the form">New operator</h3>
+            <p i18n="Observation creation/edition|Description of a section of the form">Alternatively, you can quickly add new operator.</p>
+
+            <!-- 3.2.1. Name -->
+            <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
+              <label for="operator_name" i18n="Observation creation/edition|Label for the operator name field">Name</label>
+              <input id="operator_name" type="text" class="form-control" name="operator_name" [(ngModel)]="operatorName" #operator_name="ngModel" [required]="!operatorChoice" />
+              <div *ngIf="f.submitted && !operator_name.valid" class="help-text" i18n="Observation creation/edition|Error message if the operator name isn't supplied">Please enter the name</div>
+            </div>
+
+            <!-- 3.2.1. Type -->
+            <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
+              <label for="operator_type" i18n="Observation creation/edition|Label for the operator type field">Type</label>
+              <select if="operator_type" name="operator_type" [(ngModel)]="operatorType" #operator_type="ngModel" [required]="!operatorChoice">
+                <option [value]="null" disabled i18n="Observation creation/edition">Select an operator type</option>
+                <option *ngFor="let type of operatorTypes" [ngValue]="type">{{ type }}</option>
+              </select>
+              <div *ngIf="f.submitted && !operator_type.valid" class="help-text" i18n="Observation creation/edition|Error message if the operator type isn't supplied (the user will have to user between some options)">Please select an operator type</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
 
     <!-- 4. Additional monitors -->
     <div class="form-group">

@@ -57,6 +57,10 @@ export class ObservationDetailComponent {
   documentsToDelete: ObservationDocument[] = []; // Existing document to delete
   documentsToUpload: ObservationDocument[] = []; // New document to upload
   evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, {});
+  operatorTypes = [ // Possible types of an operator
+    'Logging company', 'Artisanal', 'Community forest', 'Estate',
+    'Industrial agriculture', 'Mining company', 'Sawmill', 'Other', 'Unknown'
+  ];
 
   // Map related
   map: L.Map;
@@ -85,7 +89,8 @@ export class ObservationDetailComponent {
   _severity: Severity = null;
   _subcategory: Subcategory = null;
   _publicationDate: Date;
-  _operator: Operator = null; // Only for type operator
+  operator: Operator = this.datastoreService.createRecord(Operator, { 'operator-type': null });
+  _operatorChoice: Operator = null; // Only for type operator, chose between the options
   _opinion: string; // Only for type operator
   _pv: string; // Only for type operator
   _latitude: number; // Only for type operator
@@ -109,7 +114,7 @@ export class ObservationDetailComponent {
       this.country = null;
       this.details = null;
       this.subcategory = null;
-      this.operator = null;
+      this.operatorChoice = null;
       this.opinion = null;
       this.pv = null;
       this.government = null;
@@ -150,7 +155,7 @@ export class ObservationDetailComponent {
           // match any of the objects of this.operators, so we search for the "same" model
           // and set it
           if (this.observation) {
-            this.operator = this.operators.find((operator) => operator.id === this.observation.operator.id);
+            this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
           }
         })
         .catch((err) => console.error(err)); // TODO: visual feedback
@@ -177,29 +182,59 @@ export class ObservationDetailComponent {
     }
   }
 
-  get operator() { return this.observation ? this.observation.operator : this._operator; }
-  set operator(operator) {
+  get operatorName() { return this.operator.name; }
+  set operatorName(operatorName) {
+    this.operator.name = operatorName;
+
+    // If the user wants to add a new operator,
+    // we discard the choice they've made in the selector
+    if (operatorName) {
+      this.operatorChoice = null;
+    }
+  }
+
+  get operatorType() { return this.operator['operator-type']; }
+  set operatorType(operatorType) {
+    this.operator['operator-type'] = operatorType;
+
+    // If the user wants to add a new operator,
+    // we discard the choice they've made in the selector
+    if (operatorType) {
+      this.operatorChoice = null;
+    }
+  }
+
+  get operatorChoice() { return this.observation ? this.observation.operator : this._operatorChoice; }
+  set operatorChoice(operatorChoice) {
     if (this.observation) {
-      this.observation.operator = operator;
+      this.observation.operator = operatorChoice;
     } else {
-      this._operator = operator;
+      this._operatorChoice = operatorChoice;
     }
 
-    if (operator) {
-      this.operatorsService.getById(operator.id, { include: 'fmus' })
+    if (operatorChoice) {
+      this.operatorsService.getById(operatorChoice.id, { include: 'fmus' })
         .then((op) => {
           this.fmus = op.fmus ? op.fmus : [];
 
           // If we can restore the FMU of the observation, we do it,
           // otherwise we just reset the fmu each time the user
           // update the operator
-          if (this.observation && this.observation.operator.id === operator.id && this.observation.fmu) {
+          if (this.observation && this.observation.operator.id === operatorChoice.id && this.observation.fmu) {
             this.fmu = this.fmus.find(fmu => fmu.id === this.observation.fmu.id);
           } else {
             this.fmu = null;
           }
         })
         .catch(err => console.error(err)); // TODO: visual feedback
+
+      // If the user selects an operator, then the new
+      // operator is discarded
+      this.operatorName = null;
+      this.operatorType = null;
+    } else {
+      this.fmus = [];
+      this.fmu = null;
     }
   }
 
@@ -455,7 +490,7 @@ export class ObservationDetailComponent {
           this.type = this.observation['observation-type'];
           this.latitude = this.observation.lat;
           this.longitude = this.observation.lng;
-          this.operator = this.observation.operator;
+          this.operatorChoice = this.observation.operator;
         })
         .catch(() => {
           // The only reason the request should fail is that the user
@@ -555,6 +590,27 @@ export class ObservationDetailComponent {
   }
 
   /**
+   * Upload the operator, if the user created a
+   * new one
+   * @returns {Promise<{}>}
+   */
+  uploadOperator(): Promise<{}> {
+    return new Promise((resolve, reject) => {
+      if (!this.operator.name) {
+        // If the user didn't create a new operator,
+        // we just resolve
+        resolve();
+      } else {
+        // Otherwise, we upload it
+        this.operator.save()
+          .toPromise()
+          .then(resolve)
+          .catch(reject);
+      }
+    });
+  }
+
+  /**
    * Upload the report, if any
    * @returns {Promise<{}>}
    */
@@ -565,6 +621,10 @@ export class ObservationDetailComponent {
       if (!this.report.attachment) {
         resolve();
       } else {
+        // We don't forget to link the country
+        // to the operator
+        this.operator.country = this.country;
+
         // Otherwise, we upload the report first
         this.report.save()
           .toPromise()
@@ -622,7 +682,7 @@ export class ObservationDetailComponent {
       };
 
       if (this.type === 'operator') {
-        model.operator = this.operator;
+        model.operator = this.operatorChoice;
         model.lat = this.latitude;
         model.lng = this.longitude;
         model['concern-opinion'] = this.opinion;
@@ -642,6 +702,15 @@ export class ObservationDetailComponent {
           observation['observation-report'] = this.report;
         } else {
           observation['observation-report'] = this.reportChoice;
+        }
+      })
+      .then(() => this.uploadOperator())
+      .then(() => {
+        // If we created an operator, we link it to the observation
+        if (this.operator.id) {
+          observation.operator = this.operator;
+        } else {
+          observation.operator = this.operatorChoice;
         }
       })
       .then(() => observation.save().toPromise())

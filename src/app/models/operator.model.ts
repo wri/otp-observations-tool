@@ -9,7 +9,10 @@ import { User } from 'app/models/user.model';
 export class Operator extends JsonApiModel {
 
   @Attribute() name: string;
-  @Attribute() operator_type?: ['Logging Company', 'Artisanal', 'Sawmill', 'CommunityForest', 'ARB1327', 'PalmOil', 'Trader', 'Company'];
+  @Attribute() 'operator-type'?: [
+    'Logging company', 'Artisanal', 'Community forest', 'Estate',
+    'Industrial agriculture', 'Mining company', 'Sawmill', 'Other', 'Unknown'
+  ];
   @Attribute() concession?: string;
   @Attribute() is_active?: boolean;
   @Attribute() logo?: any;
