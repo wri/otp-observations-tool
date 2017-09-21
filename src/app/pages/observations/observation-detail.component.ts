@@ -48,7 +48,7 @@ export class ObservationDetailComponent {
   countries: Country[] = [];
   subcategories: Subcategory[] = [];
   severities: Severity[] = [];
-  operators: Operator[] = []; // Ordered by name
+  operators: Operator[] = []; // Ordered by name, filtered by country
   governments: Government[] = [];
   observers: Observer[] = []; // Ordered by name
   fmus: Fmu[] = [];
@@ -146,20 +146,6 @@ export class ObservationDetailComponent {
           }
         })
       .catch((err) => console.error(err)); // TODO: visual feedback
-
-    if (type === 'operator') {
-      this.operatorsService.getAll({ sort: 'name' })
-        .then(operators => this.operators = operators)
-        .then(() => {
-          // If we're editing an observation, the object Operator of the observation won't
-          // match any of the objects of this.operators, so we search for the "same" model
-          // and set it
-          if (this.observation) {
-            this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
-          }
-        })
-        .catch((err) => console.error(err)); // TODO: visual feedback
-    }
   }
 
   get country() { return this.observation ? this.observation.country : this._country; }
@@ -179,6 +165,20 @@ export class ObservationDetailComponent {
       } else {
         this.government = null;
       }
+    } else if (country) {
+      this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
+        .then(operators => this.operators = operators)
+        .then(() => {
+          // If we're editing an observation, the object Operator of the observation won't
+          // match any of the objects of this.operators, so we search for the "same" model
+          // and set it
+          if (this.observation && this.observation.country === country) {
+            this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
+          } else {
+            this.operatorChoice = null;
+          }
+        })
+        .catch((err) => console.error(err)); // TODO: visual feedback
     }
   }
 
