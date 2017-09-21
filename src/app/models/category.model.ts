@@ -8,6 +8,4 @@ export class Category extends JsonApiModel {
 
   @Attribute() name: string;
 
-  @HasMany() subcategory: Subcategory[];
-
 }

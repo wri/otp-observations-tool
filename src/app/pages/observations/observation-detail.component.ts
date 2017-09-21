@@ -140,7 +140,7 @@ export class ObservationDetailComponent {
         }
       });
 
-    this.subcategoriesService.getByType(<'operator'|'government'>type, { include: 'severities' })
+    this.subcategoriesService.getByType(<'operator'|'government'>type, { include: 'severities,category' })
       .then(subcategories => this.subcategories = subcategories)
       .then(() => {
           // If we're editing an observation, the object Subcategory of the observation won't

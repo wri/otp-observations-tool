@@ -13,6 +13,10 @@
     margin-bottom: 15px;
     border-radius: 3px;
     z-index: 1; // Needed for the border-radius to apply
+
+    @media screen and (min-width: $break-tablet) {
+      height: 350px;
+    }
   }
 
   .documents-list {
