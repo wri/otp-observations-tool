@@ -1,4 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep';
+import EXIF from 'exif-js';
 import { ObservationDocument } from 'app/models/observation_document';
 import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
@@ -527,6 +528,29 @@ export class ObservationDetailComponent {
     this.longitude = e.latlng.lng;
   }
 
+  onChangePhoto(e: Event) {
+    const photo = (<HTMLInputElement>e.target).files[0];
+    const self = this;
+    EXIF.getData(photo, function () {
+      // We get the coordinated in minutes, seconds
+      const minLatitude: any[] = EXIF.getTag(this, 'GPSLatitude');
+      const minLongitude: any[] = EXIF.getTag(this, 'GPSLongitude');
+
+      // We determine in for which hemisphere the coordinates are for
+      const latitudeRef = EXIF.getTag(this, 'GPSLatitudeRef') || 'N';
+      const longitudeRef = EXIF.getTag(this, 'GPSLongitudeRef') || 'W';
+
+      if (!minLatitude || !minLongitude) {
+        alert('The image can\'t be georeferenced, try another one.');
+        return;
+      }
+
+      // We convert them to decimal degrees
+      self.latitude = (latitudeRef === 'N' ? 1 : -1) * self.convertMinutesToDegrees(minLatitude);
+      self.longitude = (longitudeRef === 'E' ? 1 : -1) * self.convertMinutesToDegrees(minLongitude);
+    });
+  }
+
   /**
    * Event handler executed when the user changes the list of additional observers
    * NOTE: we can't use a getter/setter model as we do with the other fields because
@@ -587,6 +611,17 @@ export class ObservationDetailComponent {
   onCancel(): void {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate([this.observation ? '../..' : '..'], { relativeTo: this.route });
+  }
+
+  /**
+   * Convert a coordinate from minutes, seconds to decimal
+   * @param {number[]} coordinate
+   * @return {number}
+   */
+  convertMinutesToDegrees(coordinate: number[]) {
+    return coordinate
+      .map((value, index) => value / Math.pow(60, index))
+      .reduce((res, n) => res + n);
   }
 
   /**

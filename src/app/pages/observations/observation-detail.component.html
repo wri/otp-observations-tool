@@ -160,16 +160,32 @@
               </div>
             </div>
 
-            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !latitude_field.valid }">
-              <label for="latitude_field" i18n="Observation creation/edition|Label for the latitude field">Latitude</label>
-              <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" number/>
-              <div *ngIf="f.submitted && latitude_field.errors?.number" class="help-text" i18n="Observation creation/edition|Error message if the latitude isn't valid">Please enter a valid number</div>
-            </div>
+            <div class="row">
+              <!-- 4.2.1. Coordinates -->
+              <div class="small-12 medium-6 columns">
+                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !latitude_field.valid }">
+                  <label for="latitude_field" i18n="Observation creation/edition|Label for the latitude field">Latitude</label>
+                  <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" number/>
+                  <div *ngIf="f.submitted && latitude_field.errors?.number" class="help-text" i18n="Observation creation/edition|Error message if the latitude isn't valid">Please enter a valid number</div>
+                </div>
 
-            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !longitude_field.valid }">
-              <label for="longitude_field" i18n="Observation creation/edition|Label for the longitude field">Longitude</label>
-              <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" number/>
-              <div *ngIf="f.submitted && longitude_field.errors?.number" class="help-text" i18n="Observation creation/edition|Error message if the longitude isn't valid">Please enter a valid number</div>
+                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !longitude_field.valid }">
+                  <label for="longitude_field" i18n="Observation creation/edition|Label for the longitude field">Longitude</label>
+                  <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" number/>
+                  <div *ngIf="f.submitted && longitude_field.errors?.number" class="help-text" i18n="Observation creation/edition|Error message if the longitude isn't valid">Please enter a valid number</div>
+                </div>
+              </div>
+
+              <!-- 4.2.2. Coordinates from photo -->
+              <div class="small-12 medium-6 columns">
+                <h3 i18n="Observation creation/edition|Title of a section of the form">Get coordinates from a photo</h3>
+                <p i18n="Observation creation/edition|Description of a section of the form">Instead of clicking on the map or manually filling the coordinates, you can get them from a georeferenced photo. This photo won't be part of the observation.</p>
+
+                <div class="form-group">
+                  <label for="photo_field" i18n="Observation creation/edition|Label for the georeferenced photo field">Georeferenced photo</label>
+                  <input id="photo_field" type="file" class="form-control" name="photo_field" (change)="onChangePhoto($event)" accept=".jpg, .jpeg" />
+                </div>
+              </div>
             </div>
           </div>
         </fieldset>
