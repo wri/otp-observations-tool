@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { LawsService } from 'app/services/laws.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ModalComponent } from 'app/shared/modal/modal.component';
@@ -155,6 +156,7 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
     CategoriesService,
     ObservationReportsService,
     ObservationDocumentsService,
+    LawsService,
     ResponsiveService,
     WebWorkerService,
     { provide: RequestOptions, useClass: OauthRequestOptions }

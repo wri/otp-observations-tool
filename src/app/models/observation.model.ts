@@ -1,3 +1,4 @@
+import { Law } from 'app/models/law.model';
 import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
 import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from 'angular2-jsonapi';
@@ -33,6 +34,7 @@ export class Observation extends JsonApiModel {
   @Attribute() 'actions-taken'?: string;
 
   @BelongsTo() fmu?: Fmu;
+  @BelongsTo() law?: Law;
   @BelongsTo() country: Country;
   @BelongsTo() subcategory?: Subcategory;
   @BelongsTo() severity: Severity;

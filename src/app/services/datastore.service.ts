@@ -19,6 +19,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { JsonApiDatastore, JsonApiDatastoreConfig } from 'angular2-jsonapi';
 import { Observation } from 'app/models/observation.model';
+import { Law } from 'app/models/law.model';
 
 @Injectable()
 @JsonApiDatastoreConfig({
@@ -29,6 +30,7 @@ import { Observation } from 'app/models/observation.model';
     severities: Severity,
     categories: Category,
     comments: Comment,
+    laws: Law,
     governments: Government,
     observers: Observer,
     operators: Operator,

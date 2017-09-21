@@ -1,5 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import EXIF from 'exif-js';
+import { Law } from 'app/models/law.model';
+import { LawsService } from 'app/services/laws.service';
 import { ObservationDocument } from 'app/models/observation_document';
 import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
@@ -62,6 +64,7 @@ export class ObservationDetailComponent {
     'Logging company', 'Artisanal', 'Community forest', 'Estate',
     'Industrial agriculture', 'Mining company', 'Sawmill', 'Other', 'Unknown'
   ];
+  laws: Law[] = []; // Filtered by country and subcategory
 
   // Map related
   map: L.Map;
@@ -103,6 +106,7 @@ export class ObservationDetailComponent {
   report: ObservationReport = this.datastoreService.createRecord(ObservationReport, {});
   // Report choosed between options
   _reportChoice: ObservationReport = null;
+  law: Law = null; // Only for type operator
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -166,20 +170,44 @@ export class ObservationDetailComponent {
       } else {
         this.government = null;
       }
-    } else if (country) {
-      this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
-        .then(operators => this.operators = operators)
-        .then(() => {
-          // If we're editing an observation, the object Operator of the observation won't
-          // match any of the objects of this.operators, so we search for the "same" model
-          // and set it
-          if (this.observation && this.observation.country === country) {
-            this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
-          } else {
-            this.operatorChoice = null;
-          }
-        })
-        .catch((err) => console.error(err)); // TODO: visual feedback
+    } else {
+      // We update the list of operators
+      if (country) {
+        this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
+          .then(operators => this.operators = operators)
+          .then(() => {
+            // If we're editing an observation, the object Operator of the observation won't
+            // match any of the objects of this.operators, so we search for the "same" model
+            // and set it
+            if (this.observation && this.observation.country === country) {
+              this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
+            } else {
+              this.operatorChoice = null;
+            }
+          })
+          .catch((err) => console.error(err)); // TODO: visual feedback
+      }
+
+      // We update the list of laws
+      if (country && this.subcategory) {
+        this.lawsService.getAll({ filter: { country: country.id, subcategory: this.subcategory.id } })
+          .then(laws => this.laws = laws)
+          .then(() => {
+            // If we're editing an observation, the object Law of the observation won't
+            // match any of the objects of this.laws, so we search for the "same" model
+            // and set it
+            if (this.observation && this.observation.country === country
+              && this.observation.subcategory === this.subcategory) {
+              this.law = this.laws.find(law => law.id === this.observation.law.id);
+            } else {
+              this.law = null;
+            }
+          })
+          .catch(err => console.error(err)); // TODO: visual feedback
+      } else {
+        this.laws = [];
+        this.law = null;
+      }
     }
   }
 
@@ -284,6 +312,27 @@ export class ObservationDetailComponent {
       this.severity = this.severities.find(severity => severity.id === this.observation.severity.id);
     } else {
       this.severity = null;
+    }
+
+    // We update the list of laws
+    if (this.type === 'operator' && subcategory && this.country) {
+      this.lawsService.getAll({ filter: { country: this.country.id, subcategory: subcategory.id } })
+        .then(laws => this.laws = laws)
+        .then(() => {
+          // If we're editing an observation, the object Law of the observation won't
+          // match any of the objects of this.laws, so we search for the "same" model
+          // and set it
+          if (this.observation && this.observation.country === this.country
+            && this.observation.subcategory === subcategory) {
+            this.law = this.laws.find(law => law.id === this.observation.law.id);
+          } else {
+            this.law = null;
+          }
+        })
+        .catch(err => console.error(err)); // TODO: visual feedback
+    } else {
+      this.laws = [];
+      this.law = null;
     }
   }
 
@@ -433,6 +482,7 @@ export class ObservationDetailComponent {
     private countriesService: CountriesService,
     private subcategoriesService: SubcategoriesService,
     private operatorsService: OperatorsService,
+    private lawsService: LawsService,
     private datastoreService: DatastoreService,
     private router: Router,
     private route: ActivatedRoute
@@ -469,7 +519,7 @@ export class ObservationDetailComponent {
       this.loading = true;
 
       this.observationsService.getById(this.route.snapshot.params.id, {
-        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report'
+        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report,law'
       }).then((observation) => {
           this.observation = observation;
 
@@ -721,6 +771,7 @@ export class ObservationDetailComponent {
         model.lat = this.latitude;
         model.lng = this.longitude;
         model['concern-opinion'] = this.opinion;
+        model.law = this.law;
         model.pv = this.pv;
         model.fmu = this.fmu;
       } else {

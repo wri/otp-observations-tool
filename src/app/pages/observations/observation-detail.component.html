@@ -192,12 +192,7 @@
       </div>
     </fieldset>
 
-    <!-- 6. Observation according to legal text -->
-    <div class="form-group">
-      <label i18n="Observation creation/edition|Label for the observation according to legal text field">Observation according to legal text</label>
-    </div>
-
-    <!-- 7. Observation category -->
+    <!-- 6. Observation category -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
       <label for="subcategory_id" i18n="Observation creation/edition|Label for the observation category field">Observation category</label>
       <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required>
@@ -207,24 +202,24 @@
       <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the observation category isn't supplied (the user will have to user between some options)">Please select an observation category</div>
     </div>
 
-    <!-- 8. Observation details -->
+    <!-- 7. Observation details -->
     <div class="form-group">
       <label for="details_field" i18n="Observation creation/edition|Label for the observation details field">Observation details</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
     </div>
 
-    <!-- 9. Due dilegence category -->
+    <!-- 8. Due dilegence category -->
     <div class="form-group">
       <label i18n="Observation creation/edition|Label for the due diligence category field">Due diligence category</label>
     </div>
 
-    <!-- 10. Evidence -->
+    <!-- 9. Evidence -->
     <fieldset>
       <legend i18n="Observation creation/edition|Title of a section of the form">Evidences</legend>
       <div class="fieldset-container">
         <div class="row">
           <div class="small-12 medium-6 columns">
-            <!-- 10.1 Current evidences -->
+            <!-- 9.1 Current evidences -->
             <h3 i18n="Observation creation/edition|Title of a section of the form">Current evidences</h3>
             <ul class="documents-list" *ngIf="documents.length">
               <li *ngFor="let document of documents">
@@ -241,7 +236,7 @@
             <p *ngIf="!documents.length" i18n="Observation creation/edition|Text message when no evidence has been uploaded">No evidence</p>
           </div>
           <div class="small-12 medium-6 columns">
-            <!-- 10.2.1 Evidence -->
+            <!-- 9.2.1 Evidence -->
             <p i18n="Observation creation/edition|Description of a section of the form">When you upload a new evidence, it will appear in the list of current evidences.</p>
             <div class="form-group">
               <label for="evidence_field" i18n="Observation creation/edition|Label for the upload evidence field">Evidence</label>
@@ -250,14 +245,14 @@
               <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence file is not valid">The file is not valid</div>
             </div>
 
-            <!-- 10.2.2 Title -->
+            <!-- 9.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment }">
               <label for="evidence_title" i18n="Observation creation/edition|Label for the report title field">Title</label>
               <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment" />
               <div *ngIf="!evidence_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence title isn't supplied">Please enter the title</div>
             </div>
 
-            <!-- 10.2.3 Add to list -->
+            <!-- 9.2.3 Add to list -->
             <div class="form-group">
               <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()" i18n="Add to list button">Add to list</button>
             </div>
@@ -266,7 +261,7 @@
       </div>
     </fieldset>
 
-    <!-- 11. Severity -->
+    <!-- 10. Severity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
       <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
@@ -276,99 +271,99 @@
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
     </div>
 
-    <!-- 12. Actions taken by operator -->
+    <!-- 11. Actions taken by operator -->
     <div class="form-group">
       <label for="actions_taken" i18n="Observation creation/edition|Label for the actions taken by operator field">Actions taken by operator</label>
       <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel"></textarea>
     </div>
 
-    <!-- 13. Opinion of the operator -->
+    <!-- 12. Opinion of the operator -->
     <div class="form-group">
       <label for="concern_opinion" i18n="Observation creation/edition|Label for the opinion of the operator field">Opinion of the operator</label>
       <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel"></textarea>
     </div>
 
-    <!-- 14. Law enforcement -->
-    <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Law enforcement</legend>
-      <div class="fieldset-container">
-        <!-- 14.1. Status -->
-        <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the status field">Status</label>
-        </div>
+    <!-- 13. Citation -->
+    <div class="form-group">
+      <label for="pv_field" i18n="Observation creation/edition|Label for the citation field">Citation</label>
+      <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" />
+    </div>
 
-        <!-- 14.2. Citation -->
-        <div class="form-group">
-          <label for="pv_field" i18n="Observation creation/edition|Label for the PV field">PV</label>
-          <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" />
-        </div>
-
-        <!-- 14.3. Details -->
-        <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the details field">Details</label>
-        </div>
-      </div>
-    </fieldset>
-
-    <!-- 15. Legal -->
+    <!-- 14. Legal -->
     <fieldset>
       <legend i18n="Observation creation/edition|Title of a section of the form">Legal</legend>
       <div class="fieldset-container">
-        <!-- 15.1. Legal reference (infraction) -->
+        <!-- 14.1. Observation according to legal text -->
         <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the legal reference (infraction) field">Legal reference (infraction)</label>
+          <label i18n="Observation creation/edition|Label for the observation according to legal text field">Observation according to legal text</label>
+          <select id="law_field" name="law_field" [(ngModel)]="law" #law_field="ngModel">
+            <option [value]="null" disabled i18n="Observation creation/edition">Select an observation</option>
+            <option *ngFor="let law of laws" [ngValue]="law">{{ law['written-infraction'] }}</option>
+          </select>
         </div>
 
-        <!-- 15.2. Legal reference (sanction) -->
+        <!-- 14.1. Legal reference (infraction) -->
         <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the legal reference (sanction) field">Legal reference (sanction)</label>
+          <label for="infraction" i18n="Observation creation/edition|Label for the legal reference (infraction) field">Legal reference (infraction)</label>
+          <input id="infraction" type="text" class="form-control" name="infraction" [(ngModel)]="law && law.infraction" #infraction="ngModel" disabled />
         </div>
 
-        <!-- 15.3. Minimum fine -->
+        <!-- 14.2. Legal reference (sanction) -->
         <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the minimum fine field">Minimum fine</label>
+          <label for="sanction" i18n="Observation creation/edition|Label for the legal reference (sanction) field">Legal reference (sanction)</label>
+          <input id="sanction" type="text" class="form-control" name="sanction" [(ngModel)]="law && law.sanctions" #sanction="ngModel" disabled />
         </div>
 
-        <!-- 15.4. Maximum fine -->
+        <!-- 14.3. Minimum fine -->
         <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the maximum fine field">Maximum fine</label>
+          <label for="min_fine" i18n="Observation creation/edition|Label for the minimum fine field">Minimum fine</label>
+          <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" disabled />
         </div>
 
-        <!-- 15.5. Penal servitude -->
+        <!-- 14.4. Maximum fine -->
         <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the penal servitude field">Penal servitude</label>
+          <label for="max_fine" i18n="Observation creation/edition|Label for the maximum fine field">Maximum fine</label>
+          <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" disabled />
         </div>
 
-        <!-- 15.6. Other penalties -->
+        <!-- 14.5. Penal servitude -->
         <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the other penalties field">Other penalties</label>
+          <label for="penal_servitude" i18n="Observation creation/edition|Label for the penal servitude field">Penal servitude</label>
+          <input id="penal_servitude" type="text" class="form-control" name="penal_servitude" [(ngModel)]="law && law['penal-servitude']" #penal_servitude="ngModel" disabled />
         </div>
 
-        <!-- 15.7. FLEGT indicator -->
+        <!-- 14.6. Other penalties -->
         <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the FLEGT indicator field">FLEGT indicator</label>
+          <label for="other_penalties" i18n="Observation creation/edition|Label for the other penalties field">Other penalties</label>
+          <input id="other_penalties" type="text" class="form-control" name="other_penalties" [(ngModel)]="law && law['other-penalties']" #other_penalties="ngModel" disabled />
+        </div>
+
+        <!-- 14.7. APV -->
+        <div class="form-group">
+          <label for="apv" i18n="Observation creation/edition|Label for the APV field">APV</label>
+          <input id="apv" type="text" class="form-control" name="apv" [(ngModel)]="law && law.apv" #flegt="ngModel" disabled />
         </div>
       </div>
     </fieldset>
 
-    <!-- 16. Publication date -->
+    <!-- 15. Publication date -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
       <label for="publication_date" i18n="Observation creation/edition|Label for the publication date field">Publication date</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required></otp-datepicker>
       <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the publication date of a project isn't supplied">Publication date is required</div>
     </div>
 
-    <!-- 17. Metadata -->
+    <!-- 16. Metadata -->
     <fieldset *ngIf="observation">
       <legend i18n="Observation creation/edition|Title of a section of the form">Metadata</legend>
       <div class="fieldset-container">
-        <!-- 17.1. Last modification by -->
+        <!-- 16.1. Last modification by -->
         <div class="form-group">
           <label for="last_modification_by" i18n="Observation creation/edition|Label for the last modification by field">Last modification by</label>
           <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'].name" #last_modification_by="ngModel" disabled />
         </div>
 
-        <!-- 17.1. Last modified on -->
+        <!-- 16.1. Last modified on -->
         <div class="form-group">
           <label for="last_modified_on" i18n="Observation creation/edition|Label for the last modified on field">Last modified on</label>
           <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>
