@@ -255,9 +255,8 @@
       <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
       <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
         <option [value]="null" disabled i18n="Observation creation/edition">Select a severity</option>
-        <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }}</option>
+        <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
       </select>
-      <div *ngIf="severity" class="note">{{ severity.details }}</div>
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
     </div>
 
@@ -509,9 +508,8 @@
       <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
       <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
         <option [value]="null" disabled i18n="Observation creation/edition">Select a severity</option>
-        <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }}</option>
+        <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
       </select>
-      <div *ngIf="severity" class="note">{{ severity.details }}</div>
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
     </div>
 
