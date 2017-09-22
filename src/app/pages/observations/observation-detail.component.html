@@ -245,6 +245,8 @@
           <div class="small-12 medium-6 columns">
             <!-- 9.2.1 Evidence -->
             <p i18n="Observation creation/edition|Description of a section of the form">When you upload a new file, it will appear in the list of evidence.</p>
+            <!-- This input is used to prevent the submitting until evidence are uploaded -->
+            <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
             <div class="form-group" *ngIf="f.submitted && !documents.length">
               <div class="help-text" i18n="Observation creation/edition|Error message if no evidence is supplied">You need to upload evidence</div>
             </div>
@@ -507,6 +509,8 @@
           <div class="small-12 medium-6 columns">
             <!-- 7.2.1 Evidence -->
             <p i18n="Observation creation/edition|Description of a section of the form">When you upload new file, it will appear in the list of evidence.</p>
+            <!-- This input is used to prevent the submitting until evidence are uploaded -->
+            <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
             <div class="form-group" *ngIf="f.submitted && !documents.length">
               <div class="help-text" i18n="Observation creation/edition|Error message if no evidence is supplied">You need to upload evidence</div>
             </div>
