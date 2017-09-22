@@ -261,7 +261,7 @@
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
               <label for="evidence_title" i18n="Observation creation/edition|Label for the report title field">Title</label>
               <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment || !documents.length" />
-              <div *ngIf="!evidence_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence title isn't supplied">Please enter the title</div>
+              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence title isn't supplied">Please enter the title</div>
             </div>
 
             <!-- 9.2.3 Add to list -->
@@ -525,7 +525,7 @@
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
               <label for="evidence_title" i18n="Observation creation/edition|Label for the report title field">Title</label>
               <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment || !documents.length" />
-              <div *ngIf="!evidence_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence title isn't supplied">Please enter the title</div>
+              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence title isn't supplied">Please enter the title</div>
             </div>
 
             <!-- 7.2.3 Add to list -->
