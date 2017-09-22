@@ -211,7 +211,7 @@
     <!-- 7. Due diligence category -->
     <div class="form-group">
       <label for="diligence_category" i18n="Observation creation/edition|Label for the due diligence category field">Due diligence category</label>
-      <input id="diligence_category" type="text" class="form-control" name="diligence_category" [(ngModel)]="subcategory && subcategory.category.name" #diligence_category="ngModel" disabled />
+      <input id="diligence_category" type="text" class="form-control" name="diligence_category" [(ngModel)]="subcategory && subcategory.category && subcategory.category.name" #diligence_category="ngModel" disabled />
     </div>
 
     <!-- 8. Observation details -->
