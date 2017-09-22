@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { ReportLibraryComponent } from 'app/pages/my-otp/report-library/report-library.component';
 import { LawsService } from 'app/services/laws.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
@@ -111,6 +112,7 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
     OperatorListComponent,
     SubcategoryListComponent,
     SubcategoriesComponent,
+    ReportLibraryComponent,
     IconComponent,
     MaxTabletDirective,
     MinTabletDirective,

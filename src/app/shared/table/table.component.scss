@@ -205,7 +205,8 @@
         }
       }
 
-      /deep/ button.action {
+      /deep/ button.action,
+      /deep/ a.action {
         margin-right: 12px;
         cursor: pointer;
 

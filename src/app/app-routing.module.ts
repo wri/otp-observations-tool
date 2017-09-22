@@ -29,6 +29,7 @@ import { CategoryListComponent } from 'app/pages/fields/categories/category-list
 import { OrganizationProfileComponent } from 'app/pages/my-otp/profile/organization-profile.component';
 import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
+import { ReportLibraryComponent } from 'app/pages/my-otp/report-library/report-library.component';
 
 
 const observationsChildren = [
@@ -81,9 +82,13 @@ const routes: Routes = [
             component: OrganizationProfileComponent
           },
           {
-            path: 'observations',
-            children: observationsChildren
+            path: 'reports',
+            component: ReportLibraryComponent
           }
+          // {
+          //   path: 'observations',
+          //   children: observationsChildren
+          // }
         ]
       },
       // -------------OBSERVATIONS------------------

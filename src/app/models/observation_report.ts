@@ -1,3 +1,4 @@
+import { Observation } from 'app/models/observation.model';
 import { User } from 'app/models/user.model';
 import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from 'angular2-jsonapi';
 
@@ -11,5 +12,6 @@ export class ObservationReport extends JsonApiModel {
   @Attribute() 'publication-date': Date;
 
   @BelongsTo() user: User;
+  @HasMany() observations: Observation[];
 
 }
