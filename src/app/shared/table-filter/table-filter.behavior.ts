@@ -24,7 +24,13 @@ export class TableFilterBehavior implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.table.change.subscribe(() => this.loadData());
-    this.filters.change.subscribe(() => this.loadData());
+    this.filters.change.subscribe(() => {
+      // We don't forget to move the user to the first
+      // page of results each time a filter changes
+      this.table.paginationIndex = 0;
+
+      this.loadData();
+    });
     // Need to be asynchronous:
     // https://github.com/angular/angular/issues/17572#issuecomment-323645870
     setTimeout(() => this.loadData(), 0);
