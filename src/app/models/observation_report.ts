@@ -12,6 +12,5 @@ export class ObservationReport extends JsonApiModel {
   @Attribute() 'publication-date': Date;
 
   @BelongsTo() user: User;
-  @HasMany() observations: Observation[];
 
 }
