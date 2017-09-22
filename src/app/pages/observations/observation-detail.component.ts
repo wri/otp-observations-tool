@@ -96,6 +96,7 @@ export class ObservationDetailComponent {
   operator: Operator = this.datastoreService.createRecord(Operator, { 'operator-type': null });
   _operatorChoice: Operator = null; // Only for type operator, chose between the options
   _opinion: string; // Only for type operator
+  _litigationStatus: string; // Only for type operator
   _pv: string; // Only for type operator
   _latitude: number; // Only for type operator
   _longitude: number; // Only for type operator
@@ -392,6 +393,15 @@ export class ObservationDetailComponent {
       this.observation['concern-opinion'] = opinion;
     } else {
       this._opinion = opinion;
+    }
+  }
+
+  get litigationStatus() { return this.observation ? this.observation['litigation-status'] : this._litigationStatus; }
+  set litigationStatus(litigationStatus) {
+    if (this.observation) {
+      this.observation['litigation-status'] = litigationStatus;
+    } else {
+      this._litigationStatus = litigationStatus;
     }
   }
 
@@ -771,6 +781,7 @@ export class ObservationDetailComponent {
         model.lat = this.latitude;
         model.lng = this.longitude;
         model['concern-opinion'] = this.opinion;
+        model['litigation-status'] = this.litigationStatus;
         model.law = this.law;
         model.pv = this.pv;
         model.fmu = this.fmu;
