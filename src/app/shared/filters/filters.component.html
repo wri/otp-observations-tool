@@ -4,8 +4,8 @@
   <div class="filter" *ngIf="hasValue(filter)">
     <select [attr.aria-label]="filter.name" [(ngModel)]="filter.selected" (change)="change.emit()">
       <option value="" disabled>{{filter.name}}</option>
-      <option *ngFor="let value of filter.values" [value]="value">{{value}}</option>
-      <option value="" i18n="Table filters" [disabled]="filter.required">Remove filter</option>
+      <option *ngFor="let key of objectKeys(filter.values)" [value]="filter.values[key]">{{key}}</option>
+      <option [ngValue]="null" i18n="Table filters" [disabled]="filter.required">Remove filter</option>
     </select>
   </div>
 </ng-container>
@@ -17,8 +17,8 @@
     <div *ngFor="let filter of filters">
       <label [for]="'filter-modal-' + filter.prop">{{filter.name}}</label>
       <select [id]="'filter-modal-' + filter.prop" [(ngModel)]="filter.selected">
-        <option value="" i18n="Table filters" [disabled]="filter.required">Not filtering</option>
-        <option *ngFor="let value of filter.values" [value]="value">{{value}}</option>
+        <option [value]="null" i18n="Table filters" [disabled]="filter.required">Not filtering</option>
+        <option *ngFor="let key of objectKeys(filter.values)" [value]="filter.values[key]">{{key}}</option>
       </select>
     </div>
   </div>

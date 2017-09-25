@@ -29,6 +29,7 @@
 
     @media screen and (min-width: $break-tablet) {
       margin-right: 10px;
+      max-width: 200px;
     }
 
     &:last-of-type {
@@ -52,7 +53,7 @@
 
     select {
       margin-bottom: 0;
-      padding: 0 25px 0 15px;
+      padding: 0 35px 0 15px;
       text-transform: capitalize;
       background: transparent;
       border: 1px solid $lighter-grey;

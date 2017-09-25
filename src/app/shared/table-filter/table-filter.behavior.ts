@@ -57,13 +57,7 @@ export class TableFilterBehavior implements AfterViewInit {
 
   getFiltersApiParams(): JsonApiParams {
     return this.filtersState
-      .filter(filter => {
-        if (typeof filter.selected === 'string') {
-          return !!filter.selected.length;
-        }
-
-        return filter.selected !== undefined && filter.selected !== null;
-      })
+      .filter(filter => filter.selected !== null)
       .reduce((res, filter) => {
         return Object.assign({}, res, {
           [`filter[${filter.prop}]`]: filter.selected

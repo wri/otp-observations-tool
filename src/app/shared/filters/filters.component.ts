@@ -1,13 +1,13 @@
+import { DatastoreService } from 'app/services/datastore.service';
 import { FilterDirective } from './directives/filter.directive';
 import { Component, ContentChildren, QueryList, Output, EventEmitter } from '@angular/core';
 
 export interface Filter {
   name: string;
   prop: string;
-  values: (string|number|boolean)[];
-  selected?: string|number|boolean;
+  values: {};
+  selected?: any;
   required: boolean;
-  visible: boolean;
 }
 
 @Component({
@@ -18,8 +18,9 @@ export interface Filter {
 export class FiltersComponent {
 
   private _filtersNodes: QueryList<FilterDirective>;
-  filters: Filter[];
+  filters: Filter[] = [];
   modalOpen = false;
+  objectKeys = Object.keys;
 
   @Output() change = new EventEmitter<void>();
 
@@ -29,15 +30,47 @@ export class FiltersComponent {
     this.resetFilters(true);
   }
 
-  resetFilters(silent = false) {
-    this.filters = this._filtersNodes.toArray().map(filter => ({
-      name: filter.name,
-      prop: filter.prop,
-      values: filter.values || [],
-      selected: filter.default || '',
-      required: filter.required || false,
-      visible: filter.required || false
-    }));
+  constructor(private datastoreService: DatastoreService) {
+  }
+
+  async resetFilters(silent = false) {
+    const filterNodes = this._filtersNodes.toArray();
+
+    const promises = filterNodes.map((filter) => {
+      // The values of the filter needs to be fetched from
+      // the API
+      if (typeof filter.values === 'string') {
+        const models = Reflect.getMetadata('JsonApiDatastoreConfig', this.datastoreService.constructor).models;
+        const model = models[filter.values];
+
+        return this.datastoreService.query(model, { sort: filter['name-attr'], page: { size: 3000 } })
+          .toPromise()
+          .then(rows => rows.map(row => ({ [row[filter['name-attr']]]: row.id })))
+          .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
+      }
+
+      // The values are contained in the object and are
+      // renamed to be more user friendly
+      if (!Array.isArray(filter.values)) {
+        return filter.values;
+      }
+
+      // The values are directly given by the template
+      return filter.values.map(value => ({ [value]: value }))
+        .reduce((res, value) => Object.assign({}, res, value), {});
+    });
+
+    Promise.all(promises)
+      .then(p => {
+        this.filters = p.map((promise, index) => ({
+          name: filterNodes[index].name,
+          prop: filterNodes[index].prop,
+          values: promise || {},
+          selected: filterNodes[index].default || null,
+          required: filterNodes[index].required || false
+        }));
+      })
+      .catch(err => console.error(err)); // TODO: visual feedback
 
     if (!silent) {
       this.change.emit();
@@ -55,11 +88,7 @@ export class FiltersComponent {
   }
 
   hasValue(filter: Filter): boolean {
-    if (typeof filter.selected === 'string') {
-      return !!filter.selected.length;
-    }
-
-    return filter.selected !== undefined && filter.selected !== null;
+    return filter.selected !== null;
   }
 
 }
