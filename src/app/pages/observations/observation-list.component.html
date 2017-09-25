@@ -11,6 +11,7 @@
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the observations" caption="Observations">
+  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the id of the observations" name="ID" prop="id"></otp-table-column>
   <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the date of the observations" name="Date" prop="publication-date">
     <ng-template let-value="value" table-cell-template>{{getFormatedDate(value)}}</ng-template>
   </otp-table-column>

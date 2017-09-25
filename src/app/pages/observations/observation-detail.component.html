@@ -23,6 +23,12 @@
   </div>
 
   <div class="form-container" *ngIf="type === 'operator'">
+    <!-- 0. ID -->
+    <div class="form-group" *ngIf="observation">
+      <label for="id_field" i18n="Observation creation/edition|Label for the ID field">ID</label>
+      <input id="id_field" type="text" class="form-control" name="id_field" [(ngModel)]="observation.id" #id_field="ngModel" disabled />
+    </div>
+
     <!-- 1. Report -->
     <fieldset>
       <legend i18n="Observation creation/edition|Title of a section of the form">Report</legend>
@@ -392,6 +398,12 @@
   </div>
 
   <div class="form-container" *ngIf="type === 'government'">
+    <!-- 0. ID -->
+    <div class="form-group" *ngIf="observation">
+      <label for="id_field" i18n="Observation creation/edition|Label for the ID field">ID</label>
+      <input id="id_field" type="text" class="form-control" name="id_field" [(ngModel)]="observation.id" #id_field="ngModel" disabled />
+    </div>
+
     <!-- 1. Report -->
     <fieldset>
       <legend i18n="Observation creation/edition|Title of a section of the form">Report</legend>
