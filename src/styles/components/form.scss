@@ -54,6 +54,8 @@
       .note {
         margin: 5px 0 0;
         font-size: 0.8125rem;
+
+        a { color: $color-primary; }
       }
 
       .help-text {

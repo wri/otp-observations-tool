@@ -9,5 +9,11 @@
     top: 50%;
     left: 50%;
   }
+
+  otp-action-bar {
+    /deep/ a.c-button {
+      margin-right: 10px;
+    }
+  }
 }
 

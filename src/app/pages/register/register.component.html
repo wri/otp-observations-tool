@@ -1,48 +1,74 @@
 <div class="l-wrapper">
-  <h2 i18n="Register page|Title of the page">Register</h2>
-  <spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
-  <form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-      <label for="name" i18n="Register page|Label for the name field (name of the person)">Name</label>
-      <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
-      <div *ngIf="f.submitted && !name.valid" class="help-text" i18n="Register page|Error message if the name isn't supplied">Name is required</div>
+  <otp-loader fixed overlay *ngIf="loading"></otp-loader>
+  <form class="c-form" name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
+    <h2 i18n="Register page|Title of the page">Register</h2>
+
+    <div class="form-container">
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+        <label for="name" i18n="Register page|Label for the name field (name of the person)">Name</label>
+        <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
+        <div *ngIf="f.submitted && !name.valid" class="help-text" i18n="Register page|Error message if the name isn't supplied">Please enter your name</div>
+      </div>
+
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !nickname.valid }">
+        <label for="nickname" i18n="Register page|Label for the username field (a nickname)">Username</label>
+        <input id="nickname" type="text" class="form-control" name="nickname" ngModel #nickname="ngModel" required />
+        <div *ngIf="f.submitted && !nickname.valid" class="help-text" i18n="Register page|Error message if the username/nickname isn't supplied">Please enter a username</div>
+      </div>
+
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !observer_id.valid }">
+        <label for="observer_id" i18n="Register page|Label for the organisation field (name of the insitution, organization)">Organization</label>
+        <select id="observer_id" name="observer_id" ngModel #observer_id="ngModel" required>
+          <option value="" disabled>Select an organization</option>
+          <option *ngFor="let observer of observers" [value]="observer.id">{{ observer.name }}</option>
+        </select>
+        <p class="note">Can't find yours? Please <a href="mailto:marie.vallee@wri.org">contact us</a>.</p>
+        <div *ngIf="f.submitted && !observer_id.valid" class="help-text">Please select an organization</div>
+      </div>
+
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
+        <label for="country_id" i18n="Register page|Label for the country field (the user will have to choose between some options)">Country</label>
+        <select id="country_id" name="country_id" ngModel #country_id="ngModel" required>
+          <option value="" disabled>Select a country</option>
+          <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+        </select>
+        <div *ngIf="f.submitted && !country_id.valid" class="help-text">Please select a country</div>
+      </div>
+
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+        <label for="email" i18n="Register page|Label for the email field">Email</label>
+        <input id="email" type="email" class="form-control" name="email" ngModel #email="ngModel" required email />
+        <p *ngIf="f.submitted && email.errors?.required" class="help-text" i18n="Register page|Error message if the email isn't supplied">Email is required</p>
+        <p *ngIf="f.submitted && email.errors?.email && !email.errors?.required" class="help-text" i18n="Register page|Error message if the email isn't valid">Please enter your email address</p>
+      </div>
+
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+        <label for="password" i18n="Register page|Label for the password field">Password</label>
+        <input id="password" type="password" class="form-control" name="password" ngModel #password="ngModel" required />
+        <div *ngIf="f.submitted && !password.valid" class="help-text" i18n="Register page|Error message if the password isn't supplied">Please enter a password</div>
+      </div>
+
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid }">
+        <label for="password_confirmation" i18n="Register page|Label for the password confirmation field">Confirm your password</label>
+        <input id="password_confirmation" type="password" ngModel class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="password" required />
+        <div *ngIf="f.submitted && password_confirmation.errors?.required" class="help-text" i18n="Register page|Error message if the password confirmation isn't supplied">Please confirm your password</div>
+        <div *ngIf="f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required" class="help-text" i18n="Register page|Error message if the password and it's confirmation don't coincide">Password values don't not coincide</div>
+      </div>
     </div>
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !nickname.valid }">
-      <label for="nickname" i18n="Register page|Label for the username field (a nickname)">Username</label>
-      <input id="nickname" type="text" class="form-control" name="nickname" ngModel #nickname="ngModel" required />
-      <div *ngIf="f.submitted && !nickname.valid" class="help-text" i18n="Register page|Error message if the username/nickname isn't supplied">Username is required</div>
+
+    <div class="form-footer">
+      <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+        <div class="c-button-container -j-end form-group">
+          <a [routerLink]="['/']" class="c-button -secondary" i18n="Button to log in">Login</a>
+          <button disable="loading" type="submit" class="c-button -primary" i18n="Button to register">Register</button>
+        </div>
+      </div>
     </div>
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !institution.valid }">
-      <label for="institution" i18n="Register page|Label for the institution field (name of the insitution, organization)">Institution</label>
-      <input id="institution" type="text" class="form-control" name="institution" ngModel #institution="ngModel" required />
-    </div>
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
-      <label for="country_id" i18n="Register page|Label for the country field (the user will have to choose between some options)">Country</label>
-      <select id="country_id" name="country_id" ngModel #country_id="ngModel" required>
-        <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
-      </select>
-    </div>
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
-      <label for="email" i18n="Register page|Label for the email field">Email</label>
-      <input id="email" type="email" class="form-control" name="email" ngModel #email="ngModel" required email />
-      <p *ngIf="f.submitted && email.errors?.required" class="help-text" i18n="Register page|Error message if the email isn't supplied">Email is required</p>
-      <p *ngIf="f.submitted && email.errors?.email && !email.errors?.required" class="help-text" i18n="Register page|Error message if the email isn't valid">Please enter an email address</p>
-    </div>
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-      <label for="password" i18n="Register page|Label for the password field">Password</label>
-      <input id="password" type="password" class="form-control" name="password" ngModel #password="ngModel" required />
-      <div *ngIf="f.submitted && !password.valid" class="help-text" i18n="Register page|Error message if the password isn't supplied">Password is required</div>
-    </div>
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid }">
-      <label for="password_confirmation" i18n="Register page|Label for the password confirmation field">Confirm your password</label>
-      <input id="password_confirmation" type="password" ngModel class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="password" required />
-      <div *ngIf="f.submitted && password_confirmation.errors?.required" class="help-text" i18n="Register page|Error message if the password confirmation isn't supplied">Please confirm your password</div>
-      <div *ngIf="f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required" class="help-text" i18n="Register page|Error message if the password and it's confirmation don't coincide">Password values don't not coincide</div>
-    </div>
-    <div class="c-button-container form-group">
+
+    <otp-action-bar *otpMaxTablet>
       <a [routerLink]="['/']" class="c-button -secondary" i18n="Button to log in">Login</a>
       <button disable="loading" type="submit" class="c-button -primary" i18n="Button to register">Register</button>
-    </div>
+    </otp-action-bar>
   </form>
 </div>
 
