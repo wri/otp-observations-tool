@@ -1,4 +1,6 @@
 import 'reflect-metadata';
+import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
+import { LawDetailComponent } from 'app/pages/fields/laws/law-detail.component';
 import { ReportLibraryComponent } from 'app/pages/my-otp/report-library/report-library.component';
 import { LawsService } from 'app/services/laws.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
@@ -113,6 +115,8 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
     SubcategoryListComponent,
     SubcategoriesComponent,
     ReportLibraryComponent,
+    LawListComponent,
+    LawDetailComponent,
     IconComponent,
     MaxTabletDirective,
     MinTabletDirective,

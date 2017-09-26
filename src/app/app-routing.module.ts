@@ -1,3 +1,5 @@
+import { LawDetailComponent } from 'app/pages/fields/laws/law-detail.component';
+import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { PageNotFoundComponent } from 'app/pages/page-not-found/page-not-found.component';
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { SubcategoryListComponent } from 'app/pages/fields/subcategories/subcategory-list.component';
@@ -178,6 +180,15 @@ const routes: Routes = [
           {
             path: 'operators/new',
             component: OperatorDetailComponent
+          },
+          // --------------LAWS-----------------
+          {
+            path: 'laws',
+            component: LawListComponent
+          },
+          {
+            path: 'laws/edit/:id',
+            component: LawDetailComponent
           }
         ]
       },

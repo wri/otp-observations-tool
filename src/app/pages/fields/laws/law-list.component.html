@@ -1,0 +1,20 @@
+<div class="c-table-header">
+  <otp-filters>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Country" values="countries" prop="country" name-attr="name"></otp-filter>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Subcategory" values="subcategories" prop="subcategory" name-attr="name"></otp-filter>
+  </otp-filters>
+</div>
+
+<otp-table i18n-caption="Caption for the table which lists the laws" caption="Laws">
+  <otp-table-column i18n-name="Table of laws|Name of the column corresponding to the country of the laws" prop="country.name" name="Country" [include]="true"></otp-table-column>
+  <otp-table-column i18n-name="Table of laws|Name of the column corresponding to the subcategory of the laws" prop="subcategory.name" name="Subcategory" [include]="true"></otp-table-column>
+  <otp-table-column i18n-name="Table of laws|Name of the column corresponding to the Observation according to legal text of the laws" prop="written-infraction" name="Observation according to legal text">
+    <ng-template let-value="value" table-cell-template>{{ value ? shorten(value) : '–' }}</ng-template>
+  </otp-table-column>
+  <otp-table-column i18n-name="Table of laws|Name of the actions columns (containing the edit and delete button)" name="Actions">
+    <ng-template let-row="row" table-cell-template>
+      <button class="action" (click)="onInfo(row)" aria-label="Info"><otp-icon name="#icon-info"></otp-icon></button>
+    </ng-template>
+  </otp-table-column>
+</otp-table>
+

@@ -26,4 +26,15 @@ export class LawsService extends JsonApiService<Law> {
       .toPromise();
   }
 
+  /**
+   * Get a law by its ID
+   * @param {string} id - ID of the law
+   * @param {*} [params={}] Additional params for the request
+   * @returns {Promise<Law>}
+   */
+  getById(id: string, params: any = {}): Promise<Law> {
+    return this.datastoreService.findRecord(Law, id, params)
+      .toPromise();
+  }
+
 }

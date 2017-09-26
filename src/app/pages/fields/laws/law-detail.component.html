@@ -1,0 +1,88 @@
+<form name="form" class="c-form" #f="ngForm" novalidate>
+  <div class="c-container -j-between -t-d-column -t-a-start">
+    <h2 i18n="Observation edition|Title of the page">Law details</h2>
+    <div class="c-button-container -j-end form-group" *otpMinTablet>
+      <button disable="loading" type="button" (click)="onClickBack()" class="c-button -secondary" i18n="Back button">Go back</button>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <otp-loader *ngIf="loading"></otp-loader>
+    <!-- 1. Country -->
+    <div class="form-group">
+      <label for="country">Country</label>
+      <select id="country" name="country" disabled>
+        <option value="">{{ law && law.country.name }}</option>
+      </select>
+    </div>
+
+    <!-- 2. Subcategory -->
+    <div class="form-group">
+      <label for="subcategory">Subcategory</label>
+      <select id="subcategory" name="subcategory" disabled>
+        <option value="">{{ law && law.subcategory.name }}</option>
+      </select>
+    </div>
+
+    <!-- 3. Observation according to legal text -->
+    <div class="form-group">
+      <label for="law_field">Observation according to legal text</label>
+      <textarea id="law_field" class="form-control" name="law_field" [(ngModel)]="law && law['written-infraction']" #law_field="ngModel" disabled></textarea>
+    </div>
+
+    <!-- 4. Legal reference (infraction) -->
+    <div class="form-group">
+      <label for="infraction">Legal reference (infraction)</label>
+      <textarea id="infraction" class="form-control" name="infraction" [(ngModel)]="law && law.infraction" #infraction="ngModel" disabled></textarea>
+    </div>
+
+    <!-- 5. Legal reference (sanction) -->
+    <div class="form-group">
+      <label for="sanctions">Legal reference (sanction)</label>
+      <textarea id="sanctions" class="form-control" name="sanctions" [(ngModel)]="law && law.sanctions" #sanctions="ngModel" disabled></textarea>
+    </div>
+
+    <!-- 6. Minimum fine -->
+    <div class="form-group">
+      <label for="min_fine">Minimum fine</label>
+      <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" disabled />
+    </div>
+
+    <!-- 7. Maximum fine -->
+    <div class="form-group">
+      <label for="max_fine">Minimum fine</label>
+      <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" disabled />
+    </div>
+
+    <!-- 8. Penal servitude -->
+    <div class="form-group">
+      <label for="penal_servitude">Penal servitude</label>
+      <textarea id="penal_servitude" type="text" class="form-control" name="penal_servitude" [(ngModel)]="law && law['penal-servitude']" #penal_servitude="ngModel" disabled></textarea>
+    </div>
+
+    <!-- 9. Other penalties -->
+    <div class="form-group">
+      <label for="other_penalties">Other penalties</label>
+      <textarea id="other_penalties" type="text" class="form-control" name="other_penalties" [(ngModel)]="law && law['other-penalties']" #other_penalties="ngModel" disabled></textarea>
+    </div>
+
+    <!-- 10. APV -->
+    <div class="form-group">
+      <label for="apv">APV</label>
+      <textarea id="apv" type="text" class="form-control" name="apv" [(ngModel)]="law && law.apv" #flegt="ngModel" disabled></textarea>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+      <div class="c-button-container -j-end form-group">
+        <button disable="loading" type="button" (click)="onClickBack()" class="c-button -secondary" i18n="Back button">Go back</button>
+      </div>
+    </div>
+
+    <otp-action-bar *otpMaxTablet>
+      <button disable="loading" type="button" (click)="onClickBack()" class="c-button -secondary" i18n="Back button">Go back</button>
+    </otp-action-bar>
+  </div>
+
+</form>

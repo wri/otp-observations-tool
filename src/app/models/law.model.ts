@@ -1,3 +1,4 @@
+import { Country } from 'app/models/country.model';
 import { Subcategory } from 'app/models/subcategory.model';
 import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
 
@@ -16,5 +17,6 @@ export class Law extends JsonApiModel {
   @Attribute() 'written-infraction': string;
 
   @BelongsTo() subcategory: Subcategory;
+  @BelongsTo() country: Country;
 
 }
