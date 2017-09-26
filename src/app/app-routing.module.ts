@@ -5,12 +5,12 @@ import { SubcategoriesComponent } from 'app/pages/fields/subcategories/subcatego
 import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
 import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
 import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
-import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
-import { CountryDetailComponent } from 'app/pages/fields/countries/country-detail.component';
-import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
-import { ObserverListComponent } from 'app/pages/fields/observers/observer-list.component';
-import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
-import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
+// import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
+// import { CountryDetailComponent } from 'app/pages/fields/countries/country-detail.component';
+// import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
+// import { ObserverListComponent } from 'app/pages/fields/observers/observer-list.component';
+// import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
+// import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
 import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
 import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
@@ -133,31 +133,6 @@ const routes: Routes = [
           {
             path: 'subcategories',
             component: SubcategoryListComponent,
-            // children: [
-            //   {
-            //     path: '',
-            //     pathMatch: 'full',
-            //     redirectTo: 'operators'
-            //   },
-            //   // ----------OPERATORS----------
-            //   {
-            //     path: 'operators',
-            //     component: AnnexOperatorListComponent
-            //   },
-            //   {
-            //     path: 'operators/new',
-            //     component: AnnexOperatorDetailComponent
-            //   },
-            //   // ----------GOVERNANCE----------
-            //   {
-            //     path: 'governance',
-            //     component: AnnexGovernanceListComponent
-            //   },
-            //   {
-            //     path: 'governance/new',
-            //     component: AnnexGovernanceDetailComponent
-            //   },
-            // ]
           },
           // --------------GOVERNMENTS-----------------
           {
@@ -168,33 +143,33 @@ const routes: Routes = [
             path: 'governments/new',
             component: GovernmentDetailComponent
           },
-          // --------------OBSERVERS-----------------
-          {
-            path: 'observers',
-            component: ObserverListComponent
-          },
-          {
-            path: 'observers/new',
-            component: ObserverDetailComponent
-          },
-          // --------------SPECIES-----------------
-          {
-            path: 'species',
-            component: SpeciesListComponent
-          },
-          {
-            path: 'species/new',
-            component: SpeciesDetailComponent
-          },
-          // --------------COUNTRIES-----------------
-          {
-            path: 'countries',
-            component: CountryListComponent
-          },
-          {
-            path: 'countries/new',
-            component: CountryDetailComponent
-          },
+          // // --------------OBSERVERS-----------------
+          // {
+          //   path: 'observers',
+          //   component: ObserverListComponent
+          // },
+          // {
+          //   path: 'observers/new',
+          //   component: ObserverDetailComponent
+          // },
+          // // --------------SPECIES-----------------
+          // {
+          //   path: 'species',
+          //   component: SpeciesListComponent
+          // },
+          // {
+          //   path: 'species/new',
+          //   component: SpeciesDetailComponent
+          // },
+          // // --------------COUNTRIES-----------------
+          // {
+          //   path: 'countries',
+          //   component: CountryListComponent
+          // },
+          // {
+          //   path: 'countries/new',
+          //   component: CountryDetailComponent
+          // },
           // --------------OPERATORS-----------------
           {
             path: 'operators',
