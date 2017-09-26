@@ -1,14 +1,14 @@
 <div class="c-table-header">
   <otp-filters></otp-filters>
-  <button (click)="triggerNewCategory()" class="c-button -primary" i18n="Button to create a new category">New Category</button>
+  <!-- <button (click)="triggerNewCategory()" class="c-button -primary" i18n="Button to create a new category">New Category</button> -->
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the categories" caption="Categories">
   <otp-table-column i18n-name="Table of categories|Name of the column corresponding to the name of the categories" prop="name" name="Name"></otp-table-column>
-  <otp-table-column i18n-name="Table of categories|Name of the actions columns (containing the edit and delete button)" name="Actions">
+  <!-- <otp-table-column i18n-name="Table of categories|Name of the actions columns (containing the edit and delete button)" name="Actions">
      <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
        <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
      </ng-template>
-  </otp-table-column>
+  </otp-table-column> -->
 </otp-table>

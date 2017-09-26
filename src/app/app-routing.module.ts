@@ -2,7 +2,7 @@ import { PageNotFoundComponent } from 'app/pages/page-not-found/page-not-found.c
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { SubcategoryListComponent } from 'app/pages/fields/subcategories/subcategory-list.component';
 import { SubcategoriesComponent } from 'app/pages/fields/subcategories/subcategories.component';
-import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
+// import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
 import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
 import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
 // import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
@@ -125,10 +125,10 @@ const routes: Routes = [
             path: 'categories',
             component: CategoryListComponent
           },
-          {
-            path: 'categories/new',
-            component: CategoryDetailComponent
-          },
+          // {
+          //   path: 'categories/new',
+          //   component: CategoryDetailComponent
+          // },
           // --------------SUB-CATEGORIES--------------
           {
             path: 'subcategories',

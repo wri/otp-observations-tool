@@ -18,24 +18,24 @@ export class CategoryListComponent extends TableFilterBehavior {
     super();
   }
 
-  triggerNewCategory(): void {
-    this.router.navigate(['private/fields/categories/new']);
-  }
+  // triggerNewCategory(): void {
+  //   this.router.navigate(['private/fields/categories/new']);
+  // }
 
-  onEdit(row): void {
+  // onEdit(row): void {
 
-  }
+  // }
 
-  private onDelete(category: Category): void {
-    if (confirm(`Are you sure to delete the category: ${category.name}?`) ) {
-      this.service.deleteCategory(category)
-      .then((data) => {
-        this.loadData();
-        alert(data.json().messages[0].title);
-      })
-      .catch((e) => alert('Unable to delete the category: ${category.name} '));
-    }
-  }
+  // private onDelete(category: Category): void {
+  //   if (confirm(`Are you sure to delete the category: ${category.name}?`) ) {
+  //     this.service.deleteCategory(category)
+  //     .then((data) => {
+  //       this.loadData();
+  //       alert(data.json().messages[0].title);
+  //     })
+  //     .catch((e) => alert('Unable to delete the category: ${category.name} '));
+  //   }
+  // }
 
 
 }
