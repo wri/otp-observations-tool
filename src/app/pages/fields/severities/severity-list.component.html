@@ -1,0 +1,11 @@
+<div class="c-table-header">
+  <otp-filters>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Subcategory" values="subcategories" prop="subcategory" name-attr="name"></otp-filter>
+  </otp-filters>
+</div>
+
+<otp-table i18n-caption="Caption for the table which lists the severities" caption="Severities">
+  <otp-table-column i18n-name="Table of severities|Name of the column corresponding to the subcategory of the severities" prop="subcategory.name" name="Subcategory" [include]="true"></otp-table-column>
+  <otp-table-column i18n-name="Table of severities|Name of the column corresponding to the level of the severities" prop="level" name="Level"></otp-table-column>
+  <otp-table-column i18n-name="Table of severities|Name of the column corresponding to the details of the severities" prop="details" name="Details"></otp-table-column>
+</otp-table>
