@@ -1,7 +1,7 @@
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { Government } from './../../../models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 
 @Component({
@@ -13,33 +13,34 @@ export class GovernmentListComponent extends TableFilterBehavior {
 
   constructor(
     protected service: GovernmentsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     super();
   }
 
-  triggerNewGovernment(): void {
-    this.router.navigate(['private/fields/governments/new']);
-  }
-
   /**
-   * Event handler to delete a government
-   * @private
-   * @param {Government} government
+   * Shorten the passed string and add an ellipsis
+   * if necessary
+   * @param {string} string String to shorten
+   * @param {number} [limit=80] Character limit
+   * @returns {string}
    */
-  private onDelete(government: Government): void {
-    if (confirm(`Are you sure to delete the government: ${government.government_entity}?`) ) {
-      this.service.deleteGovernment(government)
-      .then((data) => {
-        this.loadData();
-        alert(data.json().messages[0].title);
-      })
-      .catch((e) => alert('Unable to delete the government: ${government.government_entity} '));
+  shorten(string: string, limit = 80): string {
+    if (!string) {
+      return null;
     }
+
+    if (string.length <= limit) {
+      return string;
+    }
+
+    return string.slice(0, limit) + '...';
   }
 
   onEdit(row): void {
-
+    // Without relativeTo, the navigation doesn't work properly
+    this.router.navigate(['edit', row.id], { relativeTo: this.route });
   }
 
 

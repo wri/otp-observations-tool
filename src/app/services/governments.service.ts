@@ -22,6 +22,17 @@ export class GovernmentsService extends JsonApiService<Government> {
     return this.datastoreService.query(Government, { page: { size: 1000 } }).toPromise();
   }
 
+  /**
+   * Return the government entity designated by its id
+   * @param {string} id - Id of the government entity
+   * @param {any} [params={}] - Additional params for the query
+   * @returns {Promise<Government[]>}
+   */
+  getById(id: string, params = {}): Promise<Government> {
+    return this.datastoreService.findRecord(Government, id, params)
+      .toPromise();
+  }
+
   getByCountry(countryId) {
     return this.datastoreService.query(Government, { country_id: countryId }).toPromise();
   }

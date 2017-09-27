@@ -1,34 +1,37 @@
-<spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
-<div class="c-container -j-between -t-d-column -t-a-start">
-  <h2>
-    <ng-template [ngIf]="mode === 'new'" i18n="Government creation|Title of the page">New government</ng-template>
-    <ng-template [ngIf]="mode !== 'new'" i18n="Government creation|Title of the page">Update government</ng-template>
-  </h2>
-  <div class="c-button-container -j-end form-group" *otpMinTablet>
-    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-    <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+<otp-loader *ngIf="loading" overlay fixed></otp-loader>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
+  <div class="c-container -j-between -t-d-column -t-a-start">
+    <h2 *ngIf="!government.id" i18n="Operator creation|Title of the page">New government entity</h2>
+    <h2 *ngIf="government.id" i18n="Operator edition|Title of the page">Edit government entity</h2>
+    <div class="c-button-container -j-end form-group" *otpMinTablet>
+      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+      <button *ngIf="!government.id" disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="government.id" disable="loading" type="submit" class="c-button -primary" i18n="Save button">Save</button>
+    </div>
   </div>
-</div>
 
-<form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
   <div class="form-container">
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !government_entity.valid }">
-      <label for="government_entity" i18n="Government creation/edition|Label for the government entity field">Government entity</label>
-      <input id="government_entity" type="text" class="form-control" name="government_entity" ngModel #government_entity="ngModel" required />
-      <div *ngIf="f.submitted && !government_entity.valid" class="help-text" i18n="Government creation/edition|Error message if the government entity isn't supplied">Government entity is required</div>
+    <!-- 1. Name -->
+    <div class="form-group -required">
+      <label for="name_field">Name</label>
+      <input id="name_field" type="text" class="form-control" name="name_field" [(ngModel)]="government['government-entity']" #name_field="ngModel" required />
+      <div *ngIf="f.submitted && !name_field.valid" class="help-text">Please enter the name</div>
     </div>
 
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
-      <label for="country_id" i18n="Government creation/edition|Label for the country field">Country</label>
-      <select id="country_id" name="country_id" ngModel #country_id="ngModel" required>
-        <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+    <!-- 2. Country -->
+    <div class="form-group -required">
+      <label for="country_field">Country</label>
+      <select id="country_field" name="country_field" [(ngModel)]="government.country" #country_field="ngModel" required>
+        <option disabled [value]="null">Select a country</option>
+        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
-      <div *ngIf="f.submitted && !country_id.valid" class="help-text" i18n="Government creation/edition|Error message if the country isn't supplied (the user will have to choose between serveral options)">Please select a country</div>
+      <div *ngIf="f.submitted && !country_field.valid" class="help-text">Please select a country</div>
     </div>
 
+    <!-- 3. Details -->
     <div class="form-group">
-      <label for="details" i18n="Government creation/edition|Label for the details field">Details</label>
-      <input id="details" type="text" class="form-control" name="details" ngModel #details="ngModel" />
+      <label for="details_field">Details</label>
+      <textarea id="details_field" name="details_field" [(ngModel)]="government.details" #details_field="ngModel"></textarea>
     </div>
   </div>
 
@@ -36,13 +39,15 @@
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
         <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+        <button *ngIf="!government.id" disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="government.id" disable="loading" type="submit" class="c-button -primary" i18n="Save button">Save</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
       <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-      <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="!government.id" disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="government.id" disable="loading" type="submit" class="c-button -primary" i18n="Save button">Save</button>
     </otp-action-bar>
   </div>
 </form>

@@ -137,13 +137,17 @@ const routes: Routes = [
             path: 'subcategories',
             component: SubcategoryListComponent,
           },
-          // --------------GOVERNMENTS-----------------
+          // --------------GOVERNMENT ENTITIES-----------------
           {
-            path: 'governments',
+            path: 'government-entities',
             component: GovernmentListComponent
           },
           {
-            path: 'governments/new',
+            path: 'government-entities/new',
+            component: GovernmentDetailComponent
+          },
+          {
+            path: 'government-entities/edit/:id',
             component: GovernmentDetailComponent
           },
           // // --------------OBSERVERS-----------------

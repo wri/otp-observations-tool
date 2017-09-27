@@ -1,17 +1,19 @@
 <div class="c-table-header">
-  <otp-filters></otp-filters>
-  <button (click)="triggerNewGovernment()" class="c-button -primary" i18n="Button to create a new government unit">
-    New government unit
-  </button>
+  <otp-filters>
+    <otp-filter i18n-name="Table of observations|Name of a filter" name="Country" values="countries" prop="country" name-attr="name"></otp-filter>
+  </otp-filters>
+   <a class="c-button -primary" routerLink="new">New government entity</a>
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the governments" caption="Governments">
   <otp-table-column i18n-name="Table of governments|Name of the column corresponding to the name of the governments" prop="government-entity" name="Name"></otp-table-column>
-  <otp-table-column i18n-name="Table of governments|Name of the column corresponding to the details of the governments" prop="details" name="Details"></otp-table-column>
+  <otp-table-column i18n-name="Table of governments|Name of the column corresponding to the country of the governments" prop="country.name" name="Country" [include]="true"></otp-table-column>
+  <otp-table-column i18n-name="Table of governments|Name of the column corresponding to the details of the governments" prop="details" name="Details">
+    <ng-template let-value="value" table-cell-template>{{ value ? shorten(value) : '–' }}</ng-template>
+  </otp-table-column>
   <otp-table-column i18n-name="Table of governments|Name of the actions columns (containing the edit and delete button)" name="Actions">
      <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
-       <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
      </ng-template>
   </otp-table-column>
 </otp-table>
