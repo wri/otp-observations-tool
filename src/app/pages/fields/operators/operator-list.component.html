@@ -1,22 +1,20 @@
 <div class="c-table-header">
   <otp-filters>
-    <otp-filter i18n-name="Table of operators|Name of a filter" name="Type" prop="operator-type"></otp-filter>
-    <otp-filter i18n-name="Table of operators|Name of a filter" name="Active" prop="is-active" [values]="[true, false]"></otp-filter>
+    <otp-filter i18n-name="Table of operators|Name of a filter" name="Type" [values]="operatorTypes" prop="operator-type"></otp-filter>
+    <otp-filter i18n-name="Table of operators|Name of a filter" name="Country" values="countries" prop="country" name-attr="name"></otp-filter>
   </otp-filters>
   <button (click)="triggerNewOperator()" class="c-button -primary" i18n="Button to create a new operator">
-    New Operator
+    New operator
   </button>
 </div>
 
 <otp-table i18n-caption="Caption for the table which lists the operators" caption="Operators">
-  <otp-table-column i18n-name="Table of operators|Name of the column corresponding to the name of the operators" name="Name" prop="name" prop="name" name="Name"></otp-table-column>
+  <otp-table-column i18n-name="Table of operators|Name of the column corresponding to the name of the operators" name="Name" prop="name"></otp-table-column>
   <otp-table-column i18n-name="Table of operators|Name of the column corresponding to the type of the operators" prop="operator-type" name="Type"></otp-table-column>
-  <otp-table-column i18n-name="Table of operators|Name of the column corresponding to the concession of the operators" prop="concession" name="Concession"></otp-table-column>
-  <otp-table-column i18n-name="Table of operators|Name of the column corresponding to the whether or not the operators are active" prop="is-active" name="Active"></otp-table-column>
+  <otp-table-column i18n-name="Table of operators|Name of the column corresponding to the country of the operators" prop="country.name" name="Country" [include]="true"></otp-table-column>
   <otp-table-column i18n-name="Table of operators|Name of the actions columns (containing the edit and delete button)" name="Actions">
      <ng-template let-row="row" table-cell-template>
        <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
-       <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
      </ng-template>
   </otp-table-column>
 </otp-table>

@@ -1,73 +1,109 @@
-<spinner class="center" *ngIf="loading" [tickness]="1" [size]="20"></spinner>
-<div class="c-container -j-between -t-d-column -t-a-start">
-  <h2>
-    <ng-template [ngIf]="mode === 'new'" i18n="Operator creation|Title of the page">New operator</ng-template>
-    <ng-template [ngIf]="mode !== 'new'" i18n="Operator creation|Title of the page">Update operator</ng-template>
-  </h2>
-  <div class="c-button-container -j-end form-group" *otpMinTablet>
-    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-    <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+<otp-loader *ngIf="loading" overlay fixed></otp-loader>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
+  <div class="c-container -j-between -t-d-column -t-a-start">
+    <h2 *ngIf="!operator.id" i18n="Operator creation|Title of the page">New operator</h2>
+    <h2 *ngIf="operator.id" i18n="Operator edition|Title of the page">Edit operator</h2>
+    <div class="c-button-container -j-end form-group" *otpMinTablet>
+      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+      <button *ngIf="!operator.id" disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="operator.id" disable="loading" type="submit" class="c-button -primary" i18n="Save button">Save</button>
+    </div>
   </div>
-</div>
 
-<form name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
   <div class="form-container">
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-      <label for="name" i18n="Operator creation/edition|Label for the name field">Name</label>
-      <input id="name" type="text" class="form-control" name="name" ngModel #name="ngModel" required />
-      <div *ngIf="f.submitted && !name.valid" class="help-text" i18n="Operator creation/edition|Error message if the name isn't supplied">Name is required</div>
+    <!-- 1. Name -->
+    <div class="form-group -required">
+      <label for="name_field">Name</label>
+      <input id="name_field" type="text" class="form-control" name="name_field" [(ngModel)]="operator.name" #name_field="ngModel" required />
+      <div *ngIf="f.submitted && !name_field.valid" class="help-text">Please enter the name</div>
     </div>
 
-    <div class="form-group">
-      <label for="operator_type" i18n="Operator creation/edition|Label for the operator type field">Operator type</label>
-      <select id="operator_type" name="operator_type" ngModel #operator_type="ngModel" required>
-        <option selected value="Logging" i18n="Operator type">Logging</option>
-        <option value="Company" i18n="Operator type">Company</option>
-        <option value="Artisanal" i18n="Operator type">Artisanal</option>
-        <option value="Sawmill" i18n="Operator type">Sawmill</option>
-        <option value="CommunityForest" i18n="Operator type">Community Forest</option>
-        <option value="ARB1327" i18n="Operator type">ARB1327</option>
-        <option value="PalmOil" i18n="Operator type">Palm Oil</option>
-        <option value="Trader" i18n="Operator type">Trader</option>
-        <option value="Company" i18n="Operator type">Company</option>
+    <!-- 2. Type -->
+    <div class="form-group -required">
+      <label for="type_field">Type</label>
+      <select id="type_field" name="type_field" [(ngModel)]="operator['operator-type']" #type_field="ngModel" required>
+        <option disabled value="">Select an operator type</option>
+        <option *ngFor="let type of operatorTypes" [ngValue]="type">{{ type }}</option>
       </select>
-      <div *ngIf="f.submitted && !operator_type.valid" class="help-text" i18n="Operator creation/edition|Error message if the operator type isn't supplied (the user will have to choose between several options)">Please select an operator type</div>
+      <div *ngIf="f.submitted && !type_field.valid" class="help-text">Please select an operator type</div>
     </div>
 
-    <div class="form-group" i18n="Operator creation/edition|Label for the country field">
-      <label for="country_id">Country</label>
-      <select id="country_id" name="country_id" ngModel #country_id="ngModel">
-        <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+    <!-- 3. Country -->
+    <div class="form-group -required">
+      <label for="country_field">Country</label>
+      <select id="country_field" name="country_field" [(ngModel)]="operator.country" #country_field="ngModel" required>
+        <option disabled [value]="null">Select a country</option>
+        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
+      <div *ngIf="f.submitted && !country_field.valid" class="help-text">Please select a country</div>
     </div>
 
+    <!-- 4. Concession -->
     <div class="form-group">
-      <label for="concession" i18n="Operator creation/edition|Label for the concession field">Concession</label>
-      <input id="concession" type="text" class="form-control" name="concession" ngModel #concession="ngModel" />
+      <label for="concession_field">Concession</label>
+      <input id="concession_field" type="text" class="form-control" name="concession_field" [(ngModel)]="operator.concession" #concession_field="ngModel" />
     </div>
 
+    <!-- 5. Details -->
     <div class="form-group">
-      <label for="country_centroid" i18n="Operator creation/edition|Label for the country centroid field">Country centroid</label>
-      <input id="country_centroid" type="text" class="form-control" name="country_centroid" ngModel #country_centroid="ngModel" />
+      <label for="details_field">Details</label>
+      <textarea id="details_field" name="details_field" [(ngModel)]="operator.details" #details_field="ngModel"></textarea>
     </div>
 
+    <!-- 6. Address -->
     <div class="form-group">
-      <label for="active" i18n="Operator creation/edition|Label for the field to tell whether the operator is active or not">Active</label>
-      <input id="active" type="checkbox" name="active" ngModel #active="ngModel" />
+      <label for="address_field">Address</label>
+      <textarea id="address_field" name="address_field" [(ngModel)]="operator.address" #address_field="ngModel"></textarea>
     </div>
+
+    <!-- 7. Website -->
+    <div class="form-group">
+      <label for="website_field">Website</label>
+      <input id="website_field" type="url" class="form-control" name="website_field" [(ngModel)]="operator.website" #website_field="ngModel" />
+    </div>
+
+    <!-- 8. Logo -->
+    <fieldset>
+      <legend>Logo</legend>
+      <div class="fieldset-container">
+        <div class="row">
+          <div class="small-12 medium-6 columns">
+            <h3>Preview</h3>
+            <p *ngIf="!operator.logo">No logo</p>
+            <p *ngIf="operator.logo">
+              <img class="logo" [src]="logoUrl" alt="Operator's logo" />
+            </p>
+          </div>
+
+          <div class="small-12 medium-6 columns">
+            <h3>Upload a logo</h3>
+            <p></p>
+            <div class="form-group">
+              <label for="logo_field">Logo</label>
+              <input id="logo_field" type="file" class="form-control" name="logo_field" [(ngModel)]="operator.logo" #logo_field="ngModel" otpBase64FileInput maxSize="5242880" accept="image/*" />
+              <div *ngIf="logo_field.errors?.maxSize" class="help-text">The image should weight less than 5MB</div>
+              <div *ngIf="!logo_field.errors?.maxSize && !logo_field.valid" class="help-text">The file is not valid</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
   </div>
 
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
         <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+        <button *ngIf="!operator.id" disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="operator.id" disable="loading" type="submit" class="c-button -primary" i18n="Save button">Save</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
       <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-      <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="!operator.id" disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="operator.id" disable="loading" type="submit" class="c-button -primary" i18n="Save button">Save</button>
     </otp-action-bar>
   </div>
+
 </form>

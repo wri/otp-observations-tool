@@ -45,13 +45,6 @@ export class OperatorsService extends JsonApiService<Operator> {
     return this.datastoreService.query(Operator, { countr_id: countryId, page: { size: 10000 }}).toPromise();
   }
 
-  createOperator(formValues): Promise<any> {
-    const payload = { operator: formValues };
-    return this.http.post(`${environment.apiUrl}/operators`, payload)
-      .map(response => response.json())
-      .toPromise();
-  }
-
   deleteOperator(operator: Operator): Promise<any> {
     return this.datastoreService.deleteRecord(Operator, operator.id).toPromise();
   }

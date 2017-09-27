@@ -182,6 +182,10 @@ const routes: Routes = [
             path: 'operators/new',
             component: OperatorDetailComponent
           },
+          {
+            path: 'operators/edit/:id',
+            component: OperatorDetailComponent
+          },
           // --------------LAWS-----------------
           {
             path: 'laws',

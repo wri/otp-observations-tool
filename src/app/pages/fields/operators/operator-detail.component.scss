@@ -1,15 +1,9 @@
 :host {
-  h2 {
-    margin-top: 0;
-  }
 
-  .actions {
-    display: flex;
-    justify-content: flex-end;
-    padding-top: 10px;
-  }
-
-  label {
-    text-transform: uppercase;
+  .logo {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 200px;
   }
 }

@@ -1,8 +1,20 @@
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { OperatorsService } from 'app/services/operators.service';
 import { Operator } from 'app/models/operator.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
+
+export enum OperatorTypes {
+  'Artisanal' = 'Artisanal',
+  'Community forest' = 'Community forest',
+  'Estate' = 'Estate',
+  'Industrial agriculture' = 'Industrial agriculture',
+  'Logging company' = 'Logging company',
+  'Mining company' = 'Mining company',
+  'Other' = 'Other',
+  'Sawmill' = 'Sawmill',
+  'Unknown' = 'Unknown'
+}
 
 @Component({
   selector: 'otp-operator-list',
@@ -11,9 +23,12 @@ import { Component } from '@angular/core';
 })
 export class OperatorListComponent extends TableFilterBehavior {
 
+  operatorTypes = Object.keys(OperatorTypes);
+
   constructor(
     protected service: OperatorsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     super();
   }
@@ -23,17 +38,8 @@ export class OperatorListComponent extends TableFilterBehavior {
   }
 
   onEdit(row): void {
-
-  }
-
-  onDelete(operator: Operator): void {
-    if (confirm(`Are you sure to delete the operator with name: ${operator.name}?`)) {
-      this.service.deleteOperator(operator).then(
-        data => {
-          alert(data.json().messages[0].title);
-          this.loadData();
-        });
-    }
+    // Without relativeTo, the navigation doesn't work properly
+    this.router.navigate([`edit/${row.id}`], { relativeTo: this.route });
   }
 
 }
