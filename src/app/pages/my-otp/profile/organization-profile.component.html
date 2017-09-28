@@ -1,18 +1,18 @@
+<otp-loader *ngIf="saveLoading" overlay fixed></otp-loader>
 <div class="l-wrapper">
-  <spinner class="center" *ngIf="loading" tickness="1" size="20"></spinner>
-  <form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit(f.value, $event)" #f="ngForm" novalidate>
-    <div class="form-container">
+  <form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
+    <div class="form-container" *ngIf="loading"><otp-loader></otp-loader></div>
+    <div class="form-container" *ngIf="!loading">
 
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
         <label for="name" i18n="Organization profile|Label for the name field (name of the organization)">Name of the organization</label>
-        <input type="text" id="name" name="name" ngModel #name="ngModel" required />
+        <input type="text" id="name" name="name" [(ngModel)]="observer.name" #name="ngModel" required />
         <div *ngIf="f.submitted && name.errors?.required" class="help-text" i18n="Organization profile|Error message if the name of the organization isn't supplied">Name is required</div>
       </div>
 
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !address.valid }">
         <label for="address" i18n="Organization profile|Label for the address field">Address</label>
-        <input type="text" id="address" name="address" ngModel #address="ngModel" required />
-        <div *ngIf="f.submitted && address.errors?.required" class="help-text" i18n="Organization profile|Error message if the address isn't supplied">Address is required</div>
+        <textarea id="address" name="address" [(ngModel)]="observer.address" #address="ngModel"></textarea>
       </div>
 
       <fieldset>
@@ -22,21 +22,18 @@
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_general_name.valid }">
             <label for="contact_general_name" i18n="Organization profile|Label for the contact's name field (general information)">Name</label>
-            <input type="text" id="contact_general_name" name="contact_general_name" ngModel #contact_general_name="ngModel" required />
-            <div *ngIf="f.submitted && contact_general_name.errors?.required" class="help-text" i18n="Organization profile|Error message if the name of the contact isn't supplied (general information)">Name is required</div>
+            <input type="text" id="contact_general_name" name="contact_general_name" [(ngModel)]="observer['information-name']" #contact_general_name="ngModel" />
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_general_email.valid }">
             <label for="contact_general_email" i18n="Organization profile|Label for the contact's email field (general information)">Email</label>
-            <input type="email" id="contact_general_email" name="contact_general_email" ngModel #contact_general_email="ngModel" email required />
-            <div *ngIf="f.submitted && contact_general_email.errors?.required" class="help-text" i18n="Organization profile|Error message if the contact email isn't supplied (general information)">Email is required</div>
-            <div *ngIf="f.submitted && contact_general_email.errors?.email && !contact_general_email.errors?.required" class="help-text" i18n="Organization profile|Error message if the contact email isn't valid (general information)">Please enter an email address</div>
+            <input type="email" id="contact_general_email" name="contact_general_email" [(ngModel)]="observer['information-email']" #contact_general_email="ngModel" [email]="!!observer['information-email']" />
+            <div *ngIf="f.submitted && contact_general_email.errors?.email" class="help-text" i18n="Organization profile|Error message if the contact email isn't valid (general information)">Please enter an email address</div>
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_general_phone.valid }">
             <label for="contact_general_phone" i18n="Organization profile|Label for the contact's phone number field (general information)">Phone number</label>
-            <input type="tel" id="contact_general_phone" name="contact_general_phone" ngModel #contact_general_phone="ngModel" required />
-            <div *ngIf="f.submitted && contact_general_phone.errors?.required" class="help-text" i18n="Organization profile|Error message if the contact phone number isn't supplied (general information)">Phone number is required</div>
+            <input type="tel" id="contact_general_phone" name="contact_general_phone" [(ngModel)]="observer['information-phone']" #contact_general_phone="ngModel" />
           </div>
 
         </div>
@@ -50,249 +47,23 @@
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_inquiries_name.valid }">
             <label for="contact_inquiries_name" i18n="Organization profile|Label for the contact's name field (inquiries on data uploaded)">Name</label>
-            <input type="text" id="contact_inquiries_name" name="contact_inquiries_name" ngModel #contact_inquiries_name="ngModel" required />
-            <div *ngIf="f.submitted && contact_inquiries_name.errors?.required" class="help-text" i18n="Organization profile|Error message if the name of the contact isn't supplied (inquiries on data uploaded)">Name is required</div>
+            <input type="text" id="contact_inquiries_name" name="contact_inquiries_name" [(ngModel)]="observer['data-name']" #contact_inquiries_name="ngModel" />
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_inquiries_email.valid }">
             <label for="contact_inquiries_email" i18n="Organization profile|Label for the contact's email field (inquiries on data uploaded)">Email</label>
-            <input type="email" id="contact_inquiries_email" name="contact_inquiries_email" ngModel #contact_inquiries_email="ngModel" email required />
-            <div *ngIf="f.submitted && contact_inquiries_email.errors?.required" class="help-text" i18n="Organization profile|Error message if the contact email isn't supplied (inquiries on data uploaded)">Email is required</div>
-            <div *ngIf="f.submitted && contact_inquiries_email.errors?.email && !contact_inquiries_email.errors?.required" class="help-text" i18n="Organization profile|Error message if the contact email isn't valid (inquiries on data uploaded)">Please enter an email address</div>
+            <input type="email" id="contact_inquiries_email" name="contact_inquiries_email" [(ngModel)]="observer['data-email']" #contact_inquiries_email="ngModel" [email]="!!observer['data-email']" />
+            <div *ngIf="f.submitted && contact_inquiries_email.errors?.email" class="help-text" i18n="Organization profile|Error message if the contact email isn't valid (inquiries on data uploaded)">Please enter an email address</div>
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_inquiries_phone.valid }">
             <label for="contact_inquiries_phone" i18n="Organization profile|Label for the contact's phone number field (inquiries on data uploaded)">Phone number</label>
-            <input type="tel" id="contact_inquiries_phone" name="contact_inquiries_phone" ngModel #contact_inquiries_phone="ngModel" required />
-            <div *ngIf="f.submitted && contact_inquiries_phone.errors?.required" class="help-text" i18n="Organization profile|Error message if the contact phone number isn't supplied (inquiries on data uploaded)">Phone number is required</div>
+            <input type="tel" id="contact_inquiries_phone" name="contact_inquiries_phone" [(ngModel)]="observer['data-phone']" #contact_inquiries_phone="ngModel" />
           </div>
 
         </div>
 
       </fieldset>
-
-      <!-- <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !type_organization.valid }">
-        <label for="type_organization" i18n="Organization profile|Label for the type of organization field">Type of organization</label>
-        <select id="type_organization" name="type_organization" ngModel #type_organization="ngModel" required>
-          <option value="ngo" i18n="Type of organization">Non governmental organization (NGO)</option>
-          <option value="academic" i18n="Type of organization">Academic</option>
-          <option value="research_institute" i18n="Type of organization">Research Institute</option>
-          <option value="private_company" i18n="Type of organization">Private company</option>
-          <option value="other" i18n="Type of organization">Other</option>
-        </select>
-        <div *ngIf="f.submitted && type_organization.errors?.required" class="help-text" i18n="Organization profile|Error message if the type of organization isn't supplied (the user will have to choose between some options)">Please select a type of organization</div>
-      </div>
-
-      <div class="form-group -inline" *ngIf="type_organization.value === 'other'" [ngClass]="{ 'has-error': f.submitted && !type_organization_other.valid }">
-        <label for="type_organization_other" i18n="Organization profile|Label of an additional field where the user is asked to specify/detail a previous field">Please specify:</label>
-        <input type="text" id="type_organization_other" name="type_organization_other" ngModel #type_organization_other="ngModel" required />
-        <div *ngIf="f.submitted && type_organization_other.errors?.required" class="help-text" i18n="Organization profile|Error message if the 'more specific' type of organization field isn't supplied">Type of organization is required</div>
-      </div>
-
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !type_monitoring_organization.valid }">
-        <label for="type_monitoring_organization" i18n="Organization profile|Label for the type of monitoring organization field">Type of monitoring organization</label>
-        <select id="type_monitoring_organization" name="type_monitoring_organization" ngModel #type_monitoring_organization="ngModel" required>
-          <option value="mandated" i18n="type of monitoring organization">Mandated</option>
-          <option value="semi_mandated" i18n="type of monitoring organization">Semi mandated</option>
-          <option value="non-mandated" i18n="type of monitoring organization">Non-mandated (external)</option>
-          <option value="other" i18n="type of monitoring organization">Other</option>
-        </select>
-        <div *ngIf="f.submitted && type_monitoring_organization.errors?.required" class="help-text" i18n="Organization profile|Error message if the type of monitoring organization isn't supplied (the user will have to choose between some options)">Please select a type of monitoring organization</div>
-      </div>
-
-      <div class="form-group -inline" *ngIf="type_monitoring_organization.value === 'other'" [ngClass]="{ 'has-error': f.submitted && !type_monitoring_organization_other.valid }">
-        <label for="type_monitoring_organization_other" i18n="Organization profile|Label of an additional field where the user is asked to specify/detail a previous field">Please specify:</label>
-        <input type="text" id="type_monitoring_organization_other" name="type_monitoring_organization_other" ngModel #type_monitoring_organization_other="ngModel" required />
-        <div *ngIf="f.submitted && type_monitoring_organization_other.errors?.required" class="help-text" i18n="Organization profile|Error message if the 'more specific' type of monitoring organization field isn't supplied">Type of monitoring organization is required</div>
-      </div>
-
-      <fieldset>
-        <legend i18n="Organization profile|Title of a section of the form">Current independent monitoring project</legend>
-
-        <div class="fieldset-container">
-
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !project_title.valid }">
-            <label for="project_title" i18n="Organization profile|Label for the project title field">Project title</label>
-            <input type="text" id="project_title" name="project_title" ngModel #project_title="ngModel" required />
-            <div *ngIf="f.submitted && project_title.errors?.required" class="help-text" i18n="Organization profile|Error message if the project title isn't supplied">Project title is required</div>
-          </div>
-
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !project_organization.valid }">
-            <label for="project_organization" i18n="Organization profile|Label for the lead organization field (of a project)">Lead organization</label>
-            <input type="text" id="project_organization" name="project_organization" ngModel #project_organization="ngModel" required />
-            <div *ngIf="f.submitted && project_organization.errors?.required" class="help-text" i18n="Organization profile|Error message if the lead organization of a project isn't supplied">Lead organization is required</div>
-          </div>
-
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !project_start_date.valid }">
-            <label for="project_start_date" i18n="Organization profile|Label for the start date field (of a project)">Start date</label>
-            <otp-datepicker [id]="'project_start_date'" [name]="'project_start_date'" ngModel #project_start_date="ngModel" required></otp-datepicker>
-            <div *ngIf="f.submitted && project_start_date.errors?.required" class="help-text" i18n="Organization profile|Error message if the start date of a project isn't supplied">Start date is required</div>
-          </div>
-
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !project_duration.valid }">
-            <label for="project_duration" i18n="Organization profile|Label for the duration in years field (of a project)">Project duration (years)</label>
-            <input type="number" id="project_duration" name="project_duration" ngModel #project_duration="ngModel" required />
-            <div *ngIf="f.submitted && project_duration.errors?.required" class="help-text" i18n="Organization profile|Error message if the duration in years of a project isn't supplied">Project duration is required</div>
-          </div>
-
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !project_donors.valid }">
-            <label for="project_donors" i18n="Organization profile|Label for the donor(s) field (of a project)">Donor(s)</label>
-            <input type="text" id="project_donors" name="project_donors" ngModel #project_donors="ngModel" required />
-            <div *ngIf="f.submitted && project_donors.errors?.required" class="help-text" i18n="Organization profile|Error message if the donor(s) isn't supplied">Donor(s) is required</div>
-          </div>
-
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !project_website.valid }">
-            <label for="project_website" i18n="Organization profile|Label for the website URL field (of a project)">Project website</label>
-            <input type="url" id="project_website" name="project_website" ngModel #project_website="ngModel" />
-          </div>
-
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !project_additional_info.valid }">
-            <label for="project_additional_info" i18n="Organization profile|Label for the additional information field (of a project)">Additional information on status, progress, etc.</label>
-            <input type="text" id="project_additional_info" name="project_additional_info" ngModel #project_additional_info="ngModel" />
-          </div>
-
-        </div>
-
-      </fieldset>
-
-      <ng-template [ngIf]="showMore">
-
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !website_link.valid }">
-          <label for="website_link" i18n="Organization profile|Label for the website URL field (of the organization)">Website link</label>
-          <input type="url" id="website_link" name="website_link" ngModel #website_link="ngModel" />
-        </div>
-
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !mission.valid }">
-          <label for="mission" i18n="Organization profile|Label for the organization's mission field (with a limit of 250 chars)">Organisation’s mission (max 250 characters)</label>
-          <textarea id="mission" name="mission" ngModel #mission="ngModel" maxlength="250"></textarea>
-          <div *ngIf="f.submitted && mission.errors?.maxlength" class="help-text" i18n="Organization profile|Error message if the organization's mission exceeds 250 chars">You exceed the maximum number of characters</div>
-        </div>
-
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !quality_control.valid }">
-          <label for="quality_control" i18n="Organization profile|Label for the quality control process field (with a limit of 500 chars)">Quality control (max 500 characters)</label>
-          <textarea id="quality_control" name="quality_control" ngModel #quality_control="ngModel" maxlength="500"></textarea>
-          <div *ngIf="f.submitted && quality_control.errors?.maxlength" class="help-text" i18n="Organization profile|Error message if the quality control process field exceeds 500 chars">You exceed the maximum number of characters</div>
-        </div>
-
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !geographical_scope.valid }">
-          <label for="geographical_scope" i18n="Organization profile|Label for the organization's geographical scope field">Geographical scope of work</label>
-          <select id="geographical_scope" name="geographical_scope" ngModel #geographical_scope="ngModel">
-            <option value="sub-national" i18n="Geographical scope of an organization">Sub-national</option>
-            <option value="national" i18n="Geographical scope of an organization">National</option>
-            <option value="international" i18n="Geographical scope of an organization">International</option>
-          </select>
-        </div>
-
-        <fieldset>
-
-          <legend>Past independent monitoring projects</legend>
-
-          <div class="fieldset-container">
-
-            <fieldset>
-
-              <legend i18n="Organization profile|Title of a section of the form">Project 1</legend>
-
-              <div class="fieldset-container">
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_title.valid }">
-                  <label for="past_project_1_title" i18n="Organization profile|Label for the project title field">Project title</label>
-                  <input type="text" id="past_project_1_title" name="past_project_1_title" ngModel #past_project_1_title="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_organization.valid }">
-                  <label for="past_project_1_organization" i18n="Organization profile|Label for the lead organization field (of a project)">Lead organization</label>
-                  <input type="text" id="past_project_1_organization" name="past_project_1_organization" ngModel #past_project_1_organization="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_start_date.valid }">
-                  <label for="past_project_1_start_date" i18n="Organization profile|Label for the start date field (of a project)">Start date</label>
-                  <otp-datepicker [id]="'past_project_1_start_date'" [name]="'past_project_1_start_date'" ngModel #past_project_1_start_date="ngModel"></otp-datepicker>
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_duration.valid }">
-                  <label for="past_project_1_duration" i18n="Organization profile|Label for the duration in years field (of a project)">Project duration (years)</label>
-                  <input type="number" id="past_project_1_duration" name="past_project_1_duration" ngModel #past_project_1_duration="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_donors.valid }">
-                  <label for="past_project_1_donors" i18n="Organization profile|Label for the donor(s) field (of a project)">Donor(s)</label>
-                  <input type="text" id="past_project_1_donors" name="past_project_1_donors" ngModel #past_project_1_donors="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_website.valid }">
-                  <label for="past_project_1_website" i18n="Organization profile|Label for the website URL field (of a project)">Project website</label>
-                  <input type="url" id="past_project_1_website" name="past_project_1_website" ngModel #past_project_1_website="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_1_additional_info.valid }">
-                  <label for="past_project_1_additional_info" i18n="Organization profile|Label for the additional information field (of a project)">Additional information on status, progress, etc.</label>
-                  <input type="text" id="past_project_1_additional_info" name="past_project_1_additional_info" ngModel #past_project_1_additional_info="ngModel" />
-                </div>
-
-              </div>
-
-            </fieldset>
-
-            <fieldset>
-
-              <legend i18n="Organization profile|Title of a section of the form">Project 2</legend>
-
-              <div class="fieldset-container">
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_title.valid }">
-                  <label for="past_project_2_title" i18n="Organization profile|Label for the project title field">Project title</label>
-                  <input type="text" id="past_project_2_title" name="past_project_2_title" ngModel #past_project_2_title="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_organization.valid }">
-                  <label for="past_project_2_organization" i18n="Organization profile|Label for the lead organization field (of a project)">Lead organization</label>
-                  <input type="text" id="past_project_2_organization" name="past_project_2_organization" ngModel #past_project_2_organization="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_start_date.valid }">
-                  <label for="past_project_2_start_date" i18n="Organization profile|Label for the start date field (of a project)">Start date</label>
-                  <otp-datepicker [id]="'past_project_2_start_date'" [name]="'past_project_2_start_date'" ngModel #past_project_2_start_date="ngModel"></otp-datepicker>
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_duration.valid }">
-                  <label for="past_project_2_duration" i18n="Organization profile|Label for the duration in years field (of a project)">Project duration (years)</label>
-                  <input type="number" id="past_project_2_duration" name="past_project_2_duration" ngModel #past_project_2_duration="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_donors.valid }">
-                  <label for="past_project_2_donors" i18n="Organization profile|Label for the donor(s) field (of a project)">Donor(s)</label>
-                  <input type="text" id="past_project_2_donors" name="past_project_2_donors" ngModel #past_project_2_donors="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_website.valid }">
-                  <label for="past_project_2_website" i18n="Organization profile|Label for the website URL field (of a project)">Project website</label>
-                  <input type="url" id="past_project_2_website" name="past_project_2_website" ngModel #past_project_2_website="ngModel" />
-                </div>
-
-                <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !past_project_2_additional_info.valid }">
-                  <label for="past_project_2_additional_info" i18n="Organization profile|Label for the additional information field (of a project)">Additional information on status, progress, etc.</label>
-                  <input type="text" id="past_project_2_additional_info" name="past_project_2_additional_info" ngModel #past_project_2_additional_info="ngModel" />
-                </div>
-
-              </div>
-
-            </fieldset>
-
-          </div>
-
-        </fieldset>
-
-      </ng-template>
-
-      <div class="c-container -j-center -t-a-start">
-        <div class="c-button-container -j-center">
-          <button type="button" (click)="showMore = !showMore" class="c-button -secondary">
-            <ng-template [ngIf]="showMore" i18n="Less details button">Less details</ng-template>
-            <ng-template [ngIf]="!showMore" i18n="More details button">More details</ng-template>
-          </button>
-        </div>
-      </div> -->
 
     </div>
 
