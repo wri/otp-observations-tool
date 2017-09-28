@@ -1,6 +1,14 @@
 <otp-loader *ngIf="saveLoading" overlay fixed></otp-loader>
 <div class="l-wrapper">
   <form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
+    <div class="c-container -j-between -t-d-column -t-a-start">
+      <div></div>
+      <div class="c-button-container -j-end form-group" *otpMinTablet>
+        <button type="button" (click)="onDiscard()" class="c-button -secondary" i18n="Discard button">Discard changes</button>
+        <button type="submit" class="c-button -primary" i18n="Save button">Save</button>
+      </div>
+    </div>
+
     <div class="form-container" *ngIf="loading"><otp-loader></otp-loader></div>
     <div class="form-container" *ngIf="!loading">
 
@@ -68,14 +76,17 @@
     </div>
 
     <div class="form-footer">
-
-      <div class="c-container -j-end -t-d-column -t-a-start">
-        <div class="c-button-container -xs-j-between -t-j-end">
-          <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Discard change button">Discard changes</button>
-          <button disable="loading" type="submit" class="c-button -primary" i18n="Save changes button">Save changes</button>
+      <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+        <div class="c-button-container -j-end form-group">
+          <button type="button" (click)="onDiscard()" class="c-button -secondary" i18n="Discard button">Discard changes</button>
+          <button type="submit" class="c-button -primary" i18n="Save button">Save</button>
         </div>
       </div>
 
+      <otp-action-bar *otpMaxTablet>
+        <button type="button" (click)="onDiscard()" class="c-button -secondary" i18n="Discard button">Discard changes</button>
+        <button type="submit" class="c-button -primary" i18n="Save button">Save</button>
+      </otp-action-bar>
     </div>
 
   </form>

@@ -44,7 +44,7 @@ export class OrganizationProfileComponent {
       .then(() => this.saveLoading = false);
   }
 
-  onCancel(): void {
+  onDiscard(): void {
     this.loadObserver();
   }
 
