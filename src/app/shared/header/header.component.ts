@@ -1,5 +1,5 @@
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, Inject, LOCALE_ID } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
 
@@ -12,16 +12,13 @@ export class HeaderComponent {
 
   private isAdmin = false;
   isLogged = false;
-  lang: string;
+  lang = 'en';
 
   constructor (
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    @Inject(LOCALE_ID) locale: string
   ) {
-    this.lang = locale.slice(0, 2);
-
     // Each time the status of the login change, we update some variables
     this.authService.loginStatus.subscribe(isLogged => {
       this.isLogged = isLogged;
