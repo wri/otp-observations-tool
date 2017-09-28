@@ -27,6 +27,16 @@ export class ObserversService extends JsonApiService<Observer> {
       .toPromise();
   }
 
+  /**
+   * Return the observer designated by its id
+   * @param {string} id ID of the observer
+   * @param {*} [params={}] Additional params for the query
+   */
+  getById(id: string, params: any = {}): Promise<Observer> {
+    return this.datastoreService.findRecord(Observer, id, params)
+      .toPromise();
+  }
+
   createObserver(formValues): Promise<any> {
     const payload = { observer: formValues };
     return this.http.post(`${environment.apiUrl}/observers`, payload)
