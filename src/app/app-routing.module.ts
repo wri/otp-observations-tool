@@ -16,7 +16,7 @@ import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-det
 // import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
 import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
 import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
-// import { ProfileComponent } from 'app/pages/profile/profile.component';
+import { ProfileComponent } from 'app/pages/profile/profile.component';
 import { FieldListComponent } from 'app/pages/fields/field-list.component';
 import { FieldDetailComponent } from 'app/pages/fields/field-detail.component';
 // import { UserListComponent } from 'app/pages/users/user-list.component';
@@ -205,11 +205,11 @@ const routes: Routes = [
             component: SeverityListComponent
           }
         ]
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent
       }
-      // {
-      //   path: 'profile',
-      //   component: ProfileComponent
-      // }
     ]
   },
   {

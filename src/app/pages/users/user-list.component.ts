@@ -35,9 +35,9 @@ export class UserListComponent extends TableFilterBehavior {
    */
   onDelete(user: User): void {
     if(confirm(`Are you sure to delete the user with name: ${user.name}?`)) {
-      this.service.deleteUser(user)
-      .then(() => this.loadData())
-      .catch((e) => alert('Unable to delete the user'));
+      // this.service.deleteUser(user)
+      // .then(() => this.loadData())
+      // .catch((e) => alert('Unable to delete the user'));
     }
   }
   /**

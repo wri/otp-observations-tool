@@ -45,8 +45,8 @@ export class UserDetailComponent implements OnInit {
     if (this.mode === 'edit') {
       this.userId = +this.route.snapshot.params['id'];
 
-      this.userService.getUser(this.userId)
-        .then(user => this.user = user);
+      // this.userService.getUser(this.userId)
+      //   .then(user => this.user = user);
     }
   }
 
@@ -55,15 +55,15 @@ export class UserDetailComponent implements OnInit {
       delete formValues.country_id;
     }
 
-    if (this.mode === 'edit') {
-      this.userService.updateUser(this.user)
-        .then(() => this.router.navigate(['/private/users']))
-        .catch(() => alert('Unable to update the user'));
-    } else {
-      this.userService.createUser(formValues)
-        .then(() => this.router.navigate(['/private/users']))
-        .catch(() => alert('Unable to create the user'));
-    }
+    // if (this.mode === 'edit') {
+    //   this.userService.updateUser(this.user)
+    //     .then(() => this.router.navigate(['/private/users']))
+    //     .catch(() => alert('Unable to update the user'));
+    // } else {
+    //   this.userService.createUser(formValues)
+    //     .then(() => this.router.navigate(['/private/users']))
+    //     .catch(() => alert('Unable to create the user'));
+    // }
   }
 
 
