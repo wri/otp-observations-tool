@@ -5,8 +5,8 @@
     <ng-template [ngIf]="mode !== 'new'" i18n="Category edition|Title of the page">Update category</ng-template>
   </h2>
   <div class="c-button-container -j-end form-group" *otpMinTablet>
-    <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-    <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+    <button  type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+    <button  type="submit" class="c-button -primary" i18n="Create button">Create</button>
   </div>
 </div>
 
@@ -22,14 +22,14 @@
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-        <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+        <button  type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+        <button  type="submit" class="c-button -primary" i18n="Create button">Create</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-      <button disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button  type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+      <button  type="submit" class="c-button -primary" i18n="Create button">Create</button>
     </otp-action-bar>
   </div>
 </form>

@@ -4,9 +4,9 @@
     <h2 *ngIf="!government.id" i18n="Operator creation|Title of the page">New government entity</h2>
     <h2 *ngIf="government.id" i18n="Operator edition|Title of the page">Edit government entity</h2>
     <div class="c-button-container -j-end form-group" *otpMinTablet>
-      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-      <button *ngIf="!government.id" disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
-      <button *ngIf="government.id" disable="loading" type="submit" class="c-button -primary" i18n="Save button">Save</button>
+      <button  type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+      <button *ngIf="!government.id"  type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="government.id"  type="submit" class="c-button -primary" i18n="Save button">Save</button>
     </div>
   </div>
 
@@ -38,16 +38,16 @@
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-        <button *ngIf="!government.id" disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
-      <button *ngIf="government.id" disable="loading" type="submit" class="c-button -primary" i18n="Save button">Save</button>
+        <button  type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+        <button *ngIf="!government.id"  type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="government.id"  type="submit" class="c-button -primary" i18n="Save button">Save</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button disable="loading" type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-      <button *ngIf="!government.id" disable="loading" type="submit" class="c-button -primary" i18n="Create button">Create</button>
-      <button *ngIf="government.id" disable="loading" type="submit" class="c-button -primary" i18n="Save button">Save</button>
+      <button  type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
+      <button *ngIf="!government.id"  type="submit" class="c-button -primary" i18n="Create button">Create</button>
+      <button *ngIf="government.id"  type="submit" class="c-button -primary" i18n="Save button">Save</button>
     </otp-action-bar>
   </div>
 </form>
