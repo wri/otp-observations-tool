@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run transifex:pull && ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -13,7 +13,9 @@
     "extract-i18n": "ng xi18n --output-path src/locale/ --locale en && xliffmerge --profile xliffmerge.json en fr",
     "start-en": "ng serve --aot --i18n-file=src/locale/messages.en.xlf --locale=en --i18n-format=xlf",
     "start-fr": "ng serve --aot --i18n-file=src/locale/messages.fr.xlf --locale=fr --i18n-format=xlf",
-    "bundle-report": "webpack-bundle-analyzer dist/stats.json"
+    "bundle-report": "webpack-bundle-analyzer dist/stats.json",
+    "transifex:push": "node transifex/transifex-push.js",
+    "transifex:pull": "node transifex/transifex-pull.js"
   },
   "private": true,
   "dependencies": {
@@ -50,6 +52,7 @@
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
     "codelyzer": "~2.0.0",
+    "dotenv": "^4.0.0",
     "jasmine-core": "~2.5.2",
     "jasmine-spec-reporter": "~3.2.0",
     "karma": "~1.4.1",
@@ -59,6 +62,7 @@
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "ngx-i18nsupport": "^0.6.1",
+    "node-fetch": "^1.7.3",
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",

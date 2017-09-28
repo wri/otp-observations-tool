@@ -43,3 +43,7 @@ Thumbs.db
 
 # Environment file
 /src/environments/environment.dev.ts
+
+# i18n
+.env
+src/locale
