@@ -1,5 +1,86 @@
-<div>
-  <h1> Profile page </h1>
-  <otp-user-detail #userDetail>
-  </otp-user-detail>
+<div class="l-wrapper">
+  <otp-loader *ngIf="saveLoading" overlay fixed></otp-loader>
+  <form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
+    <div class="c-container -j-between -t-d-column -t-a-start">
+      <h2>My profile</h2>
+      <div class="c-button-container -j-end form-group" *otpMinTablet>
+        <button type="button" (click)="onDiscard()" class="c-button -secondary" i18n="Discard button">Discard changes</button>
+        <button type="submit" class="c-button -primary" i18n="Save button">Save</button>
+      </div>
+    </div>
+
+    <div class="form-container" *ngIf="loading"><otp-loader></otp-loader></div>
+    <div class="form-container" *ngIf="!loading">
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+        <label for="name">Name</label>
+        <input id="name" type="text" class="form-control" name="name" [(ngModel)]="user.name" #name="ngModel" required />
+        <div *ngIf="f.submitted && !name.valid" class="help-text">Please enter your name</div>
+      </div>
+
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !nickname.valid }">
+        <label for="nickname">Username</label>
+        <input id="nickname" type="text" class="form-control" name="nickname" [(ngModel)]="user.nickname" #nickname="ngModel" required />
+        <div *ngIf="f.submitted && !nickname.valid" class="help-text">Please enter a username</div>
+      </div>
+
+      <div class="form-group">
+        <label for="observer_id">Organization</label>
+        <select id="observer_id" name="observer_id" disabled>
+          <option value="">{{ user.observer.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="country_id">Country</label>
+        <select id="country_id" name="country_id" disabled>
+          <option value="">{{ user.country.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !email_field.valid }">
+        <label for="email_field">Email</label>
+        <input id="email_field" type="email" class="form-control" name="email_field" [(ngModel)]="user.email" #email_field="ngModel" required email />
+        <p *ngIf="f.submitted && email_field.errors?.required" class="help-text">Email is required</p>
+        <p *ngIf="f.submitted && email_field.errors?.email && !email_field.errors?.required" class="help-text">Please enter your email address</p>
+      </div>
+
+      <fieldset>
+        <legend>Update your password</legend>
+        <div class="fieldset-container">
+          <!-- <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid, '-required': !!new_password.value && !!new_password.value.length }">
+            <label for="password">Current password</label>
+            <input id="password" type="password" class="form-control" name="password" ngModel #password="ngModel" [required]="!!new_password.value" />
+            <div *ngIf="f.submitted && password.errors?.required" class="help-text">Please write your current password</div>
+          </div> -->
+
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !new_password.valid }">
+            <label for="new_password">New password</label>
+            <input id="new_password" type="password" class="form-control" name="new_password" [(ngModel)]="user.password" #new_password="ngModel" minlength="6" />
+            <div *ngIf="f.submitted && new_password.errors?.minlength && !new_password.errors?.required" class="help-text">Your password needs at least 6 characters</div>
+          </div>
+
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid, '-required': !!new_password.value && !!new_password.value.length }">
+            <label for="password_confirmation">Confirm your new password</label>
+            <input id="password_confirmation" type="password" [(ngModel)]="user['password-confirmation']" class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="new_password" [required]="!!new_password.value" />
+            <div *ngIf="f.submitted && password_confirmation.errors?.required" class="help-text">Please confirm your new password</div>
+            <div *ngIf="f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required" class="help-text">Password values don't not coincide</div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="form-footer">
+      <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+        <div class="c-button-container -j-end form-group">
+          <button type="button" (click)="onDiscard()" class="c-button -secondary" i18n="Discard button">Discard changes</button>
+          <button type="submit" class="c-button -primary" i18n="Save button">Save</button>
+        </div>
+      </div>
+
+      <otp-action-bar *otpMaxTablet>
+        <button type="button" (click)="onDiscard()" class="c-button -secondary" i18n="Discard button">Discard changes</button>
+        <button type="submit" class="c-button -primary" i18n="Save button">Save</button>
+      </otp-action-bar>
+    </div>
+  </form>
 </div>

@@ -52,12 +52,12 @@ import { CategoryListComponent } from 'app/pages/fields/categories/category-list
 import { HeaderComponent } from 'app/shared/header/header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 // import { UserDetailComponent } from 'app/pages/users/user-detail.component';
-// import { UsersService } from 'app/services/users.service';
+import { UsersService } from 'app/services/users.service';
 import { TabsComponent } from 'app/shared/tabs/tabs.component';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 import { FieldListComponent } from 'app/pages/fields/field-list.component';
 import { FieldDetailComponent } from 'app/pages/fields/field-detail.component';
-// import { ProfileComponent } from 'app/pages/profile/profile.component';
+import { ProfileComponent } from 'app/pages/profile/profile.component';
 // import { UserListComponent } from 'app/pages/users/user-list.component';
 import { BottombarComponent } from 'app/shared/bottom-bar/bottom-bar.component';
 import { DatastoreService } from 'app/services/datastore.service';
@@ -94,7 +94,7 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
     BottombarComponent,
     // UserListComponent,
     // UserDetailComponent,
-    // ProfileComponent,
+    ProfileComponent,
     FieldListComponent,
     FieldDetailComponent,
     TabsComponent,
@@ -156,7 +156,7 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
     GovernmentsService,
     CountriesService,
     DatastoreService,
-    // UsersService,
+    UsersService,
     ObservationsService,
     SubcategoriesService,
     ObserversService,

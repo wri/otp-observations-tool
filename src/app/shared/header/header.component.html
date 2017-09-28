@@ -8,6 +8,9 @@
           <option value="fr">Français</option>
         </select>
       </li>
+      <ng-template [ngIf]="isLogged">
+        <li *otpMinTablet><a routerLink="/private/profile" routerLinkActive="-active">Profile</a></li>
+      </ng-template>
       <li *ngIf="isLogged"><button type="button" (click)="logout()" i18n="Log out button">Log out</button></li>
     </ul>
   </div>
