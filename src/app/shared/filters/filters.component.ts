@@ -1,6 +1,7 @@
+import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { FilterDirective } from './directives/filter.directive';
-import { Component, ContentChildren, QueryList, Output, EventEmitter } from '@angular/core';
+import { Component, ContentChildren, QueryList, Output, EventEmitter, AfterContentInit } from '@angular/core';
 
 export interface Filter {
   name: string;
@@ -15,7 +16,7 @@ export interface Filter {
   templateUrl: 'filters.component.html',
   styleUrls: ['filters.component.scss']
 })
-export class FiltersComponent {
+export class FiltersComponent implements AfterContentInit {
 
   private _filtersNodes: QueryList<FilterDirective>;
   filters: Filter[] = [];
@@ -30,7 +31,24 @@ export class FiltersComponent {
     this.resetFilters(true);
   }
 
-  constructor(private datastoreService: DatastoreService) {
+  get filtersNodes(): QueryList<FilterDirective> {
+    return this._filtersNodes;
+  }
+
+  constructor(
+    private datastoreService: DatastoreService,
+    private translateService: TranslateService
+  ) {}
+
+  ngAfterContentInit(): void {
+    // Angular doesn't detect the changes of the attributes of
+    // the columns so we need to listen to the language changes
+    // to force the columns to be re-rendered
+    this.translateService.onLangChange.subscribe((lang) => {
+      // Also, when the event is triggered, the language is not
+      // already changed, so we need to sligthly delay the render
+      setTimeout(() => this.filtersNodes = this.filtersNodes, 0);
+    });
   }
 
   async resetFilters(silent = false) {
