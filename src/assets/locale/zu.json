@@ -156,5 +156,17 @@
     "Level": "Level",
     "Info": "Info",
     "Law details": "Law details",
-    "Go back": "Go back"
+    "Go back": "Go back",
+    "Edit operator": "Edit operator",
+    "Concession": "Concession",
+    "Website": "Website",
+    "Logo": "Logo",
+    "Preview": "Preview",
+    "No logo": "No logo",
+    "Upload a logo": "Upload a logo",
+    "The image should weight less than 5MB": "The image should weight less than 5MB",
+    "operatorCreation.success": "The operator has been created successfully.",
+    "operatorCreation.error": "The creation of the operator has been unsuccessful.",
+    "operatorUpdate.success": "The operator has been successfully updated.",
+    "operatorUpdate.error": "The update of the operator has been unsuccessful."
 }
