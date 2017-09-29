@@ -202,5 +202,9 @@
     "Confirm your password": "Confirm your password",
     "Please confirm your password": "Please confirm your password",
     "register.success": "The request has been sent! We'll get back to you soon.",
-    "organization.missing": "Can't find yours? Please <a href=\"mailto:marie.vallee@wri.org\">contact us</a>."
+    "organization.missing": "Can't find yours? Please <a href=\"mailto:marie.vallee@wri.org\">contact us</a>.",
+    "404.title": "404. Page not found",
+    "404.description": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+    "Go to my OTP": "Go to my OTP",
+    "Go to login page": "Go to login page"
 }
