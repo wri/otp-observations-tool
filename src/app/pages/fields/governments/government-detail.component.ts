@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Government } from 'app/models/government.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { GovernmentsService } from 'app/services/governments.service';
@@ -22,7 +23,8 @@ export class GovernmentDetailComponent {
     private governmentsService: GovernmentsService,
     private datastoreService: DatastoreService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translateService: TranslateService
   ) {
     this.countriesService.getAll({ sort: 'name' })
       .then(data => this.countries = data)
@@ -45,31 +47,31 @@ export class GovernmentDetailComponent {
     }
   }
 
-  onCancel(): void{
+  onCancel(): void {
     this.router.navigate(['/', 'private', 'fields', 'government-entities']);
   }
 
-  onSubmit(formValues):void {
+  onSubmit(formValues): void {
     this.loading = true;
 
     const isEdition = !!this.government.id;
 
     this.government.save()
       .toPromise()
-      .then(() => {
+      .then(async () => {
         if (isEdition) {
-          alert('The government entity has been successfully updated.');
+          alert(await this.translateService.get('governmentUpdate.success').toPromise());
         } else {
-          alert('The government entity has been created successfully.');
+          alert(await this.translateService.get('governmentCreation.success').toPromise());
         }
 
         this.router.navigate(['/', 'private', 'fields', 'government-entities']);
       })
-      .catch((err) => {
+      .catch(async (err) => {
         if (isEdition) {
-          alert('The update of the government entity has been unsuccessful.');
+          alert(await this.translateService.get('governmentUpdate.error').toPromise());
         } else {
-          alert('The creation of the government entity has been unsuccessful.');
+          alert(await this.translateService.get('governmentCreation.error').toPromise());
         }
 
         console.error(err);

@@ -169,5 +169,10 @@
     "operatorCreation.error": "The creation of the operator has been unsuccessful.",
     "operatorUpdate.success": "The operator has been successfully updated.",
     "operatorUpdate.error": "The update of the operator has been unsuccessful.",
-    "New government entity": "New government entity"
+    "New government entity": "New government entity",
+    "Edit government entity": "Edit government entity",
+    "governmentCreation.success": "The government entity has been created successfully.",
+    "governmentCreation.error": "The creation of the government entity has been unsuccessful.",
+    "governmentUpdate.success": "The government entity has been successfully updated.",
+    "governmentUpdate.error": "The update of the government entity has been unsuccessful."
 }
