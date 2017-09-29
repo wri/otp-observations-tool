@@ -1,17 +1,17 @@
 <div class="c-table-header">
   <otp-filters>
-     <otp-filter i18n-name="Table of sub-categories|Name of a filter" name="Type" prop="subcategory-type" [values]="['operator', 'government']" default="operator" [required]="true"></otp-filter>
-     <otp-filter i18n-name="Table of sub-categories|Name of a filter" name="Category" prop="category-id" values="categories" name-attr="name"></otp-filter>
+     <otp-filter [name]="'Type' | translate" prop="subcategory-type" [values]="['operator', 'government']" default="operator" [required]="true"></otp-filter>
+     <otp-filter [name]="'Category' | translate" prop="category-id" values="categories" name-attr="name"></otp-filter>
   </otp-filters>
   <!-- <button class="c-button -primary" i18n="Button to create a new sub-category">
     New sub-category
   </button> -->
 </div>
 
-<otp-table i18n-caption="Caption for the table which lists the sub-categories" caption="Sub-categories">
-  <otp-table-column i18n-name="Table of sub-categories|Name of the column corresponding to the name of the sub-categories" prop="name" name="Name"></otp-table-column>
-  <otp-table-column i18n-name="Table of sub-categories|Name of the column corresponding to the category of the sub-categories" prop="category.name" name="Category" [include]="true"></otp-table-column>
-  <otp-table-column i18n-name="Table of sub-categories|Name of the column corresponding to the details of the sub-categories" prop="details" name="Details">
+<otp-table [caption]="'Subcategories' | translate">
+  <otp-table-column prop="name" [name]="'Name' | translate"></otp-table-column>
+  <otp-table-column prop="category.name" [name]="'Category' | translate" [include]="true"></otp-table-column>
+  <otp-table-column prop="details" [name]="'Details' | translate">
     <ng-template let-value="value" table-cell-template>{{ value ? value : '–' }}</ng-template>
   </otp-table-column>
   <!-- <otp-table-column i18n-name="Table of sub-categories|Name of the actions columns (containing the edit and delete button)" name="Actions">
