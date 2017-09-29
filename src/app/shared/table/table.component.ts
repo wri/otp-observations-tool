@@ -1,5 +1,6 @@
+import { TranslateService } from '@ngx-translate/core';
 import { TABLET_BREAKPOINT } from 'app/directives/responsive.directive';
-import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, AfterContentInit } from '@angular/core';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
 
 export interface TableState {
@@ -15,7 +16,7 @@ export interface TableState {
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent {
+export class TableComponent implements AfterContentInit {
 
   public rows: any[] = [];
   public rowCount: number; // Number of total rows (total results)
@@ -145,6 +146,21 @@ export class TableComponent {
         row.__index__ = this.perPage * this.paginationIndex + index + 2;
         return row;
       });
+  }
+
+  constructor(
+    private translateService: TranslateService
+  ) {}
+
+  ngAfterContentInit(): void {
+    // Angular doesn't detect the changes of the attributes of
+    // the columns so we need to listen to the language changes
+    // to force the columns to be re-rendered
+    this.translateService.onLangChange.subscribe((lang) => {
+      // Also, when the event is triggered, the language is not
+      // already changed, so we need to sligthly delay the render
+      setTimeout(() => this.columnTemplates = this.columnTemplates, 0);
+    });
   }
 
   sortByColumn(column: any): void {
