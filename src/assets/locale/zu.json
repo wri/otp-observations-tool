@@ -11,5 +11,13 @@
     "Not filtering": "Not filtering",
     "Reset filters": "Reset filters",
     "Done": "Done",
-    "Table filters": "Table filters"
+    "Table filters": "Table filters",
+    "Undefined table": "Undefined table",
+    "table.sortOrder": "sorted by {{column}}",
+    "ascendent": "ascendent",
+    "descendent": "descendent",
+    "No data": "No data",
+    "Previous": "Previous",
+    "Next": "Next",
+    "table.page": "Page {{pageNumber}}"
 }
