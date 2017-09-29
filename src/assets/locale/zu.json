@@ -4,5 +4,12 @@
     "My OTP": "My OTP",
     "Observations": "Observations",
     "Observation fields": "Observation fields",
-    "Fields": "Fields"
+    "Fields": "Fields",
+    "Add filter": "Add filter",
+    "Remove filter": "Remove filter",
+    "Filter by": "Filter by",
+    "Not filtering": "Not filtering",
+    "Reset filters": "Reset filters",
+    "Done": "Done",
+    "Table filters": "Table filters"
 }
