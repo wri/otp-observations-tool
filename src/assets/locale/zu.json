@@ -189,5 +189,11 @@
     "Please confirm your new password": "Please confirm your new password",
     "Password values don't not coincide": "Password values don't not coincide",
     "profileUpdate.success": "Your profile has been sucessfully updated.",
-    "profileUpdate.error": "The update of your profile has been unsuccessful."
+    "profileUpdate.error": "The update of your profile has been unsuccessful.",
+    "Login": "Login",
+    "Password": "Password",
+    "Password is required": "Password is required",
+    "Register": "Register",
+    "login.permissionError": "You are not allowed to access this app.",
+    "login.error": "You entered a wrong username and password combination."
 }
