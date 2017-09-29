@@ -6,7 +6,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
-import { Tab } from 'app/shared/tabs/tabs.component';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 
 @Component({
