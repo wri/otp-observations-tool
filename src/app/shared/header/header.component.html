@@ -1,25 +1,25 @@
 <div class="l-wrapper">
   <div class="menu">
-    <img src="assets/OTP-logo.svg" i18n-alt="Name of the app" alt="Open Timber Portal" />
+    <img src="assets/OTP-logo.svg" alt="Open Timber Portal" />
     <ul>
       <li>
-        <select [(ngModel)]="lang" (change)="onChangeLanguage()">
+        <select [(ngModel)]="lang">
           <option value="en">English</option>
           <option value="fr">Français</option>
         </select>
       </li>
       <ng-template [ngIf]="isLogged">
-        <li *otpMinTablet><a routerLink="/private/profile" routerLinkActive="-active">Profile</a></li>
+        <li *otpMinTablet><a routerLink="/private/profile" routerLinkActive="-active">{{ 'Profile' | translate }}</a></li>
       </ng-template>
-      <li *ngIf="isLogged"><button type="button" (click)="logout()" i18n="Log out button">Log out</button></li>
+      <li *ngIf="isLogged"><button type="button" (click)="logout()">{{ 'Log out' | translate }}</button></li>
     </ul>
   </div>
   <ng-template [ngIf]="isLogged">
     <otp-navigation (change)="onChange($event)" *otpMinTablet>
-      <otp-navigation-item i18n-name="Menu item|Main navigation menu (desktop)" name="My OTP" url="/private/my-otp"></otp-navigation-item>
-      <otp-navigation-item i18n-name="Menu item|Main navigation menu (desktop)" name="Observations" url="/private/observations"></otp-navigation-item>
-      <otp-navigation-item i18n-name="Menu item|Main navigation menu (desktop)" name="Observation fields" url="/private/fields"></otp-navigation-item>
-      <!-- <otp-navigation-item i18n-name="Menu item|Main navigation menu (desktop)" name="Users" url="/private/users" *ngIf="isAdmin"></otp-navigation-item> -->
+      <otp-navigation-item [name]="'My OTP' | translate" url="/private/my-otp"></otp-navigation-item>
+      <otp-navigation-item [name]="'Observations' | translate" url="/private/observations"></otp-navigation-item>
+      <otp-navigation-item [name]="'Observation fields' | translate" url="/private/fields"></otp-navigation-item>
+      <!-- <otp-navigation-item name="Users" url="/private/users" *ngIf="isAdmin"></otp-navigation-item> -->
     </otp-navigation>
   </ng-template>
 </div>
