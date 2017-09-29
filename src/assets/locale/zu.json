@@ -174,5 +174,20 @@
     "governmentCreation.success": "The government entity has been created successfully.",
     "governmentCreation.error": "The creation of the government entity has been unsuccessful.",
     "governmentUpdate.success": "The government entity has been successfully updated.",
-    "governmentUpdate.error": "The update of the government entity has been unsuccessful."
+    "governmentUpdate.error": "The update of the government entity has been unsuccessful.",
+    "My profile": "My profile",
+    "Please enter your name": "Please enter your name",
+    "Username": "Username",
+    "Please enter a username": "Please enter a username",
+    "Organization": "Organization",
+    "Email is required": "Email is required",
+    "Please enter your email address": "Please enter your email address",
+    "Update your password": "Update your password",
+    "New password": "New password",
+    "Your password needs at least 6 characters": "Your password needs at least 6 characters",
+    "Confirm your new password": "Confirm your new password",
+    "Please confirm your new password": "Please confirm your new password",
+    "Password values don't not coincide": "Password values don't not coincide",
+    "profileUpdate.success": "Your profile has been sucessfully updated.",
+    "profileUpdate.error": "The update of your profile has been unsuccessful."
 }
