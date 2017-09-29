@@ -33,5 +33,7 @@
     "Phone number": "Phone number",
     "Contact information (For inquiries on data uploaded)": "Contact information (For inquiries on data uploaded)",
     "organizationProfile.success": "Your organization profile has been sucessfully updated.",
-    "organizationProfile.error": "The update of your organization profile has been unsuccessful."
+    "organizationProfile.error": "The update of your organization profile has been unsuccessful.",
+    "Organization profile": "Organization profile",
+    "Report library": "Report library"
 }
