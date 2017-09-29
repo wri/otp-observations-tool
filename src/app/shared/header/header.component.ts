@@ -15,22 +15,10 @@ export class HeaderComponent {
   isLogged = false;
   acceptedLang = ['en', 'fr'];
   defaultLang = 'en';
-  _lang = this.defaultLang;
+  _lang = 'en';
 
   get lang() { return this._lang; }
-  set lang(lang) {
-    if (this._lang === lang) {
-      return;
-    }
-
-    this._lang = lang;
-    this.translateService.use(lang);
-
-    this.router.navigate([], {
-      queryParams: { lang },
-      relativeTo: this.route
-    });
-  }
+  set lang(lang) { this.translateService.use(lang); }
 
   constructor (
     private authService: AuthService,
@@ -38,20 +26,7 @@ export class HeaderComponent {
     private route: ActivatedRoute,
     private translateService: TranslateService
   ) {
-    // We set the fallback language
-    this.translateService.setDefaultLang('zu');
-
-    // Language to use by default
-    this.translateService.use(this.lang);
-
-    this.route.queryParams.subscribe((params) => {
-      if (params.lang && this.acceptedLang.indexOf(params.lang) !== -1) {
-        this.lang = params.lang;
-      } else {
-        // This will update the URL with a correct lang param
-        this.lang = this.lang;
-      }
-    });
+    this.translateService.onLangChange.subscribe(({ lang }) => this._lang = lang);
 
     // Each time the status of the login change, we update some variables
     this.authService.loginStatus.subscribe(isLogged => {
