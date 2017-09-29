@@ -46,4 +46,5 @@ Thumbs.db
 
 # i18n
 .env
-src/locale
+src/assets/locale/en.json
+src/assets/locale/fr.json

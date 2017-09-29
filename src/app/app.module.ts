@@ -74,13 +74,20 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JsonApiModule } from 'angular2-jsonapi';
-import { HttpModule, RequestOptions } from '@angular/http';
+import { HttpModule, RequestOptions, } from '@angular/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { SpinnerModule } from 'angular2-spinner/dist';
 import { DatePickerModule } from 'ng2-datepicker';
 import { ObservationsService } from 'app/services/observations.service';
 import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsive.directive';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/locale/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -147,7 +154,15 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
     SpinnerModule,
     DatePickerModule,
     LeafletModule.forRoot(),
-    MultiselectDropdownModule
+    MultiselectDropdownModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [
     TokenService,
