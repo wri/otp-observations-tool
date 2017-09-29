@@ -146,5 +146,11 @@
     "observationUpdate.success": "The observation has been successfully updated.",
     "observationUpdate.error": "The update of the observation has been unsuccessful.",
     "observationCreation.success": "The observation has been submitted and is awaiting approval.",
-    "observationCreation.error": "The creation of the observation has been unsuccessful."
+    "observationCreation.error": "The creation of the observation has been unsuccessful.",
+    "Categories": "Categories",
+    "Subcategories": "Subcategories",
+    "Government entities": "Government entities",
+    "Operators": "Operators",
+    "Laws": "Laws",
+    "Severities": "Severities"
 }
