@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
 import { Observer } from 'app/models/observer.model';
 import { environment } from 'environments/environment';
@@ -28,7 +29,8 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService,
     private countriesService: CountriesService,
     private observersService: ObserversService,
-    private http: Http
+    private http: Http,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -50,8 +52,8 @@ export class RegisterComponent implements OnInit {
     this.http.post(`${environment.apiUrl}/register`, payload)
       .map(response => response.json())
       .toPromise()
-      .then(() => {
-        alert('The request has been sent! We\'ll get back to you soon.');
+      .then(async () => {
+        alert(await this.translateService.get('register.success').toPromise());
         this.router.navigate(['']);
       })
       .catch(error => {

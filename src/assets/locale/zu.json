@@ -195,5 +195,12 @@
     "Password is required": "Password is required",
     "Register": "Register",
     "login.permissionError": "You are not allowed to access this app.",
-    "login.error": "You entered a wrong username and password combination."
+    "login.error": "You entered a wrong username and password combination.",
+    "Select an organization": "Select an organization",
+    "Please select an organization": "Please select an organization",
+    "Please enter a password": "Please enter a password",
+    "Confirm your password": "Confirm your password",
+    "Please confirm your password": "Please confirm your password",
+    "register.success": "The request has been sent! We'll get back to you soon.",
+    "organization.missing": "Can't find yours? Please <a href=\"mailto:marie.vallee@wri.org\">contact us</a>."
 }
