@@ -1,37 +1,37 @@
 <div class="c-table-header">
   <otp-filters>
-    <otp-filter i18n-name="Table of observations|Name of a filter" name="Type" [values]="['operator', 'government']" prop="observation-type" default="operator" [required]="true"></otp-filter>
-    <otp-filter i18n-name="Table of observations|Name of a filter" name="Country" values="countries" prop="country-id" name-attr="name"></otp-filter>
-    <otp-filter i18n-name="Table of observations|Name of a filter" name="Operator" values="operators" prop="operator" name-attr="name"></otp-filter>
-    <otp-filter i18n-name="Table of observations|Name of a filter" name="Report" values="observation-reports" prop="observation-report" name-attr="title"></otp-filter>
-    <otp-filter i18n-name="Table of observations|Name of a filter" name="Status" [values]="{ 'Pending': false, 'Active': true }" prop="is-active"></otp-filter>
+    <otp-filter [name]="'Type' | translate" [values]="['operator', 'government']" prop="observation-type" default="operator" [required]="true"></otp-filter>
+    <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name"></otp-filter>
+    <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name"></otp-filter>
+    <otp-filter [name]="'Report' | translate" values="observation-reports" prop="observation-report" name-attr="title"></otp-filter>
+    <otp-filter [name]="'Status' | translate" [values]="statusFilterValues" prop="is-active"></otp-filter>
   </otp-filters>
 
-  <a class="c-button -primary" routerLink="../new" i18n="Button to create a new observation">New observation</a>
+  <a class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
 </div>
 
-<otp-table i18n-caption="Caption for the table which lists the observations" caption="Observations">
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the id of the observations" name="ID" prop="id"></otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the date of the observations" name="Date" prop="publication-date">
+<otp-table [caption]="'Observations' | translate">
+  <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
+  <otp-table-column [name]="'Date' | translate" prop="publication-date">
     <ng-template let-value="value" table-cell-template>{{getFormatedDate(value)}}</ng-template>
   </otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the country of the observations" name="Country" prop="country.name" [include]="true"></otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the operator name of the observations" name="Operator" prop="operator.name" [include]="true"></otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the category of the observations" name="Sub-category" prop="subcategory.name" [include]="true"></otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the details of the observations" name="Observation" prop="details"></otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the severity of the observations" name="Severity" prop="severity.level" [include]="true"></otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the status of the observations" name="Status">
+  <otp-table-column [name]="'Country' | translate" prop="country.name" [include]="true"></otp-table-column>
+  <otp-table-column [name]="'Operator' | translate" prop="operator.name" [include]="true"></otp-table-column>
+  <otp-table-column [name]="'Subcategory' | translate" prop="subcategory.name" [include]="true"></otp-table-column>
+  <otp-table-column [name]="'Observation' | translate" prop="details"></otp-table-column>
+  <otp-table-column [name]="'Severity' | translate" prop="severity.level" [include]="true"></otp-table-column>
+  <otp-table-column [name]="'Status' | translate">
     <ng-template let-row="row" table-cell-template>
-      <ng-template [ngIf]="row['is-active']">Active</ng-template>
-      <ng-template [ngIf]="!row['is-active']">Pending</ng-template>
+      <ng-template [ngIf]="row['is-active']">{{'Active' | translate}}</ng-template>
+      <ng-template [ngIf]="!row['is-active']">{{'Pending' | translate}}</ng-template>
     </ng-template>
   </otp-table-column>
   <!-- We need the user info for canEdit -->
-  <otp-table-column i18n-name="Table of observations|Name of the actions columns (containing the edit and delete button)" name="Actions" prop="user" [include]="true">
+  <otp-table-column [name]="'Actions' | translate" prop="user" [include]="true">
     <ng-template let-row="row" table-cell-template>
       <ng-template [ngIf]="canEdit(row)">
-        <button class="action" (click)="onEdit(row)" aria-label="Edit"><otp-icon name="#icon-edit"></otp-icon></button>
-        <button class="action" (click)="onDelete(row)" aria-label="Delete"><otp-icon name="#icon-delete"></otp-icon></button>
+        <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
+        <button class="action" (click)="onDelete(row)" [attr.aria-label]="'Delete' | translate"><otp-icon name="#icon-delete"></otp-icon></button>
       </ng-template>
     </ng-template>
   </otp-table-column>

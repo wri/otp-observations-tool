@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Operator } from 'app/models/operator.model';
 import { OperatorsService } from 'app/services/operators.service';
@@ -33,7 +34,8 @@ export class OperatorDetailComponent {
     private operatorsService: OperatorsService,
     private datastoreService: DatastoreService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translateService: TranslateService
   ) {
     this.countriesService.getAll({ sort: 'name' })
       .then(data => this.countries = data)
@@ -67,20 +69,20 @@ export class OperatorDetailComponent {
 
     this.operator.save()
       .toPromise()
-      .then(() => {
+      .then(async () => {
         if (isEdition) {
-          alert('The operator has been successfully updated.');
+          alert(await this.translateService.get('operatorUpdate.success').toPromise());
         } else {
-          alert('The operator has been created successfully.');
+          alert(await this.translateService.get('operatorCreation.success').toPromise());
         }
 
         this.router.navigate(['/', 'private', 'fields', 'operators']);
       })
-      .catch((err) => {
+      .catch(async (err) => {
         if (isEdition) {
-          alert('The update of the operator has been unsuccessful.');
+          alert(await this.translateService.get('operatorUpdate.error').toPromise());
         } else {
-          alert('The creation of the operator has been unsuccessful.');
+          alert(await this.translateService.get('operatorCreation.error').toPromise());
         }
 
         console.error(err);

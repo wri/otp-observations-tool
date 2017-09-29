@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { User } from './../../models/user.model';
 import { UsersService } from 'app/services/users.service';
 import { AuthService } from 'app/services/auth.service';
@@ -16,7 +17,8 @@ export class ProfileComponent {
 
   constructor(
     private auth: AuthService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private translateService: TranslateService
   ) {
     this.loadUser();
   }
@@ -54,8 +56,8 @@ export class ProfileComponent {
 
     this.user.save()
       .toPromise()
-      .then(() => alert('Your profile has been sucessfully updated.'))
-      .catch(() => alert('The update of your profile has been unsuccessful.'))
+      .then(async () => alert(await this.translateService.get('profileUpdate.success').toPromise()))
+      .catch(async () => alert(await this.translateService.get('profileUpdate.success').toPromise()))
       .then(() => this.saveLoading = false);
   }
 

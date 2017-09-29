@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
@@ -16,7 +17,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService) {}
+    private authService: AuthService,
+    private translateService: TranslateService
+  ) {}
 
   ngOnInit(): void {
     if (this.route.snapshot.queryParams.returnUrl) {
@@ -27,17 +30,17 @@ export class LoginComponent implements OnInit {
   login() {
     this.loading = true;
     this.authService.login(this.model.username, this.model.password)
-      .then(isLogged => {
+      .then(async isLogged => {
         if (!isLogged) {
-          alert('You are not allowed to access this app');
+          alert(await this.translateService.get('login.permissionError').toPromise());
         } else {
           this.router.navigate([this.returnUrl]);
         }
 
         return isLogged;
       })
-      .catch((error) => {
-        alert('You entered a wrong username+password combination');
+      .catch(async (error) => {
+        alert(await this.translateService.get('login.error').toPromise());
       })
       .then(() => this.loading = false);
   }

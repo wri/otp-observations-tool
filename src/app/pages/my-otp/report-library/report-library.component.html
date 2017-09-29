@@ -1,16 +1,15 @@
 <div class="c-table-header">
-  <otp-filters>
-  </otp-filters>
+  <otp-filters></otp-filters>
 </div>
 
-<otp-table i18n-caption="Caption for the table which lists the reports" caption="Reports">
-  <otp-table-column i18n-name="Table of reports|Name of the column corresponding to the title of the reports" prop="title" name="Title"></otp-table-column>
-  <otp-table-column i18n-name="Table of reports|Name of the column corresponding to the publication date of the reports" prop="publication-date" name="Publication date">
+<otp-table [caption]="'Reports' | translate">
+  <otp-table-column prop="title" [name]="'Title' | translate"></otp-table-column>
+  <otp-table-column prop="publication-date" [name]="'Publication date' | translate">
     <ng-template let-value="value" table-cell-template>{{ value ? getFormatedDate(value) : '–' }}</ng-template>
   </otp-table-column>
-  <otp-table-column i18n-name="Table of observations|Name of the column corresponding to the actions of the observations" name="Actions">
+  <otp-table-column [name]="'Actions' | translate">
     <ng-template let-row="row" table-cell-template>
-      <a href="{{apiUrl}}{{row.attachment.url}}" class="action" aria-label="Download" target="_blank" download><otp-icon name="#icon-download"></otp-icon></a>
+      <a href="{{apiUrl}}{{row.attachment.url}}" class="action" [attr.aria-label]="'Download' | translate" target="_blank" download><otp-icon name="#icon-download"></otp-icon></a>
     </ng-template>
   </otp-table-column>
 </otp-table>

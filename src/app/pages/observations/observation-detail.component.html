@@ -1,78 +1,78 @@
 <otp-loader *ngIf="loading" overlay fixed></otp-loader>
 <form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
-    <h2 *ngIf="!observation" i18n="Observation creation|Title of the page">New observation</h2>
-    <h2 *ngIf="observation" i18n="Observation edition|Title of the page">Edit observation</h2>
+    <h2 *ngIf="!observation">{{'New observation' | translate}}</h2>
+    <h2 *ngIf="observation">{{'Edit observation' | translate}}</h2>
     <div class="c-button-container -j-end form-group" *otpMinTablet>
-      <button  type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-      <button *ngIf="!observation"  type="submit" class="c-button -primary" i18n="Create button">Create</button>
-      <button *ngIf="observation"  type="submit" class="c-button -primary" i18n="Save button">Save</button>
+      <button  type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="!observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
     </div>
   </div>
 
   <div class="form-header">
     <div class="form-group">
-      <label for="observation_type" i18n="Observation creation/edition|Label for the type field">Type</label>
+      <label for="observation_type">{{'Type' | translate}}</label>
       <select id="observation_type" name="observation_type" [(ngModel)]="type" #observation_type="ngModel" [required]="!observation" [disabled]="!!observation">
-        <option [value]="null" disabled i18n="Observation creation/edition">Select an observation type</option>
-        <option value="operator" i18n="Observation type">Operator</option>
-        <option value="government" i18n="Observation type">Government</option>
+        <option [value]="null" disabled>{{'Select an observation type' | translate}}</option>
+        <option value="operator">{{'Operator' | translate}}</option>
+        <option value="government">{{'Government' | translate}}</option>
       </select>
-      <div *ngIf="f.submitted && observation_type.invalid" class="help-text" i18n="Observation creation/edition|Error message if the type isn't supplied (the user will have to user between some options)">Please select an observation type</div>
+      <div *ngIf="f.submitted && observation_type.invalid" class="help-text">Please select an observation type</div>
     </div>
   </div>
 
   <div class="form-container" *ngIf="type === 'operator'">
     <!-- 0. ID -->
     <div class="form-group" *ngIf="observation">
-      <label for="id_field" i18n="Observation creation/edition|Label for the ID field">ID</label>
+      <label for="id_field">{{'ID' | translate}}</label>
       <input id="id_field" type="text" class="form-control" name="id_field" [(ngModel)]="observation.id" #id_field="ngModel" disabled />
     </div>
 
     <!-- 1. Report -->
     <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Report</legend>
+      <legend>{{'Report' | translate}}</legend>
       <div class="fieldset-container">
-        <p class="fieldset-description" *otpMaxTablet i18n="Observation creation/edition|Description of a section of the form">
-          Select one of the two options below: use an existing report or upload a new one.
+        <p class="fieldset-description" *otpMaxTablet>
+          {{'Select one of the two options below: use an existing report or upload a new one.' | translate}}
         </p>
         <div class="row">
           <div class="small-12 medium-6 columns">
             <!-- 1.1 Select report -->
-            <h3 i18n="Observation creation/edition|Title of a section of the form">Existing report</h3>
-            <p i18n="Observation creation/edition|Description of a section of the form">Select a report from the report library of your organization.</p>
+            <h3>{{'Existing report' | translate}}</h3>
+            <p>{{'Select a report from the report library of your organization.' | translate}}</p>
             <div class="form-group">
-              <label for="report_field" i18n="Observation creation/edition|Label for the report field">Report</label>
+              <label for="report_field">{{'Report' | translate}}</label>
               <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
-                <option disabled [value]="null" i18n="Observation creation/edition">Select a report</option>
+                <option disabled [value]="null">{{'Select a report' | translate}}</option>
                 <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
               </select>
             </div>
           </div>
           <div class="small-12 medium-6 columns">
             <!-- 1.2 Upload report -->
-            <h3 i18n="Observation creation/edition|Title of a section of the form">Upload report</h3>
-            <p i18n="Observation creation/edition|Description of a section of the form">Alternatively, you can upload a new report to the library and use it for this observation.</p>
+            <h3>{{'Upload report' | translate}}</h3>
+            <p>{{'Alternatively, you can upload a new report to the library and use it for this observation.' | translate}}</p>
             <!-- 1.2.A File -->
             <div class="form-group">
-              <label for="report_file" i18n="Observation creation/edition|Label for the report file field">File</label>
+              <label for="report_file">{{'File' | translate}}</label>
               <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-              <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text" i18n="Observation creation/edition|Error message if the report exceed the maximum size">The file should weight less than 5MB</div>
-              <div *ngIf="f.submitted && !report_file.valid" class="help-text" i18n="Observation creation/edition|Error message if the report file is not valid">The file is not valid</div>
+              <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 5MB' | translate}}</div>
+              <div *ngIf="f.submitted && !report_file.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
             <!-- 1.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-              <label for="report_title" i18n="Observation creation/edition|Label for the report title field">Title</label>
+              <label for="report_title">{{'Title' | translate}}</label>
               <input id="report_title" type="text" class="form-control" name="report_title" [(ngModel)]="report.title" #report_title="ngModel" [required]="!!report_file.value" />
-              <div *ngIf="f.submitted && !report_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the report title isn't supplied">Please enter the name</div>
+              <div *ngIf="f.submitted && !report_title.valid" class="help-text">{{'Please enter the name' | translate}}</div>
             </div>
 
             <!-- 1.2.3 Publication date -->
             <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-              <label for="report_date" i18n="Observation creation/edition|Label for the report publication date field">Publication date</label>
+              <label for="report_date">{{'Publication date' | translate}}</label>
               <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="report['publication-date']" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
-              <div *ngIf="f.submitted && !report_date.valid" class="help-text" i18n="Observation creation/edition|Error message if the report publication date isn't supplied">Please enter the publication date</div>
+              <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
             </div>
           </div>
         </div>
@@ -81,55 +81,55 @@
 
     <!-- 2. Country -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
-      <label for="country_id" i18n="Observation creation/edition|Label for the country field">Country</label>
+      <label for="country_id">{{'Country' | translate}}</label>
       <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required>
-        <option [value]="null" disabled i18n="Observation creation/edition">Select a country</option>
+        <option [value]="null" disabled>{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
-      <div *ngIf="f.submitted && !country_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the country isn't supplied (the user will have to user between some options)">Please select a country</div>
+      <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
     </div>
 
     <!-- 3. Operator -->
     <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Operator</legend>
+      <legend>{{'Operator' | translate}}</legend>
       <div class="fieldset-container">
-        <p class="fieldset-description" *otpMaxTablet i18n="Observation creation/edition|Description of a section of the form">
-          Select one of the two options below: use an existing operator or create a new one.
+        <p class="fieldset-description" *otpMaxTablet>
+          {{'Select one of the two options below: use an existing operator or create a new one.' | translate}}
         </p>
         <div class="row">
           <div class="small-12 medium-6 columns">
             <!-- 3.1 Select operator -->
-            <h3 i18n="Observation creation/edition|Title of a section of the form">Existing operator</h3>
-            <p i18n="Observation creation/edition|Description of a section of the form">Select an operator from the list below.</p>
+            <h3>{{'Existing operator' | translate}}</h3>
+            <p>{{'Select an operator from the list below.' | translate}}</p>
             <div [ngClass]="{ 'form-group': true,  '-required': !operator.name }" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
-              <label for="operator_id" i18n="Observation creation/edition|Label for the operator field">Operator</label>
+              <label for="operator_id">{{'Operator' | translate}}</label>
               <select id="operator_id" name="operator_id" [(ngModel)]="operatorChoice" #operator_id="ngModel" [required]="!operator.name">
-                <option [value]="null" disabled i18n="Observation creation/edition">Select an operator</option>
+                <option [value]="null" disabled>{{'Select an operator' | translate}}</option>
                 <option *ngFor="let operator of operators" [ngValue]="operator">{{ operator.name }}</option>
               </select>
-              <div *ngIf="f.submitted && !operator_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the operator isn't supplied (the user will have to user between some options)">Please select an operator</div>
+              <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
             </div>
           </div>
           <div class="small-12 medium-6 columns">
             <!-- 3.2 New operator -->
-            <h3 i18n="Observation creation/edition|Title of a section of the form">New operator</h3>
-            <p i18n="Observation creation/edition|Description of a section of the form">Alternatively, you can quickly add new operator.</p>
+            <h3>{{'New operator' | translate}}</h3>
+            <p>{{'Alternatively, you can quickly add new operator.' | translate}}</p>
 
             <!-- 3.2.1. Name -->
             <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
-              <label for="operator_name" i18n="Observation creation/edition|Label for the operator name field">Name</label>
+              <label for="operator_name">{{'Name' | translate}}</label>
               <input id="operator_name" type="text" class="form-control" name="operator_name" [(ngModel)]="operatorName" #operator_name="ngModel" [required]="!operatorChoice" />
-              <div *ngIf="f.submitted && !operator_name.valid" class="help-text" i18n="Observation creation/edition|Error message if the operator name isn't supplied">Please enter the name</div>
+              <div *ngIf="f.submitted && !operator_name.valid" class="help-text">{{'Please enter the name' | translate}}</div>
             </div>
 
             <!-- 3.2.1. Type -->
             <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
-              <label for="operator_type" i18n="Observation creation/edition|Label for the operator type field">Type</label>
+              <label for="operator_type">{{'Type' | translate}}</label>
               <select if="operator_type" name="operator_type" [(ngModel)]="operatorType" #operator_type="ngModel" [required]="!operatorChoice">
-                <option [value]="null" disabled i18n="Observation creation/edition">Select an operator type</option>
+                <option [value]="null" disabled>{{'Select an operator type' | translate}}</option>
                 <option *ngFor="let type of operatorTypes" [ngValue]="type">{{ type }}</option>
               </select>
-              <div *ngIf="f.submitted && !operator_type.valid" class="help-text" i18n="Observation creation/edition|Error message if the operator type isn't supplied (the user will have to user between some options)">Please select an operator type</div>
+              <div *ngIf="f.submitted && !operator_type.valid" class="help-text">{{'Please select an operator type' | translate}}</div>
             </div>
           </div>
         </div>
@@ -138,27 +138,27 @@
 
     <!-- 4. Additional monitors -->
     <div class="form-group">
-      <label i18n="Observation creation/edition|Label for the additional monitors field">Additional monitors</label>
+      <label>Additional monitors</label>
       <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers"></ss-multiselect-dropdown>
     </div>
 
     <!-- 5. Location -->
     <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Location</legend>
+      <legend>{{'Location' | translate}}</legend>
       <div class="fieldset-container">
 
         <!-- 4.1. Forest management unit -->
         <div [ngClass]="{ 'form-group': true, '-required': fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) }">
-          <label for="fmu_field" i18n="Observation creation/edition|Label for the forest management unit field">Forest management unit</label>
+          <label for="fmu_field">{{'Forest management unit' | translate}}</label>
           <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0)">
-            <option [value]="null" disabled i18n="Observation creation/edition">Select a FMU</option>
+            <option [value]="null" disabled>{{'Select a FMU' | translate}}</option>
             <option *ngFor="let fmu of fmus" [ngValue]="fmu">{{ fmu.name }}</option>
           </select>
         </div>
 
         <!-- 4.2. GPS coordinates -->
         <fieldset>
-          <legend i18n="Observation creation/edition|Title of a section of the form">GPS coordinates</legend>
+          <legend>{{'GPS coordinates' | translate}}</legend>
           <div class="fieldset-container">
             <!-- 4.2.0. Map -->
             <div class="form-group">
@@ -170,30 +170,30 @@
               <!-- 4.2.1. Coordinates -->
               <div class="small-12 medium-6 columns">
                 <div class="form-group" *ngIf="f.submitted && !fmu && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0)">
-                  <div class="help-text" i18n="Observation creation/edition|Error message if no location is supplied">Please select a FMU or enter coordinates below</div>
+                  <div class="help-text">{{'Please select a FMU or enter coordinates below' | translate}}</div>
                 </div>
                 <div class="form-group" [ngClass]="{ '-required': !this.fmu }">
-                  <label for="latitude_field" i18n="Observation creation/edition|Label for the latitude field">Latitude</label>
+                  <label for="latitude_field">{{'Latitude' | translate}}</label>
                   <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" number [required]="!this.fmu" />
-                  <div *ngIf="f.submitted && latitude_field.errors?.number" class="help-text" i18n="Observation creation/edition|Error message if the latitude isn't valid">Please enter a valid number</div>
-                  <div *ngIf="f.submitted && !latitude_field.valid" class="help-text" i18n="Observation creation/edition|Error message if the latitude isn't supplied">Please enter a latitude</div>
+                  <div *ngIf="f.submitted && latitude_field.errors?.number" class="help-text">{{'Please enter a valid number' | translate}}</div>
+                  <div *ngIf="f.submitted && !latitude_field.valid" class="help-text">{{'Please enter a latitude' | translate}}</div>
                 </div>
 
                 <div class="form-group" [ngClass]="{ '-required': !this.fmu }">
-                  <label for="longitude_field" i18n="Observation creation/edition|Label for the longitude field">Longitude</label>
+                  <label for="longitude_field">{{'Longitude' | translate}}</label>
                   <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" number [required]="!this.fmu" />
-                  <div *ngIf="f.submitted && longitude_field.errors?.number" class="help-text" i18n="Observation creation/edition|Error message if the longitude isn't valid">Please enter a valid number</div>
-                  <div *ngIf="f.submitted && !longitude_field.valid" class="help-text" i18n="Observation creation/edition|Error message if the longitude isn't supplied">Please enter a longitude</div>
+                  <div *ngIf="f.submitted && longitude_field.errors?.number" class="help-text">{{'Please enter a valid number' | translate}}</div>
+                  <div *ngIf="f.submitted && !longitude_field.valid" class="help-text">{{'Please enter a longitude' | translate}}</div>
                 </div>
               </div>
 
               <!-- 4.2.2. Coordinates from photo -->
               <div class="small-12 medium-6 columns">
-                <h3 i18n="Observation creation/edition|Title of a section of the form">Get coordinates from a photo</h3>
-                <p i18n="Observation creation/edition|Description of a section of the form">Instead of clicking on the map or manually filling the coordinates, you can get them from a georeferenced photo. This photo won't be part of the observation.</p>
+                <h3>{{'Get coordinates from a photo' | translate}}</h3>
+                <p>{{"Instead of clicking on the map or manually filling the coordinates, you can get them from a georeferenced photo. This photo won't be part of the observation." | translate}}</p>
 
                 <div class="form-group">
-                  <label for="photo_field" i18n="Observation creation/edition|Label for the georeferenced photo field">Georeferenced photo</label>
+                  <label for="photo_field">{{'Georeferenced photo' | translate}}</label>
                   <input id="photo_field" type="file" class="form-control" name="photo_field" (change)="onChangePhoto($event)" accept=".jpg, .jpeg" />
                 </div>
               </div>
@@ -205,74 +205,74 @@
 
     <!-- 6. Observation category -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
-      <label for="subcategory_id" i18n="Observation creation/edition|Label for the observation category field">Observation category</label>
+      <label for="subcategory_id">{{'Observation category' | translate}}</label>
       <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required>
-        <option [value]="null" disabled i18n="Observation creation/edition">Select an observation category</option>
+        <option [value]="null" disabled>{{'Select an observation category' | translate}}</option>
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
-      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the observation category isn't supplied (the user will have to user between some options)">Please select an observation category</div>
+      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">{{'Please select an observation category' | translate}}</div>
     </div>
 
 
     <!-- 7. Due diligence category -->
     <div class="form-group">
-      <label for="diligence_category" i18n="Observation creation/edition|Label for the due diligence category field">Due diligence category</label>
+      <label for="diligence_category">{{'Due diligence category' | translate}}</label>
       <input id="diligence_category" type="text" class="form-control" name="diligence_category" [(ngModel)]="subcategory && subcategory.category && subcategory.category.name" #diligence_category="ngModel" disabled />
     </div>
 
     <!-- 8. Observation details -->
     <div class="form-group">
-      <label for="details_field" i18n="Observation creation/edition|Label for the observation details field">Observation details</label>
+      <label for="details_field">{{'Observation details' | translate}}</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
     </div>
 
     <!-- 9. Evidence -->
     <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Evidence</legend>
+      <legend>{{'Evidence' | translate}}</legend>
       <div class="fieldset-container">
         <div class="row">
           <div class="small-12 medium-6 columns">
             <!-- 9.1 List of evidence -->
-            <h3 i18n="Observation creation/edition|Title of a section of the form">List of evidence</h3>
+            <h3>{{'List of evidence' | translate}}</h3>
             <ul class="documents-list" *ngIf="documents.length">
               <li *ngFor="let document of documents">
                 <div class="content">
                   <div class="title">{{document.name}}</div>
-                  <div class="status" *ngIf="document.id" i18n="Observation creation/edition|Status of an evidence">Already uploaded</div>
-                  <div class="status" *ngIf="!document.id" i18n="Observation creation/edition|Status of an evidence">To upload</div>
+                  <div class="status" *ngIf="document.id">{{'Already uploaded' | translate}}</div>
+                  <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
                 </div>
                 <div class="actions">
-                  <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)" i18n="Delete button">Delete</button>
+                  <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)">{{'Delete' | translate}}</button>
                 </div>
               </li>
             </ul>
-            <p *ngIf="!documents.length" i18n="Observation creation/edition|Text message when no evidence has been uploaded">No evidence</p>
+            <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
           <div class="small-12 medium-6 columns">
             <!-- 9.2.1 Evidence -->
-            <p i18n="Observation creation/edition|Description of a section of the form">When you upload a new file, it will appear in the list of evidence.</p>
+            <p>{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
             <!-- This input is used to prevent the submitting until evidence are uploaded -->
             <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
             <div class="form-group" *ngIf="f.submitted && !documents.length">
-              <div class="help-text" i18n="Observation creation/edition|Error message if no evidence is supplied">You need to upload evidence</div>
+              <div class="help-text">{{'You need to upload evidence' | translate}}</div>
             </div>
             <div class="form-group">
-              <label for="evidence_field" i18n="Observation creation/edition|Label for the upload evidence field">Evidence</label>
+              <label for="evidence_field">{{'Evidence' | translate}}</label>
               <input id="evidence_field" type="file" class="form-control" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-              <div *ngIf="evidence_field.errors?.maxSize" class="help-text" i18n="Observation creation/edition|Error message if the evidence exceed the maximum size">The file should weight less than 5MB</div>
-              <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence file is not valid">The file is not valid</div>
+              <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 5MB' | translate}}</div>
+              <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
             <!-- 9.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
-              <label for="evidence_title" i18n="Observation creation/edition|Label for the report title field">Title</label>
+              <label for="evidence_title">{{'Title' | translate}}</label>
               <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment || !documents.length" />
-              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence title isn't supplied">Please enter the title</div>
+              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
             </div>
 
             <!-- 9.2.3 Add to list -->
             <div class="form-group">
-              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()" i18n="Add to list button">Add to list</button>
+              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
             </div>
           </div>
         </div>
@@ -281,90 +281,90 @@
 
     <!-- 10. Severity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
-      <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
+      <label for="severity_id">{{'Severity' | translate}}</label>
       <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
-        <option [value]="null" disabled i18n="Observation creation/edition">Select a severity</option>
+        <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
         <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
       </select>
-      <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
+      <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
     </div>
 
     <!-- 11. Actions taken by operator -->
     <div class="form-group">
-      <label for="actions_taken" i18n="Observation creation/edition|Label for the actions taken by operator field">Actions taken by operator</label>
+      <label for="actions_taken">{{'Actions taken by operator' | translate}}</label>
       <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel"></textarea>
     </div>
 
     <!-- 12. Comments from the operator -->
     <div class="form-group">
-      <label for="concern_opinion" i18n="Observation creation/edition|Label for the comments from the operator field">Comments from the operator</label>
+      <label for="concern_opinion">{{'Comments from the operator' | translate}}</label>
       <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel"></textarea>
     </div>
 
     <!-- 13. Citation -->
     <div class="form-group">
-      <label for="pv_field" i18n="Observation creation/edition|Label for the citation field">Citation</label>
+      <label for="pv_field">{{'Citation' | translate}}</label>
       <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" />
     </div>
 
     <!-- 14. Litigation status -->
     <div class="form-group">
-      <label for="litigation_status" i18n="Observation creation/edition|Label for the litigation status field">Litigation status</label>
+      <label for="litigation_status">{{'Litigation status' | translate}}</label>
       <input id="litigation_status" type="text" class="form-control" name="litigation_status" [(ngModel)] ="litigationStatus" #litigation_status="ngModel" />
     </div>
 
     <!-- 15. Legal -->
     <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Legal</legend>
+      <legend>{{'Legal' | translate}}</legend>
       <div class="fieldset-container">
         <!-- 15.1. Observation according to legal text -->
         <div class="form-group">
-          <label i18n="Observation creation/edition|Label for the observation according to legal text field">Observation according to legal text</label>
+          <label>{{'Observation according to legal text' | translate}}</label>
           <select id="law_field" name="law_field" [(ngModel)]="law" #law_field="ngModel">
-            <option [value]="null" disabled i18n="Observation creation/edition">Select an observation</option>
+            <option [value]="null" disabled>{{'Select an observation' | translate}}</option>
             <option *ngFor="let law of laws" [ngValue]="law">{{ law['written-infraction'] }}</option>
           </select>
         </div>
 
         <!-- 15.1. Legal reference (infraction) -->
         <div class="form-group">
-          <label for="infraction" i18n="Observation creation/edition|Label for the legal reference (infraction) field">Legal reference (infraction)</label>
+          <label for="infraction">{{'Legal reference (infraction)' | translate}}</label>
           <input id="infraction" type="text" class="form-control" name="infraction" [(ngModel)]="law && law.infraction" #infraction="ngModel" disabled />
         </div>
 
         <!-- 15.2. Legal reference (sanction) -->
         <div class="form-group">
-          <label for="sanction" i18n="Observation creation/edition|Label for the legal reference (sanction) field">Legal reference (sanction)</label>
+          <label for="sanction">{{'Legal reference (sanction)' | translate}}</label>
           <input id="sanction" type="text" class="form-control" name="sanction" [(ngModel)]="law && law.sanctions" #sanction="ngModel" disabled />
         </div>
 
         <!-- 15.3. Minimum fine -->
         <div class="form-group">
-          <label for="min_fine" i18n="Observation creation/edition|Label for the minimum fine field">Minimum fine</label>
+          <label for="min_fine">{{'Minimum fine' | translate}}</label>
           <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" disabled />
         </div>
 
         <!-- 15.4. Maximum fine -->
         <div class="form-group">
-          <label for="max_fine" i18n="Observation creation/edition|Label for the maximum fine field">Maximum fine</label>
+          <label for="max_fine">{{'Maximum fine' | translate}}</label>
           <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" disabled />
         </div>
 
         <!-- 15.5. Penal servitude -->
         <div class="form-group">
-          <label for="penal_servitude" i18n="Observation creation/edition|Label for the penal servitude field">Penal servitude</label>
+          <label for="penal_servitude">{{'Penal servitude' | translate}}</label>
           <input id="penal_servitude" type="text" class="form-control" name="penal_servitude" [(ngModel)]="law && law['penal-servitude']" #penal_servitude="ngModel" disabled />
         </div>
 
         <!-- 15.6. Other penalties -->
         <div class="form-group">
-          <label for="other_penalties" i18n="Observation creation/edition|Label for the other penalties field">Other penalties</label>
+          <label for="other_penalties">{{'Other penalties' | translate}}</label>
           <input id="other_penalties" type="text" class="form-control" name="other_penalties" [(ngModel)]="law && law['other-penalties']" #other_penalties="ngModel" disabled />
         </div>
 
         <!-- 15.7. APV -->
         <div class="form-group">
-          <label for="apv" i18n="Observation creation/edition|Label for the APV field">APV</label>
+          <label for="apv">{{'APV' | translate}}</label>
           <input id="apv" type="text" class="form-control" name="apv" [(ngModel)]="law && law.apv" #flegt="ngModel" disabled />
         </div>
       </div>
@@ -372,24 +372,24 @@
 
     <!-- 16. Publication date -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
-      <label for="publication_date" i18n="Observation creation/edition|Label for the publication date field">Publication date</label>
+      <label for="publication_date">{{'Publication date' | translate}}</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required></otp-datepicker>
-      <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the publication date of a project isn't supplied">Publication date is required</div>
+      <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text">{{'Publication date is required' | translate}}</div>
     </div>
 
     <!-- 17. Metadata -->
     <fieldset *ngIf="observation">
-      <legend i18n="Observation creation/edition|Title of a section of the form">Metadata</legend>
+      <legend>{{'Metadata' | translate}}</legend>
       <div class="fieldset-container">
         <!-- 17.1. Last modification by -->
         <div class="form-group">
-          <label for="last_modification_by" i18n="Observation creation/edition|Label for the last modification by field">Last modification by</label>
+          <label for="last_modification_by">{{'Last modification by' | translate}}</label>
           <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'].name" #last_modification_by="ngModel" disabled />
         </div>
 
         <!-- 17.1. Last modified on -->
         <div class="form-group">
-          <label for="last_modified_on" i18n="Observation creation/edition|Label for the last modified on field">Last modified on</label>
+          <label for="last_modified_on">{{'Last modified on' | translate}}</label>
           <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>
         </div>
       </div>
@@ -400,54 +400,54 @@
   <div class="form-container" *ngIf="type === 'government'">
     <!-- 0. ID -->
     <div class="form-group" *ngIf="observation">
-      <label for="id_field" i18n="Observation creation/edition|Label for the ID field">ID</label>
+      <label for="id_field">{{'ID' | translate}}</label>
       <input id="id_field" type="text" class="form-control" name="id_field" [(ngModel)]="observation.id" #id_field="ngModel" disabled />
     </div>
 
     <!-- 1. Report -->
     <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Report</legend>
+      <legend>{{'Report' | translate}}</legend>
       <div class="fieldset-container">
-        <p class="fieldset-description" *otpMaxTablet i18n="Observation creation/edition|Description of a section of the form">
-          Select one of the two options below: use an existing report or upload a new one.
+        <p class="fieldset-description" *otpMaxTablet>
+          {{'Select one of the two options below: use an existing report or upload a new one.' | translate}}
         </p>
         <div class="row">
           <div class="small-12 medium-6 columns">
             <!-- 1.1 Select report -->
-            <h3 i18n="Observation creation/edition|Title of a section of the form">Existing report</h3>
-            <p i18n="Observation creation/edition|Description of a section of the form">Select a report from the report library of your organization.</p>
+            <h3>{{'Existing report' | translate}}</h3>
+            <p>{{'Select a report from the report library of your organization.' | translate}}</p>
             <div class="form-group">
-              <label for="report_field" i18n="Observation creation/edition|Label for the report field">Report</label>
+              <label for="report_field">{{'Report' | translate}}</label>
               <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
-                <option disabled [value]="null" i18n="Observation creation/edition">Select a report</option>
+                <option disabled [value]="null">{{'Select a report' | translate}}</option>
                 <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
               </select>
             </div>
           </div>
           <div class="small-12 medium-6 columns">
             <!-- 1.2 Upload report -->
-            <h3 i18n="Observation creation/edition|Title of a section of the form">Upload report</h3>
-            <p i18n="Observation creation/edition|Description of a section of the form">Alternatively, you can upload a new report to the library and use it for this observation.</p>
+            <h3>{{'Upload report' | translate}}</h3>
+            <p>{{'Alternatively, you can upload a new report to the library and use it for this observation.' | translate}}</p>
             <!-- 1.2.A File -->
             <div class="form-group">
-              <label for="report_file" i18n="Observation creation/edition|Label for the report file field">File</label>
+              <label for="report_file">{{'File' | translate}}</label>
               <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-              <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text" i18n="Observation creation/edition|Error message if the report exceed the maximum size">The file should weight less than 5MB</div>
-              <div *ngIf="f.submitted && !report_file.valid" class="help-text" i18n="Observation creation/edition|Error message if the report file is not valid">The file is not valid</div>
+              <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 5MB' | translate}}</div>
+              <div *ngIf="f.submitted && !report_file.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
             <!-- 1.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-              <label for="report_title" i18n="Observation creation/edition|Label for the report title field">Title</label>
+              <label for="report_title">{{'Title' | translate}}</label>
               <input id="report_title" type="text" class="form-control" name="report_title" [(ngModel)]="report.title" #report_title="ngModel" [required]="!!report_file.value" />
-              <div *ngIf="f.submitted && !report_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the report title isn't supplied">Please enter the name</div>
+              <div *ngIf="f.submitted && !report_title.valid" class="help-text">{{'Please enter the name' | translate}}</div>
             </div>
 
             <!-- 1.2.3 Publication date -->
             <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-              <label for="report_date" i18n="Observation creation/edition|Label for the report publication date field">Publication date</label>
+              <label for="report_date">{{'Publication date' | translate}}</label>
               <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="report['publication-date']" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
-              <div *ngIf="f.submitted && !report_date.valid" class="help-text" i18n="Observation creation/edition|Error message if the report publication date isn't supplied">Please enter the publication date</div>
+              <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
             </div>
           </div>
         </div>
@@ -456,93 +456,93 @@
 
     <!-- 2. Country -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
-      <label for="country_id" i18n="Observation creation/edition|Label for the country field">Country</label>
+      <label for="country_id">{{'Country' | translate}}</label>
       <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required>
-        <option [value]="null" disabled i18n="Observation creation/edition">Select a country</option>
+        <option [value]="null" disabled>{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
-      <div *ngIf="f.submitted && !country_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the country isn't supplied (the user will have to user between some options)">Please select a country</div>
+      <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
     </div>
 
     <!-- 3. Government entity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
-      <label for="government_id" i18n="Observation creation/edition|Label for the government entity field">Government entity</label>
+      <label for="government_id">{{'Government entity' | translate}}</label>
       <select id="government_id" name="government_id" [(ngModel)]="government" #government_id="ngModel" required>
-        <option [value]="null" disabled i18n="Observation creation/edition">Select a government entity</option>
+        <option [value]="null" disabled>{{'Select a government entity' | translate}}</option>
         <option *ngFor="let government of governments" [ngValue]="government">{{ government['government-entity'] }}</option>
       </select>
-      <div *ngIf="f.submitted && !government_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the government entity isn't supplied (the user will have to user between some options)">Please select a government entity</div>
+      <div *ngIf="f.submitted && !government_id.valid" class="help-text">{{'Please select a government entity' | translate}}</div>
     </div>
 
     <!-- 4. Governance problem -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
-      <label for="subcategory_id" i18n="Observation creation/edition|Label for the governance problem field">Governance problem</label>
+      <label for="subcategory_id">{{'Governance problem' | translate}}</label>
       <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required>
-        <option [value]="null" disabled i18n="Observation creation/edition">Select a governance problem</option>
+        <option [value]="null" disabled>{{'Select a governance problem' | translate}}</option>
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
-      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the governance problem isn't supplied (the user will have to user between some options)">Please select a governance problem</div>
+      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">Please select a governance problem</div>
     </div>
 
     <!-- 5. Additional monitors -->
     <div class="form-group">
-      <label i18n="Observation creation/edition|Label for the additional monitors field">Additional monitors</label>
+      <label>{{'Additional monitors' | translate}}</label>
       <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers"></ss-multiselect-dropdown>
     </div>
 
     <!-- 6. Description -->
     <div class="form-group">
-      <label for="details_field" i18n="Observation creation/edition|Label for the description field">Description</label>
+      <label for="details_field">{{'Description' | translate}}</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
     </div>
 
     <!-- 7. Evidence -->
     <fieldset>
-      <legend i18n="Observation creation/edition|Title of a section of the form">Evidence</legend>
+      <legend>{{'Evidence' | translate}}</legend>
       <div class="fieldset-container">
         <div class="row">
           <div class="small-12 medium-6 columns">
             <!-- 7.1 List of evidence -->
-            <h3 i18n="Observation creation/edition|Title of a section of the form">List of evidence</h3>
+            <h3>{{'List of evidence' | translate}}</h3>
             <ul class="documents-list" *ngIf="documents.length">
               <li *ngFor="let document of documents">
                 <div class="content">
                   <div class="title">{{document.name}}</div>
-                  <div class="status" *ngIf="document.id" i18n="Observation creation/edition|Status of an evidence">Already uploaded</div>
-                  <div class="status" *ngIf="!document.id" i18n="Observation creation/edition|Status of an evidence">To upload</div>
+                  <div class="status" *ngIf="document.id" >{{'Already uploaded' | translate}}</div>
+                  <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
                 </div>
                 <div class="actions">
-                  <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)" i18n="Delete button">Delete</button>
+                  <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)">{{'Delete' | translate}}</button>
                 </div>
               </li>
             </ul>
-            <p *ngIf="!documents.length" i18n="Observation creation/edition|Text message when no evidence has been uploaded">No evidence</p>
+            <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
           <div class="small-12 medium-6 columns">
             <!-- 7.2.1 Evidence -->
-            <p i18n="Observation creation/edition|Description of a section of the form">When you upload new file, it will appear in the list of evidence.</p>
+            <p>{{'When you upload new file, it will appear in the list of evidence.' | translate}}</p>
             <!-- This input is used to prevent the submitting until evidence are uploaded -->
             <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
             <div class="form-group" *ngIf="f.submitted && !documents.length">
-              <div class="help-text" i18n="Observation creation/edition|Error message if no evidence is supplied">You need to upload evidence</div>
+              <div class="help-text">{{'You need to upload evidence' | translate}}</div>
             </div>
             <div class="form-group">
-              <label for="evidence_field" i18n="Observation creation/edition|Label for the upload evidence field">Evidence</label>
+              <label for="evidence_field">{{'Evidence' | translate}}</label>
               <input id="evidence_field" type="file" class="form-control" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-              <div *ngIf="evidence_field.errors?.maxSize" class="help-text" i18n="Observation creation/edition|Error message if the evidence exceed the maximum size">The file should weight less than 5MB</div>
-              <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence file is not valid">The file is not valid</div>
+              <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 5MB' | translate}}</div>
+              <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
             <!-- 7.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
-              <label for="evidence_title" i18n="Observation creation/edition|Label for the report title field">Title</label>
+              <label for="evidence_title">{{'Title' | translate}}</label>
               <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment || !documents.length" />
-              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text" i18n="Observation creation/edition|Error message if the evidence title isn't supplied">Please enter the title</div>
+              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
             </div>
 
             <!-- 7.2.3 Add to list -->
             <div class="form-group">
-              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()" i18n="Add to list button">Add to list</button>
+              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
             </div>
           </div>
         </div>
@@ -551,40 +551,40 @@
 
     <!-- 8. Severity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
-      <label for="severity_id" i18n="Observation creation/edition|Label for the severity field">Severity</label>
+      <label for="severity_id">{{'Severity' | translate}}</label>
       <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
-        <option [value]="null" disabled i18n="Observation creation/edition">Select a severity</option>
+        <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
         <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
       </select>
-      <div *ngIf="f.submitted && !severity_id.valid" class="help-text" i18n="Observation creation/edition|Error message if the severity isn't supplied (the user will have to user between some options)">Please select a severity</div>
+      <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
     </div>
 
     <!-- 9. Actions taken by government -->
     <div class="form-group">
-      <label for="actions_taken" i18n="Observation creation/edition|Label for the actions taken by government field">Actions taken by government</label>
+      <label for="actions_taken">{{'Actions taken by government' | translate}}</label>
       <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel"></textarea>
     </div>
 
     <!-- 10. Publication date -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
-      <label for="publication_date" i18n="Observation creation/edition|Label for the publication date field">Publication date</label>
+      <label for="publication_date">{{'Publication date' | translate}}</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required></otp-datepicker>
-      <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text" i18n="Observation creation/edition|Error message if the publication date of a project isn't supplied">Publication date is required</div>
+      <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text">{{'Publication date is required' | translate}}</div>
     </div>
 
     <!-- 11. Metadata -->
     <fieldset *ngIf="observation">
-      <legend i18n="Observation creation/edition|Title of a section of the form">Metadata</legend>
+      <legend>{{'Metadata'}}</legend>
       <div class="fieldset-container">
         <!-- 11.1. Last modification by -->
         <div class="form-group">
-          <label for="last_modification_by" i18n="Observation creation/edition|Label for the last modification by field">Last modification by</label>
+          <label for="last_modification_by">{{'Last modification by' | translate}}</label>
           <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'].name" #last_modification_by="ngModel" disabled />
         </div>
 
         <!-- 11.1. Last modified on -->
         <div class="form-group">
-          <label for="last_modified_on" i18n="Observation creation/edition|Label for the last modified on field">Last modified on</label>
+          <label for="last_modified_on">{{'Last modified on' | translate}}</label>
           <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>
         </div>
       </div>
@@ -594,16 +594,16 @@
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button  type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-        <button *ngIf="!observation"  type="submit" class="c-button -primary" i18n="Create button">Create</button>
-      <button *ngIf="observation"  type="submit" class="c-button -primary" i18n="Save button">Save</button>
+        <button  type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        <button *ngIf="!observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button  type="button" (click)="onCancel()" class="c-button -secondary" i18n="Cancel button">Cancel</button>
-      <button *ngIf="!observation"  type="submit" class="c-button -primary" i18n="Create button">Create</button>
-      <button *ngIf="observation"  type="submit" class="c-button -primary" i18n="Save button">Save</button>
+      <button  type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="!observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
     </otp-action-bar>
   </div>
 

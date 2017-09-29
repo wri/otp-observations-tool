@@ -1,5 +1,6 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, Inject, LOCALE_ID } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
 
@@ -12,30 +13,26 @@ export class HeaderComponent {
 
   private isAdmin = false;
   isLogged = false;
-  lang: string;
+  acceptedLang = ['en', 'fr'];
+  defaultLang = 'en';
+  _lang = 'en';
+
+  get lang() { return this._lang; }
+  set lang(lang) { this.translateService.use(lang); }
 
   constructor (
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    @Inject(LOCALE_ID) locale: string
+    private translateService: TranslateService
   ) {
-    this.lang = locale.slice(0, 2);
+    this.translateService.onLangChange.subscribe(({ lang }) => this._lang = lang);
 
     // Each time the status of the login change, we update some variables
     this.authService.loginStatus.subscribe(isLogged => {
       this.isLogged = isLogged;
       this.authService.isAdmin().then(isAdmin => this.isAdmin = isAdmin);
     });
-  }
-
-  onChangeLanguage() {
-    // We update the lang query param and reload the app so the other
-    // bundle can be loaded
-    this.router.navigate([], {
-      queryParams: { lang: this.lang },
-      relativeTo: this.route
-    }).then(() => location.reload());
   }
 
   logout(): void {

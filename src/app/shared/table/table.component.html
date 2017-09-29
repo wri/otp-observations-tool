@@ -3,9 +3,9 @@
 <table role="grid" aria-readonly="true" [attr.aria-rowcount]="rowCount">
   <caption>
     <ng-template [ngIf]="caption">{{caption}}</ng-template>
-    <ng-template [ngIf]="!caption" i18n="Default caption for the tables">Undefined table</ng-template>
+    <ng-template [ngIf]="!caption">{{'Undefined table' | translate}}</ng-template>
     <ng-template [ngIf]="sortColumn">
-      <span i18n="Complementary caption information">, sorted by</span> {{sortColumn.name || sortColumn.prop}}: <span i18n="Sort order of the table" *ngIf="sortOrder === 'asc'">ascendent</span><span i18n="Sort order of the table" *ngIf="sortOrder === 'desc'">descendent</span>
+      , {{'table.sortOrder' | translate: { 'column': sortColumn.name || sortColumn.prop} }}: <span *ngIf="sortOrder === 'asc'">{{'ascendent' | translate}}</span><span *ngIf="sortOrder === 'desc'">{{'descendent' | translate}}</span>
     </ng-template>
   </caption>
 
@@ -26,7 +26,7 @@
 
   <tbody>
     <tr *ngIf="!rows || !rows.length" class="no-data" role="row">
-      <td role="gridcell" [attr.colspan]="columns.length">No data</td>
+      <td role="gridcell" [attr.colspan]="columns.length">{{'No data' | translate}}</td>
     </tr>
 
     <tr *ngFor="let row of renderableRows" role="row" [attr.aria-rowindex]="row.__index__">
@@ -45,18 +45,16 @@
 
 </table>
 
-<span #pageWordTranslation i18n="Table paginator|Page of a table" hidden style="display: none;">Page</span>
-
 <div *ngIf="perPage" class="paginator">
-  <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage" i18n="Table paginator|Previous page button">Previous</button>
+  <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage">{{'Previous' | translate}}</button>
   <ul>
-    <li *ngIf="currentPage > firstPage + 1"><button type="button" [attr.aria-label]="pageWord + ' ' + firstPage" (click)="currentPage = firstPage">{{firstPage}}</button></li>
+    <li *ngIf="currentPage > firstPage + 1"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': firstPage }" (click)="currentPage = firstPage">{{firstPage}}</button></li>
     <li *ngIf="currentPage > firstPage + 2">...</li>
-    <li *ngIf="previousPage"><button type="button" [attr.aria-label]="pageWord + ' ' + previousPage" (click)="currentPage = previousPage">{{previousPage}}</button></li>
-    <li class="-active"><button type="button" [attr.aria-label]="pageWord + ' ' + currentPage">{{currentPage}}</button></li>
-    <li *ngIf="nextPage"><button type="button" [attr.aria-label]="pageWord + ' ' + nextPage" (click)="currentPage = nextPage">{{nextPage}}</button></li>
+    <li *ngIf="previousPage"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': previousPage }" (click)="currentPage = previousPage">{{previousPage}}</button></li>
+    <li class="-active"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage }">{{currentPage}}</button></li>
+    <li *ngIf="nextPage"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': nextPage }" (click)="currentPage = nextPage">{{nextPage}}</button></li>
     <li *ngIf="currentPage < lastPage - 2">...</li>
-    <li *ngIf="currentPage < lastPage - 1"><button type="button" [attr.aria-label]="pageWord + ' ' + lastPage" (click)="currentPage = lastPage">{{lastPage}}</button></li>
+    <li *ngIf="currentPage < lastPage - 1"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': lastPage }" (click)="currentPage = lastPage">{{lastPage}}</button></li>
   </ul>
-  <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage" i18n="Table paginator|Next page button">Next</button>
+  <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage">{{'Next' | translate}}</button>
 </div>

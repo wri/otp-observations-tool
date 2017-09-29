@@ -1,28 +1,28 @@
 <div class="mobile-navigation" *otpMaxTablet>
   <otp-navigation layout="horizontal">
-    <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Categories" url="categories"></otp-navigation-item>
-    <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Sub-categories" url="subcategories"></otp-navigation-item>
-    <!-- <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Species" url="species"></otp-navigation-item> -->
-    <!-- <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Countries" url="countries"></otp-navigation-item> -->
-    <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Government entities" url="government-entities"></otp-navigation-item>
-    <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Operators" url="operators"></otp-navigation-item>
-    <!-- <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Monitors" url="observers"></otp-navigation-item> -->
-    <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Laws" url="laws"></otp-navigation-item>
-    <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Severities" url="severities"></otp-navigation-item>
+    <otp-navigation-item [name]="'Categories' | translate" url="categories"></otp-navigation-item>
+    <otp-navigation-item [name]="'Subcategories' | translate" url="subcategories"></otp-navigation-item>
+    <!-- <otp-navigation-item name="Species" url="species"></otp-navigation-item> -->
+    <!-- <otp-navigation-item name="Countries" url="countries"></otp-navigation-item> -->
+    <otp-navigation-item [name]="'Government entities' | translate" url="government-entities"></otp-navigation-item>
+    <otp-navigation-item [name]="'Operators' | translate" url="operators"></otp-navigation-item>
+    <!-- <otp-navigation-item name="Monitors" url="observers"></otp-navigation-item> -->
+    <otp-navigation-item [name]="'Laws' | translate" url="laws"></otp-navigation-item>
+    <otp-navigation-item [name]="'Severities' | translate" url="severities"></otp-navigation-item>
   </otp-navigation>
 </div>
 <div class="l-wrapper">
   <div class="c-container -j-start -a-start">
     <otp-navigation *otpMinTablet layout="vertical">
-      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Categories" url="categories"></otp-navigation-item>
-      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Sub-categories" url="subcategories"></otp-navigation-item>
-      <!-- <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Species" url="species"></otp-navigation-item> -->
-      <!-- <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Countries" url="countries"></otp-navigation-item> -->
-      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Government entities" url="government-entities"></otp-navigation-item>
-      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Operators" url="operators"></otp-navigation-item>
-      <!-- <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Monitors" url="observers"></otp-navigation-item> -->
-      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Laws" url="laws"></otp-navigation-item>
-      <otp-navigation-item i18n-name="Menu item|Menu located on the 'Observations fields' page" name="Severities" url="severities"></otp-navigation-item>
+      <otp-navigation-item [name]="'Categories' | translate" url="categories"></otp-navigation-item>
+      <otp-navigation-item [name]="'Subcategories' | translate" url="subcategories"></otp-navigation-item>
+      <!-- <otp-navigation-item name="Species" url="species"></otp-navigation-item> -->
+      <!-- <otp-navigation-item name="Countries" url="countries"></otp-navigation-item> -->
+      <otp-navigation-item [name]="'Government entities' | translate" url="government-entities"></otp-navigation-item>
+      <otp-navigation-item [name]="'Operators' | translate" url="operators"></otp-navigation-item>
+      <!-- <otp-navigation-item name="Monitors" url="observers"></otp-navigation-item> -->
+      <otp-navigation-item [name]="'Laws' | translate" url="laws"></otp-navigation-item>
+      <otp-navigation-item [name]="'Severities' | translate" url="severities"></otp-navigation-item>
     </otp-navigation>
     <div class="content">
       <router-outlet ></router-outlet>

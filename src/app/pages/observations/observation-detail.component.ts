@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import cloneDeep from 'lodash/cloneDeep';
 import EXIF from 'exif-js';
 import { Law } from 'app/models/law.model';
@@ -495,7 +496,8 @@ export class ObservationDetailComponent {
     private lawsService: LawsService,
     private datastoreService: DatastoreService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translateService: TranslateService
   ) {
     this.observersService.getAll({ sort: 'name' })
       .then((observers) => {
@@ -591,7 +593,7 @@ export class ObservationDetailComponent {
   onChangePhoto(e: Event) {
     const photo = (<HTMLInputElement>e.target).files[0];
     const self = this;
-    EXIF.getData(photo, function () {
+    EXIF.getData(photo, async function () {
       // We get the coordinated in minutes, seconds
       const minLatitude: any[] = EXIF.getTag(this, 'GPSLatitude');
       const minLongitude: any[] = EXIF.getTag(this, 'GPSLongitude');
@@ -601,7 +603,7 @@ export class ObservationDetailComponent {
       const longitudeRef = EXIF.getTag(this, 'GPSLongitudeRef') || 'W';
 
       if (!minLatitude || !minLongitude) {
-        alert('The image can\'t be georeferenced, try another one.');
+        alert(await this.translateService.get('imageGeoreference.error').toPromise());
         return;
       }
 
@@ -812,20 +814,20 @@ export class ObservationDetailComponent {
       })
       .then(() => observation.save().toPromise())
       .then(() => this.updateDocuments(observation))
-      .then(() => {
+      .then(async () => {
         if (this.observation) {
-          alert('The observation has been successfully updated.');
+          alert(await this.translateService.get('observationUpdate.success').toPromise());
         } else {
-          alert('The observation has been submitted and is awaiting approval.');
+          alert(await this.translateService.get('observationCreation.success').toPromise());
         }
 
         this.router.navigate(['/', 'private', 'observations']);
       })
-      .catch((err) => {
+      .catch(async (err) => {
         if (this.observation) {
-          alert('The update of the observation has been unsuccessful.');
+          alert(await this.translateService.get('observationUpdate.error').toPromise());
         } else {
-          alert('The creation of the observation has been unsuccessful.');
+          alert(await this.translateService.get('observationCreation.error').toPromise());
         }
         console.error(err);
       })
