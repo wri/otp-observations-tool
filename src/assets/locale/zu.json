@@ -35,5 +35,10 @@
     "organizationProfile.success": "Your organization profile has been sucessfully updated.",
     "organizationProfile.error": "The update of your organization profile has been unsuccessful.",
     "Organization profile": "Organization profile",
-    "Report library": "Report library"
+    "Report library": "Report library",
+    "Reports": "Reports",
+    "Title": "Title",
+    "Publication date": "Publication date",
+    "Actions": "Actions",
+    "Download": "Download"
 }
