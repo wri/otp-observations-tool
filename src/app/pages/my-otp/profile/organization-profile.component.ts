@@ -3,6 +3,7 @@ import { AuthService } from 'app/services/auth.service';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Observer } from 'app/models/observer.model';
 import { Component } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'otp-organization-profile',
@@ -18,7 +19,8 @@ export class OrganizationProfileComponent {
 
   constructor(
     private authService: AuthService,
-    private observersService: ObserversService
+    private observersService: ObserversService,
+    private translateService: TranslateService
   ) {
     this.loadObserver();
   }
@@ -39,8 +41,8 @@ export class OrganizationProfileComponent {
 
     this.observer.save()
       .toPromise()
-      .then(() => alert('Your organization profile has been sucessfully updated.'))
-      .catch(() => alert('The update of your organization profile has been unsuccessful.'))
+      .then(async () => alert(await this.translateService.get('organizationProfile.success').toPromise()))
+      .catch(async () => alert(await this.translateService.get('organizationProfile.error').toPromise()))
       .then(() => this.saveLoading = false);
   }
 

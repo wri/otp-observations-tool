@@ -20,5 +20,18 @@
     "Previous": "Previous",
     "Next": "Next",
     "table.page": "Page {{pageNumber}}",
-    "Close this dialog window": "Close this dialog window"
+    "Close this dialog window": "Close this dialog window",
+    "Discard changes": "Discard changes",
+    "Save": "Save",
+    "Name of the organization": "Name of the organization",
+    "Name is required": "Name is required",
+    "Address": "Address",
+    "Contact information (General information)": "Contact information (General information)",
+    "Name": "Name",
+    "Email": "Email",
+    "Please enter an email address": "Please enter an email address",
+    "Phone number": "Phone number",
+    "Contact information (For inquiries on data uploaded)": "Contact information (For inquiries on data uploaded)",
+    "organizationProfile.success": "Your organization profile has been sucessfully updated.",
+    "organizationProfile.error": "The update of your organization profile has been unsuccessful."
 }
