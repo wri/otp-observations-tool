@@ -4,5 +4,5 @@
   <div role="document">
     <ng-content></ng-content>
   </div>
-  <button type="button" *ngIf="closeable" class="close-button" i18n-aria-label="Modal" aria-label="Close this dialog window" (click)="close()">&times;</button>
+  <button type="button" *ngIf="closeable" class="close-button" [attr.aria-label]="'Close this dialog window' | translate" (click)="close()">&times;</button>
 </div>

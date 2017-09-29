@@ -19,5 +19,6 @@
     "No data": "No data",
     "Previous": "Previous",
     "Next": "Next",
-    "table.page": "Page {{pageNumber}}"
+    "table.page": "Page {{pageNumber}}",
+    "Close this dialog window": "Close this dialog window"
 }
