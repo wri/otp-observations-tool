@@ -71,7 +71,7 @@
             <!-- 1.2.3 Publication date -->
             <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
               <label for="report_date">{{'Publication date' | translate}}</label>
-              <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="report['publication-date']" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
+              <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="reportDate" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
               <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
             </div>
           </div>
@@ -446,7 +446,7 @@
             <!-- 1.2.3 Publication date -->
             <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
               <label for="report_date">{{'Publication date' | translate}}</label>
-              <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="report['publication-date']" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
+              <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="reportDate" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
               <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
             </div>
           </div>

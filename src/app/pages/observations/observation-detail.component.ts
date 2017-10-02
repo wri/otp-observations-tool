@@ -484,6 +484,18 @@ export class ObservationDetailComponent {
     }
   }
 
+  get reportDate() { return this.report['publication-date']; }
+  set reportDate(date) {
+    const similarReport = this.reports.find(report => report['publication-date'] === date);
+
+    if (similarReport) {
+      this.translateService.get('report.duplicate', { reportName: similarReport.title }).toPromise()
+        .then(s => alert(s));
+    }
+
+    this.report['publication-date'] = date;
+  }
+
   constructor(
     private authService: AuthService,
     private observersService: ObserversService,
