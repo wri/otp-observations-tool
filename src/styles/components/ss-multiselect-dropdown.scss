@@ -36,6 +36,12 @@ ss-multiselect-dropdown {
       &:active {
         color: #0a0a0a;
       }
+
+      &[disabled] {
+        background-color: #e6e6e6;
+        color: inherit;
+        cursor: not-allowed;
+      }
     }
 
     .dropdown-menu {

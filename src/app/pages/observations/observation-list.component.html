@@ -33,6 +33,9 @@
         <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
         <button class="action" (click)="onDelete(row)" [attr.aria-label]="'Delete' | translate"><otp-icon name="#icon-delete"></otp-icon></button>
       </ng-template>
+      <ng-template [ngIf]="!canEdit(row)">
+        <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
+      </ng-template>
     </ng-template>
   </otp-table-column>
 </otp-table>

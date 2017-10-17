@@ -97,7 +97,7 @@ export class ObservationListComponent extends TableFilterBehavior {
    * @returns {boolean}
    */
   canEdit(observation: Observation): boolean {
-    const isAdmin = this.authService.userRole === 'admin';
+    const isAdmin = this.authService.isAdmin();
 
     // If the user is an admin, they can do whatever they
     // want
