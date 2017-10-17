@@ -164,9 +164,9 @@
       <div class="fieldset-container">
 
         <!-- 4.1. Forest management unit -->
-        <div [ngClass]="{ 'form-group': true, '-required': fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) }">
+        <div [ngClass]="{ 'form-group': true, '-required': !!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) }">
           <label for="fmu_field">{{'Forest management unit' | translate}}</label>
-          <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0)" [disabled]="isDisabled()">
+          <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="!!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0)" [disabled]="isDisabled()">
             <option [value]="null" disabled>{{'Select a FMU' | translate}}</option>
             <option *ngFor="let fmu of fmus" [ngValue]="fmu">{{ fmu.name }}</option>
           </select>
