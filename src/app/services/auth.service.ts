@@ -50,7 +50,7 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}/login`, payload)
       .map(response => response.json())
       .map(body => {
-        if (body.role !== 'ngo' && body.role !== 'admin') {
+        if (body.role !== 'ngo' && body.role !== 'ngo_manager') {
           this.triggerLoginStatus(false);
           return false;
         }
@@ -102,10 +102,8 @@ export class AuthService {
    * logouts or logins with a different account
    * @returns {boolean}
    */
-  isAdmin(): Promise<boolean> {
-    return new Promise(resolve => {
-      resolve(this.userRole === 'admin');
-    });
+  isAdmin(): boolean {
+    return this.userRole === 'ngo_manager';
   }
 
   logout() {

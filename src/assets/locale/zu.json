@@ -207,5 +207,9 @@
     "404.description": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
     "Go to my OTP": "Go to my OTP",
     "Go to login page": "Go to login page",
-    "report.duplicate": "The report {{reportName}} has the same publication date. Make sure you're not uploading a duplicate."
+    "report.duplicate": "The report {{reportName}} has the same publication date. Make sure you're not uploading a duplicate.",
+    "lawCreation.success": "The law has been created successfully.",
+    "lawCreation.error": "The creation of the law has been unsuccessful.",
+    "lawUpdate.success": "The law has been successfully updated.",
+    "lawUpdate.error": "The update of the law has been unsuccessful."
 }

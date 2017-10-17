@@ -1,3 +1,4 @@
+import { AuthService } from 'app/services/auth.service';
 import { LawsService } from 'app/services/laws.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
@@ -13,7 +14,8 @@ export class LawListComponent extends TableFilterBehavior {
   constructor(
     protected service: LawsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public authService: AuthService
   ) {
     super();
   }
@@ -37,7 +39,11 @@ export class LawListComponent extends TableFilterBehavior {
     return string.slice(0, limit) + '...';
   }
 
-  onInfo(row) {
+  onClickNewLaw() {
+    this.router.navigate(['private', 'fields', 'laws', 'new']);
+  }
+
+  onEdit(row) {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate([`edit/${row.id}`], { relativeTo: this.route });
   }

@@ -1,87 +1,103 @@
-<form name="form" class="c-form" #f="ngForm" novalidate>
+<otp-loader *ngIf="loading" overlay fixed></otp-loader>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="isAdmin && f.valid && onSubmit()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
-    <h2>{{'Law details' | translate}}</h2>
+    <h2 *ngIf="!isAdmin">{{'Law details' | translate}}</h2>
+    <h2 *ngIf="isAdmin && !law.id">{{'New law' | translate}}</h2>
+    <h2 *ngIf="isAdmin && law.id">{{'Edit law' | translate}}</h2>
     <div class="c-button-container -j-end form-group" *otpMinTablet>
-      <button  type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      <button *ngIf="!isAdmin" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      <button *ngIf="isAdmin" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="isAdmin && !law.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="isAdmin && law.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
     </div>
   </div>
 
   <div class="form-container">
     <otp-loader *ngIf="loading"></otp-loader>
     <!-- 1. Country -->
-    <div class="form-group">
-      <label for="country">{{'Country' | translate}}</label>
-      <select id="country" name="country" disabled>
-        <option value="">{{ law && law.country.name }}</option>
+    <div class="form-group -required">
+      <label for="country_id">{{'Country' | translate}}</label>
+      <select id="country_id" name="country_id" [(ngModel)]="law && law.country" #country_id="ngModel" required [disabled]="!isAdmin">
+        <option [value]="null" disabled>{{'Select a country' | translate}}</option>
+        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
+      <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
     </div>
 
     <!-- 2. Subcategory -->
-    <div class="form-group">
+    <div class="form-group -required">
       <label for="subcategory">{{'Subcategory' | translate}}</label>
-      <select id="subcategory" name="subcategory" disabled>
-        <option value="">{{ law && law.subcategory.name }}</option>
+      <select id="subcategory" name="subcategory" [(ngModel)]="law && law.subcategory" #subcategory="ngModel" required [disabled]="!isAdmin">
+        <option [value]="null" disabled>{{'Select a subcategory' | translate}}</option>
+        <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
+      <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a subcategory' | translate}}</div>
     </div>
 
     <!-- 3. Observation according to legal text -->
     <div class="form-group">
       <label for="law_field">{{'Observation according to legal text' | translate}}</label>
-      <textarea id="law_field" class="form-control" name="law_field" [(ngModel)]="law && law['written-infraction']" #law_field="ngModel" disabled></textarea>
+      <textarea id="law_field" class="form-control" name="law_field" [(ngModel)]="law && law['written-infraction']" #law_field="ngModel" [disabled]="!isAdmin"></textarea>
     </div>
 
     <!-- 4. Legal reference (infraction) -->
     <div class="form-group">
       <label for="infraction">{{'Legal reference (infraction)' | translate}}</label>
-      <textarea id="infraction" class="form-control" name="infraction" [(ngModel)]="law && law.infraction" #infraction="ngModel" disabled></textarea>
+      <textarea id="infraction" class="form-control" name="infraction" [(ngModel)]="law && law.infraction" #infraction="ngModel" [disabled]="!isAdmin"></textarea>
     </div>
 
     <!-- 5. Legal reference (sanction) -->
     <div class="form-group">
       <label for="sanctions">{{'Legal reference (sanction)' | translate}}</label>
-      <textarea id="sanctions" class="form-control" name="sanctions" [(ngModel)]="law && law.sanctions" #sanctions="ngModel" disabled></textarea>
+      <textarea id="sanctions" class="form-control" name="sanctions" [(ngModel)]="law && law.sanctions" #sanctions="ngModel" [disabled]="!isAdmin"></textarea>
     </div>
 
     <!-- 6. Minimum fine -->
     <div class="form-group">
       <label for="min_fine">{{'Minimum fine' | translate}}</label>
-      <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" disabled />
+      <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" [disabled]="!isAdmin" />
     </div>
 
     <!-- 7. Maximum fine -->
     <div class="form-group">
       <label for="max_fine">{{'Maximum fine' | translate}}</label>
-      <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" disabled />
+      <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" [disabled]="!isAdmin" />
     </div>
 
     <!-- 8. Penal servitude -->
     <div class="form-group">
       <label for="penal_servitude">{{'Penal servitude' | translate}}</label>
-      <textarea id="penal_servitude" type="text" class="form-control" name="penal_servitude" [(ngModel)]="law && law['penal-servitude']" #penal_servitude="ngModel" disabled></textarea>
+      <textarea id="penal_servitude" type="text" class="form-control" name="penal_servitude" [(ngModel)]="law && law['penal-servitude']" #penal_servitude="ngModel" [disabled]="!isAdmin"></textarea>
     </div>
 
     <!-- 9. Other penalties -->
     <div class="form-group">
       <label for="other_penalties">{{'Other penalties' | translate}}</label>
-      <textarea id="other_penalties" type="text" class="form-control" name="other_penalties" [(ngModel)]="law && law['other-penalties']" #other_penalties="ngModel" disabled></textarea>
+      <textarea id="other_penalties" type="text" class="form-control" name="other_penalties" [(ngModel)]="law && law['other-penalties']" #other_penalties="ngModel" [disabled]="!isAdmin"></textarea>
     </div>
 
     <!-- 10. APV -->
     <div class="form-group">
       <label for="apv">{{'APV' | translate}}</label>
-      <textarea id="apv" type="text" class="form-control" name="apv" [(ngModel)]="law && law.apv" #flegt="ngModel" disabled></textarea>
+      <textarea id="apv" type="text" class="form-control" name="apv" [(ngModel)]="law && law.apv" #flegt="ngModel" [disabled]="!isAdmin"></textarea>
     </div>
   </div>
 
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button  type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+        <button *ngIf="!isAdmin" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+        <button *ngIf="isAdmin" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        <button *ngIf="isAdmin && !law.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+        <button *ngIf="isAdmin && law.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button  type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      <button *ngIf="!isAdmin" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      <button *ngIf="isAdmin" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="isAdmin && !law.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="isAdmin && law.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
     </otp-action-bar>
   </div>
 

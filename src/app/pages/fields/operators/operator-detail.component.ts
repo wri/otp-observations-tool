@@ -1,3 +1,4 @@
+import { AuthService } from 'app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Operator } from 'app/models/operator.model';
@@ -15,6 +16,8 @@ import { OperatorTypes } from './operator-list.component';
   styleUrls: ['./operator-detail.component.scss']
 })
 export class OperatorDetailComponent {
+
+  isAdmin = false;
 
   countries: Country[] = [];
   operator: Operator = null;
@@ -35,8 +38,11 @@ export class OperatorDetailComponent {
     private datastoreService: DatastoreService,
     private router: Router,
     private route: ActivatedRoute,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private authService: AuthService
   ) {
+    this.isAdmin = this.authService.isAdmin();
+
     this.countriesService.getAll({ sort: 'name' })
       .then(data => this.countries = data)
       .catch(err => console.error(err)); // TODO: visual feedback
@@ -88,6 +94,10 @@ export class OperatorDetailComponent {
         console.error(err);
       })
       .then(() => this.loading = false);
+  }
+
+  onClickBack() {
+    this.router.navigate(['../..'], { relativeTo: this.route });
   }
 
 

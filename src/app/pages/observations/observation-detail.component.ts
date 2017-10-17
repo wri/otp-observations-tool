@@ -543,7 +543,7 @@ export class ObservationDetailComponent {
       this.loading = true;
 
       this.observationsService.getById(this.route.snapshot.params.id, {
-        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report,law'
+        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report,law,user'
       }).then((observation) => {
           this.observation = observation;
 
@@ -685,6 +685,37 @@ export class ObservationDetailComponent {
   onCancel(): void {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate([this.observation ? '../..' : '..'], { relativeTo: this.route });
+  }
+
+  /**
+   * Return whether the form is disabled
+   * @returns {boolean}
+   */
+  isDisabled(): boolean {
+    const isAdmin = this.authService.isAdmin();
+
+    // The user is creating an observation, the form
+    // is not disabled
+    if (!this.route.snapshot.params.id) {
+      return false;
+    }
+
+    // If the user is an admin and the observation
+    // is linked to its organization, then the form is
+    // not disabled
+    if (isAdmin
+      && this.observation.observers.find(o => o.id === this.authService.userObserverId)) {
+      return false;
+    }
+
+    // If the observation is active, it is disabled
+    if (this.observation['is-active']) {
+      return true;
+    }
+
+    // If the observation is not active, then only the person
+    // who edited it can edit it
+    return !this.observation.user || this.observation.user.id !== this.authService.userId;
   }
 
   /**
@@ -844,6 +875,10 @@ export class ObservationDetailComponent {
         console.error(err);
       })
       .then(() => this.loading = false);
+  }
+
+  onClickBack() {
+    this.router.navigate(['../..'], { relativeTo: this.route });
   }
 
 }

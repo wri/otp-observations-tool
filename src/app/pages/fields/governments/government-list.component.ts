@@ -1,3 +1,4 @@
+import { AuthService } from 'app/services/auth.service';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { Government } from './../../../models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
@@ -14,7 +15,8 @@ export class GovernmentListComponent extends TableFilterBehavior {
   constructor(
     protected service: GovernmentsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public authService: AuthService
   ) {
     super();
   }

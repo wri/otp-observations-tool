@@ -1,12 +1,14 @@
 <otp-loader *ngIf="loading" overlay fixed></otp-loader>
-<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && f.valid && onSubmit()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
-    <h2 *ngIf="!observation">{{'New observation' | translate}}</h2>
-    <h2 *ngIf="observation">{{'Edit observation' | translate}}</h2>
+    <h2 *ngIf="isDisabled()">{{'Observation details' | translate}}</h2>
+    <h2 *ngIf="!isDisabled() && !observation">{{'New observation' | translate}}</h2>
+    <h2 *ngIf="!isDisabled() && observation">{{'Edit observation' | translate}}</h2>
     <div class="c-button-container -j-end form-group" *otpMinTablet>
-      <button  type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="!observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+      <button *ngIf="isDisabled()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      <button *ngIf="!isDisabled()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="!isDisabled() && !observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="!isDisabled() && observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
     </div>
   </div>
 
@@ -30,7 +32,14 @@
     </div>
 
     <!-- 1. Report -->
-    <fieldset>
+    <div *ngIf="isDisabled()" class="form-group">
+      <label for="report_field">{{'Report' | translate}}</label>
+      <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" disabled>
+        <option disabled [value]="null">{{'Select a report' | translate}}</option>
+        <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
+      </select>
+    </div>
+    <fieldset *ngIf="!isDisabled()">
       <legend>{{'Report' | translate}}</legend>
       <div class="fieldset-container">
         <p class="fieldset-description" *otpMaxTablet>
@@ -82,7 +91,7 @@
     <!-- 2. Country -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
       <label for="country_id">{{'Country' | translate}}</label>
-      <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required>
+      <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required [disabled]="isDisabled()">
         <option [value]="null" disabled>{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
@@ -90,7 +99,14 @@
     </div>
 
     <!-- 3. Operator -->
-    <fieldset>
+    <div *ngIf="isDisabled()" class="form-group -required">
+      <label for="operator_id">{{'Operator' | translate}}</label>
+      <select id="operator_id" name="operator_id" [(ngModel)]="operatorChoice" #operator_id="ngModel" [required]="!operator.name" disabled>
+        <option [value]="null" disabled>{{'Select an operator' | translate}}</option>
+        <option *ngFor="let operator of operators" [ngValue]="operator">{{ operator.name }}</option>
+      </select>
+    </div>
+    <fieldset *ngIf="!isDisabled()">
       <legend>{{'Operator' | translate}}</legend>
       <div class="fieldset-container">
         <p class="fieldset-description" *otpMaxTablet>
@@ -139,7 +155,7 @@
     <!-- 4. Additional monitors -->
     <div class="form-group">
       <label>Additional monitors</label>
-      <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers"></ss-multiselect-dropdown>
+      <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers" [disabled]="isDisabled()"></ss-multiselect-dropdown>
     </div>
 
     <!-- 5. Location -->
@@ -150,14 +166,29 @@
         <!-- 4.1. Forest management unit -->
         <div [ngClass]="{ 'form-group': true, '-required': fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) }">
           <label for="fmu_field">{{'Forest management unit' | translate}}</label>
-          <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0)">
+          <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0)" [disabled]="isDisabled()">
             <option [value]="null" disabled>{{'Select a FMU' | translate}}</option>
             <option *ngFor="let fmu of fmus" [ngValue]="fmu">{{ fmu.name }}</option>
           </select>
         </div>
 
         <!-- 4.2. GPS coordinates -->
-        <fieldset>
+        <ng-template [ngIf]="isDisabled()">
+          <div class="form-group">
+            <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="mapLayers" (leafletMapReady)="onMapReady($event)" class="map">
+            </div>
+          </div>
+          <div class="form-group" [ngClass]="{ '-required': !this.fmu }">
+            <label for="latitude_field">{{'Latitude' | translate}}</label>
+            <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" number [required]="!this.fmu" disabled />
+          </div>
+
+          <div class="form-group" [ngClass]="{ '-required': !this.fmu }">
+            <label for="longitude_field">{{'Longitude' | translate}}</label>
+            <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" number [required]="!this.fmu" disabled />
+          </div>
+        </ng-template>
+        <fieldset *ngIf="!isDisabled()">
           <legend>{{'GPS coordinates' | translate}}</legend>
           <div class="fieldset-container">
             <!-- 4.2.0. Map -->
@@ -206,7 +237,7 @@
     <!-- 6. Observation category -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
       <label for="subcategory_id">{{'Observation category' | translate}}</label>
-      <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required>
+      <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required [disabled]="isDisabled()">
         <option [value]="null" disabled>{{'Select an observation category' | translate}}</option>
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
@@ -223,7 +254,7 @@
     <!-- 8. Observation details -->
     <div class="form-group">
       <label for="details_field">{{'Observation details' | translate}}</label>
-      <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
+      <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
     </div>
 
     <!-- 9. Evidence -->
@@ -231,7 +262,20 @@
       <legend>{{'Evidence' | translate}}</legend>
       <div class="fieldset-container">
         <div class="row">
-          <div class="small-12 medium-6 columns">
+          <div *ngIf="isDisabled()" class="small-12 columns">
+            <h3>{{'List of evidence' | translate}}</h3>
+            <ul class="documents-list" *ngIf="documents.length">
+              <li *ngFor="let document of documents">
+                <div class="content">
+                  <div class="title">{{document.name}}</div>
+                  <div class="status" *ngIf="document.id">{{'Already uploaded' | translate}}</div>
+                  <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
+                </div>
+              </li>
+            </ul>
+            <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
+          </div>
+          <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
             <!-- 9.1 List of evidence -->
             <h3>{{'List of evidence' | translate}}</h3>
             <ul class="documents-list" *ngIf="documents.length">
@@ -248,7 +292,7 @@
             </ul>
             <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
-          <div class="small-12 medium-6 columns">
+          <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
             <!-- 9.2.1 Evidence -->
             <p>{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
             <!-- This input is used to prevent the submitting until evidence are uploaded -->
@@ -282,7 +326,7 @@
     <!-- 10. Severity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id">{{'Severity' | translate}}</label>
-      <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
+      <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
         <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
         <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
       </select>
@@ -292,25 +336,25 @@
     <!-- 11. Actions taken by operator -->
     <div class="form-group">
       <label for="actions_taken">{{'Actions taken by operator' | translate}}</label>
-      <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel"></textarea>
+      <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
     </div>
 
     <!-- 12. Comments from the operator -->
     <div class="form-group">
       <label for="concern_opinion">{{'Comments from the operator' | translate}}</label>
-      <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel"></textarea>
+      <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
     </div>
 
     <!-- 13. Citation -->
     <div class="form-group">
       <label for="pv_field">{{'Citation' | translate}}</label>
-      <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" />
+      <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" [disabled]="isDisabled()" />
     </div>
 
     <!-- 14. Litigation status -->
     <div class="form-group">
       <label for="litigation_status">{{'Litigation status' | translate}}</label>
-      <input id="litigation_status" type="text" class="form-control" name="litigation_status" [(ngModel)] ="litigationStatus" #litigation_status="ngModel" />
+      <input id="litigation_status" type="text" class="form-control" name="litigation_status" [(ngModel)] ="litigationStatus" #litigation_status="ngModel" [disabled]="isDisabled()" />
     </div>
 
     <!-- 15. Legal -->
@@ -320,7 +364,7 @@
         <!-- 15.1. Observation according to legal text -->
         <div class="form-group">
           <label>{{'Observation according to legal text' | translate}}</label>
-          <select id="law_field" name="law_field" [(ngModel)]="law" #law_field="ngModel">
+          <select id="law_field" name="law_field" [(ngModel)]="law" #law_field="ngModel" [disabled]="isDisabled()">
             <option [value]="null" disabled>{{'Select an observation' | translate}}</option>
             <option *ngFor="let law of laws" [ngValue]="law">{{ law['written-infraction'] }}</option>
           </select>
@@ -373,7 +417,7 @@
     <!-- 16. Publication date -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
       <label for="publication_date">{{'Publication date' | translate}}</label>
-      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required></otp-datepicker>
+      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required [disabled]="isDisabled()"></otp-datepicker>
       <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text">{{'Publication date is required' | translate}}</div>
     </div>
 
@@ -384,7 +428,7 @@
         <!-- 17.1. Last modification by -->
         <div class="form-group">
           <label for="last_modification_by">{{'Last modification by' | translate}}</label>
-          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'].name" #last_modification_by="ngModel" disabled />
+          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'] && observation['modified-user'].name" #last_modification_by="ngModel" disabled />
         </div>
 
         <!-- 17.1. Last modified on -->
@@ -405,7 +449,14 @@
     </div>
 
     <!-- 1. Report -->
-    <fieldset>
+    <div *ngIf="isDisabled()" class="form-group">
+      <label for="report_field">{{'Report' | translate}}</label>
+      <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" disabled>
+        <option disabled [value]="null">{{'Select a report' | translate}}</option>
+        <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
+      </select>
+    </div>
+    <fieldset *ngIf="!isDisabled()">
       <legend>{{'Report' | translate}}</legend>
       <div class="fieldset-container">
         <p class="fieldset-description" *otpMaxTablet>
@@ -457,7 +508,7 @@
     <!-- 2. Country -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
       <label for="country_id">{{'Country' | translate}}</label>
-      <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required>
+      <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required [disabled]="isDisabled()">
         <option [value]="null" disabled>{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
@@ -467,7 +518,7 @@
     <!-- 3. Government entity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
       <label for="government_id">{{'Government entity' | translate}}</label>
-      <select id="government_id" name="government_id" [(ngModel)]="government" #government_id="ngModel" required>
+      <select id="government_id" name="government_id" [(ngModel)]="government" #government_id="ngModel" required [disabled]="isDisabled()">
         <option [value]="null" disabled>{{'Select a government entity' | translate}}</option>
         <option *ngFor="let government of governments" [ngValue]="government">{{ government['government-entity'] }}</option>
       </select>
@@ -477,7 +528,7 @@
     <!-- 4. Governance problem -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
       <label for="subcategory_id">{{'Governance problem' | translate}}</label>
-      <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required>
+      <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required [disabled]="isDisabled()">
         <option [value]="null" disabled>{{'Select a governance problem' | translate}}</option>
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
@@ -487,13 +538,13 @@
     <!-- 5. Additional monitors -->
     <div class="form-group">
       <label>{{'Additional monitors' | translate}}</label>
-      <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers"></ss-multiselect-dropdown>
+      <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers" [disabled]="isDisabled()"></ss-multiselect-dropdown>
     </div>
 
     <!-- 6. Description -->
     <div class="form-group">
       <label for="details_field">{{'Description' | translate}}</label>
-      <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel"></textarea>
+      <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
     </div>
 
     <!-- 7. Evidence -->
@@ -501,7 +552,20 @@
       <legend>{{'Evidence' | translate}}</legend>
       <div class="fieldset-container">
         <div class="row">
-          <div class="small-12 medium-6 columns">
+          <div *ngIf="isDisabled()" class="small-12 columns">
+            <h3>{{'List of evidence' | translate}}</h3>
+            <ul class="documents-list" *ngIf="documents.length">
+              <li *ngFor="let document of documents">
+                <div class="content">
+                  <div class="title">{{document.name}}</div>
+                  <div class="status" *ngIf="document.id">{{'Already uploaded' | translate}}</div>
+                  <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
+                </div>
+              </li>
+            </ul>
+            <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
+          </div>
+          <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
             <!-- 7.1 List of evidence -->
             <h3>{{'List of evidence' | translate}}</h3>
             <ul class="documents-list" *ngIf="documents.length">
@@ -518,7 +582,7 @@
             </ul>
             <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
-          <div class="small-12 medium-6 columns">
+          <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
             <!-- 7.2.1 Evidence -->
             <p>{{'When you upload new file, it will appear in the list of evidence.' | translate}}</p>
             <!-- This input is used to prevent the submitting until evidence are uploaded -->
@@ -552,7 +616,7 @@
     <!-- 8. Severity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id">{{'Severity' | translate}}</label>
-      <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required>
+      <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
         <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
         <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
       </select>
@@ -562,13 +626,13 @@
     <!-- 9. Actions taken by government -->
     <div class="form-group">
       <label for="actions_taken">{{'Actions taken by government' | translate}}</label>
-      <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel"></textarea>
+      <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
     </div>
 
     <!-- 10. Publication date -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
       <label for="publication_date">{{'Publication date' | translate}}</label>
-      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required></otp-datepicker>
+      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required [disabled]="isDisabled()"></otp-datepicker>
       <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text">{{'Publication date is required' | translate}}</div>
     </div>
 
@@ -579,7 +643,7 @@
         <!-- 11.1. Last modification by -->
         <div class="form-group">
           <label for="last_modification_by">{{'Last modification by' | translate}}</label>
-          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'].name" #last_modification_by="ngModel" disabled />
+          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'] && observation['modified-user'].name" #last_modification_by="ngModel" disabled />
         </div>
 
         <!-- 11.1. Last modified on -->
@@ -594,16 +658,18 @@
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button  type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-        <button *ngIf="!observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+        <button *ngIf="isDisabled()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+        <button *ngIf="!isDisabled()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        <button *ngIf="!isDisabled() && !observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="!isDisabled() && observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button  type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="!observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+      <button *ngIf="isDisabled()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      <button *ngIf="!isDisabled()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="!isDisabled() && !observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="!isDisabled() && observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
     </otp-action-bar>
   </div>
 
