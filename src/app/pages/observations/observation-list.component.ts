@@ -102,7 +102,7 @@ export class ObservationListComponent extends TableFilterBehavior {
     // If the user is an admin, they can do whatever they
     // want
     if (isAdmin) {
-      return true;
+      return !!observation.observers.find(o => o.id === this.authService.userObserverId);
     }
 
     // If the observation is active, only the admin users

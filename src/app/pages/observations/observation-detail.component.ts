@@ -700,10 +700,17 @@ export class ObservationDetailComponent {
       return false;
     }
 
-    // If the observation is active, only the admin users
-    // can edit or delete it
-    if (this.observation['is-active']) {
+    // If the user is an admin and the observation
+    // is linked to its organization, then the form is
+    // not disabled
+    if (isAdmin
+      && this.observation.observers.find(o => o.id === this.authService.userObserverId)) {
       return false;
+    }
+
+    // If the observation is active, it is disabled
+    if (this.observation['is-active']) {
+      return true;
     }
 
     // If the observation is not active, then only the person
