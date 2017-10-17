@@ -102,10 +102,8 @@ export class AuthService {
    * logouts or logins with a different account
    * @returns {boolean}
    */
-  isAdmin(): Promise<boolean> {
-    return new Promise(resolve => {
-      resolve(this.userRole === 'admin');
-    });
+  isAdmin(): boolean {
+    return this.userRole === 'ngo_admin';
   }
 
   logout() {

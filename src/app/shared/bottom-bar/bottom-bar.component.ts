@@ -18,7 +18,7 @@ export class BottombarComponent {
   constructor(private authService: AuthService) {
     // Each time the status of the login change, we update some variables
     this.authService.loginStatus.subscribe(isLogged => {
-      this.authService.isAdmin().then(isAdmin => this.isAdmin = isAdmin);
+      this.isAdmin = this.authService.isAdmin();
     });
   }
 
