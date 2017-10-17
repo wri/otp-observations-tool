@@ -1,3 +1,4 @@
+import { AuthService } from 'app/services/auth.service';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { OperatorsService } from 'app/services/operators.service';
 import { Operator } from 'app/models/operator.model';
@@ -28,7 +29,8 @@ export class OperatorListComponent extends TableFilterBehavior {
   constructor(
     protected service: OperatorsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public authService: AuthService
   ) {
     super();
   }
