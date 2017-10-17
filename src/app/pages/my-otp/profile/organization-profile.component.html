@@ -1,7 +1,7 @@
 <otp-loader *ngIf="saveLoading" overlay fixed></otp-loader>
 <div class="l-wrapper">
   <form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
-    <div class="c-container -j-between -t-d-column -t-a-start">
+    <div *ngIf="isAdmin" class="c-container -j-between -t-d-column -t-a-start">
       <div></div>
       <div class="c-button-container -j-end form-group" *otpMinTablet>
         <button type="button" (click)="onDiscard()" class="c-button -secondary">{{'Discard changes' | translate}}</button>
@@ -14,13 +14,13 @@
 
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
         <label for="name">{{'Name of the organization' | translate}}</label>
-        <input type="text" id="name" name="name" [(ngModel)]="observer.name" #name="ngModel" required />
+        <input type="text" id="name" name="name" [(ngModel)]="observer.name" #name="ngModel" [disabled]="!isAdmin" required />
         <div *ngIf="f.submitted && name.errors?.required" class="help-text">{{'Name is required' | translate}}</div>
       </div>
 
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !address.valid }">
         <label for="address">{{'Address' | translate}}</label>
-        <textarea id="address" name="address" [(ngModel)]="observer.address" #address="ngModel"></textarea>
+        <textarea id="address" name="address" [(ngModel)]="observer.address" #address="ngModel" [disabled]="!isAdmin"></textarea>
       </div>
 
       <fieldset>
@@ -30,18 +30,18 @@
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_general_name.valid }">
             <label for="contact_general_name">{{'Name' | translate}}</label>
-            <input type="text" id="contact_general_name" name="contact_general_name" [(ngModel)]="observer['information-name']" #contact_general_name="ngModel" />
+            <input type="text" id="contact_general_name" name="contact_general_name" [(ngModel)]="observer['information-name']" #contact_general_name="ngModel" [disabled]="!isAdmin" />
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_general_email.valid }">
             <label for="contact_general_email">Email</label>
-            <input type="email" id="contact_general_email" name="contact_general_email" [(ngModel)]="observer['information-email']" #contact_general_email="ngModel" [email]="!!observer['information-email']" />
+            <input type="email" id="contact_general_email" name="contact_general_email" [(ngModel)]="observer['information-email']" #contact_general_email="ngModel" [email]="!!observer['information-email']" [disabled]="!isAdmin" />
             <div *ngIf="f.submitted && contact_general_email.errors?.email" class="help-text">{{'Please enter an email address' | translate}}</div>
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_general_phone.valid }">
             <label for="contact_general_phone">{{'Phone number' | translate}}</label>
-            <input type="tel" id="contact_general_phone" name="contact_general_phone" [(ngModel)]="observer['information-phone']" #contact_general_phone="ngModel" />
+            <input type="tel" id="contact_general_phone" name="contact_general_phone" [(ngModel)]="observer['information-phone']" #contact_general_phone="ngModel" [disabled]="!isAdmin" />
           </div>
 
         </div>
@@ -55,18 +55,18 @@
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_inquiries_name.valid }">
             <label for="contact_inquiries_name">{{'Name' | translate}}</label>
-            <input type="text" id="contact_inquiries_name" name="contact_inquiries_name" [(ngModel)]="observer['data-name']" #contact_inquiries_name="ngModel" />
+            <input type="text" id="contact_inquiries_name" name="contact_inquiries_name" [(ngModel)]="observer['data-name']" #contact_inquiries_name="ngModel" [disabled]="!isAdmin" />
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_inquiries_email.valid }">
             <label for="contact_inquiries_email">{{'Email' | translate}}</label>
-            <input type="email" id="contact_inquiries_email" name="contact_inquiries_email" [(ngModel)]="observer['data-email']" #contact_inquiries_email="ngModel" [email]="!!observer['data-email']" />
+            <input type="email" id="contact_inquiries_email" name="contact_inquiries_email" [(ngModel)]="observer['data-email']" #contact_inquiries_email="ngModel" [email]="!!observer['data-email']" [disabled]="!isAdmin" />
             <div *ngIf="f.submitted && contact_inquiries_email.errors?.email" class="help-text">{{'Please enter an email address' | translate}}</div>
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !contact_inquiries_phone.valid }">
             <label for="contact_inquiries_phone">{{'Phone number' | translate}}</label>
-            <input type="tel" id="contact_inquiries_phone" name="contact_inquiries_phone" [(ngModel)]="observer['data-phone']" #contact_inquiries_phone="ngModel" />
+            <input type="tel" id="contact_inquiries_phone" name="contact_inquiries_phone" [(ngModel)]="observer['data-phone']" #contact_inquiries_phone="ngModel" [disabled]="!isAdmin" />
           </div>
 
         </div>
@@ -76,17 +76,19 @@
     </div>
 
     <div class="form-footer">
-      <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
-        <div class="c-button-container -j-end form-group">
+      <ng-template [ngIf]="isAdmin">
+        <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+          <div class="c-button-container -j-end form-group">
+            <button type="button" (click)="onDiscard()" class="c-button -secondary">{{'Discard changes' | translate}}</button>
+            <button type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+          </div>
+        </div>
+
+        <otp-action-bar *otpMaxTablet>
           <button type="button" (click)="onDiscard()" class="c-button -secondary">{{'Discard changes' | translate}}</button>
           <button type="submit" class="c-button -primary">{{'Save' | translate}}</button>
-        </div>
-      </div>
-
-      <otp-action-bar *otpMaxTablet>
-        <button type="button" (click)="onDiscard()" class="c-button -secondary">{{'Discard changes' | translate}}</button>
-        <button type="submit" class="c-button -primary">{{'Save' | translate}}</button>
-      </otp-action-bar>
+        </otp-action-bar>
+      </ng-template>
     </div>
 
   </form>

@@ -11,6 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./organization-profile.component.scss']
 })
 export class OrganizationProfileComponent {
+  isAdmin = false;
 
   loading = true;
   saveLoading = false;
@@ -22,6 +23,7 @@ export class OrganizationProfileComponent {
     private observersService: ObserversService,
     private translateService: TranslateService
   ) {
+    this.isAdmin = this.authService.isAdmin();
     this.loadObserver();
   }
 
