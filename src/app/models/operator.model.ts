@@ -1,5 +1,5 @@
-import { Fmu } from 'app/models/fmu.model';
 import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from 'angular2-jsonapi';
+import { Fmu } from 'app/models/fmu.model';
 import { Country } from 'app/models/country.model';
 import { User } from 'app/models/user.model';
 import { OperatorTypes } from 'app/pages/fields/operators/operator-list.component';
@@ -19,4 +19,5 @@ export class Operator extends JsonApiModel {
 
   @BelongsTo() country: Country;
 
+  @HasMany() fmus: Fmu[];
 }
