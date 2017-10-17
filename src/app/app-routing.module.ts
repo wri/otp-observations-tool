@@ -196,6 +196,10 @@ const routes: Routes = [
             component: LawListComponent
           },
           {
+            path: 'laws/new',
+            component: LawDetailComponent
+          },
+          {
             path: 'laws/edit/:id',
             component: LawDetailComponent
           },
