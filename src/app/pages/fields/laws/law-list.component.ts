@@ -11,6 +11,12 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 })
 export class LawListComponent extends TableFilterBehavior {
 
+  tableOptions = {
+    rows: {
+      highlight: row => !row.complete
+    }
+  };
+
   constructor(
     protected service: LawsService,
     private router: Router,

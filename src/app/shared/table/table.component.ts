@@ -23,6 +23,7 @@ export class TableComponent implements AfterContentInit {
   @Input() caption: string;
   @Input() perPage = 10;
   @Input() include: string[] = []; // Include param for the query
+  @Input() options: any; // Additional options for the table
 
   @Output() change = new EventEmitter<void>();
 
@@ -161,6 +162,27 @@ export class TableComponent implements AfterContentInit {
       // already changed, so we need to sligthly delay the render
       setTimeout(() => this.columnTemplates = this.columnTemplates, 0);
     });
+  }
+
+  /**
+   * Return whether the row is highlighted
+   * @param {any} row Entry of data
+   * @returns {boolean}
+   */
+  hasHighlight(row: any) {
+    if (!this.options || !this.options.rows || this.options.rows.highlight === null
+      || this.options.rows.highlight === undefined) {
+      return false;
+    }
+
+    const condition = this.options.rows.highlight;
+    if (typeof condition === 'function') {
+      return condition(row);
+    } else if (typeof condition === 'boolean') {
+      return condition;
+    } else {
+      return !!row[condition];
+    }
   }
 
   sortByColumn(column: any): void {

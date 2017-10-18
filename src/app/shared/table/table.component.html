@@ -30,7 +30,7 @@
     </tr>
 
     <tr *ngFor="let row of renderableRows" role="row" [attr.aria-rowindex]="row.__index__">
-      <td *ngFor="let column of columns" role="gridcell" [attr.aria-rowindex]="row.__index__">
+      <td *ngFor="let column of columns" role="gridcell" [attr.aria-rowindex]="row.__index__" [ngClass]="{ '-highlight': hasHighlight(row) }">
         <span class="column-name">{{column.name || column.prop}}</span>
         <ng-template [ngIf]="!column.cellTemplate">{{column.getValue(row)}}</ng-template>
         <ng-template
