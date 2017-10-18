@@ -156,6 +156,10 @@
             }
           }
 
+          &.-highlight {
+            background: mix($white, $color-primary, 90%);
+          }
+
           .column-name {
             flex-basis: 100px;
             flex-grow: 0;
