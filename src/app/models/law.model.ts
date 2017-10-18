@@ -15,6 +15,7 @@ export class Law extends JsonApiModel {
   @Attribute() 'penal-servitude': string;
   @Attribute() sanctions: string;
   @Attribute() 'written-infraction': string;
+  @Attribute() complete: boolean;
 
   @BelongsTo() subcategory: Subcategory;
   @BelongsTo() country: Country;
