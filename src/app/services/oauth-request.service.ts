@@ -1,4 +1,4 @@
-import { NgModule, Inject, Injectable, LOCALE_ID } from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
 import { RequestOptions, RequestOptionsArgs, RequestMethod, Headers } from '@angular/http';
 import { TokenService } from 'app/services/token.service';
 import { environment } from 'environments/environment';
@@ -6,9 +6,10 @@ import { environment } from 'environments/environment';
 @Injectable()
 export class OauthRequestOptions extends RequestOptions {
 
+  locale = localStorage.getItem('lang') || 'en';
+
   constructor (
-    private tokenService: TokenService,
-    @Inject(LOCALE_ID) private locale: string
+    private tokenService: TokenService
   ) {
     super();
   }
@@ -28,7 +29,7 @@ export class OauthRequestOptions extends RequestOptions {
         options.search = {};
       }
 
-      options.search['locale'] = this.locale.slice(0, 2);
+      options.search['locale'] = this.locale;
       options.search['app'] = 'observations-tool';
     }
 
