@@ -211,5 +211,7 @@
     "lawCreation.success": "The law has been created successfully.",
     "lawCreation.error": "The creation of the law has been unsuccessful.",
     "lawUpdate.success": "The law has been successfully updated.",
-    "lawUpdate.error": "The update of the law has been unsuccessful."
+    "lawUpdate.error": "The update of the law has been unsuccessful.",
+    "Request a manager role": "Request a manager role",
+    "A manager role gives you the permission to update legal references for your country.": "A manager role gives you the permission to update legal references for your country."
 }

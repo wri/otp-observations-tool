@@ -46,8 +46,17 @@ export class RegisterComponent implements OnInit {
 
     const payload = { user: formValues };
 
-    // We only create NGO users
-    payload.user.permissions_request = 'ngo';
+    // We create an NGO or manager user depending on the
+    // checkbox
+    if (!formValues.manager_role) {
+      payload.user.permissions_request = 'ngo';
+    } else {
+      payload.user.permissions_request = 'ngo_manager';
+    }
+
+    // We don't forget to remove the boolean value from
+    // the payload
+    delete payload.user.manager_role;
 
     this.http.post(`${environment.apiUrl}/register`, payload)
       .map(response => response.json())

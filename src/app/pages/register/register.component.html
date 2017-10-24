@@ -35,6 +35,14 @@
         <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
       </div>
 
+      <div class="form-group">
+        <input type="checkbox" name="manager_role" id="manager_role" ngModel #manager_role="ngModel" />
+        <label for="manager_role">{{'Request a manager role' | translate}}</label>
+        <p class="note">
+          {{'A manager role gives you the permission to update legal references for your country.' | translate}}
+        </p>
+      </div>
+
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
         <label for="email">{{'Email' | translate}}</label>
         <input id="email" type="email" class="form-control" name="email" ngModel #email="ngModel" required email />
