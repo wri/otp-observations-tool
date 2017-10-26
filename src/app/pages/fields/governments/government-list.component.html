@@ -2,7 +2,7 @@
   <otp-filters>
     <otp-filter [name]="'Country' | translate" values="countries" prop="country" name-attr="name"></otp-filter>
   </otp-filters>
-   <a *ngIf="authService.isAdmin()" class="c-button -primary" routerLink="new">
+   <a *ngIf="isAdmin" class="c-button -primary" routerLink="new">
      {{'New government entity' | translate}}
     </a>
 </div>
@@ -15,8 +15,8 @@
   </otp-table-column>
   <otp-table-column [name]="'Actions' | translate">
     <ng-template let-row="row" table-cell-template>
-      <button class="action" (click)="onEdit(row)" [attr.aria-label]="(authService.isAdmin() ? 'Edit' :'Info') | translate">
-        <otp-icon [name]="authService.isAdmin() ? '#icon-edit' : '#icon-info'"></otp-icon>
+      <button class="action" (click)="onEdit(row)" [attr.aria-label]="(canEdit(row) ? 'Edit' :'Info') | translate">
+        <otp-icon [name]="canEdit(row) ? '#icon-edit' : '#icon-info'"></otp-icon>
       </button>
     </ng-template>
   </otp-table-column>

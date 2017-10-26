@@ -12,6 +12,8 @@ import { Component } from '@angular/core';
 })
 export class GovernmentListComponent extends TableFilterBehavior {
 
+  isAdmin = this.authService.isAdmin();
+
   constructor(
     protected service: GovernmentsService,
     private router: Router,
@@ -38,6 +40,19 @@ export class GovernmentListComponent extends TableFilterBehavior {
     }
 
     return string.slice(0, limit) + '...';
+  }
+
+  /**
+   * Return whether the logged user can edit the government
+   * @param {Government} government
+   * @returns {boolean}
+   */
+  canEdit(government: Government): boolean {
+    if (!this.isAdmin) {
+      return false;
+    }
+
+    return government.country.id === this.authService.userCountryId;
   }
 
   onEdit(row): void {

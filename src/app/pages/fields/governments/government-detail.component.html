@@ -1,14 +1,14 @@
 <otp-loader *ngIf="loading" overlay fixed></otp-loader>
-<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="isAdmin && f.valid && onSubmit()" #f="ngForm" novalidate>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="canEdit() && f.valid && onSubmit()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
-    <h2 *ngIf="!isAdmin">{{'Government entity details' | translate}}</h2>
-    <h2 *ngIf="isAdmin && !government.id">{{'New government entity' | translate}}</h2>
-    <h2 *ngIf="isAdmin && government.id">{{'Edit government entity' | translate}}</h2>
+    <h2 *ngIf="!canEdit()">{{'Government entity details' | translate}}</h2>
+    <h2 *ngIf="canEdit() && !government.id">{{'New government entity' | translate}}</h2>
+    <h2 *ngIf="canEdit() && government.id">{{'Edit government entity' | translate}}</h2>
     <div class="c-button-container -j-end form-group" *otpMinTablet>
-      <button *ngIf="!isAdmin" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-      <button *ngIf="isAdmin" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="isAdmin && !government.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="isAdmin && government.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+      <button *ngIf="!canEdit()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      <button *ngIf="canEdit()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="canEdit() && !government.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="canEdit() && government.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
     </div>
   </div>
 
@@ -16,14 +16,14 @@
     <!-- 1. Name -->
     <div class="form-group -required">
       <label for="name_field">{{'Name' | translate}}</label>
-      <input id="name_field" type="text" class="form-control" name="name_field" [(ngModel)]="government['government-entity']" #name_field="ngModel" [disabled]="!isAdmin" required />
+      <input id="name_field" type="text" class="form-control" name="name_field" [(ngModel)]="government['government-entity']" #name_field="ngModel" [disabled]="!canEdit()" required />
       <div *ngIf="f.submitted && !name_field.valid" class="help-text">{{'Please enter the name' | translate}}</div>
     </div>
 
     <!-- 2. Country -->
     <div class="form-group -required">
       <label for="country_field">{{'Country' | translate}}</label>
-      <select id="country_field" name="country_field" [(ngModel)]="government.country" #country_field="ngModel" [disabled]="!isAdmin" required>
+      <select id="country_field" name="country_field" [(ngModel)]="government.country" #country_field="ngModel" [disabled]="!canEdit()" required>
         <option disabled [value]="null">{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
@@ -33,25 +33,25 @@
     <!-- 3. Details -->
     <div class="form-group">
       <label for="details_field">{{'Details'}}</label>
-      <textarea id="details_field" name="details_field" [(ngModel)]="government.details" #details_field="ngModel" [disabled]="!isAdmin"></textarea>
+      <textarea id="details_field" name="details_field" [(ngModel)]="government.details" #details_field="ngModel" [disabled]="!canEdit()"></textarea>
     </div>
   </div>
 
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button *ngIf="!isAdmin" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-        <button *ngIf="isAdmin" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-        <button *ngIf="isAdmin && !government.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="isAdmin && government.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+        <button *ngIf="!canEdit()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+        <button *ngIf="canEdit()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        <button *ngIf="canEdit() && !government.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="canEdit() && government.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button *ngIf="!isAdmin" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-      <button *ngIf="isAdmin" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="isAdmin && !government.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="isAdmin && government.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+      <button *ngIf="!canEdit()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      <button *ngIf="canEdit()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="canEdit() && !government.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="canEdit() && government.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
     </otp-action-bar>
   </div>
 </form>
