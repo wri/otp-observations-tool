@@ -4,7 +4,7 @@
     <otp-filter [name]="'Subcategory' | translate" values="subcategories" prop="subcategory" name-attr="name"></otp-filter>
     <otp-filter [name]="'Complete' | translate" [values]="{ 'True': true, 'False': false }" prop="complete"></otp-filter>
   </otp-filters>
-  <button *ngIf="authService.isAdmin()" (click)="onClickNewLaw()" class="c-button -primary">
+  <button *ngIf="isAdmin" (click)="onClickNewLaw()" class="c-button -primary">
     {{'New law' | translate}}
   </button>
 </div>
@@ -20,10 +20,10 @@
   </otp-table-column> -->
   <otp-table-column [name]="'Actions' | translate">
     <ng-template let-row="row" table-cell-template>
-      <ng-template [ngIf]="!authService.isAdmin()">
+      <ng-template [ngIf]="!canEdit(row)">
         <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
       </ng-template>
-      <ng-template [ngIf]="authService.isAdmin()">
+      <ng-template [ngIf]="canEdit(row)">
         <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
       </ng-template>
     </ng-template>

@@ -3,7 +3,7 @@
     <otp-filter [name]="'Type' | translate" [values]="operatorTypes" prop="operator-type"></otp-filter>
     <otp-filter [name]="'Country' | translate" values="countries" prop="country" name-attr="name"></otp-filter>
   </otp-filters>
-  <button *ngIf="authService.isAdmin()" (click)="triggerNewOperator()" class="c-button -primary">
+  <button *ngIf="isAdmin" (click)="triggerNewOperator()" class="c-button -primary">
     {{'New operator' | translate}}
   </button>
 </div>
@@ -14,8 +14,8 @@
   <otp-table-column prop="country.name" [name]="'Country' | translate" [include]="true"></otp-table-column>
   <otp-table-column [name]="'Actions' | translate">
      <ng-template let-row="row" table-cell-template>
-       <button class="action" (click)="onEdit(row)" [attr.aria-label]="(authService.isAdmin() ? 'Edit' :'Info') | translate">
-         <otp-icon [name]="authService.isAdmin() ? '#icon-edit' : '#icon-info'"></otp-icon>
+       <button class="action" (click)="onEdit(row)" [attr.aria-label]="(canEdit(row) ? 'Edit' :'Info') | translate">
+         <otp-icon [name]="canEdit(row) ? '#icon-edit' : '#icon-info'"></otp-icon>
       </button>
      </ng-template>
   </otp-table-column>

@@ -14,6 +14,7 @@ export class AuthService {
   public userId: string;
   public userRole: string;
   public userObserverId: string;
+  public userCountryId: string;
   // Observable of the login status of the user
   private logged$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -79,13 +80,19 @@ export class AuthService {
     }
 
     try {
-      const response = await this.http.get(`${environment.apiUrl}/users/current-user?include=user-permission,observer`)
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user?include=user-permission,observer, country`)
         .map(data => data.json())
         .toPromise();
 
       this.userId = response.data.id;
-      this.userRole = response.included.length && response.included[0].attributes['user-role'];
-      this.userObserverId = response.included.length > 1 && response.included[1].id;
+      this.userRole = response.included.length
+        && response.included.find(i => i.type === 'user-permissions')
+        && response.included.find(i => i.type === 'user-permissions').attributes['user-role'];
+      this.userObserverId = response.data.relationships.observer.data
+        && response.data.relationships.observer.data.id;
+      this.userCountryId = response.data.relationships.country.data
+        && response.data.relationships.country.data.id;
+
       this.triggerLoginStatus(!!response);
       return !!response;
     } catch (e) {

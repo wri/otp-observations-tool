@@ -25,6 +25,7 @@ export enum OperatorTypes {
 export class OperatorListComponent extends TableFilterBehavior {
 
   operatorTypes = Object.keys(OperatorTypes);
+  isAdmin = this.authService.isAdmin();
 
   constructor(
     protected service: OperatorsService,
@@ -42,6 +43,19 @@ export class OperatorListComponent extends TableFilterBehavior {
   onEdit(row): void {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate([`edit/${row.id}`], { relativeTo: this.route });
+  }
+
+  /**
+   * Return whether the logged user can edit the operator
+   * @param {Operator} operator
+   * @returns {boolean}
+   */
+  canEdit(operator: Operator): boolean {
+    if (!this.isAdmin) {
+      return false;
+    }
+
+    return operator.country.id === this.authService.userCountryId;
   }
 
 }

@@ -89,5 +89,15 @@ export class GovernmentDetailComponent {
     this.router.navigate(['../..'], { relativeTo: this.route });
   }
 
+  /**
+   * Return whether the logged user can edit the government
+   * @returns {boolean}
+   */
+  canEdit(): boolean {
+    if (!this.isAdmin) {
+      return false;
+    }
 
+    return this.government.country.id === this.authService.userCountryId;
+  }
 }
