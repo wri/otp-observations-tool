@@ -1,3 +1,4 @@
+import { Law } from 'app/models/law.model';
 import { AuthService } from 'app/services/auth.service';
 import { LawsService } from 'app/services/laws.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -16,6 +17,8 @@ export class LawListComponent extends TableFilterBehavior {
       highlight: row => !row.complete
     }
   };
+
+  isAdmin = this.authService.isAdmin();
 
   constructor(
     protected service: LawsService,
@@ -52,6 +55,19 @@ export class LawListComponent extends TableFilterBehavior {
   onEdit(row) {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate([`edit/${row.id}`], { relativeTo: this.route });
+  }
+
+  /**
+   * Return whether the logged user can edit the law
+   * @param {Law} law
+   * @returns {boolean}
+   */
+  canEdit(law: Law): boolean {
+    if (!this.isAdmin) {
+      return false;
+    }
+
+    return law.country.id === this.authService.userCountryId;
   }
 
 }
