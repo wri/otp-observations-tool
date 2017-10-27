@@ -6,7 +6,7 @@ require('dotenv').config();
 const translations = require(`../${process.env.LOCALES_PATH}/${process.env.TRANSIFEX_SOURCE}.json`);
 
 // Endpoint for source language translations
-const url = `${process.env.TRANSIFEX_URL}/${process.env.TRANSIFEX_PROJECT}/resource/${process.env.TRANSIFEX_SLUG}/content`;
+const url = `${process.env.TRANSIFEX_URL}/${process.env.TRANSIFEX_PROJECT}/resource/${process.env.TRANSIFEX_SLUG}/content?format=json`;
 
 // Request config
 const json = {

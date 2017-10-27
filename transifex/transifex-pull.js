@@ -11,7 +11,7 @@ if (!fs.existsSync(process.env.LOCALES_PATH)) {
 }
 
 // Endpoint for fetching available languages
-const langUrl = `${process.env.TRANSIFEX_URL}/${process.env.TRANSIFEX_PROJECT}/resource/${process.env.TRANSIFEX_SLUG}/?details`;
+const langUrl = `${process.env.TRANSIFEX_URL}/${process.env.TRANSIFEX_PROJECT}/resource/${process.env.TRANSIFEX_SLUG}/?details&format=json`;
 
 // Endpoint for fetching translations
 const transUrl = `${process.env.TRANSIFEX_URL}/${process.env.TRANSIFEX_PROJECT}/resource/${process.env.TRANSIFEX_SLUG}/translation`;
@@ -37,7 +37,7 @@ fetch(langUrl, fetchConfig)
     })
     .then((languages) => {
       languages.forEach((lang) => {
-        fetch(`${transUrl}/${lang}`, fetchConfig)
+        fetch(`${transUrl}/${lang}?format=json`, fetchConfig)
           .then(res => res.json())
           .then((json) => {
             fs.writeFile(`${process.env.LOCALES_PATH}/${lang}.json`, JSON.stringify(JSON.parse(json.content), null, 4), (err) => {
