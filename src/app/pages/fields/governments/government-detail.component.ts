@@ -98,6 +98,10 @@ export class GovernmentDetailComponent {
       return false;
     }
 
+    if (!this.route.snapshot.params.id) {
+      return true;
+    }
+
     return this.government.country.id === this.authService.userCountryId;
   }
 }

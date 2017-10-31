@@ -34,7 +34,7 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.countriesService.getAll({ sort: 'name', 'filter[is-active]': 'all' })
+    this.countriesService.getAll({ sort: 'name' })
       .then(data => this.countries = data);
 
     this.observersService.getAll({ sort: 'name' })

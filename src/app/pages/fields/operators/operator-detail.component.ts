@@ -109,6 +109,10 @@ export class OperatorDetailComponent {
       return false;
     }
 
+    if (!this.route.snapshot.params.id) {
+      return true;
+    }
+
     return this.operator.country.id === this.authService.userCountryId;
   }
 

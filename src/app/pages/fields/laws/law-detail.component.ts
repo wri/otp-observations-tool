@@ -105,6 +105,10 @@ export class LawDetailComponent {
       return false;
     }
 
+    if (!this.route.snapshot.params.id) {
+      return true;
+    }
+
     return this.law.country.id === this.authService.userCountryId;
   }
 
