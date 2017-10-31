@@ -61,7 +61,14 @@ export class FiltersComponent implements AfterContentInit {
         const models = Reflect.getMetadata('JsonApiDatastoreConfig', this.datastoreService.constructor).models;
         const model = models[filter.values];
 
-        return this.datastoreService.query(model, { sort: filter['name-attr'], page: { size: 3000 } })
+        let params = { sort: filter['name-attr'], page: { size: 3000 } };
+        console.log(filter.prop);
+
+        if (filter.prop === 'country' || filter.prop === 'country-id') {
+          params = Object.assign({}, params, { 'filter[is-active]': 'all'});
+        }
+
+        return this.datastoreService.query(model, params)
           .toPromise()
           .then(rows => rows.map(row => ({ [row[filter['name-attr']]]: row.id })))
           .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
