@@ -80,7 +80,7 @@ export class AuthService {
     }
 
     try {
-      const response = await this.http.get(`${environment.apiUrl}/users/current-user?include=user-permission,observer, country`)
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user?include=user-permission,observer,country`)
         .map(data => data.json())
         .toPromise();
 
