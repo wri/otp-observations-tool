@@ -17,11 +17,10 @@
     <!-- 1. Country -->
     <div class="form-group -required">
       <label for="country_id">{{'Country' | translate}}</label>
-      <select id="country_id" name="country_id" [(ngModel)]="law && law.country" #country_id="ngModel" required [disabled]="!canEdit()">
+      <select id="country_id" name="country_id" [(ngModel)]="law && law.country" #country_id="ngModel" required disabled>
         <option [value]="null" disabled>{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
-      <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
     </div>
 
     <!-- 2. Subcategory -->

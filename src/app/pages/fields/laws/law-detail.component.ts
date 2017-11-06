@@ -34,10 +34,6 @@ export class LawDetailComponent {
   ) {
     this.isAdmin = this.authService.isAdmin();
 
-    this.countriesService.getAll({ sort: 'name' })
-      .then(countries => this.countries = countries)
-      .catch(err => console.error(err)); // TODO: visual feedback
-
     this.subcategoriesService.getAll({ sort: 'name' })
       .then(subcategories => this.subcategories = subcategories)
       .catch((err) => console.error(err)); // TODO: visual feedback
@@ -46,6 +42,11 @@ export class LawDetailComponent {
     // and do a bit more stuff
     if (this.route.snapshot.params.id) {
       this.loading = true;
+
+      this.countriesService.getAll({ sort: 'name' })
+      .then(countries => this.countries = countries)
+      .catch(err => console.error(err)); // TODO: visual feedback
+
       this.lawsService.getById(this.route.snapshot.params.id, { include: 'country,subcategory' })
         .then(law => this.law = law)
         .catch(err => console.error(err))
@@ -57,6 +58,13 @@ export class LawDetailComponent {
       // the selectors in the UI
       this.law.country = null;
       this.law.subcategory = null;
+
+      this.countriesService.getAll({ sort: 'name' })
+      .then(countries => this.countries = countries)
+      .then(() => {
+        this.law.country = this.countries.find(c => c.id === this.authService.userCountryId);
+      })
+      .catch(err => console.error(err)); // TODO: visual feedback
     }
   }
 
