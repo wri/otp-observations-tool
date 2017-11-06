@@ -62,7 +62,6 @@ export class FiltersComponent implements AfterContentInit {
         const model = models[filter.values];
 
         let params = { sort: filter['name-attr'], page: { size: 3000 } };
-        console.log(filter.prop);
 
         if (filter.prop === 'country' || filter.prop === 'country-id') {
           params = Object.assign({}, params, { 'filter[is-active]': 'all'});
