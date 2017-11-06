@@ -17,8 +17,15 @@ export class SubcategoriesService extends JsonApiService<Subcategory> {
     super();
   }
 
-  getAll() {
-    return this.datastoreService.query(Subcategory, { page: { size: 3000 } }).toPromise();
+  /**
+   * Return the list of all the subcategories
+   * @params {*} [params={}] Additional params for the query
+   * @returns {Promise<Subcategory[]>}
+   */
+  getAll(params: any = {}): Promise<Subcategory[]> {
+    return this.datastoreService
+      .query(Subcategory, Object.assign({}, { page: { size: 3000 } }, params))
+      .toPromise();
   }
 
   /**

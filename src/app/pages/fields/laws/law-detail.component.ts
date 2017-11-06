@@ -34,11 +34,11 @@ export class LawDetailComponent {
   ) {
     this.isAdmin = this.authService.isAdmin();
 
-    this.countriesService.getAll()
+    this.countriesService.getAll({ sort: 'name' })
       .then(countries => this.countries = countries)
       .catch(err => console.error(err)); // TODO: visual feedback
 
-    this.subcategoriesService.getAll()
+    this.subcategoriesService.getAll({ sort: 'name' })
       .then(subcategories => this.subcategories = subcategories)
       .catch((err) => console.error(err)); // TODO: visual feedback
 
