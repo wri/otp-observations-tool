@@ -44,8 +44,14 @@ export class LawDetailComponent {
       this.loading = true;
 
       this.countriesService.getAll({ sort: 'name' })
-      .then(countries => this.countries = countries)
-      .catch(err => console.error(err)); // TODO: visual feedback
+        .then(countries => this.countries = countries)
+        .then(() => {
+          // NOTE: the object Country of the law won't match any of
+          // the objects of this.countries, so we search for
+          // the "same" model and set it
+          this.law.country = this.countries.find(c => c.id === this.law.country.id);
+        })
+        .catch(err => console.error(err)); // TODO: visual feedback
 
       this.lawsService.getById(this.route.snapshot.params.id, { include: 'country,subcategory' })
         .then(law => this.law = law)
@@ -60,11 +66,11 @@ export class LawDetailComponent {
       this.law.subcategory = null;
 
       this.countriesService.getAll({ sort: 'name' })
-      .then(countries => this.countries = countries)
-      .then(() => {
-        this.law.country = this.countries.find(c => c.id === this.authService.userCountryId);
-      })
-      .catch(err => console.error(err)); // TODO: visual feedback
+        .then(countries => this.countries = countries)
+        .then(() => {
+          this.law.country = this.countries.find(c => c.id === this.authService.userCountryId);
+        })
+        .catch(err => console.error(err)); // TODO: visual feedback
     }
   }
 
