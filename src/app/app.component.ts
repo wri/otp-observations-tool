@@ -52,8 +52,13 @@ export class AppComponent {
     // Everytime the language is modified by the user, we update
     // the URL, localStorage and the translations
     this.translateService.onLangChange.subscribe(({ lang }) => {
-      this.lang = lang;
-      this.saveLocale();
+      // NOTE: make sure the lang is different because
+      // otherwise we'll enter an infinite loop reloading
+      // the page
+      if (lang !== this.lang) {
+        this.lang = lang;
+        this.saveLocale(true);
+      }
     });
   }
 
@@ -70,18 +75,30 @@ export class AppComponent {
    * the lang query param, update the localStorage and
    * load the appropriate translations according to the
    * value of this.lang
+   * @param {boolean} [reload=false] Reload the page
    */
-  saveLocale(): void {
+  saveLocale(reload = false): void {
     this.setHTMLLangAttribute();
 
     this.router.navigate([], {
       queryParams: { lang: this.lang },
       replaceUrl: true,
       relativeTo: this.route
+    }).then(() => {
+      localStorage.setItem('lang', this.lang);
+
+      // NOTE: the URL needs to be updated before reloading the page
+      if (reload) {
+        // We reload the page to make sure the tables fetch the data
+        // with the correct locale
+        // Ideally, we would just fetch the data again, but the library
+        // we use (angular2-jsonapi) has an issue with the relationships
+        // being different after the initial fetch:
+        // https://github.com/ghidoz/angular2-jsonapi/issues/124
+        location.reload();
+      } else {
+        this.translateService.use(this.lang);
+      }
     });
-
-    localStorage.setItem('lang', this.lang);
-
-    this.translateService.use(this.lang);
   }
 }
