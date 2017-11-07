@@ -13,4 +13,5 @@ export class Country extends JsonApiModel {
   @Attribute() country_centroid?: any;
   @Attribute() region_centroid?: any;
   @Attribute() is_active?: boolean;
+  @HasMany() governments?: Government[];
 }
