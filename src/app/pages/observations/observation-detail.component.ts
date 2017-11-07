@@ -87,6 +87,10 @@ export class ObservationDetailComponent {
   additionalObserversOptions: IMultiSelectOption[] = [];
   _additionalObserversSelection: number[] = [];
 
+  // Relevant operatos multi-select related
+  relevantOperatorsOptions: IMultiSelectOption[] = [];
+  _relevantOperatorsSelection: number[] = [];
+
   // User selection
   _type: string = null;
   _country: Country = null;
@@ -171,6 +175,20 @@ export class ObservationDetailComponent {
         this.government = this.governments.find(government => government.id === this.observation.government.id);
       } else {
         this.government = null;
+      }
+
+      if (country) {
+        this.operatorsService.getAll({ sort: 'name', filter: { country: country.id } })
+          .then((operators) => {
+            this.operators = operators;
+
+            // We update the list of options for the relevant operators field
+            this._relevantOperatorsSelection = this.observation && this.observation.country.id === country.id
+              ? this.observation['relevant-operators'].map(relevantOperator => operators.findIndex(o => o.id === relevantOperator.id))
+              : [];
+            this.relevantOperatorsOptions = operators
+              .map((operator, index) => ({ id: index, name: operator.name }));
+          });
       }
     } else {
       // We update the list of operators
@@ -543,7 +561,8 @@ export class ObservationDetailComponent {
       this.loading = true;
 
       this.observationsService.getById(this.route.snapshot.params.id, {
-        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report,law,user'
+        // tslint:disable-next-line:max-line-length
+        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report,law,user,relevant-operators'
       }).then((observation) => {
           this.observation = observation;
 
@@ -634,6 +653,17 @@ export class ObservationDetailComponent {
    */
   onChangeAdditionalObserversOptions(options: number[]) {
     this._additionalObserversSelection = options;
+  }
+
+  /**
+   * Event handler executed when the user changes the list of relevant operators
+   * NOTE: we can't use a getter/setter model as we do with the other fields because
+   * the library doesn't support it:
+   * https://github.com/softsimon/angular-2-dropdown-multiselect/issues/273
+   * @param {number[]} options
+   */
+  onChangeRelevantOperatorsOptions(options: number[]) {
+    this._relevantOperatorsSelection = options;
   }
 
   /**
@@ -808,6 +838,11 @@ export class ObservationDetailComponent {
         .filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1)
         .concat([this.observers.find(o => o.id === this.authService.userObserverId)]);
 
+      if (this.type !== 'operator') {
+        this.observation['relevant-operators'] = this.operators
+          .filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
+      }
+
       observation = this.observation;
     } else {
       const model: any = {
@@ -832,6 +867,7 @@ export class ObservationDetailComponent {
         model.fmu = this.fmu;
       } else {
         model.government = this.government;
+        model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       }
 
       observation = this.datastoreService.createRecord(Observation, model);

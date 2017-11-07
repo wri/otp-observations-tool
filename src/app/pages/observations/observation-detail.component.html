@@ -541,13 +541,19 @@
       <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers" [disabled]="isDisabled()"></ss-multiselect-dropdown>
     </div>
 
-    <!-- 6. Description -->
+    <!-- 6. Relevant operators -->
+    <div class="form-group">
+      <label>{{'Relevant operators' | translate}}</label>
+      <ss-multiselect-dropdown [options]="relevantOperatorsOptions" [(ngModel)]="_relevantOperatorsSelection" (ngModelChange)="onChangeRelevantOperatorsOptions($event)" name="relevant_operators" [disabled]="isDisabled()"></ss-multiselect-dropdown>
+    </div>
+
+    <!-- 7. Description -->
     <div class="form-group">
       <label for="details_field">{{'Description' | translate}}</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
     </div>
 
-    <!-- 7. Evidence -->
+    <!-- 8. Evidence -->
     <fieldset>
       <legend>{{'Evidence' | translate}}</legend>
       <div class="fieldset-container">
@@ -613,7 +619,7 @@
       </div>
     </fieldset>
 
-    <!-- 8. Severity -->
+    <!-- 9. Severity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id">{{'Severity' | translate}}</label>
       <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
@@ -623,30 +629,30 @@
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
     </div>
 
-    <!-- 9. Actions taken by government -->
+    <!-- 10. Actions taken by government -->
     <div class="form-group">
       <label for="actions_taken">{{'Actions taken by government' | translate}}</label>
       <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
     </div>
 
-    <!-- 10. Publication date -->
+    <!-- 11. Publication date -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
       <label for="publication_date">{{'Publication date' | translate}}</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required [disabled]="isDisabled()"></otp-datepicker>
       <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text">{{'Publication date is required' | translate}}</div>
     </div>
 
-    <!-- 11. Metadata -->
+    <!-- 12. Metadata -->
     <fieldset *ngIf="observation">
       <legend>{{'Metadata'}}</legend>
       <div class="fieldset-container">
-        <!-- 11.1. Last modification by -->
+        <!-- 12.1. Last modification by -->
         <div class="form-group">
           <label for="last_modification_by">{{'Last modification by' | translate}}</label>
           <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'] && observation['modified-user'].name" #last_modification_by="ngModel" disabled />
         </div>
 
-        <!-- 11.1. Last modified on -->
+        <!-- 12.1. Last modified on -->
         <div class="form-group">
           <label for="last_modified_on">{{'Last modified on' | translate}}</label>
           <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>

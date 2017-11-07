@@ -44,6 +44,7 @@ export class Observation extends JsonApiModel {
   @BelongsTo() operator?: Operator;
   @BelongsTo() government?: Government;
   @BelongsTo() 'observation-report'?: ObservationReport;
+  @HasMany() 'relevant-operators'?: Operator[];
 
   @HasMany() species: Species[];
   @HasMany() comments: Comment[];
