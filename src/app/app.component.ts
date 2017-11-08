@@ -3,6 +3,8 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 
+const ACCEPTED_LOCALES = ['en', 'fr'];
+
 @Component({
   selector: 'otp-root',
   templateUrl: './app.component.html',
@@ -28,13 +30,15 @@ export class AppComponent {
     // consequently
     this.router.events.subscribe(e => {
       if (e instanceof NavigationEnd) {
-        if (!this.route.snapshot.queryParams.lang) {
+        const locale = this.route.snapshot.queryParams.lang;
+
+        if (!locale || !this.isAcceptedLocale(locale)) {
           // There's no lang param in the URL...
           const storageLang = localStorage.getItem('lang');
 
           // If it's been saved in the localStorage, the we
           // use it
-          if (storageLang) {
+          if (storageLang && this.isAcceptedLocale(storageLang)) {
             this.lang = storageLang;
           }
 
@@ -43,7 +47,7 @@ export class AppComponent {
         } else {
           // There's a lang param in the URL, then we change
           // the language
-          this.lang = this.route.snapshot.queryParams.lang;
+          this.lang = locale;
           this.saveLocale();
         }
       }
@@ -100,5 +104,13 @@ export class AppComponent {
         this.translateService.use(this.lang);
       }
     });
+  }
+
+  /**
+   * Return whether the locale is accepted by the app
+   * @param locale {string} Locale code (two letters)
+   */
+  isAcceptedLocale(locale): boolean {
+    return ACCEPTED_LOCALES.indexOf(locale) !== -1;
   }
 }
