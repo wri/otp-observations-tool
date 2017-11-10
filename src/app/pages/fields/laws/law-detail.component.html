@@ -54,13 +54,15 @@
     <!-- 6. Minimum fine -->
     <div class="form-group">
       <label for="min_fine">{{'Minimum fine' | translate}}</label>
-      <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" [disabled]="!canEdit()" />
+      <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" [disabled]="!canEdit()" number />
+      <div *ngIf="f.submitted && !min_fine.valid" class="help-text">{{'Please enter a valid number' | translate}}</div>
     </div>
 
     <!-- 7. Maximum fine -->
     <div class="form-group">
       <label for="max_fine">{{'Maximum fine' | translate}}</label>
-      <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" [disabled]="!canEdit()" />
+      <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" [disabled]="!canEdit()" number />
+      <div *ngIf="f.submitted && !max_fine.valid" class="help-text">{{'Please enter a valid number' | translate}}</div>
     </div>
 
     <!-- 8. Penal servitude -->
