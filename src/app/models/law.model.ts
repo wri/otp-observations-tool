@@ -11,6 +11,7 @@ export class Law extends JsonApiModel {
   @Attribute() infraction: string;
   @Attribute() 'max-fine': number;
   @Attribute() 'min-fine': number;
+  @Attribute() currency: string;
   @Attribute() 'other-penalties': string;
   @Attribute() 'penal-servitude': string;
   @Attribute() sanctions: string;

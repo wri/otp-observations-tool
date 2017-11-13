@@ -51,33 +51,45 @@
       <textarea id="sanctions" class="form-control" name="sanctions" [(ngModel)]="law && law.sanctions" #sanctions="ngModel" [disabled]="!canEdit()"></textarea>
     </div>
 
-    <!-- 6. Minimum fine -->
-    <div class="form-group">
-      <label for="min_fine">{{'Minimum fine' | translate}}</label>
-      <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" [disabled]="!canEdit()" number />
-      <div *ngIf="f.submitted && !min_fine.valid" class="help-text">{{'Please enter a valid number' | translate}}</div>
-    </div>
+    <!-- 6. Fine -->
+    <fieldset>
+      <legend>{{'Fine' | translate}}</legend>
+      <div class="fieldset-container">
+        <!-- 6.1. Minimum fine -->
+        <div class="form-group">
+          <label for="min_fine">{{'Minimum fine' | translate}}</label>
+          <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" [disabled]="!canEdit()" number />
+          <div *ngIf="f.submitted && !min_fine.valid" class="help-text">{{'Please enter a valid number' | translate}}</div>
+        </div>
 
-    <!-- 7. Maximum fine -->
-    <div class="form-group">
-      <label for="max_fine">{{'Maximum fine' | translate}}</label>
-      <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" [disabled]="!canEdit()" number />
-      <div *ngIf="f.submitted && !max_fine.valid" class="help-text">{{'Please enter a valid number' | translate}}</div>
-    </div>
+        <!-- 6.2. Maximum fine -->
+        <div class="form-group">
+          <label for="max_fine">{{'Maximum fine' | translate}}</label>
+          <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" [disabled]="!canEdit()" number />
+          <div *ngIf="f.submitted && !max_fine.valid" class="help-text">{{'Please enter a valid number' | translate}}</div>
+        </div>
 
-    <!-- 8. Penal servitude -->
+        <!-- 6.3. Currency -->
+        <div class="form-group">
+          <label for="currency">{{'Currency' | translate}}</label>
+          <input id="currency" type="text" class="form-control" name="currency" [(ngModel)]="law && law.currency" #currency="ngModel" [disabled]="!canEdit()" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- 7. Penal servitude -->
     <div class="form-group">
       <label for="penal_servitude">{{'Penal servitude' | translate}}</label>
       <textarea id="penal_servitude" type="text" class="form-control" name="penal_servitude" [(ngModel)]="law && law['penal-servitude']" #penal_servitude="ngModel" [disabled]="!canEdit()"></textarea>
     </div>
 
-    <!-- 9. Other penalties -->
+    <!-- 8. Other penalties -->
     <div class="form-group">
       <label for="other_penalties">{{'Other penalties' | translate}}</label>
       <textarea id="other_penalties" type="text" class="form-control" name="other_penalties" [(ngModel)]="law && law['other-penalties']" #other_penalties="ngModel" [disabled]="!canEdit()"></textarea>
     </div>
 
-    <!-- 10. APV -->
+    <!-- 9. APV -->
     <div class="form-group">
       <label for="apv">{{'APV' | translate}}</label>
       <textarea id="apv" type="text" class="form-control" name="apv" [(ngModel)]="law && law.apv" #flegt="ngModel" [disabled]="!canEdit()"></textarea>
