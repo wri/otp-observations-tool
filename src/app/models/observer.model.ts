@@ -1,4 +1,4 @@
-import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from 'angular2-jsonapi';
 import { Country } from 'app/models/country.model';
 import { User } from 'app/models/user.model';
 
@@ -20,7 +20,8 @@ export class Observer extends JsonApiModel {
   @Attribute() 'data-email'?: string;
   @Attribute() 'data-phone'?: string;
 
-  @BelongsTo() country: Country;
   @BelongsTo() users: User[];
+
+  @HasMany() countris: Country[];
 
 }
