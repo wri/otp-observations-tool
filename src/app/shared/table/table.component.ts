@@ -1,3 +1,4 @@
+import { JsonApiParams } from 'app/services/json-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TABLET_BREAKPOINT } from 'app/directives/responsive.directive';
 import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, AfterContentInit } from '@angular/core';
@@ -162,6 +163,28 @@ export class TableComponent implements AfterContentInit {
       // already changed, so we need to sligthly delay the render
       setTimeout(() => this.columnTemplates = this.columnTemplates, 0);
     });
+  }
+
+  /**
+   * Return the params for the API calls
+   */
+  getApiParams(): JsonApiParams {
+    const params: JsonApiParams = {
+      page: {
+        size: this.state.perPage,
+        number: this.state.page
+      }
+    };
+
+    if (this.state.include.length) {
+      params.include = this.state.include.join(',');
+    }
+
+    if (this.state.sortColumn) {
+      params.sort = `${this.state.sortOrder < 0 ? '-' : ''}${this.state.sortColumn}`;
+    }
+
+    return params;
   }
 
   /**

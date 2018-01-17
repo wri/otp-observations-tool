@@ -1,3 +1,4 @@
+import { JsonApiParams } from 'app/services/json-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { FilterDirective } from './directives/filter.directive';
@@ -51,48 +52,83 @@ export class FiltersComponent implements AfterContentInit {
     });
   }
 
+  /**
+   * Return the params for the API calls
+   */
+  getApiParams(): JsonApiParams {
+    return this.filters
+      .filter(filter => filter.selected !== null)
+      .reduce((res, filter) => {
+        return Object.assign({}, res, {
+          [`filter[${filter.prop}]`]: filter.selected
+        });
+      }, {});
+  }
+
   async resetFilters(silent = false) {
     const filterNodes = this._filtersNodes.toArray();
 
-    const promises = filterNodes.map((filter) => {
+    // The "sync" filters are the ones for which we don't
+    // need to remotely fetch values meaning these filters
+    // can be initialized right away
+    const syncFiltersNodes = filterNodes.filter(f => typeof f.values !== 'string');
+    const asyncFiltersNodes = filterNodes.filter(f => typeof f.values === 'string');
+
+    // In a first step, we set these sync filters so the
+    // table automatically load the table with these
+    // We assume no async filter will have a default value
+    const syncFilters = syncFiltersNodes.map((syncFiltersNode) => ({
+      name: syncFiltersNode.name,
+      prop: syncFiltersNode.prop,
+      values: !Array.isArray(syncFiltersNode.values)
+        ? (syncFiltersNode.values)
+        : syncFiltersNode.values
+            .map(value => ({ [value]: value }))
+            .reduce((res, value) => Object.assign({}, res, value), {}),
+      selected: syncFiltersNode.default || null,
+      required: syncFiltersNode.required || false
+    }));
+
+    this.filters = syncFilters;
+
+    // Then we fetch the values of the async filters and
+    // reset the filters with the combination of the sync
+    // and async ones
+    const promises = asyncFiltersNodes.map((asyncFiltersNode) => {
       // The values of the filter needs to be fetched from
       // the API
-      if (typeof filter.values === 'string') {
-        const models = Reflect.getMetadata('JsonApiDatastoreConfig', this.datastoreService.constructor).models;
-        const model = models[filter.values];
+      const models = Reflect.getMetadata('JsonApiDatastoreConfig', this.datastoreService.constructor).models;
+      const model = models[<string>asyncFiltersNode.values];
 
-        let params = { sort: filter['name-attr'], page: { size: 3000 } };
+      let params = {
+        sort: asyncFiltersNode['name-attr'],
+        page: { size: 3000 },
+        // We just request the field we need
+        fields: { [<string>asyncFiltersNode.values]: asyncFiltersNode['name-attr'] }
+      };
 
-        if (filter.prop === 'country' || filter.prop === 'country-id') {
-          params = Object.assign({}, params, { 'filter[is-active]': 'all'});
-        }
-
-        return this.datastoreService.query(model, params)
-          .toPromise()
-          .then(rows => rows.map(row => ({ [row[filter['name-attr']]]: row.id })))
-          .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
+      if (asyncFiltersNode.prop === 'country' || asyncFiltersNode.prop === 'country-id') {
+        params = Object.assign({}, params, { 'filter[is-active]': 'all'});
       }
 
-      // The values are contained in the object and are
-      // renamed to be more user friendly
-      if (!Array.isArray(filter.values)) {
-        return filter.values;
-      }
-
-      // The values are directly given by the template
-      return filter.values.map(value => ({ [value]: value }))
-        .reduce((res, value) => Object.assign({}, res, value), {});
+      return this.datastoreService.query(model, params)
+        .toPromise()
+        .then(rows => rows.map(row => ({ [row[asyncFiltersNode['name-attr']]]: row.id })))
+        .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
     });
 
     Promise.all(promises)
       .then(p => {
-        this.filters = p.map((promise, index) => ({
-          name: filterNodes[index].name,
-          prop: filterNodes[index].prop,
-          values: promise || {},
-          selected: filterNodes[index].default || null,
-          required: filterNodes[index].required || false
-        }));
+        this.filters = [
+          ...syncFilters,
+          ...p.map((promise, index) => ({
+            name: asyncFiltersNodes[index].name,
+            prop: asyncFiltersNodes[index].prop,
+            values: promise || {},
+            selected: asyncFiltersNodes[index].default || null,
+            required: asyncFiltersNodes[index].required || false
+          }))
+        ];
       })
       .catch(err => console.error(err)); // TODO: visual feedback
 

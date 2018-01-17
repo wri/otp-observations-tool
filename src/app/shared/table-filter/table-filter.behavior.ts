@@ -14,14 +14,6 @@ export class TableFilterBehavior implements AfterViewInit {
   @ViewChild(FiltersComponent)
   private filters: FiltersComponent;
 
-  private get tableState(): TableState {
-    return this.table.state;
-  }
-
-  private get filtersState(): Filter[] {
-    return this.filters.filters || [];
-  }
-
   ngAfterViewInit(): void {
     this.table.change.subscribe(() => this.loadData());
     this.filters.change.subscribe(() => {
@@ -36,39 +28,10 @@ export class TableFilterBehavior implements AfterViewInit {
     setTimeout(() => this.loadData(), 0);
   }
 
-  getTableApiParams(): JsonApiParams {
-    const params: JsonApiParams = {
-      page: {
-        size: this.tableState.perPage,
-        number: this.tableState.page
-      }
-    };
-
-    if (this.tableState.include.length) {
-      params.include = this.tableState.include.join(',');
-    }
-
-    if (this.tableState.sortColumn) {
-      params.sort = `${this.tableState.sortOrder < 0 ? '-' : ''}${this.tableState.sortColumn}`;
-    }
-
-    return params;
-  }
-
-  getFiltersApiParams(): JsonApiParams {
-    return this.filtersState
-      .filter(filter => filter.selected !== null)
-      .reduce((res, filter) => {
-        return Object.assign({}, res, {
-          [`filter[${filter.prop}]`]: filter.selected
-        });
-      }, {});
-  }
-
   public loadData() {
     this.table.loading = true;
 
-    const params = Object.assign({}, this.getFiltersApiParams(), this.getTableApiParams());
+    const params = Object.assign({}, this.filters.getApiParams(), this.table.getApiParams());
     const requestID = ++this.latestRequestID;
 
     this.service.get(params)
@@ -78,7 +41,7 @@ export class TableFilterBehavior implements AfterViewInit {
           this.table.rowCount = res.meta['record-count'];
         }
       })
-      .catch(() => console.log('Error loading the table data'))
+      .catch(() => console.error('Error loading the table data'))
       .then(() => {
         if (this.latestRequestID === requestID) {
           this.table.loading = false;

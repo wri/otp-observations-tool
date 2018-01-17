@@ -21,15 +21,4 @@ export class ReportLibraryComponent extends TableFilterBehavior {
     super();
   }
 
-  public getTableApiParams(): JsonApiParams {
-    const params = super.getTableApiParams();
-
-    // We only display the reports of the logged observer
-    params.filter = Object.assign({}, params.filter, {
-      observer_id: this.authService.userObserverId
-    });
-
-    return params;
-  }
-
 }

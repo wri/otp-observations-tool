@@ -20,23 +20,8 @@ export class ObservationListComponent extends TableFilterBehavior {
   private editURL: string;
   statusFilterValues: any = {};
 
-  get observationType(): string {
-    const filters = super.getFiltersApiParams();
-    return filters.type || 'operators';
-  }
-
   get isMyOTP(): boolean {
     return /my\-otp/.test(this.router.url);
-  }
-
-  public getTableApiParams(): JsonApiParams {
-    const params = super.getTableApiParams();
-
-    if (this.isMyOTP) {
-      params.user = 'current';
-    }
-
-    return params;
   }
 
   constructor(
