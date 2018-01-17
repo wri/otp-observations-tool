@@ -1,6 +1,6 @@
 <div class="c-table-header">
   <otp-filters>
-     <otp-filter [name]="'Type' | translate" prop="subcategory-type" [values]="['operator', 'government']" default="operator" [required]="true"></otp-filter>
+     <otp-filter [name]="'Type' | translate" prop="subcategory-type" [values]="typeFilterValues" default="operator" [required]="true"></otp-filter>
      <otp-filter [name]="'Category' | translate" prop="category-id" values="categories" name-attr="name"></otp-filter>
   </otp-filters>
   <!-- <button class="c-button -primary" i18n="Button to create a new sub-category">

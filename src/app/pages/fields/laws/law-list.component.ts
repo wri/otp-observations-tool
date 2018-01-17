@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Law } from 'app/models/law.model';
 import { AuthService } from 'app/services/auth.service';
 import { LawsService } from 'app/services/laws.service';
@@ -17,6 +18,7 @@ export class LawListComponent extends TableFilterBehavior {
       highlight: row => !row.complete
     }
   };
+  completeFilterValues: any = {};
 
   isAdmin = this.authService.isAdmin();
 
@@ -24,9 +26,33 @@ export class LawListComponent extends TableFilterBehavior {
     protected service: LawsService,
     private router: Router,
     private route: ActivatedRoute,
-    public authService: AuthService
+    public authService: AuthService,
+    private translateService: TranslateService
   ) {
     super();
+
+    this.updateCompleteFilterValues();
+    this.translateService.onLangChange.subscribe(() => this.updateCompleteFilterValues());
+  }
+
+  /**
+   * Update the values for the complete filter according to
+   * the current language
+   */
+  async updateCompleteFilterValues() {
+    await Promise.all([
+      this.translateService.get('Complete').toPromise(),
+      this.translateService.get('Incomplete').toPromise()
+    ]).then(([complete, incomplete]) => {
+      const values = {
+        [complete]: true,
+        [incomplete]: false
+      };
+      return Object.keys(values)
+        .sort()
+        .map(key => ({ [key]: values[key] }))
+        .reduce((res, filter) => Object.assign(res, filter), {});
+    }).then(completeFilterValues => this.completeFilterValues = completeFilterValues);
   }
 
   /**

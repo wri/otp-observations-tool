@@ -1,6 +1,6 @@
 <div class="c-table-header">
   <otp-filters>
-    <otp-filter [name]="'Type' | translate" [values]="['operator', 'government']" prop="observation-type" default="operator" [required]="true"></otp-filter>
+    <otp-filter [name]="'Type' | translate" [values]="typeFilterValues" prop="observation-type" default="operator" [required]="true"></otp-filter>
     <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name"></otp-filter>
     <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name"></otp-filter>
     <otp-filter [name]="'Report' | translate" values="observation-reports" prop="observation-report" name-attr="title"></otp-filter>

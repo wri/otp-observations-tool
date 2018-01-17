@@ -19,6 +19,7 @@ export class ObservationListComponent extends TableFilterBehavior {
   private selected = [];
   private editURL: string;
   statusFilterValues: any = {};
+  typeFilterValues: any = [];
 
   get isMyOTP(): boolean {
     return /my\-otp/.test(this.router.url);
@@ -34,8 +35,12 @@ export class ObservationListComponent extends TableFilterBehavior {
     super();
 
     this.updateStatusFilterValues();
+    this.updateTypeFilterValues();
 
-    this.translateService.onLangChange.subscribe(() => this.updateStatusFilterValues());
+    this.translateService.onLangChange.subscribe(() => {
+      this.updateStatusFilterValues();
+      this.updateTypeFilterValues();
+    });
   }
 
   /**
@@ -64,6 +69,26 @@ export class ObservationListComponent extends TableFilterBehavior {
         .reduce((res, filter) => Object.assign(res, filter), {});
 
     }).then(statusFilterValues => this.statusFilterValues = statusFilterValues);
+  }
+
+  /**
+   * Update the values for the type filter according to
+   * the current language
+   */
+  async updateTypeFilterValues() {
+    await Promise.all([
+      this.translateService.get('Operator').toPromise(),
+      this.translateService.get('Government').toPromise()
+    ]).then(([operator, government]) => {
+      const values = {
+        [operator]: 'operator',
+        [government]: 'government'
+      };
+      return Object.keys(values)
+        .sort()
+        .map(key => ({ [key]: values[key] }))
+        .reduce((res, filter) => Object.assign(res, filter), {});
+    }).then(typeFilterValues => this.typeFilterValues = typeFilterValues);
   }
 
   getFormatedDate(date: Date|string): string {
