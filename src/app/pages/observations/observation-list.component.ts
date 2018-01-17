@@ -44,11 +44,20 @@ export class ObservationListComponent extends TableFilterBehavior {
    */
   async updateStatusFilterValues() {
     await Promise.all([
-      this.translateService.get('Pending').toPromise(),
-      this.translateService.get('Active').toPromise()
-    ]).then(([ pending, active]) => {
+      this.translateService.get('Created').toPromise(),
+      this.translateService.get('Ready for revision').toPromise(),
+      this.translateService.get('Under revision').toPromise(),
+      this.translateService.get('Approved').toPromise(),
+      this.translateService.get('Rejected').toPromise()
+    ]).then(([ created, ready, revision, approved, rejected]) => {
       // We sort the values by alphabetical order
-      const values = { [pending]: false, [active]: true };
+      const values = {
+        [created]: 'Created',
+        [ready]: 'Ready for revision',
+        [revision]: 'Under revision',
+        [approved]: 'Approved',
+        [rejected]: 'Rejected'
+      };
       return Object.keys(values)
         .sort()
         .map(key => ({ [key]: values[key] }))
@@ -84,20 +93,17 @@ export class ObservationListComponent extends TableFilterBehavior {
   canEdit(observation: Observation): boolean {
     const isAdmin = this.authService.isAdmin();
 
-    // If the user is an admin, they can do whatever they
-    // want
+    if (observation['validation-status'] !== 'Created') {
+      return false;
+    }
+
+    // Admin users can only edit observations whose observers contain
+    // theirs
     if (isAdmin) {
       return !!observation.observers.find(o => o.id === this.authService.userObserverId);
     }
 
-    // If the observation is active, only the admin users
-    // can edit or delete it
-    if (observation['is-active']) {
-      return false;
-    }
-
-    // If the observation is not active, then only the person
-    // who edited it can edit or remove it
+    // Standard users can only edit observations they've created
     return observation.user && observation.user.id === this.authService.userId;
   }
 }

@@ -4,7 +4,7 @@
     <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name"></otp-filter>
     <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name"></otp-filter>
     <otp-filter [name]="'Report' | translate" values="observation-reports" prop="observation-report" name-attr="title"></otp-filter>
-    <otp-filter [name]="'Status' | translate" [values]="statusFilterValues" prop="is-active"></otp-filter>
+    <otp-filter [name]="'Status' | translate" [values]="statusFilterValues" prop="validation-status"></otp-filter>
   </otp-filters>
 
   <a class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
@@ -22,8 +22,11 @@
   <otp-table-column [name]="'Severity' | translate" prop="severity.level" [include]="true"></otp-table-column>
   <otp-table-column [name]="'Status' | translate">
     <ng-template let-row="row" table-cell-template>
-      <ng-template [ngIf]="row['is-active']">{{'Active' | translate}}</ng-template>
-      <ng-template [ngIf]="!row['is-active']">{{'Pending' | translate}}</ng-template>
+      <ng-template [ngIf]="row['validation-status'] === 'Created'">{{'Created' | translate}}</ng-template>
+      <ng-template [ngIf]="row['validation-status'] === 'Ready for revision'">{{'Ready for revision' | translate}}</ng-template>
+      <ng-template [ngIf]="row['validation-status'] === 'Under revision'">{{'Under revision' | translate}}</ng-template>
+      <ng-template [ngIf]="row['validation-status'] === 'Approved'">{{'Approved' | translate}}</ng-template>
+      <ng-template [ngIf]="row['validation-status'] === 'Rejected'">{{'Rejected' | translate}}</ng-template>
     </ng-template>
   </otp-table-column>
   <!-- We need the user info for canEdit -->

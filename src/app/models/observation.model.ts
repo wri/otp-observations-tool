@@ -22,7 +22,7 @@ export class Observation extends JsonApiModel {
   @Attribute() 'observation-type': string;
   @Attribute() 'publication-date': Date;
   @Attribute() pv?: string;
-  @Attribute() 'is-active'?: boolean;
+  @Attribute() 'validation-status'?: string;
   @Attribute() details?: string;
   @Attribute() evidence?: string;
   @Attribute() 'concern-opinion'?: string;
