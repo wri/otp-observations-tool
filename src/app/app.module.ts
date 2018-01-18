@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { TagComponent } from 'app/shared/tag/tag.component';
 import { SeveritiesService } from 'app/services/severities.service';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { LawDetailComponent } from 'app/pages/fields/laws/law-detail.component';
@@ -143,7 +144,8 @@ export function createTranslateLoader(http: HttpClient) {
     FiltersComponent,
     FilterDirective,
     ModalComponent,
-    Base64FileInputDirective
+    Base64FileInputDirective,
+    TagComponent
   ],
   imports: [
     JsonApiModule,

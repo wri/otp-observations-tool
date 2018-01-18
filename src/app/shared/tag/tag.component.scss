@@ -1,0 +1,18 @@
+@import 'src/settings.scss';
+
+:host {
+  display: inline-block;
+  padding: 2px 5px;
+  font-size: $font-size-default;
+  color: $white;
+  background: $color-primary;
+  border-radius: 2px;
+
+  &[type="warning"] {
+    background: $color-warning;
+  }
+
+  &[type="error"] {
+    background: $color-error;
+  }
+}

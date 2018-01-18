@@ -20,6 +20,9 @@
   </otp-table-column> -->
   <otp-table-column [name]="'Actions' | translate">
     <ng-template let-row="row" table-cell-template>
+      <ng-template [ngIf]="!row.complete">
+        <otp-tag type="warning">{{ 'Incomplete' | translate }}</otp-tag>
+      </ng-template>
       <ng-template [ngIf]="!canEdit(row)">
         <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
       </ng-template>
