@@ -34,6 +34,11 @@ export class GovernmentDetailComponent {
 
     this.countriesService.getAll({ sort: 'name' })
       .then(data => this.countries = data)
+      .then(() => {
+        if (this.government) {
+          this.government.country = this.countries.find(c => c.id === this.government.country.id);
+        }
+      })
       .catch(err => console.error(err)); // TODO: visual feedback
 
     // If we're editing a government entity, we need to fetch the model
@@ -42,6 +47,11 @@ export class GovernmentDetailComponent {
       this.loading = true;
       this.governmentsService.getById(this.route.snapshot.params.id, { include: 'country' })
         .then(government => this.government = government)
+        .then(() => {
+          if (this.countries.length) {
+            this.government.country = this.countries.find(c => c.id === this.government.country.id);
+          }
+        })
         .catch(err => console.error(err)) // TODO: visual feedback
         .then(() => this.loading = false);
     } else {
