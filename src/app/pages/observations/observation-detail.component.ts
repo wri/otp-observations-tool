@@ -73,7 +73,7 @@ export class ObservationDetailComponent {
     center: [10, 0],
     zoom: 1,
     layers: [
-      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
           &copy;<a href="https://carto.com/attribution">CARTO</a>`
@@ -136,7 +136,7 @@ export class ObservationDetailComponent {
     }
 
     // When the type change we load the necessary additional information
-    this.countriesService.getAll(type === 'government' ? { include: 'governments'} : {})
+    this.countriesService.getAll(type === 'government' ? { include: 'governments', sort: 'name' } : { sort: 'name' })
       .then(countries => this.countries = countries)
       .then(() => {
         // If we're editing an observation, the object Country of the observation won't
@@ -648,9 +648,15 @@ export class ObservationDetailComponent {
         return;
       }
 
+      const latitude = (latitudeRef === 'N' ? 1 : -1) * self.convertMinutesToDegrees(minLatitude);
+      const longitude = (longitudeRef === 'E' ? 1 : -1) * self.convertMinutesToDegrees(minLongitude);
+
       // We convert them to decimal degrees
-      self.latitude = (latitudeRef === 'N' ? 1 : -1) * self.convertMinutesToDegrees(minLatitude);
-      self.longitude = (longitudeRef === 'E' ? 1 : -1) * self.convertMinutesToDegrees(minLongitude);
+      self.latitude = latitude;
+      self.longitude = longitude;
+
+      // We zoom in the area
+      self.map.setView([latitude, longitude], 8);
     });
   }
 
