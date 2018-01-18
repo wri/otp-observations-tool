@@ -7,5 +7,6 @@ import { Subcategory } from 'app/models/subcategory.model';
 export class Category extends JsonApiModel {
 
   @Attribute() name: string;
+  @Attribute() 'category-type': string;
 
 }

@@ -1,5 +1,7 @@
 <div class="c-table-header">
-  <otp-filters></otp-filters>
+  <otp-filters>
+    <otp-filter [name]="'Type' | translate" prop="category-type" [values]="typeFilterValues" default="operator" [required]="true"></otp-filter>
+  </otp-filters>
   <!-- <button (click)="triggerNewCategory()" class="c-button -primary" i18n="Button to create a new category">New Category</button> -->
 </div>
 
