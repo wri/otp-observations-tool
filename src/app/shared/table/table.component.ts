@@ -24,6 +24,7 @@ export class TableComponent implements AfterContentInit {
   @Input() caption: string;
   @Input() perPage = 10;
   @Input() include: string[] = []; // Include param for the query
+  @Input() defaultSort: string; // Default sort param (ex: "name" or "-name")
   @Input() options: any; // Additional options for the table
 
   @Output() change = new EventEmitter<void>();
@@ -77,6 +78,21 @@ export class TableComponent implements AfterContentInit {
           };
 
           this.columns.push(column);
+        }
+
+
+        // We eventually set the default sort
+        if (this.defaultSort) {
+          const sortColumnProp = this.defaultSort.match(/-?(.*)/)[1];
+          const sortColumn = this.columns.find(c => c.prop === sortColumnProp);
+          const isDesc = !!this.defaultSort.match(/(-?).*/)[1].length;
+
+          // We only set the sort if it hasn't set before or if
+          // the columns has been reset and it stays the same
+          if (!this.sortColumn || this.sortColumn.prop === sortColumn.prop) {
+            this.sortColumn = sortColumn;
+            this.sortOrder = isDesc ? 'desc' : 'asc';
+          }
         }
       }
     }
@@ -133,11 +149,21 @@ export class TableComponent implements AfterContentInit {
       ...this.include
     ];
 
+    let sortColumn;
+    if (this.sortColumn) {
+      sortColumn = this.sortColumn.prop;
+    }
+
+    let sortOrder;
+    if (this.sortOrder) {
+      sortOrder = this.sortOrder === 'asc' ? 1 : -1;
+    }
+
     return {
       page: this.currentPage,
       perPage: this.perPage,
-      sortColumn: this.sortColumn && this.sortColumn.prop,
-      sortOrder: this.sortOrder && this.sortOrder === 'asc' ? 1 : -1,
+      sortColumn,
+      sortOrder,
       include
     };
   }
