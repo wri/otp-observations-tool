@@ -653,7 +653,7 @@
             <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
           <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
-            <!-- 7.1 List of evidence -->
+            <!-- 8.1 List of evidence -->
             <h3>{{'List of evidence' | translate}}</h3>
             <ul class="documents-list" *ngIf="documents.length">
               <li *ngFor="let document of documents">
@@ -670,7 +670,7 @@
             <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
           <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
-            <!-- 7.2.1 Evidence -->
+            <!-- 8.2.1 Evidence -->
             <p>{{'When you upload new file, it will appear in the list of evidence.' | translate}}</p>
             <!-- This input is used to prevent the submitting until evidence are uploaded -->
             <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
@@ -684,14 +684,14 @@
               <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
-            <!-- 7.2.2 Title -->
+            <!-- 8.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
               <label for="evidence_title">{{'Title' | translate}}</label>
               <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment || !documents.length" />
               <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
             </div>
 
-            <!-- 7.2.3 Add to list -->
+            <!-- 8.2.3 Add to list -->
             <div class="form-group">
               <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
             </div>
@@ -722,7 +722,16 @@
       </p>
     </div>
 
-    <!-- 11. Publication date -->
+    <!-- 11. Government entity comments -->
+    <div class="form-group">
+      <label for="concern_opinion">{{'Comments from the government entity' | translate}}</label>
+      <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
+      <p class="note">
+        {{ 'observation.commentsFromGovernment.note' | translate }}
+      </p>
+    </div>
+
+    <!-- 12. Publication date -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
       <label for="publication_date">{{'Publication date' | translate}}</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required [disabled]="isDisabled()"></otp-datepicker>
@@ -732,17 +741,17 @@
       </p>
     </div>
 
-    <!-- 12. Metadata -->
+    <!-- 13. Metadata -->
     <fieldset *ngIf="observation">
       <legend>{{'Metadata'}}</legend>
       <div class="fieldset-container">
-        <!-- 12.1. Last modification by -->
+        <!-- 13.1. Last modification by -->
         <div class="form-group">
           <label for="last_modification_by">{{'Last modification by' | translate}}</label>
           <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'] && observation['modified-user'].name" #last_modification_by="ngModel" disabled />
         </div>
 
-        <!-- 12.1. Last modified on -->
+        <!-- 13.1. Last modified on -->
         <div class="form-group">
           <label for="last_modified_on">{{'Last modified on' | translate}}</label>
           <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>

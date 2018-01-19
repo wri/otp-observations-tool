@@ -876,14 +876,14 @@ export class ObservationDetailComponent {
         severity: this.severity,
         observers: this.observers.filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1),
         'actions-taken': this.actions,
-        'validation-status': this.validationStatus
+        'validation-status': this.validationStatus,
+        'concern-opinion':this.opinion
       };
 
       if (this.type === 'operator') {
         model.operator = this.operatorChoice;
         model.lat = this.latitude;
         model.lng = this.longitude;
-        model['concern-opinion'] = this.opinion;
         model['litigation-status'] = this.litigationStatus;
         model.law = this.law;
         model.pv = this.pv;
