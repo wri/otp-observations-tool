@@ -21,6 +21,9 @@
         <option value="government">{{'Government' | translate}}</option>
       </select>
       <div *ngIf="f.submitted && observation_type.invalid" class="help-text">Please select an observation type</div>
+      <p class="note">
+        {{ 'observation.type.note' | translate }}
+      </p>
     </div>
   </div>
 
@@ -96,6 +99,9 @@
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
       <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
+      <p class="note">
+        {{ 'observation.country.note' | translate }}
+      </p>
     </div>
 
     <!-- 3. Operator -->
@@ -156,6 +162,9 @@
     <div class="form-group">
       <label>Additional monitors</label>
       <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers" [disabled]="isDisabled()"></ss-multiselect-dropdown>
+      <p class="note">
+        {{ 'observation.additionalMonitors.note' | translate }}
+      </p>
     </div>
 
     <!-- 5. Location -->
@@ -170,6 +179,9 @@
             <option [value]="null" disabled>{{'Select a FMU' | translate}}</option>
             <option *ngFor="let fmu of fmus" [ngValue]="fmu">{{ fmu.name }}</option>
           </select>
+          <p class="note">
+            {{ 'observation.fmu.note' | translate }}
+          </p>
         </div>
 
         <!-- 4.2. GPS coordinates -->
@@ -242,6 +254,9 @@
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
       <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">{{'Please select an observation category' | translate}}</div>
+      <p class="note">
+        {{ 'observation.observationCategory.note' | translate }}
+      </p>
     </div>
 
 
@@ -249,12 +264,18 @@
     <div class="form-group">
       <label for="diligence_category">{{'Due diligence category' | translate}}</label>
       <input id="diligence_category" type="text" class="form-control" name="diligence_category" [(ngModel)]="subcategory && subcategory.category && subcategory.category.name" #diligence_category="ngModel" disabled />
+      <p class="note">
+        {{ 'observation.diligenceCategory.note' | translate }}
+      </p>
     </div>
 
     <!-- 8. Observation details -->
     <div class="form-group">
       <label for="details_field">{{'Observation details' | translate}}</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
+      <p class="note">
+        {{ 'observation.observationDetails.note' | translate }}
+      </p>
     </div>
 
     <!-- 9. Evidence -->
@@ -331,30 +352,45 @@
         <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
       </select>
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
+      <p class="note">
+        {{ 'observation.severity.note' | translate }}
+      </p>
     </div>
 
     <!-- 11. Actions taken by operator -->
     <div class="form-group">
       <label for="actions_taken">{{'Actions taken by operator' | translate}}</label>
       <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
+      <p class="note">
+        {{ 'observation.actionsTakenByOperator.note' | translate }}
+      </p>
     </div>
 
     <!-- 12. Comments from the operator -->
     <div class="form-group">
       <label for="concern_opinion">{{'Comments from the operator' | translate}}</label>
       <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
+      <p class="note">
+        {{ 'observation.commentsFromOperator.note' | translate }}
+      </p>
     </div>
 
     <!-- 13. Citation -->
     <div class="form-group">
       <label for="pv_field">{{'Citation' | translate}}</label>
       <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" [disabled]="isDisabled()" />
+      <p class="note">
+        {{ 'observation.citation.note' | translate }}
+      </p>
     </div>
 
     <!-- 14. Litigation status -->
     <div class="form-group">
       <label for="litigation_status">{{'Litigation status' | translate}}</label>
       <input id="litigation_status" type="text" class="form-control" name="litigation_status" [(ngModel)] ="litigationStatus" #litigation_status="ngModel" [disabled]="isDisabled()" />
+      <p class="note">
+        {{ 'observation.litigationStatus.note' | translate }}
+      </p>
     </div>
 
     <!-- 15. Legal -->
@@ -368,48 +404,72 @@
             <option [value]="null" disabled>{{'Select an observation' | translate}}</option>
             <option *ngFor="let law of laws" [ngValue]="law">{{ law['written-infraction'] }}</option>
           </select>
+          <p class="note">
+            {{ 'observation.illegalityAsWritten.note' | translate }}
+          </p>
         </div>
 
         <!-- 15.1. Legal reference (infraction) -->
         <div class="form-group">
           <label for="infraction">{{'Legal reference (infraction)' | translate}}</label>
           <input id="infraction" type="text" class="form-control" name="infraction" [(ngModel)]="law && law.infraction" #infraction="ngModel" disabled />
+          <p class="note">
+            {{ 'observation.legalReferenceInfraction.note' | translate }}
+          </p>
         </div>
 
         <!-- 15.2. Legal reference (sanction) -->
         <div class="form-group">
           <label for="sanction">{{'Legal reference (sanction)' | translate}}</label>
           <input id="sanction" type="text" class="form-control" name="sanction" [(ngModel)]="law && law.sanctions" #sanction="ngModel" disabled />
+          <p class="note">
+            {{ 'observation.legalReferenceSanction.note' | translate }}
+          </p>
         </div>
 
         <!-- 15.3. Minimum fine -->
         <div class="form-group">
           <label for="min_fine">{{'Minimum fine' | translate}}</label>
           <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" disabled />
+          <p class="note">
+            {{ 'observation.minimumFine.note' | translate }}
+          </p>
         </div>
 
         <!-- 15.4. Maximum fine -->
         <div class="form-group">
           <label for="max_fine">{{'Maximum fine' | translate}}</label>
           <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" disabled />
+          <p class="note">
+            {{ 'observation.maximumFine.note' | translate }}
+          </p>
         </div>
 
         <!-- 15.5. Penal servitude -->
         <div class="form-group">
           <label for="penal_servitude">{{'Penal servitude' | translate}}</label>
           <input id="penal_servitude" type="text" class="form-control" name="penal_servitude" [(ngModel)]="law && law['penal-servitude']" #penal_servitude="ngModel" disabled />
+          <p class="note">
+            {{ 'observation.penalServitude.note' | translate }}
+          </p>
         </div>
 
         <!-- 15.6. Other penalties -->
         <div class="form-group">
           <label for="other_penalties">{{'Other penalties' | translate}}</label>
           <input id="other_penalties" type="text" class="form-control" name="other_penalties" [(ngModel)]="law && law['other-penalties']" #other_penalties="ngModel" disabled />
+          <p class="note">
+            {{ 'observation.otherPenalties.note' | translate }}
+          </p>
         </div>
 
         <!-- 15.7. APV -->
         <div class="form-group">
           <label for="apv">{{'APV' | translate}}</label>
           <input id="apv" type="text" class="form-control" name="apv" [(ngModel)]="law && law.apv" #flegt="ngModel" disabled />
+          <p class="note">
+            {{ 'observation.apv.note' | translate }}
+          </p>
         </div>
       </div>
     </fieldset>
@@ -419,6 +479,9 @@
       <label for="publication_date">{{'Publication date' | translate}}</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required [disabled]="isDisabled()"></otp-datepicker>
       <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text">{{'Publication date is required' | translate}}</div>
+      <p class="note">
+        {{ 'observation.publicationDate.note' | translate }}
+      </p>
     </div>
 
     <!-- 17. Metadata -->
@@ -513,6 +576,9 @@
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
       <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
+      <p class="note">
+        {{ 'observation.country.note' | translate }}
+      </p>
     </div>
 
     <!-- 3. Government entity -->
@@ -523,6 +589,9 @@
         <option *ngFor="let government of governments" [ngValue]="government">{{ government['government-entity'] }}</option>
       </select>
       <div *ngIf="f.submitted && !government_id.valid" class="help-text">{{'Please select a government entity' | translate}}</div>
+      <p class="note">
+        {{ 'observation.governmentEntity.note' | translate }}
+      </p>
     </div>
 
     <!-- 4. Governance problem -->
@@ -533,24 +602,36 @@
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
       <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">Please select a governance problem</div>
+      <p class="note">
+        {{ 'observation.governanceProblem.note' | translate }}
+      </p>
     </div>
 
     <!-- 5. Additional monitors -->
     <div class="form-group">
       <label>{{'Additional monitors' | translate}}</label>
       <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers" [disabled]="isDisabled()"></ss-multiselect-dropdown>
+      <p class="note">
+        {{ 'observation.additionalMonitors.note' | translate }}
+      </p>
     </div>
 
     <!-- 6. Relevant operators -->
     <div class="form-group">
       <label>{{'Relevant operators' | translate}}</label>
       <ss-multiselect-dropdown [options]="relevantOperatorsOptions" [(ngModel)]="_relevantOperatorsSelection" (ngModelChange)="onChangeRelevantOperatorsOptions($event)" name="relevant_operators" [disabled]="isDisabled()"></ss-multiselect-dropdown>
+      <p class="note">
+        {{ 'observation.relevantOperators.note' | translate }}
+      </p>
     </div>
 
     <!-- 7. Description -->
     <div class="form-group">
       <label for="details_field">{{'Description' | translate}}</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
+      <p class="note">
+        {{ 'observation.details.note' | translate }}
+      </p>
     </div>
 
     <!-- 8. Evidence -->
@@ -627,12 +708,18 @@
         <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
       </select>
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
+      <p class="note">
+        {{ 'observation.severity.note' | translate }}
+      </p>
     </div>
 
     <!-- 10. Actions taken by government -->
     <div class="form-group">
       <label for="actions_taken">{{'Actions taken by government' | translate}}</label>
       <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
+      <p class="note">
+        {{ 'observation.actionsTakenByGovernment.note' | translate }}
+      </p>
     </div>
 
     <!-- 11. Publication date -->
@@ -640,6 +727,9 @@
       <label for="publication_date">{{'Publication date' | translate}}</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required [disabled]="isDisabled()"></otp-datepicker>
       <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text">{{'Publication date is required' | translate}}</div>
+      <p class="note">
+        {{ 'observation.publicationDate.note' | translate }}
+      </p>
     </div>
 
     <!-- 12. Metadata -->

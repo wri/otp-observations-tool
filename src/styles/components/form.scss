@@ -35,7 +35,8 @@
       }
 
       input,
-      select {
+      select,
+      textarea {
         margin: 0;
       }
 
@@ -158,8 +159,21 @@
   .form-header {
     margin: 20px 0;
 
+    select,
+    input,
+    textarea {
+      margin: 0;
+    }
+
     .c-button-container {
       margin: 0;
+    }
+
+    .note {
+      margin: 5px 0 0;
+      font-size: 0.8125rem;
+
+      a { color: $color-primary; }
     }
   }
 
