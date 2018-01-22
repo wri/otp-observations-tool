@@ -144,6 +144,9 @@ export class ObservationDetailComponent {
         // and set it
         if (this.observation) {
           this.country = this.countries.find((country) => country.id === this.observation.country.id);
+        } else {
+          // By default, the selected country is one of the observer's
+          this.setDefaultCountry();
         }
       });
 
@@ -761,6 +764,23 @@ export class ObservationDetailComponent {
     // If this is a standard user, only the person
     // who edited it can edit it
     return !this.observation.user || this.observation.user.id !== this.authService.userId;
+  }
+
+  /**
+   * Set the default country value based on the observer's
+   * locations
+   * NOTE: do not call before loading this.countries
+   */
+  setDefaultCountry() {
+    this.observersService.getById(this.authService.userObserverId, {
+      include: 'countries',
+      fields: { countries: 'id' } // Just save bandwidth and load fastter
+    }).then((observer) => {
+      const countries = observer.countries;
+      if (countries && countries.length) {
+        this.country = this.countries.find(c => c.id === countries[0].id);
+      }
+    }).catch(err => console.error(err));
   }
 
   /**

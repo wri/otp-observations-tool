@@ -1,3 +1,4 @@
+import { ObserversService } from 'app/services/observers.service';
 import { AuthService } from 'app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Government } from 'app/models/government.model';
@@ -25,6 +26,7 @@ export class GovernmentDetailComponent {
     private countriesService: CountriesService,
     private governmentsService: GovernmentsService,
     private datastoreService: DatastoreService,
+    private observersService: ObserversService,
     private router: Router,
     private route: ActivatedRoute,
     private translateService: TranslateService,
@@ -35,8 +37,11 @@ export class GovernmentDetailComponent {
     this.countriesService.getAll({ sort: 'name' })
       .then(data => this.countries = data)
       .then(() => {
-        if (this.government) {
+        if (this.government && this.government.id) {
           this.government.country = this.countries.find(c => c.id === this.government.country.id);
+        } else {
+          // By default, the selected country is one of the observer's
+          this.setDefaultCountry();
         }
       })
       .catch(err => console.error(err)); // TODO: visual feedback
@@ -113,5 +118,22 @@ export class GovernmentDetailComponent {
     }
 
     return this.government.country.id === this.authService.userCountryId;
+  }
+
+  /**
+   * Set the default country value based on the observer's
+   * locations
+   * NOTE: do not call before loading this.countries
+   */
+  setDefaultCountry() {
+    this.observersService.getById(this.authService.userObserverId, {
+      include: 'countries',
+      fields: { countries: 'id' } // Just save bandwidth and load fastter
+    }).then((observer) => {
+      const countries = observer.countries;
+      if (countries && countries.length) {
+        this.government.country = this.countries.find(c => c.id === countries[0].id);
+      }
+    }).catch(err => console.error(err));
   }
 }

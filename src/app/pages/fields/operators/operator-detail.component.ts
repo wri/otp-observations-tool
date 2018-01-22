@@ -1,3 +1,4 @@
+import { ObserversService } from 'app/services/observers.service';
 import { AuthService } from 'app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
@@ -36,6 +37,7 @@ export class OperatorDetailComponent {
     private countriesService: CountriesService,
     private operatorsService: OperatorsService,
     private datastoreService: DatastoreService,
+    private observersService: ObserversService,
     private router: Router,
     private route: ActivatedRoute,
     private translateService: TranslateService,
@@ -44,7 +46,15 @@ export class OperatorDetailComponent {
     this.isAdmin = this.authService.isAdmin();
 
     this.countriesService.getAll({ sort: 'name' })
-      .then(data => this.countries = data)
+      .then((data) => this.countries = data)
+      .then(() => {
+        if (this.operator && this.operator.id) {
+          this.operator.country = this.countries.find(c => c.id === this.operator.country.id);
+        } else {
+          // By default, the selected country is one of the observer's
+          this.setDefaultCountry();
+        }
+      })
       .catch(err => console.error(err)); // TODO: visual feedback
 
     // If we're editing an operator, we need to fetch the model
@@ -116,5 +126,20 @@ export class OperatorDetailComponent {
     return this.operator.country.id === this.authService.userCountryId;
   }
 
-
+  /**
+   * Set the default country value based on the observer's
+   * locations
+   * NOTE: do not call before loading this.countries
+   */
+  setDefaultCountry() {
+    this.observersService.getById(this.authService.userObserverId, {
+      include: 'countries',
+      fields: { countries: 'id' } // Just save bandwidth and load fastter
+    }).then((observer) => {
+      const countries = observer.countries;
+      if (countries && countries.length) {
+        this.operator.country = this.countries.find(c => c.id === countries[0].id);
+      }
+    }).catch(err => console.error(err));
+  }
 }
