@@ -20,5 +20,11 @@
     width: 100%;
     margin: 0 auto;
     max-width: 400px;
+
+    a {
+      color: $color-primary;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 }

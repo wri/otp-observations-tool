@@ -256,5 +256,7 @@
     "observation.relevantOperators.note": "Description for the relevant operators field of the observation form. Set me empty if you don't need me.",
     "observation.details.note": "Description for the details field of the observation form. Set me empty if you don't need me.",
     "observation.actionsTakenByGovernment.note": "Description for the actions taken by government field of the observation form. Set me empty if you don't need me.",
-    "observation.commentsFromGovernment.note": "Description for the comments from the government entity field of the observation form. Set me empty if you don't need me."
+    "observation.commentsFromGovernment.note": "Description for the comments from the government entity field of the observation form. Set me empty if you don't need me.",
+    "Reset password": "Reset password",
+    "Reset": "Reset"
 }

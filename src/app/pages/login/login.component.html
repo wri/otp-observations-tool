@@ -13,6 +13,7 @@
         <input type="password" id="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
         <div *ngIf="f.submitted && !password.valid" class="help-text">{{'Password is required' | translate}}</div>
       </div>
+      <a routerLink="/reset-password">{{'Reset password' | translate}}</a>
       <div class="c-button-container form-group">
         <button type="button" (click)="triggerRegister()" class="c-button -secondary">{{'Register' | translate}}</button>
         <button [disabled]="loading" class="c-button -primary">{{'Login' | translate}}</button>
