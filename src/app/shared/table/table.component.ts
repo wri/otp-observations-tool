@@ -64,7 +64,7 @@ export class TableComponent implements AfterContentInit {
               return null;
             }
 
-            const split = this.prop.split('.');
+            const split = this.prop.replace(/[\[\]]/g, '').split('.');
             let res = row;
 
             for (let i = 0, j = split.length; i < j; i++) {
@@ -145,13 +145,27 @@ export class TableComponent implements AfterContentInit {
 
   get state(): TableState {
     const include = [
-      ...this.columns.filter(col => col.include).map(col => col.prop.split('.')[0]),
+      ...this.columns.filter(col => col.include)
+        .map((col) => {
+          // Two patterns can be used in the prop attribute:
+          //   1. subcategory.name
+          //   2. [subcategory.category].name
+          const regexMatches = col.prop.match(/\[(.*)\](.*)/);
+
+          // This is case 2.
+          if (regexMatches && regexMatches.length > 1) {
+            return regexMatches[1];
+          }
+
+          // This is case 1.
+          return col.prop.split('.')[0];
+        }),
       ...this.include
     ];
 
     let sortColumn;
     if (this.sortColumn) {
-      sortColumn = this.sortColumn.prop;
+      sortColumn = this.sortColumn.prop.replace(/[\[\]]/g, '');
     }
 
     let sortOrder;
