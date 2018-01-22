@@ -1,8 +1,2 @@
-<ng-template [ngIf]="!disabled">
-  <input *otpMaxTablet type="date" [(ngModel)]="nativeValue" [id]="id" [attr.name]="name" />
-  <ng2-datepicker *otpMinTablet [id]="id" [name]="name" [(ngModel)]="customValue" [inputEvents]="datepickerInputEvents"></ng2-datepicker>
-</ng-template>
-<ng-template [ngIf]="disabled">
-  <input type="date" [(ngModel)]="nativeValue" [id]="id" [attr.name]="name" disabled />
-</ng-template>
+<input type="text" [id]="id" [attr.name]="name" [disabled]="disabled" />
 

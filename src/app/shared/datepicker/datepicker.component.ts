@@ -1,8 +1,8 @@
-import { Component, forwardRef, Input, EventEmitter } from '@angular/core';
+import { Component, forwardRef, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
-import { DateModel } from 'ng2-datepicker';
-import { format } from 'date-fns';
-import { IDatePickerOptions, IDateModel } from 'ng2-datepicker/lib-dist/ng2-datepicker.component';
+import flatpickr from 'flatpickr';
+import Locale from 'flatpickr/dist/l10n';
+import { dateFormat } from '../formatted-date/formatted-date.component';
 
 const REQUIRED_VALIDATOR: any = {
   provide: NG_VALIDATORS,
@@ -22,7 +22,7 @@ const VALUE_ACCESSOR: any = {
   styleUrls: ['./datepicker.component.scss'],
   providers: [REQUIRED_VALIDATOR, VALUE_ACCESSOR]
 })
-export class DatepickerComponent implements Validator, ControlValueAccessor {
+export class DatepickerComponent implements Validator, ControlValueAccessor, AfterViewInit {
 
   @Input() id: string;
   @Input() name: string;
@@ -42,59 +42,34 @@ export class DatepickerComponent implements Validator, ControlValueAccessor {
   }
 
   date: Date; // Value of the external model
-  datepickerInputEvents = new EventEmitter<{ type: string, data: Date }>();
-  private _date: string; // Value of the internal native model
-  private _dateModel: DateModel; // Value of the internal custom modal
   private _required = false; // Is the input required?
   private _disabled = false; // Is the input disabled?
   private validatorCallback: () => void;
   private modelCallback: (date: Date) => void;
   private touchCallback: (date: Date) => void;
+  private flatpickr;
 
-  get nativeValue(): string {
-    return this._date;
-  }
-
-  set nativeValue(value: string) {
-    if (/^\d{4}\-\d{2}\-\d{2}$/.test(value)) {
-      const values = value.split('-');
-      this.date = new Date(Date.UTC(+values[0], +values[1] - 1, +values[2]));
-    } else {
-      this.date = null;
-    }
-
-    this._date = value;
-    this.propagateChange();
-  }
-
-  get customValue (): DateModel {
-    return this._dateModel;
-  }
-
-  set customValue(value: DateModel) {
-    this._dateModel = value;
-    this.date = new Date(Date.UTC(+value.year, +value.month, +value.day));
-    this.propagateChange();
+  ngAfterViewInit(): void {
+    this.flatpickr = flatpickr(`#${this.id}`, {
+      locale: Locale[<any>(localStorage.getItem('lang') || 'en')],
+      dateFormat: dateFormat,
+      defaultDate: this.date,
+      onChange: ([ date ]) => {
+        this.date = date;
+        this.propagateChange();
+      }
+    });
   }
 
   writeValue(date: Date): void {
     if (date === null || date === undefined) {
       this.date = null;
-      this._date = null;
-
-      // Hack to remove the date from the UI
-      if (this.customValue && this.customValue.formatted) {
-        this.customValue.formatted = '';
-      }
     } else if (typeof date === 'object') {
       this.date = date;
+    }
 
-      // We also update the native input
-      this._date = format(date, 'YYYY-MM-DD');
-
-      // We set the initial date for the custom one
-      const dateModel = new DateModel(<IDateModel>{ day: format(date, 'DD'), month: format(date, 'MM'), year: format(date, 'YYYY') });
-      this.datepickerInputEvents.emit({ type: 'setDate', data: date });
+    if (this.flatpickr) {
+      this.flatpickr.setDate(this.date);
     }
   }
 

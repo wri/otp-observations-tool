@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { FormattedDateComponent } from './shared/formatted-date/formatted-date.component';
 import { TagComponent } from 'app/shared/tag/tag.component';
 import { SeveritiesService } from 'app/services/severities.service';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
@@ -78,7 +79,6 @@ import { JsonApiModule } from 'angular2-jsonapi';
 import { HttpModule, RequestOptions, } from '@angular/http';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { SpinnerModule } from 'angular2-spinner/dist';
-import { DatePickerModule } from 'ng2-datepicker';
 import { ObservationsService } from 'app/services/observations.service';
 import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsive.directive';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
@@ -145,7 +145,8 @@ export function createTranslateLoader(http: HttpClient) {
     FilterDirective,
     ModalComponent,
     Base64FileInputDirective,
-    TagComponent
+    TagComponent,
+    FormattedDateComponent
   ],
   imports: [
     JsonApiModule,
@@ -154,7 +155,6 @@ export function createTranslateLoader(http: HttpClient) {
     HttpModule,
     AppRoutingModule,
     SpinnerModule,
-    DatePickerModule,
     LeafletModule.forRoot(),
     MultiselectDropdownModule,
     HttpClientModule,
