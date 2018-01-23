@@ -261,5 +261,7 @@
     "Reset": "Reset",
     "FMU": "FMU",
     "Observers": "Observers",
-    "Observer": "Observer"
+    "Observer": "Observer",
+    "Active": "Active",
+    "Inactive": "Inactive"
 }
