@@ -9,10 +9,10 @@ export class TableFilterBehavior implements AfterViewInit {
   protected service: JsonApiService<any>;
 
   @ViewChild(TableComponent)
-  private table: TableComponent;
+  protected table: TableComponent;
 
   @ViewChild(FiltersComponent)
-  private filters: FiltersComponent;
+  protected filters: FiltersComponent;
 
   ngAfterViewInit(): void {
     this.table.change.subscribe(() => this.loadData());

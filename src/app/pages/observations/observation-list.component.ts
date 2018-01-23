@@ -1,4 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
+import truncate from 'lodash/truncate';
 import { JsonApiParams } from 'app/services/json-api.service';
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
@@ -22,6 +23,19 @@ export class ObservationListComponent extends TableFilterBehavior {
 
   get isMyOTP(): boolean {
     return /my\-otp/.test(this.router.url);
+  }
+
+  get defaultObservationType() {
+    return 'operator';
+  }
+
+  get observationType(): string {
+    const filters = this.filters.getApiParams();
+    if (Object.keys(filters).length) {
+      return filters['filter[observation-type]'] || this.defaultObservationType;
+    }
+
+    return this.defaultObservationType;
   }
 
   constructor(
@@ -125,5 +139,9 @@ export class ObservationListComponent extends TableFilterBehavior {
 
     // Standard users can only edit observations they've created
     return observation.user && observation.user.id === this.authService.userId;
+  }
+
+  shortenText(text: string): string {
+    return truncate(text, { length: 100, separator: /,?\.?;? +/ });
   }
 }

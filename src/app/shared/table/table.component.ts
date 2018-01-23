@@ -94,6 +94,14 @@ export class TableComponent implements AfterContentInit {
             this.sortOrder = isDesc ? 'desc' : 'asc';
           }
         }
+
+        // If the columns are dynamically added or removed
+        // the current sorting might not be available anymore
+        // so we remove it
+        if (this.sortColumn && !this.columns.find(c => c.props === this.sortColumn.prop)) {
+          this.sortColumn = null;
+          this.change.emit();
+        }
       }
     }
   }

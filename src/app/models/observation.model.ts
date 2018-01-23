@@ -1,3 +1,4 @@
+import { ObservationDocument } from 'app/models/observation_document';
 import { Law } from 'app/models/law.model';
 import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
@@ -45,10 +46,10 @@ export class Observation extends JsonApiModel {
   @BelongsTo() government?: Government;
   @BelongsTo() 'observation-report'?: ObservationReport;
   @HasMany() 'relevant-operators'?: Operator[];
+  @HasMany() 'observation-documents': ObservationDocument[];
 
   @HasMany() species: Species[];
   @HasMany() comments: Comment[];
   @HasMany() photos: Photo[];
-  @HasMany() documents: Document[];
 
 }
