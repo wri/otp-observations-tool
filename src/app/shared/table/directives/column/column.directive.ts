@@ -10,6 +10,7 @@ export class TableColumnDirective {
   @Input() name: string;
   @Input() prop: string;
   @Input() include: boolean;
+  @Input() sortable: boolean;
 
   @Input()
   @ContentChild(TableColumnCellDirective, { read: TemplateRef })

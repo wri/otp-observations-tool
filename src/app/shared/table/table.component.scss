@@ -39,6 +39,11 @@
     }
   }
 
+  .table-container {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
   table {
     width: 100%;
     font-size: $font-size-default;
@@ -158,6 +163,11 @@
 
           &.-highlight {
             background: mix($white, $color-warning, 80%);
+          }
+
+          /deep/ a {
+            color: $color-primary;
+            text-decoration: underline;
           }
 
           .column-name {
