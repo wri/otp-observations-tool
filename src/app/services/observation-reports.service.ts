@@ -26,4 +26,15 @@ export class ObservationReportsService extends JsonApiService<ObservationReport>
       .toPromise();
   }
 
+  /**
+   * Get an observation report by its ID
+   * @param {string} id - ID of the observation report
+   * @param {*} [params={}] Additional params for the request
+   * @returns {Promise<ObservationReport>}
+   */
+  getById(id: string, params: any = {}): Promise<ObservationReport> {
+    return this.datastoreService.findRecord(ObservationReport, id, params)
+      .toPromise();
+  }
+
 }

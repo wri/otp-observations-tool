@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { FormattedDateComponent } from './shared/formatted-date/formatted-date.component';
+import { ReportLibraryDetailComponent } from 'app/pages/my-otp/report-library/report-library-detail.component';
+import { FormattedDateComponent } from 'app/shared/formatted-date/formatted-date.component';
 import { TagComponent } from 'app/shared/tag/tag.component';
 import { SeveritiesService } from 'app/services/severities.service';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
@@ -148,7 +149,8 @@ export function createTranslateLoader(http: HttpClient) {
     Base64FileInputDirective,
     TagComponent,
     FormattedDateComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ReportLibraryDetailComponent
   ],
   imports: [
     JsonApiModule,

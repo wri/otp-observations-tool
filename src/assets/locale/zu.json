@@ -263,5 +263,14 @@
     "Observers": "Observers",
     "Observer": "Observer",
     "Active": "Active",
-    "Inactive": "Inactive"
+    "Inactive": "Inactive",
+    "New report": "New report",
+    "Edit report": "Edit report",
+    "Current file": "Current file",
+    "Download file": "Download file",
+    "New file": "New file",
+    "reportUpdate.success": "The report has been successfully updated.",
+    "reportCreation.success": "The report has been created successfully.",
+    "reportUpdate.error": "The update of the report has been unsuccessful.",
+    "reportCreation.error": "The creation of the report has been unsuccessful."
 }

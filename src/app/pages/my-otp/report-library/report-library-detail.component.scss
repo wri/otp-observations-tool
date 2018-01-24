@@ -1,0 +1,13 @@
+@import 'src/settings.scss';
+
+:host {
+  otp-loader {
+    display: block;
+    text-align: center;
+  }
+
+  a[download] {
+    color: $color-primary;
+    text-decoration: underline;
+  }
+}

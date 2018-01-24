@@ -1,0 +1,9 @@
+:host {
+  display: block;
+
+  otp-table {
+    /deep/ a.action[download] {
+      margin-right: 12px !important;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+<otp-loader *ngIf="loading" overlay fixed></otp-loader>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
+  <div class="c-container -j-between -t-d-column -t-a-start">
+    <h2 *ngIf="!report.id">{{'New report' | translate}}</h2>
+    <h2 *ngIf="report.id">{{'Edit report' | translate}}</h2>
+    <div class="c-button-container -j-end form-group" *otpMinTablet>
+      <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="!report.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="report.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <otp-loader *ngIf="loading"></otp-loader>
+    <!-- 1. Title -->
+    <div class="form-group -required">
+      <label for="report_title">{{'Title' | translate}}</label>
+      <input id="report_title" type="text" class="form-control" name="report_title" [(ngModel)]="report.title" #report_title="ngModel" [required]="true" />
+      <div *ngIf="f.submitted && !report_title.valid" class="help-text">{{'Please enter the name' | translate}}</div>
+    </div>
+
+    <!-- 2. Current file -->
+    <div *ngIf="report.id" class="form-group">
+      <label>{{'Current file' | translate}}</label>
+      <a href="{{apiUrl}}{{report.attachment.url}}" target="_blank" download>{{'Download file' | translate}}</a>
+    </div>
+
+    <!-- 2. File -->
+    <div [ngClass]="{ 'form-group': true, '-required': !report.id }">
+      <label *ngIf="report.id" for="report_file">{{'New file' | translate}}</label>
+      <label *ngIf="!report.id" for="report_file">{{'File' | translate}}</label>
+      <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="report.attachment" #report_file="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
+      <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 5MB' | translate}}</div>
+      <div *ngIf="f.submitted && !report_file.valid" class="help-text">{{'The file is not valid' | translate}}</div>
+    </div>
+
+    <!-- 3. Publication date -->
+    <div class="form-group -required">
+      <label for="report_date">{{'Publication date' | translate}}</label>
+      <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="report['publication-date']" #report_date="ngModel" [required]="true"></otp-datepicker>
+      <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+      <div class="c-button-container -j-end form-group">
+        <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        <button *ngIf="!report.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+        <button *ngIf="report.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+      </div>
+    </div>
+
+    <otp-action-bar *otpMaxTablet>
+      <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="!report.id"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="report.id"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+    </otp-action-bar>
+  </div>
+
+</form>

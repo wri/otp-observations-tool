@@ -1,3 +1,5 @@
+import { Router, ActivatedRoute } from '@angular/router';
+import { ObservationReport } from 'app/models/observation_report';
 import { environment } from 'environments/environment';
 import { Component, AfterViewInit } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
@@ -16,7 +18,9 @@ export class ReportLibraryComponent extends TableFilterBehavior implements After
 
   constructor(
     protected service: ObservationReportsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     super();
   }
@@ -39,4 +43,13 @@ export class ReportLibraryComponent extends TableFilterBehavior implements After
     super.ngAfterViewInit();
   }
 
+  onClickNewReport() {
+    // Without relativeTo, the navigation doesn't work properly
+    this.router.navigate(['new'], { relativeTo: this.route });
+  }
+
+  onEdit(report: ObservationReport) {
+    // Without relativeTo, the navigation doesn't work properly
+    this.router.navigate([`edit/${report.id}`], { relativeTo: this.route });
+  }
 }

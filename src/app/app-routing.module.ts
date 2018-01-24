@@ -1,3 +1,4 @@
+import { ReportLibraryDetailComponent } from 'app/pages/my-otp/report-library/report-library-detail.component';
 import { LawDetailComponent } from 'app/pages/fields/laws/law-detail.component';
 import { LawListComponent } from 'app/pages/fields/laws/law-list.component';
 import { SeverityListComponent } from 'app/pages/fields/severities/severity-list.component';
@@ -92,7 +93,15 @@ const routes: Routes = [
           {
             path: 'reports',
             component: ReportLibraryComponent
-          }
+          },
+          {
+            path: 'reports/new',
+            component: ReportLibraryDetailComponent
+          },
+          {
+            path: 'reports/edit/:id',
+            component: ReportLibraryDetailComponent
+          },
           // {
           //   path: 'observations',
           //   children: observationsChildren

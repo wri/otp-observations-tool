@@ -61,11 +61,13 @@ export class DatepickerComponent implements Validator, ControlValueAccessor, Aft
     });
   }
 
-  writeValue(date: Date): void {
+  writeValue(date: Date | string): void {
     if (date === null || date === undefined) {
       this.date = null;
     } else if (typeof date === 'object') {
       this.date = date;
+    } else if (typeof date === 'string') {
+      this.date = new Date(date);
     }
 
     if (this.flatpickr) {
