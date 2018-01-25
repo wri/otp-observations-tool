@@ -498,7 +498,7 @@ export class ObservationDetailComponent {
     }
   }
 
-  get reportChoice() { return this.observation ? this.observation['observation-report'] : this._reportChoice; }
+  get reportChoice() { return this.observation ? (this.observation['observation-report'] || null) : this._reportChoice; }
   set reportChoice(reportChoice) {
     if (this.observation) {
       this.observation['observation-report'] = reportChoice;
