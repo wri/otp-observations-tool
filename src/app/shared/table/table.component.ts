@@ -29,6 +29,7 @@ export class TableComponent implements AfterContentInit {
 
   @Output() change = new EventEmitter<void>();
 
+  previousState: JsonApiParams;
   loading = false;
   columns: any[] = [];
   sortColumn: any; // Column used for sorting the table
@@ -80,9 +81,9 @@ export class TableComponent implements AfterContentInit {
           this.columns.push(column);
         }
 
-
-        // We eventually set the default sort
-        if (this.defaultSort) {
+        if (this.previousState) {
+          this.restoreState();
+        } else if (this.defaultSort) { // We eventually set the default sort
           const sortColumnProp = this.defaultSort.match(/-?(.*)/)[1];
           const sortColumn = this.columns.find(c => c.prop === sortColumnProp);
           const isDesc = !!this.defaultSort.match(/(-?).*/)[1].length;
@@ -98,7 +99,7 @@ export class TableComponent implements AfterContentInit {
         // If the columns are dynamically added or removed
         // the current sorting might not be available anymore
         // so we remove it
-        if (this.sortColumn && !this.columns.find(c => c.props === this.sortColumn.prop)) {
+        if (this.sortColumn && !this.columns.find(c => c.prop === this.sortColumn.prop)) {
           this.sortColumn = null;
           this.change.emit();
         }
@@ -233,6 +234,24 @@ export class TableComponent implements AfterContentInit {
     }
 
     return params;
+  }
+
+  /**
+   * Restore the state of the table
+   */
+  restoreState() {
+    if (this.previousState.sort) {
+      const sortColumnProp = this.previousState.sort.match(/-?(.*)/)[1];
+      const sortColumn = this.columns.find(c => c.prop.replace(/[\[\]]/g, '') === sortColumnProp);
+      const isDesc = !!this.previousState.sort.match(/(-?).*/)[1].length;
+
+      if (sortColumn) {
+        this.sortColumn = sortColumn;
+        this.sortOrder = isDesc ? 'desc' : 'asc';
+      }
+    }
+
+    this.change.emit();
   }
 
   /**
