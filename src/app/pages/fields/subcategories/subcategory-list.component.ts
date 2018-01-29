@@ -13,6 +13,7 @@ import { Component } from '@angular/core';
 export class SubcategoryListComponent extends TableFilterBehavior {
 
   typeFilterValues: any = [];
+  requiredLocationFilterValues: any = [];
 
   constructor(
     protected service: SubcategoriesService,
@@ -22,7 +23,11 @@ export class SubcategoryListComponent extends TableFilterBehavior {
     super();
 
     this.updateTypeFilterValues();
-    this.translateService.onLangChange.subscribe(() => this.updateTypeFilterValues());
+    this.updateRequiredLocationFilterValues();
+    this.translateService.onLangChange.subscribe(() => {
+      this.updateTypeFilterValues();
+      this.updateRequiredLocationFilterValues();
+    });
   }
 
   /**
@@ -43,6 +48,27 @@ export class SubcategoryListComponent extends TableFilterBehavior {
         .map(key => ({ [key]: values[key] }))
         .reduce((res, filter) => Object.assign(res, filter), {});
     }).then(typeFilterValues => this.typeFilterValues = typeFilterValues);
+  }
+
+
+  /**
+   * Update the values for the required location filter
+   * according to the current language
+   */
+  async updateRequiredLocationFilterValues() {
+    await Promise.all([
+      this.translateService.get('Yes').toPromise(),
+      this.translateService.get('No').toPromise()
+    ]).then(([yes, no]) => {
+      const values = {
+        [yes]: true,
+        [no]: false
+      };
+      return Object.keys(values)
+        .sort()
+        .map(key => ({ [key]: values[key] }))
+        .reduce((res, filter) => Object.assign(res, filter), {});
+    }).then(requiredLocationFilterValues => this.requiredLocationFilterValues = requiredLocationFilterValues);
   }
 
 }

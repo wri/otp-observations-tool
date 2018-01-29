@@ -9,6 +9,7 @@ export class Subcategory extends JsonApiModel {
 
   @Attribute() name: string;
   @Attribute() details: string;
+  @Attribute() 'location-required': boolean;
   @HasMany() severities: Severity[];
 
   @BelongsTo() category: Category;

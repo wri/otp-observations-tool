@@ -272,5 +272,10 @@
     "reportUpdate.success": "The report has been successfully updated.",
     "reportCreation.success": "The report has been created successfully.",
     "reportUpdate.error": "The update of the report has been unsuccessful.",
-    "reportCreation.error": "The creation of the report has been unsuccessful."
+    "reportCreation.error": "The creation of the report has been unsuccessful.",
+    "Yes": "Yes",
+    "No": "No",
+    "Did this observation occur at a physical place?": "Did this observation occur at a physical place?",
+    "Location information": "Location information",
+    "Required location": "Required location"
 }

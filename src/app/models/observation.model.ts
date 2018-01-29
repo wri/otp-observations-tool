@@ -33,6 +33,8 @@ export class Observation extends JsonApiModel {
   @Attribute() 'created-at'?: Date;
   @Attribute() 'updated-at'?: Date;
   @Attribute() 'actions-taken'?: string;
+  @Attribute() 'location-information'?: string;
+  @Attribute() 'is-physical-place': boolean;
 
   @BelongsTo() fmu?: Fmu;
   @BelongsTo() law?: Law;
