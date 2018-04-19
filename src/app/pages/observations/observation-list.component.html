@@ -15,7 +15,7 @@
   <a class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
 </div>
 
-<otp-table [caption]="'Observations' | translate">
+<otp-table [caption]="'Observations' | translate" defaultSort="-publication-date">
   <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
   <otp-table-column [name]="'Date' | translate" prop="publication-date">
     <ng-template let-value="value" table-cell-template>
