@@ -761,8 +761,6 @@ export class ObservationDetailComponent {
    * @returns {boolean}
    */
   isDisabled(): boolean {
-    const isAdmin = this.authService.isAdmin();
-
     // The user is creating an observation, the form
     // is not disabled
     if (!this.route.snapshot.params.id) {
@@ -773,17 +771,24 @@ export class ObservationDetailComponent {
       return true;
     }
 
-    // If the user is an admin and the observation
-    // is linked to their organization, then the form is
+    // If the observation is linked to their organization, then the form is
     // not disabled
-    if (isAdmin
-      && this.observation.observers.find(o => o.id === this.authService.userObserverId)) {
-      return false;
+    return !this.observation.observers.find(o => o.id === this.authService.userObserverId);
+  }
+
+  /**
+   * Return whether the user can submit the observation
+   * for review
+   * @returns {boolean}
+   */
+  canSubmitForReview(): boolean {
+    const isAdmin = this.authService.isAdmin();
+
+    if (isAdmin) {
+      return !!this.observation.observers.find(o => o.id === this.authService.userObserverId)
     }
 
-    // If this is a standard user, only the person
-    // who edited it can edit it
-    return !this.observation.user || this.observation.user.id !== this.authService.userId;
+    return this.observation.user && this.observation.user.id === this.authService.userId;
   }
 
   /**

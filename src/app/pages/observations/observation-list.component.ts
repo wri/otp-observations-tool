@@ -125,20 +125,11 @@ export class ObservationListComponent extends TableFilterBehavior {
    * @returns {boolean}
    */
   canEdit(observation: Observation): boolean {
-    const isAdmin = this.authService.isAdmin();
-
     if (observation['validation-status'] !== 'Created') {
       return false;
     }
 
-    // Admin users can only edit observations whose observers contain
-    // theirs
-    if (isAdmin) {
-      return !!observation.observers.find(o => o.id === this.authService.userObserverId);
-    }
-
-    // Standard users can only edit observations they've created
-    return observation.user && observation.user.id === this.authService.userId;
+    return !!observation.observers.find(o => o.id === this.authService.userObserverId);
   }
 
   shortenText(text: string): string {
