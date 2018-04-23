@@ -782,6 +782,8 @@ export class ObservationDetailComponent {
    * @returns {boolean}
    */
   canSubmitForReview(): boolean {
+    if (!this.observation) return true;
+
     const isAdmin = this.authService.isAdmin();
 
     if (isAdmin) {
