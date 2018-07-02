@@ -107,6 +107,7 @@ export class ObservationDetailComponent {
   _longitude: number; // Only for type operator
   _fmu: Fmu = null; // Only for type operator
   _government: Government = null; // Only for type government
+  _law: Law = null; // Only for type operator
   _actions: string;
   _validationStatus: string;
   _locationInformation: string;
@@ -115,7 +116,6 @@ export class ObservationDetailComponent {
   report: ObservationReport = this.datastoreService.createRecord(ObservationReport, {});
   // Report choosed between options
   _reportChoice: ObservationReport = null;
-  law: Law = null; // Only for type operator
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -223,7 +223,7 @@ export class ObservationDetailComponent {
             // match any of the objects of this.laws, so we search for the "same" model
             // and set it
             if (this.observation && this.observation.country === country
-              && this.observation.subcategory === this.subcategory) {
+              && this.observation.subcategory === this.subcategory && this.observation.law) {
               this.law = this.laws.find(law => law.id === this.observation.law.id);
             } else {
               this.law = null;
@@ -349,7 +349,7 @@ export class ObservationDetailComponent {
           // match any of the objects of this.laws, so we search for the "same" model
           // and set it
           if (this.observation && this.observation.country === this.country
-            && this.observation.subcategory === subcategory) {
+            && this.observation.subcategory === subcategory && this.observation.law) {
             this.law = this.laws.find(law => law.id === this.observation.law.id);
           } else {
             this.law = null;
@@ -427,6 +427,15 @@ export class ObservationDetailComponent {
       this.observation['litigation-status'] = litigationStatus;
     } else {
       this._litigationStatus = litigationStatus;
+    }
+  }
+
+  get law() { return this.observation ? this.observation.law : this._law; }
+  set law(law) {
+    if (this.observation) {
+      this.observation.law = law;
+    } else {
+      this._law = law;
     }
   }
 
