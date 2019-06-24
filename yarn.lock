@@ -348,9 +348,10 @@
   version "2.53.42"
   resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-2.53.42.tgz#74cb77fb6052edaff2a8984ddafd88d419f25cac"
 
-a11y-dialog@^3.0.0:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-3.0.2.tgz#9b9a4e91d87a756490a36707e210c259d1d83fec"
+a11y-dialog@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-4.0.1.tgz#41b45d04793f4064c9df3b044160d9fd006f4c0f"
+  integrity sha512-JsYMIaoZt7nZM1oDbxLBijyl09uZa91+UdPF+P9YadmmdtaVYx44v131UcqAhN48jNp8/BGV/80uMsBacPo2gg==
 
 abbrev@1:
   version "1.1.0"

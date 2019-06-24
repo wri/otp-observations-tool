@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ContentChild, ElementRef, OnInit } from '@angular/core';
-import A11yDialog from 'a11y-dialog';
+import * as A11yDialog from 'a11y-dialog';
 
 @Component({
   selector: 'otp-modal',

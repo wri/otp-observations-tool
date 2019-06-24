@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import cloneDeep from 'lodash/cloneDeep';
+import * as cloneDeep from 'lodash/cloneDeep';
 import EXIF from 'exif-js';
 import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
