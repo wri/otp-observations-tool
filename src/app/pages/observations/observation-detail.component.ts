@@ -663,9 +663,10 @@ export class ObservationDetailComponent {
     this.longitude = e.latlng.lng;
   }
 
-  onChangePhoto(e: Event) {
-    const photo = (<HTMLInputElement>e.target).files[0];
+  onChangePhoto(e: any) {
+    const photo = e.target.files[0];
     const self = this;
+
     EXIF.getData(photo, async function () {
       // We get the coordinated in minutes, seconds
       const minLatitude: any[] = EXIF.getTag(this, 'GPSLatitude');
