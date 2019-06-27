@@ -58,6 +58,9 @@ export class RegisterComponent implements OnInit {
     // the payload
     delete payload.user.manager_role;
 
+    // We also remove the attribute relative to consentment
+    delete payload.user.has_rights;
+
     this.http.post(`${environment.apiUrl}/register`, payload)
       .map(response => response.json())
       .toPromise()

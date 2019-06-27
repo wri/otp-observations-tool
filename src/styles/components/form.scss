@@ -43,6 +43,8 @@
         font-size: $font-size-default;
         font-weight: $font-weight-default;
         text-transform: uppercase;
+        max-width: calc(100% - 45px);
+        vertical-align: top;
       }
 
       input,
