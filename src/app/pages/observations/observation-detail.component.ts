@@ -158,7 +158,7 @@ export class ObservationDetailComponent {
           // If we're editing an observation, the object Subcategory of the observation won't
           // match any of the objects of this.subcategories, so we search for the "same" model
           // and set it
-          if (this.observation) {
+          if (this.observation && this.observation.subcategory) {
             this.subcategory = this.subcategories.find((subcategory) => subcategory.id === this.observation.subcategory.id);
           }
         })
@@ -205,7 +205,7 @@ export class ObservationDetailComponent {
             // If we're editing an observation, the object Operator of the observation won't
             // match any of the objects of this.operators, so we search for the "same" model
             // and set it
-            if (this.observation && this.observation.country === country) {
+            if (this.observation && this.observation.country === country && this.observation.operator) {
               this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
             } else {
               this.operatorChoice = null;

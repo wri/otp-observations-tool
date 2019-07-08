@@ -1,5 +1,5 @@
 <otp-loader *ngIf="loading" overlay fixed></otp-loader>
-<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && f.valid && onSubmit()" #f="ngForm" novalidate>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && f.valid && onSubmitForReview()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 *ngIf="isDisabled()">{{'Observation details' | translate}}</h2>
     <h2 *ngIf="!isDisabled() && !observation">{{'New observation' | translate}}</h2>
@@ -7,8 +7,8 @@
     <div class="c-button-container -j-end form-group" *otpMinTablet>
       <button *ngIf="isDisabled()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
       <button *ngIf="!isDisabled() && observation" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="!isDisabled() && canSubmitForReview() && observation" type="button" (click)="onSubmitForReview()" class="c-button -secondary">{{'Submit for review' | translate}}</button>
-      <button *ngIf="!isDisabled() && observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+      <button *ngIf="!isDisabled() && canSubmitForReview() && observation" type="submit" class="c-button -secondary">{{'Submit for review' | translate}}</button>
+      <button *ngIf="!isDisabled() && observation"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
     </div>
   </div>
 
@@ -194,7 +194,7 @@
     <fieldset>
       <legend>{{'Location' | translate}}</legend>
       <div class="fieldset-container">
-        <ng-template [ngIf]="subcategory === null || subcategory['location-required'] === true">
+        <ng-template [ngIf]="subcategory === null || subcategory === undefined || subcategory['location-required'] === true">
           <!-- 7.0. Physical place -->
           <div class="form-group -radio">
             <p>{{'Did this observation occur at a physical place?' | translate}}</p>
@@ -205,9 +205,9 @@
 
         <ng-template [ngIf]="physicalPlace">
           <!-- 7.1. Forest management unit -->
-          <div [ngClass]="{ 'form-group': true, '-required': !!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0 || subcategory === null || subcategory['location-required'] === true) }">
+          <div [ngClass]="{ 'form-group': true, '-required': !!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0 || subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
             <label for="fmu_field">{{'Forest management unit' | translate}}</label>
-            <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="!!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0 || subcategory === null || subcategory['location-required'] === true)" [disabled]="isDisabled()">
+            <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="!!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0 || subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
               <option [value]="null" disabled>{{'Select a FMU' | translate}}</option>
               <option *ngFor="let fmu of fmus" [ngValue]="fmu">{{ fmu.name }}</option>
             </select>
@@ -244,19 +244,19 @@
               <div class="row">
                 <!-- 7.2.1. Coordinates -->
                 <div class="small-12 medium-6 columns">
-                  <div class="form-group" *ngIf="f.submitted && !fmu && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory['location-required'] === true)">
+                  <div class="form-group" *ngIf="f.submitted && !fmu && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)">
                     <div class="help-text">{{'Please select a FMU or enter coordinates below' | translate}}</div>
                   </div>
-                  <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory['location-required'] === true) }">
+                  <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
                     <label for="latitude_field">{{'Latitude' | translate}}</label>
-                    <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" number [required]="!this.fmu && (subcategory === null || subcategory['location-required'] === true)" />
+                    <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" number [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
                     <div *ngIf="f.submitted && latitude_field.errors?.number" class="help-text">{{'Please enter a valid number' | translate}}</div>
                     <div *ngIf="f.submitted && !latitude_field.valid" class="help-text">{{'Please enter a latitude' | translate}}</div>
                   </div>
 
-                  <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory['location-required'] === true) }">
+                  <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
                     <label for="longitude_field">{{'Longitude' | translate}}</label>
-                    <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" number [required]="!this.fmu && (subcategory === null || subcategory['location-required'] === true)" />
+                    <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" number [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
                     <div *ngIf="f.submitted && longitude_field.errors?.number" class="help-text">{{'Please enter a valid number' | translate}}</div>
                     <div *ngIf="f.submitted && !longitude_field.valid" class="help-text">{{'Please enter a longitude' | translate}}</div>
                   </div>
@@ -781,18 +781,18 @@
       <div class="c-button-container -j-end form-group">
         <button *ngIf="isDisabled()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
         <button *ngIf="!isDisabled()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-        <button *ngIf="!isDisabled() && canSubmitForReview()" type="button" (click)="onSubmitForReview()" class="c-button -secondary">{{'Submit for review' | translate}}</button>
-        <button *ngIf="!isDisabled() && !observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-        <button *ngIf="!isDisabled() && observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+        <button *ngIf="!isDisabled() && canSubmitForReview()" type="submit" class="c-button -secondary">{{'Submit for review' | translate}}</button>
+        <button *ngIf="!isDisabled() && !observation" type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
+        <button *ngIf="!isDisabled() && observation" type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
       <button *ngIf="isDisabled()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
       <button *ngIf="!isDisabled()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="!isDisabled() && canSubmitForReview()" type="button" (click)="onSubmitForReview()" class="c-button -secondary">{{'Submit for review' | translate}}</button>
-      <button *ngIf="!isDisabled() && !observation"  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="!isDisabled() && observation"  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+      <button *ngIf="!isDisabled() && canSubmitForReview()" type="submit" class="c-button -secondary">{{'Submit for review' | translate}}</button>
+      <button *ngIf="!isDisabled() && !observation" type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="!isDisabled() && observation" type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
     </otp-action-bar>
   </div>
 
