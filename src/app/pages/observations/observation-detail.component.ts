@@ -777,7 +777,7 @@ export class ObservationDetailComponent {
       return false;
     }
 
-    if (this.observation['validation-status'] === 'Approved' || this.observation['validation-status'] === 'Rejected') {
+    if (this.observation['validation-status'] !== 'Created' && this.observation['validation-status'] !== 'Under revision') {
       return true;
     }
 

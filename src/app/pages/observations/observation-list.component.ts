@@ -125,7 +125,7 @@ export class ObservationListComponent extends TableFilterBehavior {
    * @returns {boolean}
    */
   canEdit(observation: Observation): boolean {
-    if (observation['validation-status'] === 'Approved' || observation['validation-status'] === 'Rejected') {
+    if (observation['validation-status'] !== 'Created' && observation['validation-status'] !== 'Under revision') {
       return false;
     }
 
