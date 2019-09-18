@@ -32,12 +32,12 @@ import { ObservationDocumentsService } from 'app/services/observation-documents.
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
-    iconSize: [25, 41],
-    iconAnchor:  [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-    iconUrl: 'assets/marker-icon.png',
-    shadowUrl: 'assets/marker-shadow.png'
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+  iconUrl: 'assets/marker-icon.png',
+  shadowUrl: 'assets/marker-shadow.png'
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
@@ -152,16 +152,16 @@ export class ObservationDetailComponent {
         }
       });
 
-    this.subcategoriesService.getByType(<'operator'|'government'>type, { include: 'severities,category' })
+    this.subcategoriesService.getByType(<'operator' | 'government'>type, { include: 'severities,category' })
       .then(subcategories => this.subcategories = subcategories)
       .then(() => {
-          // If we're editing an observation, the object Subcategory of the observation won't
-          // match any of the objects of this.subcategories, so we search for the "same" model
-          // and set it
-          if (this.observation && this.observation.subcategory) {
-            this.subcategory = this.subcategories.find((subcategory) => subcategory.id === this.observation.subcategory.id);
-          }
-        })
+        // If we're editing an observation, the object Subcategory of the observation won't
+        // match any of the objects of this.subcategories, so we search for the "same" model
+        // and set it
+        if (this.observation && this.observation.subcategory) {
+          this.subcategory = this.subcategories.find((subcategory) => subcategory.id === this.observation.subcategory.id);
+        }
+      })
       .catch((err) => console.error(err)); // TODO: visual feedback
   }
 
@@ -190,7 +190,7 @@ export class ObservationDetailComponent {
 
             // We update the list of options for the relevant operators field
             this._relevantOperatorsSelection = this.observation && this.observation.country.id === country.id
-              ? this.observation['relevant-operators'].map(relevantOperator => operators.findIndex(o => o.id === relevantOperator.id))
+              ? (this.observation['relevant-operators'] || []).map(relevantOperator => operators.findIndex(o => o.id === relevantOperator.id))
               : [];
             this.relevantOperatorsOptions = operators
               .map((operator, index) => ({ id: index, name: operator.name }));
@@ -585,15 +585,15 @@ export class ObservationDetailComponent {
     // We load the list of reports we can use
     this.observationReportsService.getAll({
       sort: 'title',
-      filter: {observer_id: this.authService.userObserverId }
+      filter: { observer_id: this.authService.userObserverId }
     }).then(reports => this.reports = reports)
       .then(() => {
-          // If we're editing an observation, the object ObservationReport of the observation won't
-          // match any of the objects of this.reports, so we search for the "same" model
-          // and set it
-          if (this.observation) {
-            this.reportChoice = this.reports.find((report) => report.id === this.observation['observation-report'].id);
-          }
+        // If we're editing an observation, the object ObservationReport of the observation won't
+        // match any of the objects of this.reports, so we search for the "same" model
+        // and set it
+        if (this.observation) {
+          this.reportChoice = this.reports.find((report) => report.id === this.observation['observation-report'].id);
+        }
       })
       .catch(err => console.error(err)); // TODO: visual feedback
 
@@ -606,28 +606,28 @@ export class ObservationDetailComponent {
         // tslint:disable-next-line:max-line-length
         include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report,law,user,relevant-operators'
       }).then((observation) => {
-          this.observation = observation;
+        this.observation = observation;
 
-          // FIXME: angular2-jsonapi should return a Date object but instead return
-          // a string for some reason
-          this.observation['publication-date'] = new Date(this.observation['publication-date']);
-          this.observation['created-at'] = new Date(this.observation['created-at']);
-          this.observation['updated-at'] = new Date(this.observation['updated-at']);
+        // FIXME: angular2-jsonapi should return a Date object but instead return
+        // a string for some reason
+        this.observation['publication-date'] = new Date(this.observation['publication-date']);
+        this.observation['created-at'] = new Date(this.observation['created-at']);
+        this.observation['updated-at'] = new Date(this.observation['updated-at']);
 
-          // We set the list of additional observer ids for the additional observers field
-          const additionalObserversIds = this.observation.observers
-            .filter(observer => observer.id !== this.authService.userObserverId)
-            .map(o => o.id);
-          this._additionalObserversSelection = this.observers.map((observer, index) => {
-            return additionalObserversIds.indexOf(observer.id) !== -1 ? index : null;
-          }).filter(v => v !== null);
+        // We set the list of additional observer ids for the additional observers field
+        const additionalObserversIds = this.observation.observers
+          .filter(observer => observer.id !== this.authService.userObserverId)
+          .map(o => o.id);
+        this._additionalObserversSelection = this.observers.map((observer, index) => {
+          return additionalObserversIds.indexOf(observer.id) !== -1 ? index : null;
+        }).filter(v => v !== null);
 
-          // We force some of the attributes to execute the setters
-          this.type = this.observation['observation-type'];
-          this.latitude = this.observation.lat;
-          this.longitude = this.observation.lng;
-          this.operatorChoice = this.observation.operator;
-        })
+        // We force some of the attributes to execute the setters
+        this.type = this.observation['observation-type'];
+        this.latitude = this.observation.lat;
+        this.longitude = this.observation.lng;
+        this.operatorChoice = this.observation.operator;
+      })
         .catch(() => {
           // The only reason the request should fail is that the user
           // don't have the permission to edit this observation
@@ -940,7 +940,7 @@ export class ObservationDetailComponent {
         observers: this.observers.filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1),
         'actions-taken': this.actions,
         'validation-status': this.validationStatus,
-        'concern-opinion':this.opinion
+        'concern-opinion': this.opinion
       };
 
       if (this.type === 'operator') {
