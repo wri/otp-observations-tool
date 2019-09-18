@@ -37,7 +37,7 @@
     "core-js": "^2.4.1",
     "exif-js": "^2.3.0",
     "express": "^4.15.2",
-    "flatpickr": "^4.2.3",
+    "flatpickr": "~4.2.3",
     "foundation-sites": "^6.3.1",
     "leaflet": "^1.2.0",
     "lodash": "^4.17.4",

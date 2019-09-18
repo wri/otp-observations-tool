@@ -1,7 +1,9 @@
 import { Component, forwardRef, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import flatpickr from 'flatpickr';
-import Locale from 'flatpickr/dist/l10n';
+import { CustomLocale } from 'flatpickr/dist/l10n/types/locale';
+import fr from 'flatpickr/dist/l10n/fr.js';
+import en from 'flatpickr/dist/l10n/default.js';
 import { dateFormat } from '../formatted-date/formatted-date.component';
 
 const REQUIRED_VALIDATOR: any = {
@@ -28,16 +30,16 @@ export class DatepickerComponent implements Validator, ControlValueAccessor, Aft
   @Input() name: string;
 
   @Input()
-  get disabled(): boolean|string { return this._disabled; }
+  get disabled(): boolean | string { return this._disabled; }
 
-  set disabled(value: boolean|string) {
+  set disabled(value: boolean | string) {
     this._disabled = value != null && value !== false && `${value}` !== 'false';
   }
 
   @Input()
-  get required(): boolean|string { return this._required; }
+  get required(): boolean | string { return this._required; }
 
-  set required(value: boolean|string) {
+  set required(value: boolean | string) {
     this._required = value != null && value !== false && `${value}` !== 'false';
   }
 
@@ -51,10 +53,10 @@ export class DatepickerComponent implements Validator, ControlValueAccessor, Aft
 
   ngAfterViewInit(): void {
     this.flatpickr = flatpickr(`#${this.id}`, {
-      locale: Locale[<any>(localStorage.getItem('lang') || 'en')],
+      locale: <CustomLocale>((localStorage.getItem('lang') || 'en') === 'fr' ? fr : en),
       dateFormat: dateFormat,
       defaultDate: this.date,
-      onChange: ([ date ]) => {
+      onChange: ([date]) => {
         this.date = date;
         this.propagateChange();
       }
@@ -83,7 +85,7 @@ export class DatepickerComponent implements Validator, ControlValueAccessor, Aft
     this.touchCallback = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {}
+  setDisabledState(isDisabled: boolean): void { }
 
   validate(c: AbstractControl): ValidationErrors {
     if (this.date || !this.required) {
