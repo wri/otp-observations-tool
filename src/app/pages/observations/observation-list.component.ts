@@ -67,7 +67,7 @@ export class ObservationListComponent extends TableFilterBehavior {
       this.translateService.get('Under revision').toPromise(),
       this.translateService.get('Approved').toPromise(),
       this.translateService.get('Rejected').toPromise()
-    ]).then(([ created, ready, revision, approved, rejected]) => {
+    ]).then(([created, ready, revision, approved, rejected]) => {
       // We sort the values by alphabetical order
       const values = {
         [created]: 'Created',
@@ -125,7 +125,7 @@ export class ObservationListComponent extends TableFilterBehavior {
    * @returns {boolean}
    */
   canEdit(observation: Observation): boolean {
-    if (observation['validation-status'] !== 'Created') {
+    if (observation['validation-status'] === 'Approved' || observation['validation-status'] === 'Rejected') {
       return false;
     }
 

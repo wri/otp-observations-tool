@@ -777,7 +777,7 @@ export class ObservationDetailComponent {
       return false;
     }
 
-    if (this.observation['validation-status'] !== 'Created') {
+    if (this.observation['validation-status'] === 'Approved' || this.observation['validation-status'] === 'Rejected') {
       return true;
     }
 
@@ -795,12 +795,13 @@ export class ObservationDetailComponent {
     if (!this.observation) return true;
 
     const isAdmin = this.authService.isAdmin();
+    const isAlreadySubmitted = this.observation['validation-status'] !== 'Created';
 
     if (isAdmin) {
-      return !!this.observation.observers.find(o => o.id === this.authService.userObserverId)
+      return !!this.observation.observers.find(o => o.id === this.authService.userObserverId) && !isAlreadySubmitted;
     }
 
-    return this.observation.user && this.observation.user.id === this.authService.userId;
+    return this.observation.user && this.observation.user.id === this.authService.userId && !isAlreadySubmitted;
   }
 
   /**
@@ -927,6 +928,10 @@ export class ObservationDetailComponent {
           this.observation.fmu = null;
         }
       }
+
+      this.observation['validation-status'] = this.validationStatus === 'Under revision'
+        ? 'Ready for revision'
+        : this.validationStatus;
 
       observation = this.observation;
     } else {
