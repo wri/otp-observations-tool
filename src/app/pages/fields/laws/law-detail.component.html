@@ -30,7 +30,7 @@
         <option [value]="null" disabled>{{'Select a subcategory' | translate}}</option>
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
-      <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a subcategory' | translate}}</div>
+      <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'lawDetail.selectSubcategory' | translate}}</div>
     </div>
 
     <!-- 3. Observation according to legal text -->

@@ -20,7 +20,7 @@
         <option value="operator">{{'Operator' | translate}}</option>
         <option value="government">{{'Government' | translate}}</option>
       </select>
-      <div *ngIf="f.submitted && observation_type.invalid" class="help-text">Please select an observation type</div>
+      <div *ngIf="f.submitted && observation_type.invalid" class="help-text">{{'Please select an observation type' | translate}}</div>
       <p class="note">
         {{ 'observation.type.note' | translate }}
       </p>
@@ -160,7 +160,7 @@
 
     <!-- 4. Additional monitors -->
     <div class="form-group">
-      <label>Additional monitors</label>
+      <label>{{'Additional monitors' | translate}}</label>
       <ss-multiselect-dropdown [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers" [disabled]="isDisabled()"></ss-multiselect-dropdown>
       <p class="note">
         {{ 'observation.additionalMonitors.note' | translate }}
@@ -617,7 +617,7 @@
         <option [value]="null" disabled>{{'Select a governance problem' | translate}}</option>
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
-      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">Please select a governance problem</div>
+      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">{{'Please select a governance problem' | translate}}</div>
       <p class="note">
         {{ 'observation.governanceProblem.note' | translate }}
       </p>
@@ -687,7 +687,7 @@
           </div>
           <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
             <!-- 8.2.1 Evidence -->
-            <p>{{'When you upload new file, it will appear in the list of evidence.' | translate}}</p>
+            <p>{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
             <!-- This input is used to prevent the submitting until evidence are uploaded -->
             <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
             <div class="form-group" *ngIf="f.submitted && !documents.length">
@@ -740,7 +740,7 @@
 
     <!-- 11. Government entity comments -->
     <div class="form-group">
-      <label for="concern_opinion">{{'Comments from the government entity' | translate}}</label>
+      <label for="concern_opinion">{{'observation.commentsFromGovernment.title' | translate}}</label>
       <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
       <p class="note">
         {{ 'observation.commentsFromGovernment.note' | translate }}
@@ -759,7 +759,7 @@
 
     <!-- 13. Metadata -->
     <fieldset *ngIf="observation">
-      <legend>{{'Metadata'}}</legend>
+      <legend>{{'Metadata' | translate}}</legend>
       <div class="fieldset-container">
         <!-- 13.1. Last modification by -->
         <div class="form-group">

@@ -32,7 +32,7 @@
 
     <!-- 3. Details -->
     <div class="form-group">
-      <label for="details_field">{{'Details'}}</label>
+      <label for="details_field">{{'Details' | translate}}</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="government.details" #details_field="ngModel" [disabled]="!canEdit()"></textarea>
     </div>
   </div>
