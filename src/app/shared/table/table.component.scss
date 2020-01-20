@@ -81,7 +81,7 @@
         cursor: pointer;
 
         &:first-of-type { padding-left: 20px; }
-        &:last-of-type { padding-right: 20px; }
+        &:last-of-type { padding-right: 40px; }
 
         &.-order-asc::after,
         &.-order-desc::after {
