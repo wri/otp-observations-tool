@@ -135,4 +135,8 @@ export class ObservationListComponent extends TableFilterBehavior {
   shortenText(text: string): string {
     return truncate(text, { length: 100, separator: /,?\.?;? +/ });
   }
+
+  public onClone(observation: Observation): void {
+    this.router.navigate([`../new`, { copiedId: observation.id } ], { relativeTo: this.route });
+  }
 }
