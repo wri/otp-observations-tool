@@ -206,6 +206,12 @@ export class ObservationDetailComponent {
             // match any of the objects of this.operators, so we search for the "same" model
             // and set it
             if (this.observation && this.observation.country === country && this.observation.operator) {
+            // If the observation has a "new" producer (the producer object 
+            // who is not on in the array of this.operators)
+              if (!this.operators.find((operator) => operator.id === this.observation.operator.id) &&
+                  this.observation.operator.approved) {
+                this.operators.push(this.observation.operator);
+              }
               this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
             } else {
               this.operatorChoice = null;
