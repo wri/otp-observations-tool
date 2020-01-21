@@ -2,6 +2,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
+import { environment } from 'environments/environment.dev';
+
+// declare gives Angular app access to ga function
+declare let ga: Function;
 
 const ACCEPTED_LOCALES = ['en', 'fr'];
 
@@ -31,6 +35,9 @@ export class AppComponent {
     this.router.events.subscribe(e => {
       if (e instanceof NavigationEnd) {
         const locale = this.route.snapshot.queryParams.lang;
+
+        // Send page views to Google Analytics
+        this.sendPageView(e);
 
         if (!locale || !this.isAcceptedLocale(locale)) {
           // There's no lang param in the URL...
@@ -65,6 +72,16 @@ export class AppComponent {
       }
     });
   }
+
+  private sendPageView(e: NavigationEnd): void {
+    if (environment.production) {
+      ga('set', 'page', e.urlAfterRedirects);
+      ga('send', 'pageview');
+    } else {
+      console.info(`[GA] Page view: ${e.urlAfterRedirects}`);
+    }
+  }
+
 
   /**
    * Update the lang attribute of the html tag
