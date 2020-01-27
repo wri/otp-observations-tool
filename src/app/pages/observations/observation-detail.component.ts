@@ -877,10 +877,6 @@ export class ObservationDetailComponent {
       if (!this.report.attachment) {
         resolve();
       } else {
-        // We don't forget to link the country
-        // to the operator
-        this.operator.country = this.country;
-
         // Otherwise, we upload the report first
         this.report.save()
           .toPromise()
