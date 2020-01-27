@@ -6,5 +6,6 @@
 export const environment = {
   production: false,
   apiUrl: 'http://52.44.57.176',
-  OTP_API_KEY: ''
+  OTP_API_KEY: '',
+  GOOGLE_ANALYTICS_ID: '',
 };

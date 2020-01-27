@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
-import { environment } from 'environments/environment.dev';
+import { environment } from 'environments/environment';
 
 // declare gives Angular app access to ga function
 declare let ga: Function;
@@ -25,6 +25,10 @@ export class AppComponent {
     private translateService: TranslateService
   ) {
     this.authService.loginStatus.subscribe(isLogged => this.isLogged = isLogged);
+
+    if (ga) {
+      ga('create', `${environment.GOOGLE_ANALYTICS_ID}`, 'auto');
+    }
 
     // We set the fallback language
     this.translateService.setDefaultLang('zu');
@@ -74,11 +78,14 @@ export class AppComponent {
   }
 
   private sendPageView(e: NavigationEnd): void {
+    const fullURL: string = new URL(e.urlAfterRedirects, location.origin).href;
     if (environment.production) {
-      ga('set', 'page', e.urlAfterRedirects);
-      ga('send', 'pageview');
+      if (ga) {
+        ga('set', 'page', fullURL);
+        ga('send', 'pageview');
+      }
     } else {
-      console.info(`[GA] Page view: ${e.urlAfterRedirects}`);
+      console.info(`[GA] Page view: ${fullURL}`);
     }
   }
 
