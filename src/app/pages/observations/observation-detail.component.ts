@@ -597,16 +597,20 @@ export class ObservationDetailComponent {
       })
       .catch(err => console.error(err)); // TODO: visual feedback
 
-    // If we edit an existing observation, we have a bit of
+    // If we edit an existing observation or we copy an existing observation, we have a bit of
     // code to execute
-    if (this.route.snapshot.params.id) {
+    if (this.existingObservation) {
       this.loading = true;
 
-      this.observationsService.getById(this.route.snapshot.params.id, {
+      this.observationsService.getById(this.existingObservation, {
         // tslint:disable-next-line:max-line-length
         include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report,law,user,relevant-operators'
       }).then((observation) => {
         this.observation = observation;
+        if (this.route.snapshot.params.copiedId) {
+          this.observation.id = undefined;
+          this.observation['validation-status'] = undefined;
+        }
 
         // FIXME: angular2-jsonapi should return a Date object but instead return
         // a string for some reason
@@ -639,7 +643,7 @@ export class ObservationDetailComponent {
       // We load the list of documents
       this.observationDocumentsService.getAll({
         sort: 'name',
-        filter: { observation_id: this.route.snapshot.params.id }
+        filter: { observation_id: this.existingObservation }
       }).then(documents => this.documents = documents)
         .catch(err => console.error(err)); // TODO: visual feedback
     }
@@ -763,7 +767,7 @@ export class ObservationDetailComponent {
 
   onCancel(): void {
     // Without relativeTo, the navigation doesn't work properly
-    this.router.navigate([this.observation ? '../..' : '..'], { relativeTo: this.route });
+    this.router.navigate([(this.observation && !this.isCopied) ? '../..' : '..'], { relativeTo: this.route });
   }
 
   /**
@@ -773,7 +777,7 @@ export class ObservationDetailComponent {
   isDisabled(): boolean {
     // The user is creating an observation, the form
     // is not disabled
-    if (!this.route.snapshot.params.id) {
+    if (!this.route.snapshot.params.id || this.route.snapshot.params.copiedId) {
       return false;
     }
 
@@ -786,13 +790,21 @@ export class ObservationDetailComponent {
     return !this.observation.observers.find(o => o.id === this.authService.userObserverId);
   }
 
+  public get isCopied(): boolean {
+    return this.observation && this.route.snapshot.params.copiedId;
+  }
+
+  public get existingObservation(): string {
+    return this.route.snapshot.params.id || this.route.snapshot.params.copiedId;
+  }
+
   /**
    * Return whether the user can submit the observation
    * for review
    * @returns {boolean}
    */
   canSubmitForReview(): boolean {
-    if (!this.observation) return true;
+    if (!this.observation || this.isCopied) return true;
 
     const isAdmin = this.authService.isAdmin();
     const isAlreadySubmitted = this.observation['validation-status'] !== 'Created';
@@ -844,6 +856,7 @@ export class ObservationDetailComponent {
         // we just resolve
         resolve();
       } else {
+        this.operator.country = this.country;
         // Otherwise, we upload it
         this.operator.save()
           .toPromise()
@@ -864,10 +877,6 @@ export class ObservationDetailComponent {
       if (!this.report.attachment) {
         resolve();
       } else {
-        // We don't forget to link the country
-        // to the operator
-        this.operator.country = this.country;
-
         // Otherwise, we upload the report first
         this.report.save()
           .toPromise()
@@ -911,7 +920,7 @@ export class ObservationDetailComponent {
 
     let observation: Observation;
 
-    if (this.observation) {
+    if (this.observation && !this.isCopied) {
       // We update the list of observers
       // NOTE: we make sure to add our own observer
       this.observation.observers = this.observers
@@ -987,7 +996,7 @@ export class ObservationDetailComponent {
       .then(() => observation.save().toPromise())
       .then(() => this.updateDocuments(observation))
       .then(async () => {
-        if (this.observation) {
+        if (this.observation && !this.isCopied) {
           alert(await this.translateService.get('observationUpdate.success').toPromise());
         } else {
           alert(await this.translateService.get('observationCreation.success').toPromise());
@@ -996,7 +1005,7 @@ export class ObservationDetailComponent {
         this.router.navigate(['/', 'private', 'observations']);
       })
       .catch(async (err) => {
-        if (this.observation) {
+        if (this.observation && !this.isCopied) {
           alert(await this.translateService.get('observationUpdate.error').toPromise());
         } else {
           alert(await this.translateService.get('observationCreation.error').toPromise());

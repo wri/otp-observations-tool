@@ -55,6 +55,7 @@
   "Observation": "Observation",
   "Severity": "Severity",
   "Edit": "Edit",
+  "Clone": "Clone",
   "Delete": "Delete",
   "observationDeletion.confirm": "Are you sure you want to delete the observation?",
   "observationDeletion.success": "The observation has been deleted.",

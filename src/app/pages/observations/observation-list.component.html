@@ -120,6 +120,9 @@
       <ng-template [ngIf]="!canEdit(row)">
         <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
       </ng-template>
+      <ng-template [ngIf]="observationType === 'operator'">
+        <button class="action" (click)="onClone(row)" [attr.aria-label]="'Clone' | translate"><otp-icon name="#icon-clone"></otp-icon></button>
+      </ng-template>
     </ng-template>
   </otp-table-column>
 </otp-table>
