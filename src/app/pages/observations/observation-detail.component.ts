@@ -677,8 +677,14 @@ export class ObservationDetailComponent {
    * @param {any} e
    */
   onClickMap(e: any) {
-    this.latitude = e.latlng.lat;
-    this.longitude = e.latlng.lng;
+    if (this.canSetMapPin) {
+      this.latitude = e.latlng.lat;
+      this.longitude = e.latlng.lng;
+    }
+  }
+
+  public get canSetMapPin(): boolean {
+    return !(this.fmu || (this.latitude && this.longitude));
   }
 
   onChangePhoto(e: any) {
