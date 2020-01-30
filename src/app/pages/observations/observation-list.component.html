@@ -1,129 +1,134 @@
-<div class="c-table-header">
-  <otp-filters>
-    <otp-filter [name]="'Type' | translate" [values]="typeFilterValues" prop="observation-type" default="operator" [required]="true"></otp-filter>
-    <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name"></otp-filter>
-    <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name"></otp-filter>
-    <otp-filter [name]="'Category' | translate" values="categories" prop="category-id" name-attr="name"></otp-filter>
-    <otp-filter [name]="'Subcategory' | translate" values="subcategories" prop="subcategory" name-attr="name"></otp-filter>
-    <otp-filter [name]="'Observer' | translate" values="observers" prop="observer-id" name-attr="name"></otp-filter>
-    <otp-filter [name]="'Government entity' | translate" values="governments" prop="government-id" name-attr="government-entity"></otp-filter>
-    <otp-filter [name]="'FMU' | translate" values="fmus" prop="fmu-id" name-attr="name"></otp-filter>
-    <otp-filter [name]="'Report' | translate" values="observation-reports" prop="observation-report" name-attr="title"></otp-filter>
-    <otp-filter [name]="'Status' | translate" [values]="statusFilterValues" prop="validation-status"></otp-filter>
+<otp-upload-file *ngIf="isUploading"></otp-upload-file>
 
-  </otp-filters>
+<div [hidden]="isUploading">
+  <div class="c-table-header">
+    <otp-filters>
+      <otp-filter [name]="'Type' | translate" [values]="typeFilterValues" prop="observation-type" default="operator" [required]="true"></otp-filter>
+      <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name"></otp-filter>
+      <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name"></otp-filter>
+      <otp-filter [name]="'Category' | translate" values="categories" prop="category-id" name-attr="name"></otp-filter>
+      <otp-filter [name]="'Subcategory' | translate" values="subcategories" prop="subcategory" name-attr="name"></otp-filter>
+      <otp-filter [name]="'Observer' | translate" values="observers" prop="observer-id" name-attr="name"></otp-filter>
+      <otp-filter [name]="'Government entity' | translate" values="governments" prop="government-id" name-attr="government-entity"></otp-filter>
+      <otp-filter [name]="'FMU' | translate" values="fmus" prop="fmu-id" name-attr="name"></otp-filter>
+      <otp-filter [name]="'Report' | translate" values="observation-reports" prop="observation-report" name-attr="title"></otp-filter>
+      <otp-filter [name]="'Status' | translate" [values]="statusFilterValues" prop="validation-status"></otp-filter>
+    </otp-filters>
+    <div class="table-actions">
+      <a class="c-button -secondary upload-csv" (click)="uploadCSV()">{{'Upload CSV' | translate}}</a>
+      <a class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
+    </div>
+  </div>
 
-  <a class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
-</div>
-
-<otp-table [caption]="'Observations' | translate" defaultSort="-publication-date">
-  <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
-  <otp-table-column [name]="'Date' | translate" prop="publication-date">
-    <ng-template let-value="value" table-cell-template>
-      <otp-formatted-date [date]="value"></otp-formatted-date>
-    </ng-template>
-  </otp-table-column>
-  <otp-table-column [name]="'Country' | translate" prop="country.name" [include]="true"></otp-table-column>
-  <otp-table-column [name]="'Operator' | translate" prop="operator.name" [include]="true"></otp-table-column>
-  <otp-table-column [name]="'Category' | translate" prop="[subcategory.category].name" [include]="true"></otp-table-column>
-  <otp-table-column [name]="'Subcategory' | translate" prop="subcategory.name" [include]="true"></otp-table-column>
-  <otp-table-column [name]="'Observers' | translate" prop="observers" [include]="true" [sortable]="false">
-    <ng-template let-row="row" table-cell-template>
-      <div *ngFor="let observer of row.observers">{{observer.name}}</div>
-    </ng-template>
-  </otp-table-column>
-  <ng-template [ngIf]="observationType === 'government'">
-    <otp-table-column [name]="'Government entity' | translate" prop="government.government-entity" [include]="true"></otp-table-column>
-  </ng-template>
-  <ng-template [ngIf]="observationType === 'government'">
-    <otp-table-column [name]="'Relevant operators' | translate" prop="relevant-operators" [include]="true" [sortable]="false">
+  <otp-table [caption]="'Observations' | translate" defaultSort="-publication-date" [hidden]="isUploading">
+    <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
+    <otp-table-column [name]="'Date' | translate" prop="publication-date">
+      <ng-template let-value="value" table-cell-template>
+        <otp-formatted-date [date]="value"></otp-formatted-date>
+      </ng-template>
+    </otp-table-column>
+    <otp-table-column [name]="'Country' | translate" prop="country.name" [include]="true"></otp-table-column>
+    <otp-table-column [name]="'Operator' | translate" prop="operator.name" [include]="true"></otp-table-column>
+    <otp-table-column [name]="'Category' | translate" prop="[subcategory.category].name" [include]="true"></otp-table-column>
+    <otp-table-column [name]="'Subcategory' | translate" prop="subcategory.name" [include]="true"></otp-table-column>
+    <otp-table-column [name]="'Observers' | translate" prop="observers" [include]="true" [sortable]="false">
       <ng-template let-row="row" table-cell-template>
-        <div *ngFor="let operator of row['relevant-operators']">{{operator.name}}</div>
+        <div *ngFor="let observer of row.observers">{{observer.name}}</div>
       </ng-template>
     </otp-table-column>
-  </ng-template>
-  <otp-table-column [name]="'Observation' | translate" prop="details">
-    <ng-template let-value="value" table-cell-template>
-      {{shortenText(value)}}
+    <ng-template [ngIf]="observationType === 'government'">
+      <otp-table-column [name]="'Government entity' | translate" prop="government.government-entity" [include]="true"></otp-table-column>
     </ng-template>
-  </otp-table-column>
-  <otp-table-column [name]="'Severity' | translate" prop="severity.level" [include]="true"></otp-table-column>
-  <ng-template [ngIf]="observationType === 'operator'">
-    <otp-table-column [name]="'Observation according to legal text' | translate" prop="law.written-infraction" [include]="true">
+    <ng-template [ngIf]="observationType === 'government'">
+      <otp-table-column [name]="'Relevant operators' | translate" prop="relevant-operators" [include]="true" [sortable]="false">
+        <ng-template let-row="row" table-cell-template>
+          <div *ngFor="let operator of row['relevant-operators']">{{operator.name}}</div>
+        </ng-template>
+      </otp-table-column>
+    </ng-template>
+    <otp-table-column [name]="'Observation' | translate" prop="details">
       <ng-template let-value="value" table-cell-template>
         {{shortenText(value)}}
       </ng-template>
     </otp-table-column>
-  </ng-template>
-  <otp-table-column [name]="'Actions taken by operator' | translate" prop="actions-taken">
-    <ng-template let-value="value" table-cell-template>
-      {{shortenText(value)}}
+    <otp-table-column [name]="'Severity' | translate" prop="severity.level" [include]="true"></otp-table-column>
+    <ng-template [ngIf]="observationType === 'operator'">
+      <otp-table-column [name]="'Observation according to legal text' | translate" prop="law.written-infraction" [include]="true">
+        <ng-template let-value="value" table-cell-template>
+          {{shortenText(value)}}
+        </ng-template>
+      </otp-table-column>
     </ng-template>
-  </otp-table-column>
-  <otp-table-column [name]="'Comments from the operator' | translate" prop="concern-opinion">
-    <ng-template let-value="value" table-cell-template>
-      {{shortenText(value)}}
-    </ng-template>
-  </otp-table-column>
-  <ng-template [ngIf]="observationType === 'operator'">
-    <otp-table-column [name]="'Citation' | translate" prop="pv">
+    <otp-table-column [name]="'Actions taken by operator' | translate" prop="actions-taken">
       <ng-template let-value="value" table-cell-template>
         {{shortenText(value)}}
       </ng-template>
     </otp-table-column>
-  </ng-template>
-  <ng-template [ngIf]="observationType === 'operator'">
-    <otp-table-column [name]="'Litigation status' | translate" prop="litigation-status">
+    <otp-table-column [name]="'Comments from the operator' | translate" prop="concern-opinion">
       <ng-template let-value="value" table-cell-template>
         {{shortenText(value)}}
       </ng-template>
     </otp-table-column>
-  </ng-template>
-  <ng-template [ngIf]="observationType === 'operator'">
-    <otp-table-column [name]="'FMU' | translate" prop="fmu.name" [include]="true"></otp-table-column>
-  </ng-template>
-  <ng-template [ngIf]="observationType === 'operator'">
-    <otp-table-column [name]="'Latitude' | translate" prop="lat"></otp-table-column>
-  </ng-template>
-  <ng-template [ngIf]="observationType === 'operator'">
-    <otp-table-column [name]="'Longitude' | translate" prop="lng"></otp-table-column>
-  </ng-template>
-  <otp-table-column [name]="'Report' | translate" prop="observation-report.title" [include]="true">
-    <ng-template let-row="row" table-cell-template>
-      <ng-template [ngIf]="row['observation-report']">
-        <a href="{{apiUrl}}{{row['observation-report'].attachment.url}}" target="_blank" download>{{row['observation-report'].title}}</a>
-      </ng-template>
+    <ng-template [ngIf]="observationType === 'operator'">
+      <otp-table-column [name]="'Citation' | translate" prop="pv">
+        <ng-template let-value="value" table-cell-template>
+          {{shortenText(value)}}
+        </ng-template>
+      </otp-table-column>
     </ng-template>
-  </otp-table-column>
-  <otp-table-column [name]="'Evidence' | translate" prop="observation-documents" [include]="true" [sortable]="false">
-    <ng-template let-row="row" table-cell-template>
-      <div *ngFor="let evidence of row['observation-documents']">
-        <a href="{{apiUrl}}{{evidence.attachment.url}}" target="_blank" download>{{evidence.name}}</a>
-      </div>
+    <ng-template [ngIf]="observationType === 'operator'">
+      <otp-table-column [name]="'Litigation status' | translate" prop="litigation-status">
+        <ng-template let-value="value" table-cell-template>
+          {{shortenText(value)}}
+        </ng-template>
+      </otp-table-column>
     </ng-template>
-  </otp-table-column>
-  <otp-table-column [name]="'Status' | translate">
-    <ng-template let-row="row" table-cell-template>
-      <ng-template [ngIf]="row['validation-status'] === 'Created'">{{'Created' | translate}}</ng-template>
-      <ng-template [ngIf]="row['validation-status'] === 'Ready for revision'">{{'Ready for revision' | translate}}</ng-template>
-      <ng-template [ngIf]="row['validation-status'] === 'Under revision'">{{'Under revision' | translate}}</ng-template>
-      <ng-template [ngIf]="row['validation-status'] === 'Approved'">{{'Approved' | translate}}</ng-template>
-      <ng-template [ngIf]="row['validation-status'] === 'Rejected'">{{'Rejected' | translate}}</ng-template>
+    <ng-template [ngIf]="observationType === 'operator'">
+      <otp-table-column [name]="'FMU' | translate" prop="fmu.name" [include]="true"></otp-table-column>
     </ng-template>
-  </otp-table-column>
-  <!-- We need the user info for canEdit -->
-  <otp-table-column [name]="'Actions' | translate" prop="user" [include]="true" [sortable]="false">
-    <ng-template let-row="row" table-cell-template>
-      <ng-template [ngIf]="canEdit(row)">
-        <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
-        <button class="action" (click)="onDelete(row)" [attr.aria-label]="'Delete' | translate"><otp-icon name="#icon-delete"></otp-icon></button>
-      </ng-template>
-      <ng-template [ngIf]="!canEdit(row)">
-        <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
-      </ng-template>
-      <ng-template [ngIf]="observationType === 'operator'">
-        <button class="action" (click)="onClone(row)" [attr.aria-label]="'Clone' | translate"><otp-icon name="#icon-clone"></otp-icon></button>
-      </ng-template>
+    <ng-template [ngIf]="observationType === 'operator'">
+      <otp-table-column [name]="'Latitude' | translate" prop="lat"></otp-table-column>
     </ng-template>
-  </otp-table-column>
-</otp-table>
+    <ng-template [ngIf]="observationType === 'operator'">
+      <otp-table-column [name]="'Longitude' | translate" prop="lng"></otp-table-column>
+    </ng-template>
+    <otp-table-column [name]="'Report' | translate" prop="observation-report.title" [include]="true">
+      <ng-template let-row="row" table-cell-template>
+        <ng-template [ngIf]="row['observation-report']">
+          <a href="{{apiUrl}}{{row['observation-report'].attachment.url}}" target="_blank" download>{{row['observation-report'].title}}</a>
+        </ng-template>
+      </ng-template>
+    </otp-table-column>
+    <otp-table-column [name]="'Evidence' | translate" prop="observation-documents" [include]="true" [sortable]="false">
+      <ng-template let-row="row" table-cell-template>
+        <div *ngFor="let evidence of row['observation-documents']">
+          <a href="{{apiUrl}}{{evidence.attachment.url}}" target="_blank" download>{{evidence.name}}</a>
+        </div>
+      </ng-template>
+    </otp-table-column>
+    <otp-table-column [name]="'Status' | translate">
+      <ng-template let-row="row" table-cell-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Created'">{{'Created' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Ready for revision'">{{'Ready for revision' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Under revision'">{{'Under revision' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Approved'">{{'Approved' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Rejected'">{{'Rejected' | translate}}</ng-template>
+      </ng-template>
+    </otp-table-column>
+    <!-- We need the user info for canEdit -->
+    <otp-table-column [name]="'Actions' | translate" prop="user" [include]="true" [sortable]="false">
+      <ng-template let-row="row" table-cell-template>
+        <ng-template [ngIf]="canEdit(row)">
+          <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
+          <button class="action" (click)="onDelete(row)" [attr.aria-label]="'Delete' | translate"><otp-icon name="#icon-delete"></otp-icon></button>
+        </ng-template>
+        <ng-template [ngIf]="!canEdit(row)">
+          <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
+        </ng-template>
+        <ng-template [ngIf]="observationType === 'operator'">
+          <button class="action" (click)="onClone(row)" [attr.aria-label]="'Clone' | translate"><otp-icon name="#icon-clone"></otp-icon></button>
+        </ng-template>
+      </ng-template>
+    </otp-table-column>
+  </otp-table>
+</div>

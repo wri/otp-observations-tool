@@ -17,6 +17,10 @@ import { environment } from 'environments/environment';
 })
 export class ObservationListComponent extends TableFilterBehavior {
   apiUrl: string = environment.apiUrl;
+
+  private selected = [];
+  private editURL: string;
+  isUploading = false;
   statusFilterValues: any = {};
   typeFilterValues: any = [];
 
@@ -118,6 +122,11 @@ export class ObservationListComponent extends TableFilterBehavior {
     }
   }
 
+  public uploadCSV(): void {
+    this.isUploading = true;
+    console.log('test');
+  }
+
   /**
    * Return whether the logged user can edit or delete an observation
    * @param {Observation} observation
@@ -136,6 +145,6 @@ export class ObservationListComponent extends TableFilterBehavior {
   }
 
   public onClone(observation: Observation): void {
-    this.router.navigate([`../new`, { copiedId: observation.id } ], { relativeTo: this.route });
+    this.router.navigate([`../new`, { copiedId: observation.id }], { relativeTo: this.route });
   }
 }

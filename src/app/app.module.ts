@@ -87,6 +87,7 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
+import { UploadFileComponent } from './shared/upload-file/upload-file.component';
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/locale/', '.json');
@@ -150,7 +151,8 @@ export function createTranslateLoader(http: HttpClient) {
     TagComponent,
     FormattedDateComponent,
     ResetPasswordComponent,
-    ReportLibraryDetailComponent
+    ReportLibraryDetailComponent,
+    UploadFileComponent,
   ],
   imports: [
     JsonApiModule,
