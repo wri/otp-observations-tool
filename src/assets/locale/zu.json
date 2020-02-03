@@ -261,6 +261,7 @@
   "observation.actionsTakenByGovernment.note": "Description for the actions taken by government field of the observation form. Set me empty if you don't need me.",
   "observation.commentsFromGovernment.note": "Description for the comments from the government entity field of the observation form. Set me empty if you don't need me.",
   "observation.commentsFromGovernment.title": "Comments from the government entity",
+  "observation.coordinateValue": "Please enter a valid coordinate value",
   "Reset password": "Reset password",
   "Reset": "Reset",
   "FMU": "FMU",
