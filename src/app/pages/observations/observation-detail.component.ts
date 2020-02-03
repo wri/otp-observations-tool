@@ -1,6 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
 import * as cloneDeep from 'lodash/cloneDeep';
 import EXIF from 'exif-js';
+import * as geolib from 'geolib';
 import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
 import { ObservationDocument } from 'app/models/observation_document';
@@ -380,8 +381,8 @@ export class ObservationDetailComponent {
     }
 
     // We create a layer with the marker
-    if (this.latitude && this.longitude) {
-      this._mapMarker = L.marker([this.latitude, this.longitude]);
+    if (this.isValidCoordinate(this.latitude) && this.isValidCoordinate(this.longitude)) {
+      this._mapMarker = L.marker([this.setCoordinate(this.latitude), this.setCoordinate(this.longitude)]);
     } else {
       this._mapMarker = null;
     }
@@ -396,8 +397,8 @@ export class ObservationDetailComponent {
     }
 
     // We create a layer with the marker
-    if (this.latitude && this.longitude) {
-      this._mapMarker = L.marker([this.latitude, this.longitude]);
+    if (this.isValidCoordinate(this.latitude) && this.isValidCoordinate(this.longitude)) {
+      this._mapMarker = L.marker([this.setCoordinate(this.latitude), this.setCoordinate(this.longitude)]);
     } else {
       this._mapMarker = null;
     }
@@ -656,6 +657,19 @@ export class ObservationDetailComponent {
   onMapReady(map: L.Map) {
     this.map = map;
     this.map.on('click', this.onClickMap.bind(this));
+  }
+
+  private setCoordinate(value: string | number): number {
+    try {
+      throw geolib.useDecimal(value);
+    }
+    catch (coordinate) {
+      return typeof coordinate === 'number' ? coordinate : null;
+    }
+  }
+
+  public isValidCoordinate(coordinate: string | number): boolean {
+    return coordinate && +coordinate === 0 || !!this.setCoordinate(coordinate);
   }
 
   /**
@@ -935,6 +949,9 @@ export class ObservationDetailComponent {
           this.observation.lat = null;
           this.observation.lng = null;
           this.observation.fmu = null;
+        } else {
+          this.observation.lat = this.setCoordinate(this.latitude);
+          this.observation.lng = this.setCoordinate(this.longitude);
         }
       }
 
@@ -960,8 +977,8 @@ export class ObservationDetailComponent {
       if (this.type === 'operator') {
         model.operator = this.operatorChoice;
         model['is-physical-place'] = this.physicalPlace;
-        model.lat = this.physicalPlace ? this.latitude : null;
-        model.lng = this.physicalPlace ? this.longitude : null;
+        model.lat = this.physicalPlace ? this.setCoordinate(this.latitude) : null;
+        model.lng = this.physicalPlace ? this.setCoordinate(this.longitude) : null;
         model['litigation-status'] = this.litigationStatus;
         model.law = this.law;
         model.pv = this.pv;
