@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import * as cloneDeep from 'lodash/cloneDeep';
-import EXIF from 'exif-js';
+import * as EXIF from 'exif-js';
 import * as geolib from 'geolib';
 import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
@@ -67,6 +67,7 @@ export class ObservationDetailComponent {
     'Industrial agriculture', 'Mining company', 'Sawmill', 'Other', 'Unknown'
   ];
   laws: Law[] = []; // Filtered by country and subcategory
+  isChangedCoordinates = false; // User entered the coordinates manually
 
   // Map related
   map: L.Map;
@@ -684,7 +685,7 @@ export class ObservationDetailComponent {
   }
 
   public get canSetMapPin(): boolean {
-    return !(this.fmu || (this.latitude && this.longitude));
+    return !this.fmu && !this.isChangedCoordinates;
   }
 
   onChangePhoto(e: any) {
@@ -699,6 +700,9 @@ export class ObservationDetailComponent {
       // We determine in for which hemisphere the coordinates are for
       const latitudeRef = EXIF.getTag(this, 'GPSLatitudeRef') || 'N';
       const longitudeRef = EXIF.getTag(this, 'GPSLongitudeRef') || 'W';
+
+      // Disable map if user fills in the coordinates through the photo
+      self.isChangedCoordinates = !!(minLatitude && minLongitude);
 
       if (!minLatitude || !minLongitude) {
         alert(await this.translateService.get('imageGeoreference.error').toPromise());
