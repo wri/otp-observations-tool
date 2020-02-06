@@ -24,7 +24,7 @@ import { GovernmentsService } from 'app/services/governments.service';
 import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import * as L from 'leaflet';
 import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import { GeoJsonObject } from 'geojson';
@@ -42,12 +42,19 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+interface GeoreferencedPhoto { // Usage georefered photo as evidence
+  attachment: string; // Base64 format
+  isUsed: boolean;
+}
+
 @Component({
   selector: 'otp-observation-detail',
   templateUrl: './observation-detail.component.html',
   styleUrls: ['./observation-detail.component.scss']
 })
 export class ObservationDetailComponent {
+  @ViewChild('evidenceBlock') evidenceBlock: ElementRef;
+  @ViewChild('evidenceInput') evidenceInput: ElementRef;
   loading = false;
   observation: Observation = null; // Only for edit mode
   countries: Country[] = [];
@@ -68,6 +75,10 @@ export class ObservationDetailComponent {
   ];
   laws: Law[] = []; // Filtered by country and subcategory
   isChangedCoordinates = false; // User entered the coordinates manually
+  georeferencedPhoto: GeoreferencedPhoto = {
+    attachment: null,
+    isUsed: false,
+  };
 
   // Map related
   map: L.Map;
@@ -692,33 +703,52 @@ export class ObservationDetailComponent {
     const photo = e.target.files[0];
     const self = this;
 
-    EXIF.getData(photo, async function () {
-      // We get the coordinated in minutes, seconds
-      const minLatitude: any[] = EXIF.getTag(this, 'GPSLatitude');
-      const minLongitude: any[] = EXIF.getTag(this, 'GPSLongitude');
+    if (photo) {
+      EXIF.getData(photo, async function () {
+        // We get the coordinated in minutes, seconds
+        const minLatitude: any[] = EXIF.getTag(this, 'GPSLatitude');
+        const minLongitude: any[] = EXIF.getTag(this, 'GPSLongitude');
 
-      // We determine in for which hemisphere the coordinates are for
-      const latitudeRef = EXIF.getTag(this, 'GPSLatitudeRef') || 'N';
-      const longitudeRef = EXIF.getTag(this, 'GPSLongitudeRef') || 'W';
+        // We determine in for which hemisphere the coordinates are for
+        const latitudeRef = EXIF.getTag(this, 'GPSLatitudeRef') || 'N';
+        const longitudeRef = EXIF.getTag(this, 'GPSLongitudeRef') || 'W';
 
-      // Disable map if user fills in the coordinates through the photo
-      self.isChangedCoordinates = !!(minLatitude && minLongitude);
+        // Disable map if user fills in the coordinates through the photo
+        self.isChangedCoordinates = !!(minLatitude && minLongitude);
 
-      if (!minLatitude || !minLongitude) {
-        alert(await this.translateService.get('imageGeoreference.error').toPromise());
-        return;
-      }
+        if (!minLatitude || !minLongitude) {
+          alert(await this.translateService.get('imageGeoreference.error').toPromise());
+          return;
+        }
 
-      const latitude = (latitudeRef === 'N' ? 1 : -1) * self.convertMinutesToDegrees(minLatitude);
-      const longitude = (longitudeRef === 'E' ? 1 : -1) * self.convertMinutesToDegrees(minLongitude);
+        const latitude = (latitudeRef === 'N' ? 1 : -1) * self.convertMinutesToDegrees(minLatitude);
+        const longitude = (longitudeRef === 'E' ? 1 : -1) * self.convertMinutesToDegrees(minLongitude);
 
-      // We convert them to decimal degrees
-      self.latitude = latitude;
-      self.longitude = longitude;
+        // We convert them to decimal degrees
+        self.latitude = latitude;
+        self.longitude = longitude;
 
-      // We zoom in the area
-      self.map.setView([latitude, longitude], 8);
-    });
+        // We zoom in the area
+        self.map.setView([latitude, longitude], 8);
+      });
+    } else {
+       this.georeferencedPhoto.attachment = null;
+    }
+  }
+
+  public onChangeEvidence(files: FileList): void {
+    const photo: File = files[0];
+    this.georeferencedPhoto.isUsed = false;
+    if (!photo) {
+      this.evidence.attachment = null;
+    }
+  }
+
+  public uploadAsEvidencePhoto(): void {
+    this.georeferencedPhoto.isUsed = true;
+    this.evidence.attachment = this.georeferencedPhoto.attachment;
+    this.evidenceInput.nativeElement.value = '';
+    this.evidenceBlock.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   /**
@@ -761,6 +791,7 @@ export class ObservationDetailComponent {
     // the existing one otherwise evidence will "suffer" the same
     // changes
     this.evidence = this.datastoreService.createRecord(ObservationDocument, {});
+    this.georeferencedPhoto.isUsed = false;
   }
 
   /**

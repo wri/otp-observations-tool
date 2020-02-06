@@ -57,7 +57,7 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
     this.propagateChange();
 
     // If the file weights too much, we exit the event handler
-    if (!this.isSizeValid(this.file)) {
+    if (this.file && !this.isSizeValid(this.file)) {
       return;
     }
 
