@@ -7,6 +7,21 @@
     margin-top: 20px;
   }
 
+  .use-as-evidence {
+    margin-top: 15px;
+  }
+
+  input[type='file'].filled {
+    color: transparent; 
+  }
+
+  .geo-note {
+    color: $color-primary;
+    font-size: $font-size-medium;
+    font-weight: $font-weight-bold;
+    margin-top: 10px;
+  }
+
   .map {
     height: 200px;
     width: 100%;
