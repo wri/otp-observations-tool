@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'otp-observation-list',
@@ -15,9 +16,7 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
   styleUrls: ['./observation-list.component.scss']
 })
 export class ObservationListComponent extends TableFilterBehavior {
-
-  private selected = [];
-  private editURL: string;
+  apiUrl: string = environment.apiUrl;
   statusFilterValues: any = {};
   typeFilterValues: any = [];
 
