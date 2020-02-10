@@ -41,9 +41,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Environment file
-/src/environments/environment.dev.ts
-
 # i18n
 .env
 src/assets/locale/en.json
