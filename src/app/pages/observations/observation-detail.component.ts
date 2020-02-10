@@ -641,12 +641,14 @@ export class ObservationDetailComponent {
         })
         .then(() => this.loading = false);
 
-      // We load the list of documents
-      this.observationDocumentsService.getAll({
-        sort: 'name',
-        filter: { observation_id: this.existingObservation }
-      }).then(documents => this.documents = documents)
-        .catch(err => console.error(err)); // TODO: visual feedback
+      // We load the list of documents only if we edit an observation
+      if (this.route.snapshot.params.id) {
+        this.observationDocumentsService.getAll({
+          sort: 'name',
+          filter: { observation_id: this.route.snapshot.params.id }
+        }).then(documents => this.documents = documents)
+          .catch(err => console.error(err)); // TODO: visual feedback
+      }
     }
   }
 
