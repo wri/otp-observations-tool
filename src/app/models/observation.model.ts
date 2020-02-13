@@ -34,6 +34,7 @@ export class Observation extends JsonApiModel {
   @Attribute() 'updated-at'?: Date;
   @Attribute() 'actions-taken'?: string;
   @Attribute() 'location-information'?: string;
+  @Attribute() 'location-accuracy'?: string;
   @Attribute() 'is-physical-place': boolean;
 
   @BelongsTo() fmu?: Fmu;

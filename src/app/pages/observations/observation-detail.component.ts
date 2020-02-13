@@ -73,6 +73,11 @@ export class ObservationDetailComponent {
     'Logging company', 'Artisanal', 'Community forest', 'Estate',
     'Industrial agriculture', 'Mining company', 'Sawmill', 'Other', 'Unknown'
   ];
+  locationChoice = { // Possible ways to choose a location
+    clickMap: 'Estimated location',
+    photo: 'GPS coordinates extracted from photo',
+    manually: 'Accurate GPS coordinates'
+  };
   laws: Law[] = []; // Filtered by country and subcategory
   isChangedCoordinates = false; // User entered the coordinates manually
   georeferencedPhoto: GeoreferencedPhoto = {
@@ -124,6 +129,7 @@ export class ObservationDetailComponent {
   _actions: string;
   _validationStatus: string;
   _locationInformation: string;
+  _locationAccuracy: string;
   _physicalPlace = true;
   // Report to upload
   report: ObservationReport = this.datastoreService.createRecord(ObservationReport, {});
@@ -560,6 +566,15 @@ export class ObservationDetailComponent {
     }
   }
 
+  get locationAccuracy() { return this.observation ? this.observation['location-accuracy'] : this._locationAccuracy; }
+  set locationAccuracy(locationAccuracy) {
+    if (this.observation) {
+      this.observation['location-accuracy'] = locationAccuracy;
+    } else {
+      this._locationAccuracy = locationAccuracy;
+    }
+  }
+
   get physicalPlace() { return this.observation ? this.observation['is-physical-place'] : this._physicalPlace; }
   set physicalPlace(physicalPlace) {
     if (this.observation) {
@@ -692,6 +707,7 @@ export class ObservationDetailComponent {
    */
   onClickMap(e: any) {
     if (this.canSetMapPin) {
+      this.locationAccuracy = this.locationChoice.clickMap;
       this.latitude = e.latlng.lat;
       this.longitude = e.latlng.lng;
     }
@@ -721,6 +737,8 @@ export class ObservationDetailComponent {
         if (!minLatitude || !minLongitude) {
           alert(await this.translateService.get('imageGeoreference.error').toPromise());
           return;
+        } else {
+          self.locationAccuracy = self.locationChoice.photo;
         }
 
         const latitude = (latitudeRef === 'N' ? 1 : -1) * self.convertMinutesToDegrees(minLatitude);
@@ -735,6 +753,13 @@ export class ObservationDetailComponent {
       });
     } else {
        this.georeferencedPhoto.attachment = null;
+    }
+  }
+
+  public onChangeCoordinates(): void {
+    this.isChangedCoordinates = true;
+    if (this.isValidCoordinate(this.latitude) && this.isValidCoordinate(this.longitude)) {
+      this.locationAccuracy = this.locationChoice.manually;
     }
   }
 
@@ -1026,6 +1051,7 @@ export class ObservationDetailComponent {
         model.law = this.law;
         model.pv = this.pv;
         model.fmu = this.physicalPlace ? this.fmu : null;
+        model['location-accuracy'] = this.locationAccuracy;
         model['location-information'] = this.locationInformation;
       } else {
         model.government = this.government;
