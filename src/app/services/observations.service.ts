@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Observation } from 'app/models/observation.model';
 import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ObservationsService extends JsonApiService<Observation> {
@@ -43,6 +44,11 @@ export class ObservationsService extends JsonApiService<Observation> {
     return this.http.delete(`${environment.apiUrl}/observations/${id}`)
       .map(response => response.json())
       .toPromise();
+  }
+
+  uploadFile(file: FormData): Observable<any> {
+    return this.http.post(`${environment.apiUrl}imports`, file)
+      .map(response => response.json());
   }
 
   updateObservation(observation: Observation): Promise<any> {

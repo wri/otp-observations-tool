@@ -4,7 +4,7 @@ import { JsonApiParams } from 'app/services/json-api.service';
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
@@ -17,10 +17,12 @@ import { environment } from 'environments/environment';
 })
 export class ObservationListComponent extends TableFilterBehavior {
   apiUrl: string = environment.apiUrl;
+  @ViewChild('uploadFile') uploadFile: ElementRef;
 
   private selected = [];
   private editURL: string;
   isUploading = false;
+  response: any = {};
   statusFilterValues: any = {};
   typeFilterValues: any = [];
 
@@ -122,9 +124,24 @@ export class ObservationListComponent extends TableFilterBehavior {
     }
   }
 
-  public uploadCSV(): void {
+  public uploadCSV(files: FileList): void {
+    const file: File = files[0];
+    const formData = new FormData();
+    formData.append('import[file]', file);
+    formData.append('import[importer_type]', 'observations');
     this.isUploading = true;
-    console.log('test');
+    this.service.uploadFile(formData).subscribe(
+      (response) => {
+        this.response = response;
+        this.uploadFile.nativeElement.value = '';
+      },
+      () => this.uploadFile.nativeElement.value = '');
+  }
+
+  public onExit(needUpdate: boolean): void {
+    this.isUploading = false;
+    this.response = {};
+    if (needUpdate) this.loadData();
   }
 
   /**

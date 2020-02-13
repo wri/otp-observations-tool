@@ -2,33 +2,34 @@
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2>{{'Uploading CSV' | translate}}</h2>
     <div class="c-button-container -j-end form-group">
-      <button type="button"  class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button type="button" class="c-button -primary">{{'Done' | translate}}</button>
+      <button *ngIf="!hasResponse || errors.length" type="button" (click)="exit.emit(false)" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="!errors.length" type="button" (click)="exit.emit(true)" [disabled]="!hasResponse" class="c-button -primary">{{'Done' | translate}}</button>
+      <button *ngIf="errors.length" type="button" (click)="reuploadFileInput.click()" class="c-button -primary">{{'Re-upload' | translate}}</button>
+      <input #reuploadFileInput type="file" (change)="reuploadFile($event.target.files)" accept=".csv" [style.display]="'none'">
     </div>
   </div>
   
   <div class="window">
-    <div *ngIf="false" class="process">
+    <div *ngIf="!hasResponse" class="process">
       <otp-loader></otp-loader>
-      <span class="status">Uploading and verifying...</span>
+      <span class="status">{{'uploadFile.uploading' | translate}}</span>
     </div>
-    <div *ngIf="false" class="success">
-      <span class="status">Success! You imported 12 Observations</span>
+    <div *ngIf="hasResponse && !errors.length" class="success">
+      <span class="status">{{'uploadFile.success' | translate: {'records': recordsNumber} }}</span>
     </div>
-    <div *ngIf="true" class="error">
-      <span class="status">Error importing data from test.csv</span>
+    <div *ngIf="hasResponse && errors.length" class="error">
+      <span class="status">{{'uploadFile.errorHeader' | translate}}</span>
       <ul>
-        <li>line 4: the observer can't be found</li>
-        <li>line 5: the observer can't be found</li>
-        <li>line 6: the observer can't be found</li>
-        <li>line 7: the observer can't be found</li>
-        <li>line 4: the observer can't be found</li>
+        <li *ngFor="let error of errors">
+          Line {{error.line}}: ({{error.type}}) {{error.description}}
+        </li>
       </ul>
     </div>
   </div>
 
   <div class="c-button-container -j-end form-group">
-    <button type="button"  class="c-button -secondary">{{'Cancel' | translate}}</button>
-    <button type="button" class="c-button -primary">{{'Done' | translate}}</button>
+    <button *ngIf="!hasResponse || errors.length" type="button" (click)="exit.emit(false)" class="c-button -secondary">{{'Cancel' | translate}}</button>
+    <button *ngIf="!errors.length" type="button" (click)="exit.emit(true)" [disabled]="!hasResponse" class="c-button -primary">{{'Done' | translate}}</button>
+    <button *ngIf="errors.length" type="button" (click)="reuploadFileInput.click()" class="c-button -primary">{{'Re-upload' | translate}}</button>
   </div>
 </div>

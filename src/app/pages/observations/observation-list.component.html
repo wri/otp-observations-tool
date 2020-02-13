@@ -1,4 +1,4 @@
-<otp-upload-file *ngIf="isUploading"></otp-upload-file>
+<otp-upload-file [response]="response" (exit)="onExit($event)" *ngIf="isUploading"></otp-upload-file>
 
 <div [hidden]="isUploading">
   <div class="c-table-header">
@@ -15,7 +15,8 @@
       <otp-filter [name]="'Status' | translate" [values]="statusFilterValues" prop="validation-status"></otp-filter>
     </otp-filters>
     <div class="table-actions">
-      <a class="c-button -secondary upload-csv" (click)="uploadCSV()">{{'Upload CSV' | translate}}</a>
+      <input #uploadFile type="file" (change)="uploadCSV($event.target.files)" accept=".csv" [style.display]="'none'" />
+      <a class="c-button -secondary upload-csv" (click)="uploadFile.click()">{{'Upload CSV' | translate}}</a>
       <a class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
     </div>
   </div>
