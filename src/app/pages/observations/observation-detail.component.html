@@ -341,7 +341,7 @@
               <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
             </div>
 
-            <p class="evidence-note">{{'observation.evidenceType.note' | translate}}</p>
+            <p class="note">{{'observation.evidenceType.note' | translate}}</p>
 
             <!-- 9.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
@@ -710,7 +710,7 @@
               <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
             </div>
 
-            <p class="evidence-note">{{'observation.evidenceType.note' | translate}}</p>
+            <p class="note">{{'observation.evidenceType.note' | translate}}</p>
 
             <!-- 8.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
