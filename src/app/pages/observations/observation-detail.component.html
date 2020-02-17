@@ -339,9 +339,8 @@
                 <option *ngFor="let type of objectKeys(evidenceTypeOptions)" [value]="evidenceTypeOptions[type]">{{ type }}</option>
               </select>
               <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
+              <p class="note">{{'observation.evidenceType.note' | translate}}</p>
             </div>
-
-            <p class="note">{{'observation.evidenceType.note' | translate}}</p>
 
             <!-- 9.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
@@ -708,9 +707,8 @@
                 <option *ngFor="let type of objectKeys(evidenceTypeOptions)" [value]="evidenceTypeOptions[type]">{{ type }}</option>
               </select>
               <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
+              <p class="note">{{'observation.evidenceType.note' | translate}}</p>
             </div>
-
-            <p class="note">{{'observation.evidenceType.note' | translate}}</p>
 
             <!-- 8.2.2 Title -->
             <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
