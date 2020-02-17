@@ -680,10 +680,8 @@ export class ObservationDetailComponent {
 
   private updateTranslatedOptions(phrases: string[], field: string): void {
     this[`${field}Options`] = {};
-    const observables: Observable<string | any>[] = [];
-    phrases.forEach((phrase) => {
-      observables.push(this.translateService.get(phrase));
-    })
+    const observables: Observable<string | any>[] =
+      phrases.map(phrase => this.translateService.get(phrase));
     forkJoin(observables).subscribe((translatedPhrases: string[]) => {
       translatedPhrases.forEach((term, i) => {
         this[`${field}Options`][term] = phrases[i];
