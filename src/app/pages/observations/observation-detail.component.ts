@@ -71,7 +71,7 @@ export class ObservationDetailComponent {
   documents: ObservationDocument[] = []; // Sorted by name initially
   documentsToDelete: ObservationDocument[] = []; // Existing document to delete
   documentsToUpload: ObservationDocument[] = []; // New document to upload
-  evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, {});
+  evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, { type: null });
   evidenceTypes = [ // Possible types of an evidence
     'Government document or data', 'Company document or data', 'Photos', 
     'Maps', 'Testimony from local communities', 'Other'
@@ -818,7 +818,7 @@ export class ObservationDetailComponent {
     // NOTE: we need to create a new model instead of modifying
     // the existing one otherwise evidence will "suffer" the same
     // changes
-    this.evidence = this.datastoreService.createRecord(ObservationDocument, {});
+    this.evidence = this.datastoreService.createRecord(ObservationDocument, { type: null });
     this.georeferencedPhoto.isUsed = false;
   }
 
