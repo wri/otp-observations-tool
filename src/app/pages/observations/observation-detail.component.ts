@@ -30,6 +30,8 @@ import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-mul
 import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
+import { forkJoin } from "rxjs/observable/forkJoin";
+import { Observable } from 'rxjs/Observable';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -56,6 +58,7 @@ export class ObservationDetailComponent {
   @ViewChild('evidenceBlock') evidenceBlock: ElementRef;
   @ViewChild('evidenceInput') evidenceInput: ElementRef;
   loading = false;
+  objectKeys = Object.keys;
   observation: Observation = null; // Only for edit mode
   countries: Country[] = [];
   subcategories: Subcategory[] = [];
@@ -68,7 +71,12 @@ export class ObservationDetailComponent {
   documents: ObservationDocument[] = []; // Sorted by name initially
   documentsToDelete: ObservationDocument[] = []; // Existing document to delete
   documentsToUpload: ObservationDocument[] = []; // New document to upload
-  evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, {});
+  evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, { type: null });
+  evidenceTypes = [ // Possible types of an evidence
+    'Government document or data', 'Company document or data', 'Photos', 
+    'Maps', 'Testimony from local communities', 'Other'
+  ];
+  evidenceTypeOptions: any = {}; // Object of options for evidence type selection
   operatorTypes = [ // Possible types of an operator
     'Logging company', 'Artisanal', 'Community forest', 'Estate',
     'Industrial agriculture', 'Mining company', 'Sawmill', 'Other', 'Unknown'
@@ -599,6 +607,12 @@ export class ObservationDetailComponent {
     private route: ActivatedRoute,
     private translateService: TranslateService
   ) {
+    this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
+
+    this.translateService.onLangChange.subscribe(() => {
+      this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
+    });
+
     this.observersService.getAll({ sort: 'name' })
       .then((observers) => {
         this.observers = observers;
@@ -677,6 +691,17 @@ export class ObservationDetailComponent {
           .catch(err => console.error(err)); // TODO: visual feedback
       }
     }
+  }
+
+  private updateTranslatedOptions(phrases: string[], field: string): void {
+    this[`${field}Options`] = {};
+    const observables: Observable<string | any>[] =
+      phrases.map(phrase => this.translateService.get(phrase));
+    forkJoin(observables).subscribe((translatedPhrases: string[]) => {
+      translatedPhrases.forEach((term, i) => {
+        this[`${field}Options`][term] = phrases[i];
+      });
+    });
   }
 
   /**
@@ -806,6 +831,7 @@ export class ObservationDetailComponent {
   onClickAddEvidence() {
     const evidence = this.datastoreService.createRecord(ObservationDocument, {
       name: this.evidence.name,
+      type: this.evidence.type,
       attachment: this.evidence.attachment
     });
 
@@ -817,7 +843,7 @@ export class ObservationDetailComponent {
     // NOTE: we need to create a new model instead of modifying
     // the existing one otherwise evidence will "suffer" the same
     // changes
-    this.evidence = this.datastoreService.createRecord(ObservationDocument, {});
+    this.evidence = this.datastoreService.createRecord(ObservationDocument, { type: null });
     this.georeferencedPhoto.isUsed = false;
   }
 

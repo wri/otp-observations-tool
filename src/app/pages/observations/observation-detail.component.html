@@ -331,7 +331,25 @@
             <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
           <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
-            <!-- 9.2.1 Evidence -->
+            <!-- 9.2.1 Type -->
+            <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
+              <label for="evidence_type">{{'observation.evidenceType.title' | translate}}</label>
+              <select id="evidence_type" name="evidence_type" [(ngModel)]="evidence.type" #evidence_type="ngModel" [required]="!!evidence.attachment || !documents.length">
+                <option [value]="null" disabled>{{'observation.evidenceType.select' | translate}}</option>
+                <option *ngFor="let type of objectKeys(evidenceTypeOptions)" [value]="evidenceTypeOptions[type]">{{ type }}</option>
+              </select>
+              <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
+              <p class="note">{{'observation.evidenceType.note' | translate}}</p>
+            </div>
+
+            <!-- 9.2.2 Title -->
+            <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
+              <label for="evidence_title">{{'Title' | translate}}</label>
+              <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment || !documents.length" />
+              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
+            </div>
+
+            <!-- 9.2.3 Evidence -->
             <p>{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
             <!-- This input is used to prevent the submitting until evidence are uploaded -->
             <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
@@ -346,16 +364,9 @@
               <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
-            <!-- 9.2.2 Title -->
-            <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
-              <label for="evidence_title">{{'Title' | translate}}</label>
-              <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment || !documents.length" />
-              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
-            </div>
-
-            <!-- 9.2.3 Add to list -->
+            <!-- 9.2.4 Add to list -->
             <div class="form-group">
-              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
+              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid || !evidence_type.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
             </div>
           </div>
         </div>
@@ -688,7 +699,25 @@
             <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
           <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
-            <!-- 8.2.1 Evidence -->
+            <!-- 8.2.1 Type -->
+            <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
+              <label for="evidence_type">{{'observation.evidenceType.title' | translate}}</label>
+              <select id="evidence_type" name="evidence_type" [(ngModel)]="evidence.type" #evidence_type="ngModel" [required]="!!evidence.attachment || !documents.length">
+                <option [value]="null" disabled>{{'observation.evidenceType.select' | translate}}</option>
+                <option *ngFor="let type of objectKeys(evidenceTypeOptions)" [value]="evidenceTypeOptions[type]">{{ type }}</option>
+              </select>
+              <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
+              <p class="note">{{'observation.evidenceType.note' | translate}}</p>
+            </div>
+
+            <!-- 8.2.2 Title -->
+            <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
+              <label for="evidence_title">{{'Title' | translate}}</label>
+              <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment || !documents.length" />
+              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
+            </div>
+
+            <!-- 8.2.3 Evidence -->
             <p>{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
             <!-- This input is used to prevent the submitting until evidence are uploaded -->
             <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
@@ -702,16 +731,9 @@
               <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
-            <!-- 8.2.2 Title -->
-            <div [ngClass]="{ 'form-group': true, '-required': !!evidence.attachment || !documents.length }">
-              <label for="evidence_title">{{'Title' | translate}}</label>
-              <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="!!evidence.attachment || !documents.length" />
-              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
-            </div>
-
-            <!-- 8.2.3 Add to list -->
+            <!-- 8.2.4 Add to list -->
             <div class="form-group">
-              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
+              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid || !evidence_type.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
             </div>
           </div>
         </div>

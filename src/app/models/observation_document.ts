@@ -8,6 +8,7 @@ import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2
 export class ObservationDocument extends JsonApiModel {
 
   @Attribute() name: string;
+  @Attribute() type: string;
   @Attribute() attachment: string|{ url: string };
 
   @BelongsTo() observation: Observation;
