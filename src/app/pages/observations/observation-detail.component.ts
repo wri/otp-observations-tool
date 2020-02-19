@@ -1102,7 +1102,9 @@ export class ObservationDetailComponent {
         observers: this.observers.filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1),
         'actions-taken': this.actions,
         'validation-status': this.validationStatus,
-        'concern-opinion': this.opinion
+        'concern-opinion': this.opinion,
+        'evidence-type': this.evidenceType,
+        'evidence-on-report': this.evidenceOnReport
       };
 
       if (this.type === 'operator') {
