@@ -38,7 +38,11 @@
       </ng-template>
     </otp-table-column>
     <ng-template [ngIf]="observationType === 'government'">
-      <otp-table-column [name]="'Government entity' | translate" prop="government.government-entity" [include]="true"></otp-table-column>
+      <otp-table-column [name]="'Government entities' | translate" prop="governments" [include]="true" [sortable]="false">
+        <ng-template let-row="row" table-cell-template>
+          <div *ngFor="let government of row.governments">{{government['government-entity']}}</div>
+        </ng-template>
+      </otp-table-column>
     </ng-template>
     <ng-template [ngIf]="observationType === 'government'">
       <otp-table-column [name]="'Relevant operators' | translate" prop="relevant-operators" [include]="true" [sortable]="false">

@@ -109,6 +109,10 @@ export class ObservationDetailComponent {
   _mapMarker = null; // Layer with the marker
   _mapFmu = null; // Layer with the FMU
 
+  // Governments multi-select related
+  governmentsOptions: IMultiSelectOption[] = [];
+  _governmentsSelection: number[] = [];
+
   // Monitors multi-select related
   additionalObserversOptions: IMultiSelectOption[] = [];
   _additionalObserversSelection: number[] = [];
@@ -158,8 +162,8 @@ export class ObservationDetailComponent {
       this.operatorChoice = null;
       this.opinion = null;
       this.pv = null;
-      this.government = null;
       this.publicationDate = null;
+      this._governmentsSelection = [];
       this._additionalObserversSelection = [];
       this.actions = null;
     }
@@ -202,14 +206,11 @@ export class ObservationDetailComponent {
 
     // We automatically update the governments options
     if (this.type === 'government') {
-      this.governments = country ? country.governments : [];
-
-      if (this.observation && this.country.id === this.observation.country.id) {
-        this.government = this.governments.find(government => government.id === this.observation.government.id);
-      } else {
-        this.government = null;
-      }
-
+      this.governments = country && country.governments || [];
+      this.governmentsOptions = this.governments.map((government, index) => ({ id: index, name: government['government-entity'] }));
+      this._governmentsSelection = this.observation && this.observation.country.id === country.id
+        ? (this.observation.governments || []).map(government => this.governments.findIndex(g => g.id === government.id))
+        : [];
       if (country) {
         this.operatorsService.getAll({ sort: 'name', filter: { country: country.id } })
           .then((operators) => {
@@ -475,15 +476,6 @@ export class ObservationDetailComponent {
     }
   }
 
-  get government() { return this.observation ? this.observation.government : this._government; }
-  set government(government) {
-    if (this.observation) {
-      this.observation.government = government;
-    } else {
-      this._government = government;
-    }
-  }
-
   get publicationDate() { return this.observation ? this.observation['publication-date'] : this._publicationDate; }
   set publicationDate(publicationDate) {
     if (this.observation) {
@@ -646,7 +638,7 @@ export class ObservationDetailComponent {
 
       this.observationsService.getById(this.existingObservation, {
         // tslint:disable-next-line:max-line-length
-        include: 'country,operator,subcategory,severity,observers,government,modified-user,fmu,observation-report,law,user,relevant-operators'
+        include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,law,user,relevant-operators'
       }).then((observation) => {
         this.observation = observation;
         if (this.route.snapshot.params.copiedId) {
@@ -823,6 +815,10 @@ export class ObservationDetailComponent {
    */
   onChangeRelevantOperatorsOptions(options: number[]) {
     this._relevantOperatorsSelection = options;
+  }
+
+  onChangeGovernmentsOptions(options: number[]): void {
+    this._governmentsSelection = options;
   }
 
   /**
@@ -1036,6 +1032,8 @@ export class ObservationDetailComponent {
         .concat([this.observers.find(o => o.id === this.authService.userObserverId)]);
 
       if (this.type !== 'operator') {
+        this.observation.governments = this.governments
+          .filter((government, index) => this._governmentsSelection.indexOf(index) !== -1);
         this.observation['relevant-operators'] = this.operators
           .filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       } else {
@@ -1080,7 +1078,7 @@ export class ObservationDetailComponent {
         model['location-accuracy'] = this.locationAccuracy;
         model['location-information'] = this.locationInformation;
       } else {
-        model.government = this.government;
+        model.governments = this.governments.filter((government, index) => this._governmentsSelection.indexOf(index) !== -1);
         model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       }
 
