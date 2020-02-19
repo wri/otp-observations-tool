@@ -271,7 +271,7 @@
                     <label for="photo_field">{{'Georeferenced photo' | translate}}</label>
                     <input id="photo_field" type="file" class="form-control" name="photo_field" (change)="onChangePhoto($event)" otpBase64FileInput [(ngModel)]="georeferencedPhoto.attachment" accept=".jpg, .jpeg" />
                   </div>
-                  <button type="button" (click)="uploadAsEvidencePhoto()" class="use-as-evidence c-button -secondary" [disabled]="!georeferencedPhoto.attachment">{{'observation.useAsEvidence' | translate}}</button>
+                  <button type="button" (click)="uploadAsEvidencePhoto()" class="use-as-evidence c-button -secondary" [disabled]="!georeferencedPhoto.attachment || isEvidenceTypeOnReport(evidenceType)">{{'observation.useAsEvidence' | translate}}</button>
                 </div>
               </div>
             </div>

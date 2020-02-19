@@ -729,7 +729,6 @@ export class ObservationDetailComponent {
       this.evidence.name = null;
       this.evidence.attachment = null;
       this.georeferencedPhoto.isUsed = false;
-      this.georeferencedPhoto.attachment = null;
       this.evidenceInput.nativeElement.value = '';
     } else {
       this.evidenceOnReport = null;
