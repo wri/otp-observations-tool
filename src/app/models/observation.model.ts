@@ -25,6 +25,8 @@ export class Observation extends JsonApiModel {
   @Attribute() pv?: string;
   @Attribute() 'validation-status'?: string;
   @Attribute() details?: string;
+  @Attribute() 'evidence-type': string;
+  @Attribute() 'evidence-on-report'?: string;
   @Attribute() evidence?: string;
   @Attribute() 'concern-opinion'?: string;
   @Attribute() 'litigation-status'?: string;
