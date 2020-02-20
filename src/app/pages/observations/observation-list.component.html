@@ -106,9 +106,11 @@
     </otp-table-column>
     <otp-table-column [name]="'Evidence' | translate" prop="observation-documents" [include]="true" [sortable]="false">
       <ng-template let-row="row" table-cell-template>
-        <div *ngFor="let evidence of row['observation-documents']">
-          <a href="{{apiUrl}}{{evidence.attachment.url}}" target="_blank" download>{{evidence.name}}</a>
-        </div>
+        <ng-template [ngIf]="!row['evidence-on-report']">
+          <div *ngFor="let evidence of row['observation-documents']">
+            <a href="{{apiUrl}}{{evidence.attachment.url}}" target="_blank" download>{{evidence.name}}</a>
+          </div>
+        </ng-template>
       </ng-template>
     </otp-table-column>
     <otp-table-column [name]="'Status' | translate">

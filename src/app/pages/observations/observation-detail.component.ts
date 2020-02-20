@@ -73,7 +73,7 @@ export class ObservationDetailComponent {
   documentsToUpload: ObservationDocument[] = []; // New document to upload
   evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, {});
   evidenceTypes = [ // Possible types of an evidence
-    'Government documents', 'Company documents', 'Photos', 
+    'Government Documents', 'Company Documents', 'Photos', 
     'Maps', 'Testimony from local communities', 'Other', 'Evidence presented in the report'
   ];
   evidenceTypeOptions: any = {}; // Object of options for evidence type selection
