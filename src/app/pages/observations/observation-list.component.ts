@@ -132,10 +132,16 @@ export class ObservationListComponent extends TableFilterBehavior {
     this.isUploading = true;
     this.service.uploadFile(formData).subscribe(
       (response) => {
-        this.response = response;
+        // For processing an empty object
+        this.response = response && Object.keys(response).length ? response : null;
         this.uploadFile.nativeElement.value = '';
       },
-      () => this.uploadFile.nativeElement.value = '');
+      (error) => {
+        console.error(error);
+        this.translateService.get('uploadFile.errorHeader').subscribe(phrase => alert(phrase));
+        this.isUploading = false;
+        this.uploadFile.nativeElement.value = '';
+      });
   }
 
   public onExit(needUpdate: boolean): void {

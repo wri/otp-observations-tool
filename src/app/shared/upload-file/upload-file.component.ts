@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { ObservationsService } from 'app/services/observations.service';
 
 export interface ErrorLine {
@@ -22,7 +23,18 @@ export class UploadFileComponent {
 
   @Input() set response(response: any) {
     this._response = response;
-    if (Object.keys(response).length) {
+
+    // If the backend returns success after 
+    // an invalid (empty or incorrectly composed) file
+    if (!response) {
+      this.errors.push({
+        line: 1,
+        type: 'file',
+        description: 'invalid file'
+      });
+    }
+
+    if (response && Object.keys(response).length) {
       this.recordsNumber = Object.keys(response).length;
       for (let index in response) {
         if (Object.keys(response[index].errors).length) {
@@ -36,6 +48,7 @@ export class UploadFileComponent {
 
   constructor(
     private service: ObservationsService,
+    private translateService: TranslateService,
   ) { }
 
   private generateErrorLines(response: any, index: number): void {
@@ -52,7 +65,7 @@ export class UploadFileComponent {
   }
 
   public get hasResponse(): boolean {
-    return !!Object.keys(this.response).length;
+    return this.response === null || !!Object.keys(this.response).length;
   }
 
   public reuploadFile(files: FileList): void {
@@ -64,10 +77,16 @@ export class UploadFileComponent {
     formData.append('import[importer_type]', 'observations');
     this.service.uploadFile(formData).subscribe(
       (response) => {
-        this.response = response;
+        // For processing an empty object
+        this.response = response && Object.keys(response).length ? response : null;
         this.reuploadFileInput.nativeElement.value = '';
       },
-      () => this.reuploadFileInput.nativeElement.value = '');
+      (error) => {
+        console.error(error);
+        this.translateService.get('uploadFile.errorHeader').subscribe(phrase => alert(phrase));
+        this.exit.emit(true);
+        this.reuploadFileInput.nativeElement.value = '';
+      });
   }
 
 }
