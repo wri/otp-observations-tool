@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="116px" height="102px" viewBox="0 0 116 102" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Path 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#317A4B" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#317A4B" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Observations-Uploading-Success" transform="translate(-587.000000, -372.000000)" stroke="url(#linearGradient-1)" stroke-width="10">
+            <polyline id="Path-2" points="592.75 423.71875 629.032723 469 702.75 377"></polyline>
+        </g>
+    </g>
+</svg>

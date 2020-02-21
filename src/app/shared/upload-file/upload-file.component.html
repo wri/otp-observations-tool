@@ -1,7 +1,7 @@
 <div class="container">
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2>{{'Uploading CSV' | translate}}</h2>
-    <div class="c-button-container -j-end form-group">
+    <div class="c-button-container form-group">
       <button *ngIf="!hasResponse || errors.length" type="button" (click)="exit.emit(false)" class="c-button -secondary">{{'Cancel' | translate}}</button>
       <button *ngIf="!errors.length" type="button" (click)="exit.emit(true)" [disabled]="!hasResponse" class="c-button -primary">{{'Done' | translate}}</button>
       <button *ngIf="errors.length" type="button" (click)="reuploadFileInput.click()" class="c-button -primary">{{'Re-upload' | translate}}</button>
@@ -15,6 +15,7 @@
       <span class="status">{{'uploadFile.uploading' | translate}}</span>
     </div>
     <div *ngIf="hasResponse && !errors.length" class="success">
+      <img src="assets/check-mark.svg" alt="check-mark">
       <span class="status">{{'uploadFile.success' | translate: {'records': recordsNumber} }}</span>
     </div>
     <div *ngIf="hasResponse && errors.length" class="error">
