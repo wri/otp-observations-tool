@@ -4,7 +4,7 @@ import { JsonApiParams } from 'app/services/json-api.service';
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
@@ -17,6 +17,12 @@ import { environment } from 'environments/environment';
 })
 export class ObservationListComponent extends TableFilterBehavior {
   apiUrl: string = environment.apiUrl;
+  @ViewChild('uploadFile') uploadFile: ElementRef;
+
+  private selected = [];
+  private editURL: string;
+  isUploading = false;
+  response: any = {};
   statusFilterValues: any = {};
   typeFilterValues: any = [];
 
@@ -118,6 +124,32 @@ export class ObservationListComponent extends TableFilterBehavior {
     }
   }
 
+  public uploadCSV(files: FileList): void {
+    const file: File = files[0];
+    const formData = new FormData();
+    formData.append('import[file]', file);
+    formData.append('import[importer_type]', 'observations');
+    this.isUploading = true;
+    this.service.uploadFile(formData).subscribe(
+      (response) => {
+        // For processing an empty object
+        this.response = response && Object.keys(response).length ? response : null;
+        this.uploadFile.nativeElement.value = '';
+      },
+      (error) => {
+        console.error(error);
+        this.translateService.get('uploadFile.errorHeader').subscribe(phrase => alert(phrase));
+        this.isUploading = false;
+        this.uploadFile.nativeElement.value = '';
+      });
+  }
+
+  public onExit(needUpdate: boolean): void {
+    this.isUploading = false;
+    this.response = {};
+    if (needUpdate) this.loadData();
+  }
+
   /**
    * Return whether the logged user can edit or delete an observation
    * @param {Observation} observation
@@ -136,6 +168,6 @@ export class ObservationListComponent extends TableFilterBehavior {
   }
 
   public onClone(observation: Observation): void {
-    this.router.navigate([`../new`, { copiedId: observation.id } ], { relativeTo: this.route });
+    this.router.navigate([`../new`, { copiedId: observation.id }], { relativeTo: this.route });
   }
 }
