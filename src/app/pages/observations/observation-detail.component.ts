@@ -720,16 +720,24 @@ export class ObservationDetailComponent {
     return type === 'Evidence presented in the report';
   }
 
-  public onChangeEvidenceType(type: string): void {
-    if (this.isEvidenceTypeOnReport(type)) {
-      if (this.documents.length) {
-        this.translateService.get('observation.evidence.filesDeleteNotification')
-          .subscribe((phrase: string) => window.alert(phrase));
-      }
-      this.evidence.name = null;
-      this.evidence.attachment = null;
-      this.georeferencedPhoto.isUsed = false;
-      this.evidenceInput.nativeElement.value = '';
+  public onChangeEvidenceType(previousType: string, type: string, typeElement: HTMLSelectElement): void {
+    if (!this.isEvidenceTypeOnReport(type) || !this.documents.length) {
+      this.evidenceType = type;
+    }
+
+    if (this.isEvidenceTypeOnReport(type) && this.documents.length) {
+      this.translateService.get('observation.evidence.filesDeleteNotification')
+        .subscribe((phrase: string) => {
+          if (confirm(phrase)) {
+            this.evidenceType = type;
+            this.evidence.name = null;
+            this.evidence.attachment = null;
+            this.georeferencedPhoto.isUsed = false;
+            this.evidenceInput.nativeElement.value = '';
+          } else {
+            typeElement.selectedIndex = this.evidenceTypes.indexOf(previousType) + 1;
+          }
+        });
     } else {
       this.evidenceOnReport = null;
     }
