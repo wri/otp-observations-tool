@@ -46,7 +46,7 @@ export class Observation extends JsonApiModel {
   @BelongsTo() 'modified-user'?: User;
   @HasMany() observers?: Observer[]; // Should be a BelongsTo but not working with array
   @BelongsTo() operator?: Operator;
-  @BelongsTo() government?: Government;
+  @HasMany() governments?: Government[];
   @BelongsTo() 'observation-report'?: ObservationReport;
   @HasMany() 'relevant-operators'?: Operator[];
   @HasMany() 'observation-documents': ObservationDocument[];

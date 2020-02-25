@@ -610,14 +610,11 @@
       </p>
     </div>
 
-    <!-- 3. Government entity -->
+    <!-- 3. Government entities -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
-      <label for="government_id">{{'Government entity' | translate}}</label>
-      <select id="government_id" name="government_id" [(ngModel)]="government" #government_id="ngModel" required [disabled]="isDisabled()">
-        <option [value]="null" disabled>{{'Select a government entity' | translate}}</option>
-        <option *ngFor="let government of governments" [ngValue]="government">{{ government['government-entity'] }}</option>
-      </select>
-      <div *ngIf="f.submitted && !government_id.valid" class="help-text">{{'Please select a government entity' | translate}}</div>
+      <label for="government_id">{{'Government entities' | translate}}</label>
+      <ss-multiselect-dropdown [options]="governmentsOptions" [(ngModel)]="_governmentsSelection" (ngModelChange)="onChangeGovernmentsOptions($event)" #government_id="ngModel" name="government_id" [disabled]="isDisabled()" required></ss-multiselect-dropdown>
+      <div *ngIf="f.submitted && !government_id.valid" class="help-text">{{'Please select government entities' | translate}}</div>
       <p class="note">
         {{ 'observation.governmentEntity.note' | translate }}
       </p>
