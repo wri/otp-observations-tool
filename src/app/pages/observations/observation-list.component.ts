@@ -9,6 +9,7 @@ import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { environment } from 'environments/environment';
+import { DraftObservation } from 'app/models/draft_observation.interface';
 
 @Component({
   selector: 'otp-observation-list',
@@ -17,6 +18,7 @@ import { environment } from 'environments/environment';
 })
 export class ObservationListComponent extends TableFilterBehavior {
   apiUrl: string = environment.apiUrl;
+  draftObservation: DraftObservation = JSON.parse(localStorage.getItem('draftObservation'));
   @ViewChild('uploadFile') uploadFile: ElementRef;
 
   private selected = [];
@@ -169,5 +171,13 @@ export class ObservationListComponent extends TableFilterBehavior {
 
   public onClone(observation: Observation): void {
     this.router.navigate([`../new`, { copiedId: observation.id }], { relativeTo: this.route });
+  }
+
+  public onCreate(useDraft = false): void {
+    if (useDraft) {
+      this.router.navigate([`../new`, { useDraft }], { relativeTo: this.route });
+    } else {
+      this.router.navigate([`../new`], { relativeTo: this.route });
+    }
   }
 }

@@ -9,6 +9,7 @@ import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
 import { AuthService } from 'app/services/auth.service';
 import { Observation } from './../../models/observation.model';
+import { DraftObservation } from 'app/models/draft_observation.interface';
 import { DatastoreService } from 'app/services/datastore.service';
 import { SubcategoriesService } from 'app/services/subcategories.service';
 import { Subcategory } from 'app/models/subcategory.model';
@@ -24,7 +25,7 @@ import { GovernmentsService } from 'app/services/governments.service';
 import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
 import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import { GeoJsonObject } from 'geojson';
@@ -32,6 +33,8 @@ import { ObservationReportsService } from 'app/services/observation-reports.serv
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { Observable } from 'rxjs/Observable';
+import { interval } from 'rxjs/observable/interval';
+import { Subscription } from 'rxjs/Subscription';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -54,12 +57,14 @@ interface GeoreferencedPhoto { // Usage georefered photo as evidence
   templateUrl: './observation-detail.component.html',
   styleUrls: ['./observation-detail.component.scss']
 })
-export class ObservationDetailComponent {
+export class ObservationDetailComponent implements OnDestroy {
   @ViewChild('evidenceBlock') evidenceBlock: ElementRef;
   @ViewChild('evidenceInput') evidenceInput: ElementRef;
   loading = false;
   objectKeys = Object.keys;
+  subscription: Subscription;
   observation: Observation = null; // Only for edit mode
+  draft: DraftObservation = null; // Only for using draft observation
   countries: Country[] = [];
   subcategories: Subcategory[] = [];
   severities: Severity[] = [];
@@ -174,10 +179,14 @@ export class ObservationDetailComponent {
     this.countriesService.getAll(type === 'government' ? { include: 'governments', sort: 'name' } : { sort: 'name' })
       .then(countries => this.countries = countries)
       .then(() => {
-        // If we're editing an observation, the object Country of the observation won't
+        // If we're editing an observation (or using draft), the object Country of the observation won't
         // match any of the objects of this.countries, so we search for the "same" model
         // and set it
-        if (this.observation) {
+        if (this.draft) {
+          this._additionalObserversSelection = this.draft.observers
+            ? this.draft.observers.map(id => this.observers.findIndex(o => +o.id === id)) : [];
+          this.country = this.countries.find((country) => country.id === this.draft.countryId);
+        } else if (this.observation) {
           this.country = this.countries.find((country) => country.id === this.observation.country.id);
         } else {
           // By default, the selected country is one of the observer's
@@ -188,9 +197,12 @@ export class ObservationDetailComponent {
     this.subcategoriesService.getByType(<'operator' | 'government'>type, { include: 'severities,category' })
       .then(subcategories => this.subcategories = subcategories)
       .then(() => {
-        // If we're editing an observation, the object Subcategory of the observation won't
+        // If we're editing an observation (or using draft), the object Subcategory of the observation won't
         // match any of the objects of this.subcategories, so we search for the "same" model
         // and set it
+        if (this.draft && this.draft.subcategoryId) {
+          this.subcategory = this.subcategories.find((subcategory) => subcategory.id === this.draft.subcategoryId);
+        }
         if (this.observation && this.observation.subcategory) {
           this.subcategory = this.subcategories.find((subcategory) => subcategory.id === this.observation.subcategory.id);
         }
@@ -210,18 +222,32 @@ export class ObservationDetailComponent {
     if (this.type === 'government') {
       this.governments = country && country.governments || [];
       this.governmentsOptions = this.governments.map((government, index) => ({ id: index, name: government['government-entity'] }));
-      this._governmentsSelection = this.observation && this.observation.country.id === country.id
-        ? (this.observation.governments || []).map(government => this.governments.findIndex(g => g.id === government.id))
-        : [];
+      if (this.observation) {
+        this._governmentsSelection = this.observation && this.observation.country.id === country.id
+          ? (this.observation.governments || []).map(government => this.governments.findIndex(g => g.id === government.id))
+          : [];
+      }
+      if (this.draft) {
+        this._governmentsSelection = country && this.draft.countryId === country.id && this.draft.governments
+          ? this.draft.governments.map(id => this.governments.findIndex(g => +g.id === id))
+          : [];
+      }
       if (country) {
         this.operatorsService.getAll({ sort: 'name', filter: { country: country.id } })
           .then((operators) => {
             this.operators = operators;
 
             // We update the list of options for the relevant operators field
-            this._relevantOperatorsSelection = this.observation && this.observation.country.id === country.id
-              ? (this.observation['relevant-operators'] || []).map(relevantOperator => operators.findIndex(o => o.id === relevantOperator.id))
-              : [];
+            if (this.observation) {
+              this._relevantOperatorsSelection = this.observation && this.observation.country.id === country.id
+                ? (this.observation['relevant-operators'] || []).map(relevantOperator => operators.findIndex(o => o.id === relevantOperator.id))
+                : [];
+            }
+            if (this.draft) {
+              this._relevantOperatorsSelection = country && this.draft.countryId === country.id && this.draft.relevantOperators
+                ? this.draft.relevantOperators.map(id => this.operators.findIndex(g => +g.id === id))
+                : [];
+            }
             this.relevantOperatorsOptions = operators
               .map((operator, index) => ({ id: index, name: operator.name }));
           });
@@ -232,10 +258,12 @@ export class ObservationDetailComponent {
         this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
           .then(operators => this.operators = operators)
           .then(() => {
-            // If we're editing an observation, the object Operator of the observation won't
+            // If we're editing an observation (or using draft), the object Operator of the observation won't
             // match any of the objects of this.operators, so we search for the "same" model
             // and set it
-            if (this.observation && this.observation.country === country && this.observation.operator) {
+            if (this.draft && this.draft.countryId === country.id) {
+              this.operatorChoice = this.operators.find((operator) => operator.id === this.draft.operatorId) || null;
+            } else if (this.observation && this.observation.country === country && this.observation.operator) {
               this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
             } else {
               this.operatorChoice = null;
@@ -249,10 +277,12 @@ export class ObservationDetailComponent {
         this.lawsService.getAll({ filter: { country: country.id, subcategory: this.subcategory.id } })
           .then(laws => this.laws = laws)
           .then(() => {
-            // If we're editing an observation, the object Law of the observation won't
+            // If we're editing an observation (or using draft), the object Law of the observation won't
             // match any of the objects of this.laws, so we search for the "same" model
             // and set it
-            if (this.observation && this.observation.country === country
+            if (this.draft && this.draft.countryId === country.id && this.draft.subcategoryId === this.subcategory.id) {
+              this.law = this.laws.find(law => law.id === this.draft.lawId);
+            } else if (this.observation && this.observation.country === country
               && this.observation.subcategory === this.subcategory && this.observation.law) {
               this.law = this.laws.find(law => law.id === this.observation.law.id);
             } else {
@@ -305,7 +335,9 @@ export class ObservationDetailComponent {
           // If we can restore the FMU of the observation, we do it,
           // otherwise we just reset the fmu each time the user
           // update the operator
-          if (this.observation && this.observation.operator.id === operatorChoice.id && this.observation.fmu) {
+          if (this.draft && this.draft.operatorId === operatorChoice.id) {
+            this.fmu = this.fmus.find(fmu => fmu.id === this.draft.fmuId);
+          } else if (this.observation && this.observation.operator.id === operatorChoice.id && this.observation.fmu) {
             this.fmu = this.fmus.find(fmu => fmu.id === this.observation.fmu.id);
           } else {
             this.fmu = null;
@@ -364,7 +396,9 @@ export class ObservationDetailComponent {
     // We automatically update the severities options
     this.severities = subcategory ? subcategory.severities : [];
 
-    if (this.observation && this.subcategory.id === this.observation.subcategory.id) {
+    if (this.draft && this.subcategory && this.subcategory.id === this.draft.subcategoryId) {
+      this.severity = this.severities.find(severity => severity.id === this.draft.severityId);
+    } else if (this.observation && this.observation.severity && this.subcategory.id === this.observation.subcategory.id) {
       this.severity = this.severities.find(severity => severity.id === this.observation.severity.id);
     } else {
       this.severity = null;
@@ -375,10 +409,12 @@ export class ObservationDetailComponent {
       this.lawsService.getAll({ filter: { country: this.country.id, subcategory: subcategory.id } })
         .then(laws => this.laws = laws)
         .then(() => {
-          // If we're editing an observation, the object Law of the observation won't
+          // If we're editing an observation (or using draft), the object Law of the observation won't
           // match any of the objects of this.laws, so we search for the "same" model
           // and set it
-          if (this.observation && this.observation.country === this.country
+          if (this.draft && this.draft.countryId === this.country.id && this.draft.subcategoryId === subcategory.id) {
+            this.law = this.laws.find(law => law.id === this.draft.lawId);
+          } else if (this.observation && this.observation.country === this.country
             && this.observation.subcategory === subcategory && this.observation.law) {
             this.law = this.laws.find(law => law.id === this.observation.law.id);
           } else {
@@ -642,9 +678,12 @@ export class ObservationDetailComponent {
       filter: { observer_id: this.authService.userObserverId }
     }).then(reports => this.reports = reports)
       .then(() => {
-        // If we're editing an observation, the object ObservationReport of the observation won't
+        // If we're editing an observation (or using draft), the object ObservationReport of the observation won't
         // match any of the objects of this.reports, so we search for the "same" model
         // and set it
+        if (this.draft) {
+          this.reportChoice = this.reports.find((report) => report.id === this.draft.observationReportId) || null;
+        }
         if (this.observation) {
           this.reportChoice = this.reports.find((report) => report.id === this.observation['observation-report'].id);
         }
@@ -702,6 +741,47 @@ export class ObservationDetailComponent {
         }).then(documents => this.documents = documents)
           .catch(err => console.error(err)); // TODO: visual feedback
       }
+    } else {
+      if (this.route.snapshot.params.useDraft) {
+        this.draft = JSON.parse(localStorage.getItem('draftObservation'));
+        // Set values from the draft observation
+        if (this.draft) {
+          this.type = this.draft.observationType;
+          this.actions = this.draft.actionsTaken;
+          this.details = this.draft.details;
+          this.opinion = this.draft.concernOpinion;
+          // If we were going to add an evidence
+          this.evidence.name = this.draft.evidenceTitle;
+          this.evidence.attachment = this.draft.evidenceAttachment;
+          // If we were going to add a new producer (operator)
+          this.operatorName = this.draft.operatorName;
+          this.operatorType = this.draft.operatorType;
+          // if we were going to upload a new report
+          this.report.title = this.draft.reportTitle;
+          this.reportAttachment = this.draft.reportAttachment;
+          this.reportDate = new Date(this.draft.reportDate);
+          
+          if (this.type === 'operator') {
+            this.physicalPlace = this.draft.isPhysicalPlace;
+            this.latitude = this.draft.lat;
+            this.longitude = this.draft.lng;
+            this.litigationStatus = this.draft.litigationStatus;
+            this.pv = this.draft.pv;
+            this.locationInformation = this.draft.locationInformation;
+            this.locationAccuracy = this.draft.locationAccuracy;
+          }
+        }
+      }
+
+      this.subscription = interval(5000).subscribe(() => {
+        this.saveAsDraftObservation();
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
 
@@ -741,6 +821,55 @@ export class ObservationDetailComponent {
     } else {
       this.evidenceOnReport = null;
     }
+  }
+
+  private saveAsDraftObservation(): void {
+    const draftModel: DraftObservation = {
+      observationType: this.type,
+      publicationDate: new Date(),
+      countryId: this.country && this.country.id,
+      subcategoryId: this.subcategory && this.subcategory.id,
+      details: this.details,
+      severityId: this.severity && this.severity.id,
+      observers: this.observers.filter((o, index) => this._additionalObserversSelection.indexOf(index) !== -1).map(o => +o.id),
+      actionsTaken: this.actions,
+      validationStatus: this.validationStatus,
+      concernOpinion: this.opinion,
+      evidenceTitle: this.evidence.name,
+      evidenceAttachment: this.evidence.attachment && String(this.evidence.attachment),
+    };
+    if (this.reportChoice) {
+      draftModel.observationReportId = this.reportChoice.id;
+    } else {
+      draftModel.reportTitle = this.report && this.report.title;
+      draftModel.reportAttachment = this.reportAttachment && String(this.reportAttachment);
+      draftModel.reportDate = this.reportDate;
+    }
+
+    if (this.type === 'operator') {
+
+      if (this.operatorChoice) {
+        draftModel.operatorId = this.operatorChoice && this.operatorChoice.id;
+      } else {
+        draftModel.operatorName = this.operatorName;
+        draftModel.operatorType = this.operatorType;
+      }
+
+      draftModel.isPhysicalPlace = this.physicalPlace;
+      draftModel.lat = this.physicalPlace ? this.setCoordinate(this.latitude) : null;
+      draftModel.lng = this.physicalPlace ? this.setCoordinate(this.longitude) : null;
+      draftModel.litigationStatus = this.litigationStatus;
+      draftModel.lawId = this.law && this.law.id;
+      draftModel.pv = this.pv;
+      draftModel.fmuId = this.physicalPlace && this.fmu && this.fmu.id || null;
+      draftModel.locationAccuracy = this.physicalPlace ? this.locationAccuracy : null;
+      draftModel.locationInformation = this.locationInformation;
+    } else {
+      draftModel.governments = this.governments.filter((g, index) => this._governmentsSelection.indexOf(index) !== -1).map(g => +g.id);
+      draftModel.relevantOperators = this.operators.filter((o, index) => this._relevantOperatorsSelection.indexOf(index) !== -1).map(o => +o.id);
+    }
+
+    localStorage.setItem('draftObservation', JSON.stringify(draftModel));
   }
 
   /**
@@ -1158,6 +1287,7 @@ export class ObservationDetailComponent {
         if (this.observation && !this.isCopied) {
           alert(await this.translateService.get('observationUpdate.success').toPromise());
         } else {
+          localStorage.removeItem('draftObservation');
           alert(await this.translateService.get('observationCreation.success').toPromise());
         }
 
