@@ -1051,10 +1051,10 @@ export class ObservationDetailComponent {
     });
 
     // We create an array of the documents to upload
-    const uploadPromises = this.documentsToUpload.map((d) => {
+    const uploadPromises = !this.isEvidenceTypeOnReport(this.evidenceType) ? this.documentsToUpload.map((d) => {
       d.observation = observation; // We link the document to the observation
       return d.save().toPromise();
-    });
+    }) : [];
 
     return Promise.all(deletePromises.concat(<any>uploadPromises));
   }
