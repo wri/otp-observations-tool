@@ -750,12 +750,14 @@ export class ObservationDetailComponent implements OnDestroy {
           this.actions = this.draft.actionsTaken;
           this.details = this.draft.details;
           this.opinion = this.draft.concernOpinion;
+          // this.evidenceType = this.draft.evidenceType;
+          // this.evidenceOnReport = this.draft.evidenceOnReport;
           // If we were going to add an evidence
           this.evidence.name = this.draft.evidenceTitle;
           this.evidence.attachment = this.draft.evidenceAttachment;
           // If we were going to add a new producer (operator)
           this.operatorName = this.draft.operatorName;
-          this.operatorType = this.draft.operatorType;
+          this.operatorType = this.draft.operatorType || null;
           // if we were going to upload a new report
           this.report.title = this.draft.reportTitle;
           this.reportAttachment = this.draft.reportAttachment;
@@ -773,7 +775,7 @@ export class ObservationDetailComponent implements OnDestroy {
         }
       }
 
-      this.subscription = interval(5000).subscribe(() => {
+      this.subscription = interval(15000).subscribe(() => {
         this.saveAsDraftObservation();
       });
     }
@@ -835,6 +837,8 @@ export class ObservationDetailComponent implements OnDestroy {
       actionsTaken: this.actions,
       validationStatus: this.validationStatus,
       concernOpinion: this.opinion,
+      // evidenceType: this.evidenceType,
+      // evidenceOnReport: this.evidenceOnReport,
       evidenceTitle: this.evidence.name,
       evidenceAttachment: this.evidence.attachment && String(this.evidence.attachment),
     };
@@ -843,7 +847,7 @@ export class ObservationDetailComponent implements OnDestroy {
     } else {
       draftModel.reportTitle = this.report && this.report.title;
       draftModel.reportAttachment = this.reportAttachment && String(this.reportAttachment);
-      draftModel.reportDate = this.reportDate;
+      draftModel.reportDate = this.reportDate || null;
     }
 
     if (this.type === 'operator') {

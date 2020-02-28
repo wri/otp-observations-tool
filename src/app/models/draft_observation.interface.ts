@@ -5,6 +5,8 @@ export interface DraftObservation {
   validationStatus?: string;
   concernOpinion?: string;
   details?: string;
+  evidenceType?: string;
+  evidenceOnReport?: string;
   countryId?: string;
   subcategoryId?: string;
   severityId?: string;
