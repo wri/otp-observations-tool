@@ -13,6 +13,7 @@ export interface DraftObservation {
   observers?: Array<number>; // Array of observer ids
   observationReportId?: string;
   operatorId?: string;
+  documents?: { name: string, attachement: string | { url: string } }[];
 
   // New report
   reportTitle?: string;

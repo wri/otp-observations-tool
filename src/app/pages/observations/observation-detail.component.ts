@@ -753,6 +753,11 @@ export class ObservationDetailComponent implements OnDestroy {
           this.publicationDate = this.draft.publicationDate;
           this.evidenceType = this.draft.evidenceType;
           this.evidenceOnReport = this.draft.evidenceOnReport;
+          this.documents = this.draft.documents.map(document => this.datastoreService.createRecord(ObservationDocument, {
+            name: document.name,
+            type: this.draft.evidenceType,
+            attachment: document.attachement
+          }));
           // If we were going to add an evidence
           this.evidence.name = this.draft.evidenceTitle;
           this.evidence.attachment = this.draft.evidenceAttachment;
@@ -842,6 +847,10 @@ export class ObservationDetailComponent implements OnDestroy {
       evidenceOnReport: this.evidenceOnReport,
       evidenceTitle: this.evidence.name,
       evidenceAttachment: this.evidence.attachment && String(this.evidence.attachment),
+      documents: this.documents.map(document => ({
+        name: document.name,
+        attachement: document.attachment
+      })),
     };
     if (this.reportChoice) {
       draftModel.observationReportId = this.reportChoice.id;
