@@ -16,8 +16,8 @@
   <div class="filters">
     <div *ngFor="let filter of filters">
       <label [for]="'filter-modal-' + filter.prop">{{filter.name}}</label>
-      <select [id]="'filter-modal-' + filter.prop" [(ngModel)]="filter.selected">
-        <option [value]="null" [disabled]="filter.required">{{'Not filtering' | translate}}</option>
+      <select [id]="'filter-modal-' + filter.prop" [(ngModel)]="filter.selected" (change)="onChangeFilter(true)">
+        <option [ngValue]="null" [disabled]="filter.required">{{'Not filtering' | translate}}</option>
         <option *ngFor="let key of objectKeys(filter.values)" [value]="filter.values[key]">{{key}}</option>
       </select>
     </div>

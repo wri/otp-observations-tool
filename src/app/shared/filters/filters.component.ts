@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { FilterDirective } from './directives/filter.directive';
 import { Component, ContentChildren, QueryList, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { Subcategory } from '../../models/subcategory.model';
 
 export interface Filter {
   name: string;
@@ -19,6 +20,7 @@ export interface Filter {
 })
 export class FiltersComponent implements AfterContentInit {
 
+  private skipNextFilterChange = false;
   private _filtersNodes: QueryList<FilterDirective>;
   previousState: JsonApiParams;
   filters: Filter[] = [];
@@ -51,6 +53,54 @@ export class FiltersComponent implements AfterContentInit {
       // already changed, so we need to sligthly delay the render
       setTimeout(() => this.filtersNodes = this.filtersNodes, 0);
     });
+
+    this.change.subscribe(() => {
+      this.onChangeFilter();
+    });
+  }
+
+  private async onChangeFilter(silent = false) {
+    if (this.skipNextFilterChange) {
+      this.skipNextFilterChange = false;
+      return;
+    }
+
+    const categoryFilter = this.filters.find(filter => filter.prop === 'category-id');
+    const subcategoryFilter = this.filters.find(filter => filter.prop === 'subcategory');
+
+    if (categoryFilter && subcategoryFilter) {
+      // If the user filters by category, we need to filter the subcategories
+      // If the user removes the category filter, we need to fetch all the subcategories again
+      const params = {
+        sort: 'name',
+        page: { size: 3000 },
+        // We just request the field we need
+        fields: { subcategories: 'name' },
+        ...(this.hasValue(categoryFilter)
+          ? { filter: { 'category-id': categoryFilter.selected } }
+          : {}
+        )
+      };
+
+      const options = await this.datastoreService.query(Subcategory, params)
+        .toPromise()
+        .then(rows => rows.map(row => ({ [row.name]: row.id })))
+        .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
+
+      subcategoryFilter.values = options;
+      if (this.hasValue(categoryFilter) && this.hasValue(subcategoryFilter)) {
+        const option = Object.keys(options).find(key => options[key] === subcategoryFilter.selected);
+        if (!option) {
+          subcategoryFilter.selected = null;
+        }
+      }
+
+      if (!silent) {
+        // Hack so we don't trigger an infinite loop
+        this.skipNextFilterChange = true;
+        this.change.emit();
+      }
+    }
   }
 
   /**
