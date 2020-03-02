@@ -71,10 +71,10 @@ export class ObservationDetailComponent {
   documents: ObservationDocument[] = []; // Sorted by name initially
   documentsToDelete: ObservationDocument[] = []; // Existing document to delete
   documentsToUpload: ObservationDocument[] = []; // New document to upload
-  evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, { type: null });
+  evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, {});
   evidenceTypes = [ // Possible types of an evidence
-    'Government document or data', 'Company document or data', 'Photos', 
-    'Maps', 'Testimony from local communities', 'Other'
+    'Government Documents', 'Company Documents', 'Photos', 
+    'Testimony from local communities', 'Other', 'Evidence presented in the report'
   ];
   evidenceTypeOptions: any = {}; // Object of options for evidence type selection
   operatorTypes = [ // Possible types of an operator
@@ -125,6 +125,8 @@ export class ObservationDetailComponent {
   _type: string = null;
   _country: Country = null;
   _details: string;
+  _evidenceType: string = null;
+  _evidenceOnReport: string;
   _severity: Severity = null;
   _subcategory: Subcategory = null;
   _publicationDate: Date;
@@ -440,6 +442,24 @@ export class ObservationDetailComponent {
     }
   }
 
+  get evidenceType() { return this.observation ? this.observation['evidence-type'] : this._evidenceType }
+  set evidenceType(evidenceType) {
+    if (this.observation) {
+      this.observation['evidence-type'] = evidenceType;
+    } else {
+      this._evidenceType = evidenceType;
+    }
+  }
+
+  get evidenceOnReport() { return this.observation ? this.observation['evidence-on-report'] : this._evidenceOnReport }
+  set evidenceOnReport(evidenceOnReport) {
+    if (this.observation) {
+      this.observation['evidence-on-report'] = evidenceOnReport;
+    } else {
+      this._evidenceOnReport = evidenceOnReport;
+    }
+  }
+
   get opinion() { return this.observation ? this.observation['concern-opinion'] : this._opinion; }
   set opinion(opinion) {
     if (this.observation) {
@@ -696,6 +716,33 @@ export class ObservationDetailComponent {
     });
   }
 
+  public isEvidenceTypeOnReport(type: string): boolean {
+    return type === 'Evidence presented in the report';
+  }
+
+  public onChangeEvidenceType(previousType: string, type: string, typeElement: HTMLSelectElement): void {
+    if (!this.isEvidenceTypeOnReport(type) || !this.documents.length) {
+      this.evidenceType = type;
+    }
+
+    if (this.isEvidenceTypeOnReport(type) && this.documents.length) {
+      this.translateService.get('observation.evidence.filesDeleteNotification')
+        .subscribe((phrase: string) => {
+          if (confirm(phrase)) {
+            this.evidenceType = type;
+            this.evidence.name = null;
+            this.evidence.attachment = null;
+            this.georeferencedPhoto.isUsed = false;
+            this.evidenceInput.nativeElement.value = '';
+          } else {
+            typeElement.selectedIndex = this.evidenceTypes.indexOf(previousType) + 1;
+          }
+        });
+    } else {
+      this.evidenceOnReport = null;
+    }
+  }
+
   /**
    * Event handler executed when the map is initialized
    * @param {L.Map} map - Instance of the map
@@ -839,7 +886,7 @@ export class ObservationDetailComponent {
     // NOTE: we need to create a new model instead of modifying
     // the existing one otherwise evidence will "suffer" the same
     // changes
-    this.evidence = this.datastoreService.createRecord(ObservationDocument, { type: null });
+    this.evidence = this.datastoreService.createRecord(ObservationDocument, {});
     this.georeferencedPhoto.isUsed = false;
   }
 
@@ -1004,10 +1051,10 @@ export class ObservationDetailComponent {
     });
 
     // We create an array of the documents to upload
-    const uploadPromises = this.documentsToUpload.map((d) => {
+    const uploadPromises = !this.isEvidenceTypeOnReport(this.evidenceType) ? this.documentsToUpload.map((d) => {
       d.observation = observation; // We link the document to the observation
       return d.save().toPromise();
-    });
+    }) : [];
 
     return Promise.all(deletePromises.concat(<any>uploadPromises));
   }
@@ -1063,7 +1110,9 @@ export class ObservationDetailComponent {
         observers: this.observers.filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1),
         'actions-taken': this.actions,
         'validation-status': this.validationStatus,
-        'concern-opinion': this.opinion
+        'concern-opinion': this.opinion,
+        'evidence-type': this.evidenceType,
+        'evidence-on-report': this.evidenceOnReport
       };
 
       if (this.type === 'operator') {
