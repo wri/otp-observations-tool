@@ -307,5 +307,6 @@
   "Location information": "Location information",
   "Required location": "Required location",
   "I confirm that I have the right to publish any information I upload to the site": "I confirm that I have the right to publish any information I upload to the site",
-  "Please tick the box": "Please tick the box"
+  "Please tick the box": "Please tick the box",
+  "observation.coordinate.note": "Example of accepted coordinate types: 51.519475, 71° 0' or 51° 31' 10.11\" N."
 }
