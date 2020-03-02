@@ -17,7 +17,16 @@
     <div class="table-actions">
       <input #uploadFile type="file" (change)="uploadCSV($event.target.files)" accept=".csv" [style.display]="'none'" />
       <a class="c-button -secondary upload-csv" (click)="uploadFile.click()">{{'Upload CSV' | translate}}</a>
-      <a class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
+      <a *ngIf="!draftObservation; else draftBlock" class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
+      <ng-template #draftBlock>
+        <div class="draft">
+          <button class="c-button -primary">{{'New observation' | translate}}</button>
+          <ul>
+            <li><button class="c-button -primary" (click)="onCreate()">{{'Create new' | translate}}</button></li>
+            <li><button class="c-button -secondary" (click)="onCreate(true)">{{'Continue draft' | translate}}</button></li>
+          </ul>
+        </div>
+      </ng-template>
     </div>
   </div>
 
