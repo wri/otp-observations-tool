@@ -751,8 +751,8 @@ export class ObservationDetailComponent implements OnDestroy {
           this.details = this.draft.details;
           this.opinion = this.draft.concernOpinion;
           this.publicationDate = this.draft.publicationDate;
-          // this.evidenceType = this.draft.evidenceType;
-          // this.evidenceOnReport = this.draft.evidenceOnReport;
+          this.evidenceType = this.draft.evidenceType;
+          this.evidenceOnReport = this.draft.evidenceOnReport;
           // If we were going to add an evidence
           this.evidence.name = this.draft.evidenceTitle;
           this.evidence.attachment = this.draft.evidenceAttachment;
@@ -838,8 +838,8 @@ export class ObservationDetailComponent implements OnDestroy {
       actionsTaken: this.actions,
       validationStatus: this.validationStatus,
       concernOpinion: this.opinion,
-      // evidenceType: this.evidenceType,
-      // evidenceOnReport: this.evidenceOnReport,
+      evidenceType: this.evidenceType,
+      evidenceOnReport: this.evidenceOnReport,
       evidenceTitle: this.evidence.name,
       evidenceAttachment: this.evidence.attachment && String(this.evidence.attachment),
     };
