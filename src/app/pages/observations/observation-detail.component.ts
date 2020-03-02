@@ -750,6 +750,7 @@ export class ObservationDetailComponent implements OnDestroy {
           this.actions = this.draft.actionsTaken;
           this.details = this.draft.details;
           this.opinion = this.draft.concernOpinion;
+          this.publicationDate = this.draft.publicationDate;
           // this.evidenceType = this.draft.evidenceType;
           // this.evidenceOnReport = this.draft.evidenceOnReport;
           // If we were going to add an evidence
@@ -828,7 +829,7 @@ export class ObservationDetailComponent implements OnDestroy {
   private saveAsDraftObservation(): void {
     const draftModel: DraftObservation = {
       observationType: this.type,
-      publicationDate: new Date(),
+      publicationDate: this.publicationDate,
       countryId: this.country && this.country.id,
       subcategoryId: this.subcategory && this.subcategory.id,
       details: this.details,
