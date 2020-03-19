@@ -44,6 +44,16 @@
     overflow-x: auto;
   }
 
+  .table-note {
+    font-size: $font-size-default;
+
+    button {
+      color: $color-primary;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
   table {
     width: 100%;
     font-size: $font-size-default;
@@ -78,6 +88,7 @@
                     0 2px 0 0 rgba(0, 0, 0, .03),
                     0 3px 0 0 rgba(0, 0, 0, .03),
                     0 4px 0 0 rgba(0, 0, 0, .03);
+        white-space: nowrap;
         cursor: pointer;
 
         &:first-of-type { padding-left: 20px; }
@@ -106,6 +117,18 @@
 
         &.-no-sortable {
           cursor: initial;
+        }
+
+        /deep/ button {
+          padding: 5px;
+          vertical-align: middle;
+          cursor: pointer;
+
+          svg {
+            width: 15px;
+            height: 15px;
+            fill: rgba($black, .5);
+          }
         }
       }
     }

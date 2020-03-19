@@ -34,6 +34,7 @@ export class TableComponent implements AfterContentInit {
   columns: any[] = [];
   sortColumn: any; // Column used for sorting the table
   sortOrder: 'asc'|'desc'; // Sort order
+  hiddenColumns: string[] = []; // Name of the columns that are hidden
 
   private _columnTemplates: QueryList<TableColumnDirective>;
   private _paginationIndex = 0; // Zero-based number of the page
@@ -199,6 +200,10 @@ export class TableComponent implements AfterContentInit {
       });
   }
 
+  get visibleColumns(): any[] {
+    return this.columns.filter(column => this.hiddenColumns.indexOf(column.name) === -1);
+  }
+
   constructor(
     private translateService: TranslateService
   ) {}
@@ -321,6 +326,14 @@ export class TableComponent implements AfterContentInit {
     if (t < 1) { return c / 2 * t * t + b; }
     t--;
     return -c / 2 * (t * (t - 2) - 1) + b;
+  }
+
+  onClickHide(column: any) {
+    this.hiddenColumns.push(column.name);
+  }
+
+  onClickResetColumnsVisibility() {
+    this.hiddenColumns = [];
   }
 
 }
