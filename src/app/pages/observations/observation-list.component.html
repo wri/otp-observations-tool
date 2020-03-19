@@ -40,7 +40,7 @@
     </div>
   </div>
 
-  <otp-table [caption]="'Observations' | translate" defaultSort="-publication-date" [hidden]="isUploading">
+  <otp-table [caption]="'Observations' | translate" defaultSort="-publication-date" [hidden]="isUploading" [options]="tableOptions">
     <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
     <otp-table-column [name]="'Date' | translate" prop="publication-date">
       <ng-template let-value="value" table-cell-template>
@@ -136,10 +136,11 @@
     <otp-table-column [name]="'Status' | translate">
       <ng-template let-row="row" table-cell-template>
         <ng-template [ngIf]="row['validation-status'] === 'Created'">{{'Created' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Ready for revision'">{{'Ready for revision' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Under revision'">{{'Under revision' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Approved'">{{'Approved' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Rejected'">{{'Rejected' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Ready for QC'">{{'Ready for QC' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'QC in progress'">{{'QC in progress' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Needs revision'"><span class="highlighted-status">{{'Needs revision' | translate}}</span></ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Ready for publication'"><span class="highlighted-status">{{'Ready for publication' | translate}}</span></ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Published'">{{'Published' | translate}}</ng-template>
       </ng-template>
     </otp-table-column>
     <!-- We need the user info for canEdit -->

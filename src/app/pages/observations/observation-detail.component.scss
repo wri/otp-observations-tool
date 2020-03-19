@@ -7,12 +7,20 @@
     margin-top: 20px;
   }
 
+  .callout {
+    font-size: $font-size-medium;
+
+    blockquote {
+      font-style: italic;
+    }
+  }
+
   .use-as-evidence {
     margin-top: 15px;
   }
 
   input[type='file'].filled {
-    color: transparent; 
+    color: transparent;
   }
 
   .geo-note {

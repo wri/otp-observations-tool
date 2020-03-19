@@ -15,6 +15,17 @@
     }
   }
 
+  .highlighted-status {
+    font-weight: $font-weight-bold;
+    color: $color-error;
+  }
+
+  @media screen and (min-width: $break-tablet) {
+    otp-navigation {
+      margin-left: 20px;
+    }
+  }
+
   .draft {
     position: relative;
 
@@ -78,12 +89,6 @@
       button {
         width: 100%;
       }
-    }
-  }
-
-  @media screen and (min-width: $break-tablet) {
-    otp-navigation {
-      margin-left: 20px;
     }
   }
 }

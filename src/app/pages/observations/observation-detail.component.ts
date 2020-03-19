@@ -63,6 +63,7 @@ export class ObservationDetailComponent implements OnDestroy {
   loading = false;
   objectKeys = Object.keys;
   subscription: Subscription;
+  needsRevisionState = 'undecided'; // Options are: undecided, amend, explain
   observation: Observation = null; // Only for edit mode
   draft: DraftObservation = null; // Only for using draft observation
   countries: Country[] = [];
@@ -164,6 +165,7 @@ export class ObservationDetailComponent implements OnDestroy {
   report: ObservationReport = this.datastoreService.createRecord(ObservationReport, {});
   // Report choosed between options
   _reportChoice: ObservationReport = null;
+  _monitorComment: string = null;
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -683,6 +685,15 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
+  get monitorComment() { return this.observation ? this.observation['monitor-comment'] : this._monitorComment; }
+  set monitorComment(monitorComment) {
+    if (this.observation) {
+      this.observation['monitor-comment'] = monitorComment;
+    } else {
+      this._monitorComment = monitorComment;
+    }
+  }
+
   constructor(
     private authService: AuthService,
     private observersService: ObserversService,
@@ -1193,6 +1204,14 @@ export class ObservationDetailComponent implements OnDestroy {
     this.router.navigate([(this.observation && !this.isCopied) ? '../..' : '..'], { relativeTo: this.route });
   }
 
+  onClickAmend(): void {
+    this.needsRevisionState = 'amend';
+  }
+
+  onClickExplainAndPublish(): void {
+    this.needsRevisionState = 'explain';
+  }
+
   /**
    * Return whether the form is disabled
    * @returns {boolean}
@@ -1204,7 +1223,8 @@ export class ObservationDetailComponent implements OnDestroy {
       return false;
     }
 
-    if (this.observation.hidden || (this.observation['validation-status'] !== 'Created' && this.observation['validation-status'] !== 'Under revision')) {
+    if (this.observation.hidden || this.observation['validation-status'] !== 'Created'
+      && (this.observation['validation-status'] !== 'Needs revision' || this.needsRevisionState !== 'amend')) {
       return true;
     }
 
@@ -1333,7 +1353,14 @@ export class ObservationDetailComponent implements OnDestroy {
 
   async onSubmitForReview() {
     if (window.confirm(await this.translateService.get('observationSubmitForReview').toPromise())) {
-      this.validationStatus = 'Ready for revision';
+      this.validationStatus = 'Ready for QC';
+      this.onSubmit();
+    }
+  }
+
+  async onPublish() {
+    if (window.confirm(await this.translateService.get('observationPublish').toPromise())) {
+      this.validationStatus = 'Published';
       this.onSubmit();
     }
   }
@@ -1368,9 +1395,7 @@ export class ObservationDetailComponent implements OnDestroy {
         }
       }
 
-      this.observation['validation-status'] = this.validationStatus === 'Under revision'
-        ? 'Ready for revision'
-        : this.validationStatus;
+      this.observation['validation-status'] = this.validationStatus;
 
       observation = this.observation;
     } else {

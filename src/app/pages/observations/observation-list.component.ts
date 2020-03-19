@@ -21,6 +21,13 @@ export class ObservationListComponent extends TableFilterBehavior {
   draftObservation: DraftObservation = JSON.parse(localStorage.getItem('draftObservation'));
   @ViewChild('uploadFile') uploadFile: ElementRef;
 
+  tableOptions = {
+    rows: {
+      highlight: (observation: Observation) => observation['validation-status'] === 'Needs revision'
+        || observation['validation-status'] === 'Ready for publication'
+    }
+  };
+
   private selected = [];
   private editURL: string;
   isUploading = false;
@@ -74,21 +81,22 @@ export class ObservationListComponent extends TableFilterBehavior {
   async updateStatusFilterValues() {
     await Promise.all([
       this.translateService.get('Created').toPromise(),
-      this.translateService.get('Ready for revision').toPromise(),
-      this.translateService.get('Under revision').toPromise(),
-      this.translateService.get('Approved').toPromise(),
-      this.translateService.get('Rejected').toPromise()
-    ]).then(([created, ready, revision, approved, rejected]) => {
+      this.translateService.get('Ready for QC').toPromise(),
+      this.translateService.get('QC in progress').toPromise(),
+      this.translateService.get('Needs revision').toPromise(),
+      this.translateService.get('Ready for publication').toPromise(),
+      this.translateService.get('Published').toPromise()
+    ]).then(([created, submitted, qc, revision, ready, published]) => {
       // We sort the values by alphabetical order
       const values = {
         [created]: 'Created',
-        [ready]: 'Ready for revision',
-        [revision]: 'Under revision',
-        [approved]: 'Approved',
-        [rejected]: 'Rejected'
+        [submitted]: 'Ready for QC',
+        [qc]: 'QC in progress',
+        [revision]: 'Needs revision',
+        [ready]: 'Ready for publication',
+        [published]: 'Published'
       };
       return Object.keys(values)
-        .sort()
         .map(key => ({ [key]: values[key] }))
         .reduce((res, filter) => Object.assign(res, filter), {});
 
@@ -182,7 +190,7 @@ export class ObservationListComponent extends TableFilterBehavior {
    * @returns {boolean}
    */
   canEdit(observation: Observation): boolean {
-    if (observation.hidden || (observation['validation-status'] !== 'Created' && observation['validation-status'] !== 'Under revision')) {
+    if (observation.hidden || observation['validation-status'] !== 'Created') {
       return false;
     }
 
