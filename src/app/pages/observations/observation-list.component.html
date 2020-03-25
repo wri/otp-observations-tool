@@ -1,6 +1,15 @@
 <otp-upload-file [response]="response" (exit)="onExit($event)" *ngIf="isUploading"></otp-upload-file>
 
 <div [hidden]="isUploading">
+  <otp-modal [title]="'CSV upload instructions' | translate" [opened]="uploadWarningModalOpen" [closeable]="true" (onClose)="uploadWarningModalOpen = false">
+    <h2>{{'CSV upload instructions' | translate}}</h2>
+    <p>{{'observation.csvUpload.warningIntro' | translate}}</p>
+    <p>{{'observation.csvUpload.warningText' | translate}}</p>
+    <div class="c-button-container -j-start">
+      <a class="c-button -secondary" href="assets/csv-example.csv" download>{{'Download CSV example' | translate}}</a>
+      <button type="button" class="c-button -primary" (click)="uploadFile.click()">{{'Upload CSV' | translate}}</button>
+    </div>
+  </otp-modal>
   <div class="c-table-header">
     <otp-filters>
       <otp-filter [name]="'Type' | translate" [values]="typeFilterValues" prop="observation-type" default="operator" [required]="true"></otp-filter>
@@ -17,7 +26,7 @@
     </otp-filters>
     <div class="table-actions">
       <input #uploadFile type="file" (change)="uploadCSV($event.target.files)" accept=".csv" [style.display]="'none'" />
-      <a class="c-button -secondary upload-csv" (click)="uploadFile.click()">{{'Upload CSV' | translate}}</a>
+      <a class="c-button -secondary upload-csv" (click)="uploadWarningModalOpen = true">{{'Upload CSV' | translate}}</a>
       <a *ngIf="!draftObservation; else draftBlock" class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
       <ng-template #draftBlock>
         <div class="draft">

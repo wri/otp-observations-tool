@@ -28,6 +28,7 @@ export class ObservationListComponent extends TableFilterBehavior {
   statusFilterValues: any = {};
   typeFilterValues: any = [];
   archivedFilterValues: any = [];
+  uploadWarningModalOpen = false;
 
   get isMyOTP(): boolean {
     return /my\-otp/.test(this.router.url);
