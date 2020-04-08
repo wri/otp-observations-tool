@@ -78,7 +78,7 @@ export class ObservationDetailComponent implements OnDestroy {
   documentsToUpload: ObservationDocument[] = []; // New document to upload
   evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, {});
   evidenceTypes = [ // Possible types of an evidence
-    'Government Documents', 'Company Documents', 'Photos', 
+    'Government Documents', 'Company Documents', 'Photos',
     'Testimony from local communities', 'Other', 'Evidence presented in the report'
   ];
   evidenceTypeOptions: any = {}; // Object of options for evidence type selection
@@ -768,7 +768,7 @@ export class ObservationDetailComponent implements OnDestroy {
           this.report.title = this.draft.reportTitle;
           this.reportAttachment = this.draft.reportAttachment;
           this.reportDate = new Date(this.draft.reportDate);
-          
+
           if (this.type === 'operator') {
             this.physicalPlace = this.draft.isPhysicalPlace;
             this.latitude = this.draft.lat;
@@ -959,7 +959,7 @@ export class ObservationDetailComponent implements OnDestroy {
         self.map.setView([latitude, longitude], 8);
       });
     } else {
-       this.georeferencedPhoto.attachment = null;
+      this.georeferencedPhoto.attachment = null;
     }
   }
 
@@ -1075,7 +1075,7 @@ export class ObservationDetailComponent implements OnDestroy {
       return false;
     }
 
-    if (this.observation['validation-status'] !== 'Created' && this.observation['validation-status'] !== 'Under revision') {
+    if (this.observation.hidden || (this.observation['validation-status'] !== 'Created' && this.observation['validation-status'] !== 'Under revision')) {
       return true;
     }
 

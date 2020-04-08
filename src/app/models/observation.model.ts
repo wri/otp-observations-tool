@@ -16,7 +16,7 @@ import { Subcategory } from 'app/models/subcategory.model';
 import { Severity } from 'app/models/severity.model';
 
 @JsonApiModelConfig({
-    type: 'observations'
+  type: 'observations'
 })
 export class Observation extends JsonApiModel {
 
@@ -38,6 +38,7 @@ export class Observation extends JsonApiModel {
   @Attribute() 'location-information'?: string;
   @Attribute() 'location-accuracy'?: string;
   @Attribute() 'is-physical-place': boolean;
+  @Attribute() 'hidden': boolean; // Whether an observation is archived
 
   @BelongsTo() fmu?: Fmu;
   @BelongsTo() law?: Law;

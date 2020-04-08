@@ -4,6 +4,7 @@
   <div class="c-table-header">
     <otp-filters>
       <otp-filter [name]="'Type' | translate" [values]="typeFilterValues" prop="observation-type" default="operator" [required]="true"></otp-filter>
+      <otp-filter [name]="'Archived' | translate" [values]="archivedFilterValues" prop="hidden" [default]="false" [required]="true"></otp-filter>
       <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name"></otp-filter>
       <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name"></otp-filter>
       <otp-filter [name]="'Category' | translate" values="categories" prop="category-id" name-attr="name"></otp-filter>

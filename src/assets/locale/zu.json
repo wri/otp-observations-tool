@@ -311,5 +311,7 @@
   "observation.coordinate.note": "Example of accepted coordinate types: 51.519475, 71° 0' or 51° 31' 10.11\" N.",
   "Hide column": "Hide column",
   "Some columns are hidden.": "Some columns are hidden.",
-  "Click here to show them all.": "Click here to show them all."
+  "Click here to show them all.": "Click here to show them all.",
+  "Archived": "Archived",
+  "Not archived": "Not archived"
 }

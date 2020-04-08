@@ -27,6 +27,7 @@ export class ObservationListComponent extends TableFilterBehavior {
   response: any = {};
   statusFilterValues: any = {};
   typeFilterValues: any = [];
+  archivedFilterValues: any = [];
 
   get isMyOTP(): boolean {
     return /my\-otp/.test(this.router.url);
@@ -56,10 +57,12 @@ export class ObservationListComponent extends TableFilterBehavior {
 
     this.updateStatusFilterValues();
     this.updateTypeFilterValues();
+    this.updateArchivedFilterValues();
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateStatusFilterValues();
       this.updateTypeFilterValues();
+      this.updateArchivedFilterValues();
     });
   }
 
@@ -111,6 +114,26 @@ export class ObservationListComponent extends TableFilterBehavior {
     }).then(typeFilterValues => this.typeFilterValues = typeFilterValues);
   }
 
+  /**
+   * Update the values for the archived filter according to
+   * the current language
+   */
+  async updateArchivedFilterValues() {
+    await Promise.all([
+      this.translateService.get('Archived').toPromise(),
+      this.translateService.get('Not archived').toPromise()
+    ]).then(([archived, notArchived]) => {
+      const values = {
+        [archived]: true,
+        [notArchived]: false
+      };
+      return Object.keys(values)
+        .sort()
+        .map(key => ({ [key]: values[key] }))
+        .reduce((res, filter) => Object.assign(res, filter), {});
+    }).then(archivedFilterValues => this.archivedFilterValues = archivedFilterValues);
+  }
+
   onEdit(row): void {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate([`../edit/${row.id}`], { relativeTo: this.route });
@@ -158,7 +181,7 @@ export class ObservationListComponent extends TableFilterBehavior {
    * @returns {boolean}
    */
   canEdit(observation: Observation): boolean {
-    if (observation['validation-status'] !== 'Created' && observation['validation-status'] !== 'Under revision') {
+    if (observation.hidden || (observation['validation-status'] !== 'Created' && observation['validation-status'] !== 'Under revision')) {
       return false;
     }
 
