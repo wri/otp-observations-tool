@@ -42,7 +42,7 @@ export class FiltersComponent implements AfterContentInit {
   constructor(
     private datastoreService: DatastoreService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngAfterContentInit(): void {
     // Angular doesn't detect the changes of the attributes of
@@ -157,9 +157,11 @@ export class FiltersComponent implements AfterContentInit {
       values: !Array.isArray(syncFiltersNode.values)
         ? (syncFiltersNode.values)
         : syncFiltersNode.values
-            .map(value => ({ [value]: value }))
-            .reduce((res, value) => Object.assign({}, res, value), {}),
-      selected: syncFiltersNode.default || null,
+          .map(value => ({ [value]: value }))
+          .reduce((res, value) => Object.assign({}, res, value), {}),
+      selected: syncFiltersNode.default !== null && syncFiltersNode.default !== undefined
+        ? syncFiltersNode.default
+        : null,
       required: syncFiltersNode.required || false
     }));
 
@@ -182,7 +184,7 @@ export class FiltersComponent implements AfterContentInit {
       };
 
       if (asyncFiltersNode.prop === 'country' || asyncFiltersNode.prop === 'country-id') {
-        params = Object.assign({}, params, { 'filter[is-active]': 'all'});
+        params = Object.assign({}, params, { 'filter[is-active]': 'all' });
       }
 
       return this.datastoreService.query(model, params)
