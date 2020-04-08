@@ -4,6 +4,9 @@ import { DatastoreService } from 'app/services/datastore.service';
 import { FilterDirective } from './directives/filter.directive';
 import { Component, ContentChildren, QueryList, Output, EventEmitter, AfterContentInit } from '@angular/core';
 import { Subcategory } from '../../models/subcategory.model';
+import { Government } from '../../models/government.model';
+import { Operator } from '../../models/operator.model';
+import { Fmu } from '../../models/fmu.model';
 
 export interface Filter {
   name: string;
@@ -65,6 +68,20 @@ export class FiltersComponent implements AfterContentInit {
       return;
     }
 
+    this.updateSubcategoryFilterOptions();
+    this.updateGovernmentEntityFilterOptions();
+    this.updateOperatorFilterOptions();
+    // Must be after updateOperatorFilterOptions because the FMU options depends on the operators
+    this.updateFmuFilterOptions();
+
+    if (!silent) {
+      // Hack so we don't trigger an infinite loop
+      this.skipNextFilterChange = true;
+      this.change.emit();
+    }
+  }
+
+  private async updateSubcategoryFilterOptions() {
     const categoryFilter = this.filters.find(filter => filter.prop === 'category-id');
     const subcategoryFilter = this.filters.find(filter => filter.prop === 'subcategory');
 
@@ -82,23 +99,136 @@ export class FiltersComponent implements AfterContentInit {
         )
       };
 
-      const options = await this.datastoreService.query(Subcategory, params)
-        .toPromise()
-        .then(rows => rows.map(row => ({ [row.name]: row.id })))
-        .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
+      try {
+        const options = await this.datastoreService.query(Subcategory, params)
+          .toPromise()
+          .then(rows => rows.map(row => ({ [row.name]: row.id })))
+          .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
 
-      subcategoryFilter.values = options;
-      if (this.hasValue(categoryFilter) && this.hasValue(subcategoryFilter)) {
-        const option = Object.keys(options).find(key => options[key] === subcategoryFilter.selected);
-        if (!option) {
-          subcategoryFilter.selected = null;
+        subcategoryFilter.values = options;
+        if (this.hasValue(categoryFilter) && this.hasValue(subcategoryFilter)) {
+          const option = Object.keys(options).find(key => options[key] === subcategoryFilter.selected);
+          if (!option) {
+            subcategoryFilter.selected = null;
+          }
         }
+      } catch (e) {
+        console.error(e);
       }
+    }
+  }
 
-      if (!silent) {
-        // Hack so we don't trigger an infinite loop
-        this.skipNextFilterChange = true;
-        this.change.emit();
+  private async updateGovernmentEntityFilterOptions() {
+    const countryFilter = this.filters.find(filter => filter.prop === 'country-id');
+    const governmentEntityFilter = this.filters.find(filter => filter.prop === 'government-id');
+
+    if (countryFilter && governmentEntityFilter) {
+      // If the user filters by country, we need to filter the government entities
+      // If the user removes the country filter, we need to fetch all the government entities again
+      const params = {
+        sort: 'government-entity',
+        page: { size: 3000 },
+        // We just request the field we need
+        fields: { governments: 'government-entity' },
+        ...(this.hasValue(countryFilter)
+          ? { filter: { 'country': countryFilter.selected } }
+          : {}
+        )
+      };
+
+      try {
+        const options = await this.datastoreService.query(Government, params)
+          .toPromise()
+          .then(rows => rows.map(row => ({ [row['government-entity']]: row.id })))
+          .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
+
+        governmentEntityFilter.values = options;
+        if (this.hasValue(countryFilter) && this.hasValue(governmentEntityFilter)) {
+          const option = Object.keys(options).find(key => options[key] === governmentEntityFilter.selected);
+          if (!option) {
+            governmentEntityFilter.selected = null;
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+
+  private async updateOperatorFilterOptions() {
+    const countryFilter = this.filters.find(filter => filter.prop === 'country-id');
+    const operatorFilter = this.filters.find(filter => filter.prop === 'operator');
+
+    if (countryFilter && operatorFilter) {
+      // If the user filters by country, we need to filter the operators
+      // If the user removes the country filter, we need to fetch all the operators again
+      const params = {
+        sort: 'name',
+        page: { size: 3000 },
+        // We just request the field we need
+        fields: { operators: 'name' },
+        ...(this.hasValue(countryFilter)
+          ? { filter: { 'country': countryFilter.selected } }
+          : {}
+        )
+      };
+
+      try {
+        const options = await this.datastoreService.query(Operator, params)
+          .toPromise()
+          .then(rows => rows.map(row => ({ [row.name]: row.id })))
+          .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
+
+        operatorFilter.values = options;
+        if (this.hasValue(countryFilter) && this.hasValue(operatorFilter)) {
+          const option = Object.keys(options).find(key => options[key] === operatorFilter.selected);
+          if (!option) {
+            operatorFilter.selected = null;
+            // The FMUs depend on the operators so if the country resets the operator, the FMU
+            // must be updated too
+            this.onChangeFilter(true);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+
+  private async updateFmuFilterOptions() {
+    const countryFilter = this.filters.find(filter => filter.prop === 'country-id');
+    const operatorFilter = this.filters.find(filter => filter.prop === 'operator');
+    const fmuFilter = this.filters.find(filter => filter.prop === 'fmu-id');
+
+    if (countryFilter && operatorFilter && fmuFilter) {
+      // If the user filters by country and/or operator, we need to filter the fmus
+      // If the user removes the country and/or operator filter, we need to fetch all the fmus again
+      const params = {
+        sort: 'name',
+        page: { size: 3000 },
+        // We just request the field we need
+        fields: { fmus: 'name' },
+        filter: {
+          ...(this.hasValue(countryFilter) ? { 'country': countryFilter.selected } : {}),
+          ...(this.hasValue(operatorFilter) ? { 'operator': operatorFilter.selected } : {}),
+        }
+      };
+
+      try {
+        const options = await this.datastoreService.query(Fmu, params)
+          .toPromise()
+          .then(rows => rows.map(row => ({ [row.name]: row.id })))
+          .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
+
+        fmuFilter.values = options;
+        if ((this.hasValue(countryFilter) || this.hasValue(operatorFilter)) && this.hasValue(fmuFilter)) {
+          const option = Object.keys(options).find(key => options[key] === fmuFilter.selected);
+          if (!option) {
+            fmuFilter.selected = null;
+          }
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
   }
