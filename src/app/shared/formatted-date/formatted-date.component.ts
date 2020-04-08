@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import flatpickr from 'flatpickr';
 import Locale from 'flatpickr/dist/l10n';
 
-export const dateFormat = 'j M Y';
+export const dateFormat = 'd/m/Y';
 
 @Component({
   selector: 'otp-formatted-date',
@@ -10,7 +10,7 @@ export const dateFormat = 'j M Y';
 })
 export class FormattedDateComponent {
 
-  @Input() date: Date|string;
+  @Input() date: Date | string;
 
   private isLocaleSet = false;
 
