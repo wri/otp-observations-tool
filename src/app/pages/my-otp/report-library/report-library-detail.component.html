@@ -29,8 +29,8 @@
     <div [ngClass]="{ 'form-group': true, '-required': !report.id }">
       <label *ngIf="report.id" for="report_file">{{'New file' | translate}}</label>
       <label *ngIf="!report.id" for="report_file">{{'File' | translate}}</label>
-      <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="report.attachment" #report_file="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-      <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 5MB' | translate}}</div>
+      <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="report.attachment" #report_file="ngModel" otpBase64FileInput maxSize="41943040" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
+      <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 40MB' | translate}}</div>
       <div *ngIf="f.submitted && !report_file.valid" class="help-text">{{'The file is not valid' | translate}}</div>
     </div>
 

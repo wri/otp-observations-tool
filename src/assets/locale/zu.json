@@ -76,6 +76,7 @@
   "Upload report": "Upload report",
   "Alternatively, you can upload a new report to the library and use it for this observation.": "Alternatively, you can upload a new report to the library and use it for this observation.",
   "File": "File",
+  "The file should weight less than 5MB": "The file should weight less than 5MB",
   "The file should weight less than 40MB": "The file should weight less than 40MB",
   "The file is not valid": "The file is not valid",
   "Please enter the name": "Please enter the name",
