@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 import { NavigationItem } from 'app/shared/navigation/navigation.component';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'otp-header',
@@ -16,11 +17,12 @@ export class HeaderComponent {
   acceptedLang = ['en', 'fr'];
   defaultLang = 'en';
   _lang = 'en';
+  isStaging = false;
 
   get lang() { return this._lang; }
   set lang(lang) { this.translateService.use(lang); }
 
-  constructor (
+  constructor(
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
@@ -33,6 +35,10 @@ export class HeaderComponent {
       this.isLogged = isLogged;
       this.isAdmin = this.authService.isAdmin();
     });
+
+    if (!environment.production) {
+      this.isStaging = true;
+    }
   }
 
   logout(): void {

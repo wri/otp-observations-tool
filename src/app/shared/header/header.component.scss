@@ -55,6 +55,16 @@
       box-shadow: none;
       background-position: right -10px center;
     }
+
+    .subtitle {
+      position: relative;
+      top: -2px;
+      padding-left: 43px;
+      color: $color-error;
+      font-size: $font-size-default;
+      font-weight: $font-weight-medium;
+      text-transform: uppercase;
+    }
   }
 
   // We move the navigation 10px to the left to compensate

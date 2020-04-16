@@ -1,6 +1,11 @@
 <div class="l-wrapper">
   <div class="menu">
-    <img src="assets/OTP-logo.svg" alt="Open Timber Portal" />
+    <div class="brand">
+      <img src="assets/OTP-logo.svg" alt="Open Timber Portal" />
+      <div *ngIf="isStaging" class="subtitle">
+        Staging
+      </div>
+    </div>
     <ul>
       <li>
         <select [(ngModel)]="lang">
