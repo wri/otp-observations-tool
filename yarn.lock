@@ -458,9 +458,10 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-angular-2-dropdown-multiselect@^1.5.4:
+angular-2-dropdown-multiselect@~1.5.4:
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/angular-2-dropdown-multiselect/-/angular-2-dropdown-multiselect-1.5.4.tgz#d596745ffdb877e4bc80170d64e8b5c52247926e"
+  integrity sha512-FqJmnq1gYqrOeC3Hv2gd2plPo/wUkZjFMlJ0uamnh89MMT8O9XGCZoCyw/NlqW45+u3VxOYHuWTIjn5NnPcnuQ==
 
 angular2-jsonapi@^4.0.3:
   version "4.0.3"
@@ -2648,9 +2649,10 @@ findup-sync@~0.3.0:
   dependencies:
     glob "~5.0.0"
 
-flatpickr@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.2.3.tgz#084b95d353b3b64a164ebfe7151df75c8dae14b1"
+flatpickr@~4.2.3:
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.2.4.tgz#abd6dedd0fa41e2118acb96a22f49819ba2d0157"
+  integrity sha1-q9be3Q+kHiEYrLlqIvSYGbotAVc=
 
 flatted@^2.0.0:
   version "2.0.0"
@@ -2851,6 +2853,11 @@ gaze@^1.0.0:
   resolved "https://registry.yarnpkg.com/gaze/-/gaze-1.1.2.tgz#847224677adb8870d679257ed3388fdb61e40105"
   dependencies:
     globule "^1.0.0"
+
+geo-coordinates-parser@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/geo-coordinates-parser/-/geo-coordinates-parser-1.2.3.tgz#aac4d869f1703161b8efd43d55e4ec89c2545aff"
+  integrity sha512-d5yj0zfkN4K2tIE877cg0lWofCo+JnWIjX2JMtBOMVgU76DrqEWgKuxZnp0L+hbSkmi1bot22M7a7Go5TNEVJg==
 
 get-caller-file@^1.0.1:
   version "1.0.2"
