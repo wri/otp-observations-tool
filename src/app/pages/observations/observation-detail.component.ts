@@ -394,7 +394,7 @@ export class ObservationDetailComponent implements OnDestroy {
     }
 
     // We automatically update the severities options
-    this.severities = subcategory ? subcategory.severities : [];
+    this.severities = subcategory ? subcategory.severities.sort((a, b) => a.level < b.level ? -1 : 1) : [];
 
     if (this.draft && this.subcategory && this.subcategory.id === this.draft.subcategoryId) {
       this.severity = this.severities.find(severity => severity.id === this.draft.severityId);
