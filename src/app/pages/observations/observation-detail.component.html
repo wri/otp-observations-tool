@@ -149,7 +149,7 @@
               <label for="operator_type">{{'Type' | translate}}</label>
               <select if="operator_type" name="operator_type" [(ngModel)]="operatorType" #operator_type="ngModel" [required]="!operatorChoice">
                 <option [value]="null" disabled>{{'Select an operator type' | translate}}</option>
-                <option *ngFor="let type of operatorTypes" [ngValue]="type">{{ type }}</option>
+                <option *ngFor="let type of objectKeys(operatorTypeOptions)" [ngValue]="operatorTypeOptions[type]">{{ type }}</option>
               </select>
               <div *ngIf="f.submitted && !operator_type.valid" class="help-text">{{'Please select an operator type' | translate}}</div>
             </div>

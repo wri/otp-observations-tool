@@ -660,9 +660,11 @@ export class ObservationDetailComponent implements OnDestroy {
     private translateService: TranslateService
   ) {
     this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
+    this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
+      this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
     });
 
     this.observersService.getAll({ sort: 'name' })

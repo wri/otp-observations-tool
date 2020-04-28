@@ -319,5 +319,13 @@
   "observation.csvUpload.warningIntro": "This feature lets you upload multiple observations at once that will be attached to your observer.",
   "observation.csvUpload.warningText": "The columns (first line) of the CSV file must exactly match the template below (please treat the rest of the file as an example). If the file contains errors or missing information, you will be told about them. At the end of the upload, you will be able to edit the observations in the application before submitting them.",
   "Download CSV example": "Download CSV example",
-  "Selected option:": "Selected option:"
+  "Selected option:": "Selected option:",
+  "Logging company": "Logging company",
+  "Artisanal": "Artisanal",
+  "Community forest": "Community forest",
+  "Estate": "Estate",
+  "Industrial agriculture": "Industrial agriculture",
+  "Mining company": "Mining company",
+  "Sawmill": "Sawmill",
+  "Unknown": "Unknown"
 }
