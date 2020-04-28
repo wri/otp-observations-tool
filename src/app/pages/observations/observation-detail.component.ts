@@ -905,10 +905,8 @@ export class ObservationDetailComponent implements OnDestroy {
   private getDecimalCoordinates(latitude: string | number, longitude: string | number): number[] {
     try {
       const { decimalLatitude, decimalLongitude } = GeoCoordinatesParser(`${latitude}, ${longitude}`);
-      console.log([decimalLatitude, decimalLongitude]);
       return [decimalLatitude, decimalLongitude];
     } catch (e) {
-      console.log('null');
       return null;
     }
   }

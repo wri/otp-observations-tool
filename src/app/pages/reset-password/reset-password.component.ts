@@ -18,7 +18,7 @@ export class ResetPasswordComponent {
     private router: Router,
     private http: Http,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   onSubmit(formValues) {
     this.loading = true;
@@ -28,8 +28,7 @@ export class ResetPasswordComponent {
     this.http.post(`${environment.apiUrl}/reset-password`, payload)
       .map(response => response.json())
       .toPromise()
-      .then(async (hey) => {
-        console.log(hey);
+      .then(async () => {
         alert(await this.translateService.get('register.success').toPromise());
         this.router.navigate(['']);
       })
