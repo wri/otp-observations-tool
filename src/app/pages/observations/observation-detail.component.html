@@ -271,9 +271,9 @@
 
                   <div class="form-group">
                     <label for="photo_field">{{'Georeferenced photo' | translate}}</label>
-                    <input id="photo_field" type="file" class="form-control" name="photo_field" #photo_field="ngModel" (change)="onChangePhoto($event)" otpBase64FileInput maxSize="5242880" [(ngModel)]="georeferencedPhoto.attachment" accept=".jpg, .jpeg" />
+                    <input id="photo_field" type="file" class="form-control" name="photo_field" #photo_field="ngModel" (change)="onChangePhoto($event)" otpBase64FileInput maxSize="20971520" [(ngModel)]="georeferencedPhoto.attachment" accept=".jpg, .jpeg" />
                     <button type="button" (click)="uploadAsEvidencePhoto()" class="use-as-evidence c-button -secondary" [disabled]="!georeferencedPhoto.attachment || photo_field.errors?.maxSize || isEvidenceTypeOnReport(evidenceType)">{{'observation.useAsEvidence' | translate}}</button>
-                    <div *ngIf="photo_field.errors?.maxSize" class="help-text">{{'The file should weight less than 5MB' | translate}}</div>
+                    <div *ngIf="photo_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
                   </div>
                 </div>
               </div>
@@ -371,9 +371,9 @@
             </div>
             <div [hidden]="isEvidenceTypeOnReport(evidenceType)" class="form-group">
               <label for="evidence_field">{{'Evidence' | translate}}</label>
-              <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
+              <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="20971520" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
               <div *ngIf="georeferencedPhoto.isUsed" class="geo-note">{{'observation.geoPhotoUploaded.note' | translate}}</div>
-              <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 5MB' | translate}}</div>
+              <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
               <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
@@ -751,9 +751,9 @@
             </div>
             <div [hidden]="isEvidenceTypeOnReport(evidenceType)" class="form-group">
               <label for="evidence_field">{{'Evidence' | translate}}</label>
-              <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="5242880" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
+              <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="20971520" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
               <div *ngIf="georeferencedPhoto.isUsed" class="geo-note">{{'observation.geoPhotoUploaded.note' | translate}}</div>
-              <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 5MB' | translate}}</div>
+              <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
               <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
