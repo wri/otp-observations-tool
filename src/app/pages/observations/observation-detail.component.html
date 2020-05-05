@@ -250,7 +250,6 @@
                   <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
                     <label for="latitude_field">{{'Latitude' | translate}}</label>
                     <input id="latitude_field" type="text" class="form-control" name="latitude_field" (change)="onChangeCoordinates()" [(ngModel)]="latitude" #latitude_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
-                    <div *ngIf="f.submitted && !isValidCoordinate(latitude)" class="help-text">{{'observation.coordinateValue' | translate}}</div>
                     <div *ngIf="f.submitted && !latitude_field.valid" class="help-text">{{'Please enter a latitude' | translate}}</div>
                     <p class="note">{{'observation.coordinate.note' | translate}}</p>
                   </div>
@@ -258,7 +257,6 @@
                   <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
                     <label for="longitude_field">{{'Longitude' | translate}}</label>
                     <input id="longitude_field" type="text" class="form-control" name="longitude_field" (change)="onChangeCoordinates()" [(ngModel)]="longitude" #longitude_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
-                    <div *ngIf="f.submitted && !isValidCoordinate(longitude)" class="help-text">{{'observation.coordinateValue' | translate}}</div>
                     <div *ngIf="f.submitted && !longitude_field.valid" class="help-text">{{'Please enter a longitude' | translate}}</div>
                     <p class="note">{{'observation.coordinate.note' | translate}}</p>
                   </div>
