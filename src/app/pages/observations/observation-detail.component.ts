@@ -903,6 +903,11 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   private getDecimalCoordinates(latitude: string | number, longitude: string | number): number[] {
+    const decimalCoordRegex = /^\d+(\.\d+)?$/;
+    if (decimalCoordRegex.test(`${latitude}`) && decimalCoordRegex.test(`${longitude}`)) {
+      return [+latitude, +longitude];
+    }
+
     try {
       const { decimalLatitude, decimalLongitude } = GeoCoordinatesParser(`${latitude}, ${longitude}`);
       return [decimalLatitude, decimalLongitude];
