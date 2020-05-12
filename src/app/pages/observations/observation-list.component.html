@@ -140,7 +140,14 @@
         <ng-template [ngIf]="row['validation-status'] === 'QC in progress'">{{'QC in progress' | translate}}</ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Needs revision'"><span class="highlighted-status">{{'Needs revision' | translate}}</span></ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Ready for publication'"><span class="highlighted-status">{{'Ready for publication' | translate}}</span></ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Published'">{{'Published' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Published (no comments)'">{{'Published (no comments)' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Published (not modified)'">{{'Published (not modified)' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Published (modified)'">{{'Published (modified)' | translate}}</ng-template>
+        <!-- Below are the old statuses that are temporarily maintained for consistency with the data (not entirely migrated) -->
+        <ng-template [ngIf]="row['validation-status'] === 'Under Revision'">{{'Under Revision' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Ready for Revision'">{{'Ready for Revision' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Rejected'">{{'Rejected' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Approved'">{{'Approved' | translate}}</ng-template>
       </ng-template>
     </otp-table-column>
     <!-- We need the user info for canEdit -->

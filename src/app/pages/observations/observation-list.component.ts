@@ -85,8 +85,10 @@ export class ObservationListComponent extends TableFilterBehavior {
       this.translateService.get('QC in progress').toPromise(),
       this.translateService.get('Needs revision').toPromise(),
       this.translateService.get('Ready for publication').toPromise(),
-      this.translateService.get('Published').toPromise()
-    ]).then(([created, submitted, qc, revision, ready, published]) => {
+      this.translateService.get('Published (no comments)').toPromise(),
+      this.translateService.get('Published (not modified)').toPromise(),
+      this.translateService.get('Published (modified)').toPromise()
+    ]).then(([created, submitted, qc, revision, ready, publishedNoComments, publishedNotModified, publishedModified]) => {
       // We sort the values by alphabetical order
       const values = {
         [created]: 'Created',
@@ -94,7 +96,9 @@ export class ObservationListComponent extends TableFilterBehavior {
         [qc]: 'QC in progress',
         [revision]: 'Needs revision',
         [ready]: 'Ready for publication',
-        [published]: 'Published'
+        [publishedNoComments]: 'Published (no comments)',
+        [publishedNotModified]: 'Published (not modified)',
+        [publishedModified]: 'Published (modified)',
       };
       return Object.keys(values)
         .map(key => ({ [key]: values[key] }))

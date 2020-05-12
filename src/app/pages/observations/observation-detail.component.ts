@@ -1358,9 +1358,9 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
-  async onPublish() {
+  async onPublish(validationStatus) {
     if (window.confirm(await this.translateService.get('observationPublish').toPromise())) {
-      this.validationStatus = 'Published';
+      this.validationStatus = validationStatus;
       this.onSubmit();
     }
   }
