@@ -1,7 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
 import * as cloneDeep from 'lodash/cloneDeep';
 import * as EXIF from 'exif-js';
-import * as GeoCoordinatesParser from 'geo-coordinates-parser/bundle/geocoordsparser.js';
+import proj4 from 'proj4';
 import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
 import { ObservationDocument } from 'app/models/observation_document';
@@ -86,6 +86,13 @@ export class ObservationDetailComponent implements OnDestroy {
     'Logging company', 'Artisanal', 'Community forest', 'Estate',
     'Industrial agriculture', 'Mining company', 'Sawmill', 'Other', 'Unknown'
   ];
+  coordinatesFormats = [
+    'Decimal',
+    'Degrees and decimal minutes',
+    'Sexagesimal',
+    'UTM',
+  ];
+  coordinatesFormatOptions: any = {};
   locationChoice = { // Possible ways to choose a location
     clickMap: 'Estimated location',
     photo: 'GPS coordinates extracted from photo',
@@ -140,6 +147,9 @@ export class ObservationDetailComponent implements OnDestroy {
   _opinion: string; // Only for type operator
   _litigationStatus: string; // Only for type operator
   _pv: string; // Only for type operator
+  _coordinatesFormat: string = null;
+  _hemisphere: string = null;
+  _zone: number = null;
   _latitude: number; // Only for type operator
   _longitude: number; // Only for type operator
   _fmu: Fmu = null; // Only for type operator
@@ -437,6 +447,35 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
+  get coordinatesFormat() {
+    if (!this._coordinatesFormat && this.observation && this.latitude !== undefined
+      && this.latitude !== null && this.longitude !== undefined && this.longitude !== null) {
+      return 'Decimal';
+    }
+
+    return this._coordinatesFormat;
+  }
+
+  set coordinatesFormat(coordinatesFormat) {
+    this._coordinatesFormat = coordinatesFormat;
+  }
+
+  get hemisphere() {
+    return this._hemisphere;
+  }
+
+  set hemisphere(hemisphere) {
+    this._hemisphere = hemisphere;
+  }
+
+  get zone() {
+    return this._zone;
+  }
+
+  set zone(zone) {
+    this._zone = zone;
+  }
+
   get latitude() { return this.observation ? this.observation.lat : this._latitude; }
   set latitude(latitude) {
     if (this.observation) {
@@ -445,7 +484,7 @@ export class ObservationDetailComponent implements OnDestroy {
       this._latitude = latitude;
     }
 
-    const decimalCoordinates = this.getDecimalCoordinates(this.latitude, this.longitude);
+    const decimalCoordinates = this.getDecimalCoordinates();
 
     // We create a layer with the marker
     if (decimalCoordinates) {
@@ -463,7 +502,7 @@ export class ObservationDetailComponent implements OnDestroy {
       this._longitude = longitude;
     }
 
-    const decimalCoordinates = this.getDecimalCoordinates(this.latitude, this.longitude);
+    const decimalCoordinates = this.getDecimalCoordinates();
 
     // We create a layer with the marker
     if (decimalCoordinates) {
@@ -661,10 +700,12 @@ export class ObservationDetailComponent implements OnDestroy {
   ) {
     this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
     this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
+    this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
       this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
+      this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
     });
 
     this.observersService.getAll({ sort: 'name' })
@@ -867,7 +908,7 @@ export class ObservationDetailComponent implements OnDestroy {
     }
 
     if (this.type === 'operator') {
-      const decimalCoordinates = this.getDecimalCoordinates(this.latitude, this.longitude);
+      const decimalCoordinates = this.getDecimalCoordinates();
 
       if (this.operatorChoice) {
         draftModel.operatorId = this.operatorChoice && this.operatorChoice.id;
@@ -902,17 +943,95 @@ export class ObservationDetailComponent implements OnDestroy {
     this.map.on('click', this.onClickMap.bind(this));
   }
 
-  private getDecimalCoordinates(latitude: string | number, longitude: string | number): number[] {
-    const decimalCoordRegex = /^\d+(\.\d+)?$/;
-    if (decimalCoordRegex.test(`${latitude}`) && decimalCoordRegex.test(`${longitude}`)) {
-      return [+latitude, +longitude];
-    }
+  private checkCoordinatesValidity(): number[] | boolean {
+    switch (this.coordinatesFormat) {
+      case 'Decimal':
+        try {
+          return proj4('WGS84', 'WGS84', [+this.latitude, +this.longitude]);
+        } catch (e) {
+          return false;
+        }
+      case 'Degrees and decimal minutes': {
+        const convertCoordinateToDecimal = (coordinate: string) => {
+          const convert = (degrees: string, decimalMinutes: string, direction: string) => {
+            let res = (+degrees) + (+decimalMinutes / 60);
 
-    try {
-      const { decimalLatitude, decimalLongitude } = GeoCoordinatesParser(`${latitude}, ${longitude}`);
-      return [decimalLatitude, decimalLongitude];
-    } catch (e) {
-      return null;
+            if (direction == 'S' || direction == 'W') {
+              res *= -1;
+            }
+
+            return res;
+          };
+
+          var parts = coordinate.split(/[^\d\w\.]+/);
+          return convert(parts[0], parts[1], parts[2]);
+        };
+
+        try {
+          const decimalLatitude = convertCoordinateToDecimal(`${this.latitude}`);
+          const decimalLongitude = convertCoordinateToDecimal(`${this.longitude}`);
+          return proj4('WGS84', 'WGS84', [decimalLatitude, decimalLongitude]);
+        } catch (e) {
+          return false;
+        }
+      }
+      case 'Sexagesimal': {
+        const convertCoordinateToDecimal = (coordinate: string) => {
+          const convert = (degrees: string, minutes: string, seconds: string, direction: string) => {
+            let res = (+degrees) + (+minutes / 60) + (+seconds / (60 * 60));
+
+            console.log(degrees, minutes, seconds, direction);
+
+            if (direction == 'S' || direction == 'W') {
+              res *= -1;
+            }
+
+            return res;
+          };
+
+          var parts = coordinate.split(/[^\d\w\.]+/);
+          return convert(parts[0], parts[1], parts[2], parts[3]);
+        };
+
+        try {
+          const decimalLatitude = convertCoordinateToDecimal(`${this.latitude}`);
+          const decimalLongitude = convertCoordinateToDecimal(`${this.longitude}`);
+          return proj4('WGS84', 'WGS84', [decimalLatitude, decimalLongitude]);
+        } catch (e) {
+          return false;
+        }
+      }
+      case 'UTM':
+        try {
+          // We reverse the final result because the UTM coordinates are given by X first
+          // (conventionally the longitude) and then Y (the latitude) which means the result of
+          // proj4 is the longitude first and then the latitude
+          return proj4(
+            `+proj=utm +zone=${this.zone} +datum=WGS84 +units=m +no_defs ${this.hemisphere === 'South' ? ' +south' : ''}`,
+            '+proj=longlat +datum=WGS84 +no_defs', [+this.latitude, +this.longitude],
+          ).reverse();
+        } catch (e) {
+          return false;
+        }
+      default:
+        return false;
+    }
+  }
+
+  private getDecimalCoordinates(): number[] {
+    switch (this.coordinatesFormat) {
+      case 'Decimal':
+      case 'Degrees and decimal minutes':
+      case 'Sexagesimal':
+      case 'UTM':
+        const decimalCoordinates = this.checkCoordinatesValidity();
+        if (!decimalCoordinates) {
+          return null;
+        }
+
+        return <number[]>decimalCoordinates;
+      default:
+        return null;
     }
   }
 
@@ -974,7 +1093,7 @@ export class ObservationDetailComponent implements OnDestroy {
   public onChangeCoordinates(): void {
     this.isChangedCoordinates = true;
 
-    const decimalCoordinates = this.getDecimalCoordinates(this.latitude, this.longitude);
+    const decimalCoordinates = this.getDecimalCoordinates();
     if (decimalCoordinates) {
       this.locationAccuracy = this.locationChoice.manually;
     }
@@ -1242,7 +1361,8 @@ export class ObservationDetailComponent implements OnDestroy {
           this.observation.lng = null;
           this.observation.fmu = null;
         } else {
-          const decimalCoordinates = this.getDecimalCoordinates(this.latitude, this.longitude);
+          const decimalCoordinates = this.getDecimalCoordinates();
+          console.log(decimalCoordinates);
           this.observation.lat = decimalCoordinates && decimalCoordinates[0];
           this.observation.lng = decimalCoordinates && decimalCoordinates[1];
         }
@@ -1270,7 +1390,7 @@ export class ObservationDetailComponent implements OnDestroy {
       };
 
       if (this.type === 'operator') {
-        const decimalCoordinates = this.getDecimalCoordinates(this.latitude, this.longitude);
+        const decimalCoordinates = this.getDecimalCoordinates();
 
         model.operator = this.operatorChoice;
         model['is-physical-place'] = this.physicalPlace;
