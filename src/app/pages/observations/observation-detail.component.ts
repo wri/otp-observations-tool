@@ -1053,13 +1053,14 @@ export class ObservationDetailComponent implements OnDestroy {
   onClickMap(e: any) {
     if (this.canSetMapPin) {
       this.locationAccuracy = this.locationChoice.clickMap;
+      this.coordinatesFormat = 'Decimal';
       this.latitude = e.latlng.lat;
       this.longitude = e.latlng.lng;
     }
   }
 
   public get canSetMapPin(): boolean {
-    return !this.fmu && !this.isChangedCoordinates;
+    return !this.isChangedCoordinates;
   }
 
   onChangePhoto(e: any) {
@@ -1090,6 +1091,7 @@ export class ObservationDetailComponent implements OnDestroy {
         const longitude = (longitudeRef === 'E' ? 1 : -1) * self.convertMinutesToDegrees(minLongitude);
 
         // We convert them to decimal degrees
+        self.coordinatesFormat = 'Decimal';
         self.latitude = latitude;
         self.longitude = longitude;
 
@@ -1102,10 +1104,9 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   public onChangeCoordinates(): void {
-    this.isChangedCoordinates = true;
-
     const decimalCoordinates = this.getDecimalCoordinates();
     if (decimalCoordinates) {
+      this.isChangedCoordinates = true;
       this.locationAccuracy = this.locationChoice.manually;
     }
   }
