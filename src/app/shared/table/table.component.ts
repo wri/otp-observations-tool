@@ -33,11 +33,23 @@ export class TableComponent implements AfterContentInit {
   loading = false;
   columns: any[] = [];
   sortColumn: any; // Column used for sorting the table
-  sortOrder: 'asc'|'desc'; // Sort order
-  hiddenColumns: string[] = []; // Name of the columns that are hidden
+  sortOrder: 'asc' | 'desc'; // Sort order
 
   private _columnTemplates: QueryList<TableColumnDirective>;
   private _paginationIndex = 0; // Zero-based number of the page
+
+  get hiddenColumns(): string[] {
+    try {
+      const storedValue = JSON.parse(localStorage.getItem('observations-hidden-columns'));
+      return Array.isArray(storedValue) ? storedValue : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  set hiddenColumns(hiddenColumns: string[]) {
+    localStorage.setItem('observations-hidden-columns', JSON.stringify(hiddenColumns));
+  }
 
   @ContentChildren(TableColumnDirective)
   set columnTemplates(list: QueryList<TableColumnDirective>) {
@@ -145,11 +157,11 @@ export class TableComponent implements AfterContentInit {
     }
   }
 
-  get previousPage(): number|null {
+  get previousPage(): number | null {
     return this.currentPage === this.firstPage ? null : this.currentPage - 1;
   }
 
-  get nextPage(): number|null {
+  get nextPage(): number | null {
     return this.currentPage === this.lastPage ? null : this.currentPage + 1;
   }
 
@@ -206,7 +218,7 @@ export class TableComponent implements AfterContentInit {
 
   constructor(
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngAfterContentInit(): void {
     // Angular doesn't detect the changes of the attributes of
@@ -329,7 +341,7 @@ export class TableComponent implements AfterContentInit {
   }
 
   onClickHide(column: any) {
-    this.hiddenColumns.push(column.name);
+    this.hiddenColumns = [...this.hiddenColumns, column.name];
   }
 
   onClickResetColumnsVisibility() {
