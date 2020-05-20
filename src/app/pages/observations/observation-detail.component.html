@@ -901,20 +901,22 @@
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
-        <button *ngIf="isDisabled() && !isCopied" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-      <button *ngIf="!isDisabled() && observation && !isCopied" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="!isDisabled() && canSubmitForReview() && observation && !isCopied" type="submit" class="c-button -secondary">{{'Submit for review' | translate}}</button>
-      <button *ngIf="!isDisabled() && observation && !isCopied && observation['validation-status'] !== 'Needs revision'"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
-      <button *ngIf="observation && observation['validation-status'] === 'Ready for publication'" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
-      <button *ngIf="observation && observation['validation-status'] === 'Needs revision' && needsRevisionState === 'amend'" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
+        <button *ngIf="isDisabled()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+        <button *ngIf="!isDisabled()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        <button *ngIf="!isDisabled() && canSubmitForReview() && observation && !isCopied" type="submit" class="c-button -secondary">{{'Submit for review' | translate}}</button>
+        <button *ngIf="!isDisabled() && observation && !isCopied && observation['validation-status'] !== 'Needs revision'"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
+        <button *ngIf="(!isDisabled() && !observation) || isCopied" type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
+        <button *ngIf="observation && observation['validation-status'] === 'Ready for publication'" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
+        <button *ngIf="observation && observation['validation-status'] === 'Needs revision' && needsRevisionState === 'amend'" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
       </div>
     </div>
 
     <otp-action-bar *otpMaxTablet>
-      <button *ngIf="isDisabled() && !isCopied" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-      <button *ngIf="!isDisabled() && observation && !isCopied" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+      <button *ngIf="isDisabled()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      <button *ngIf="!isDisabled()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
       <button *ngIf="!isDisabled() && canSubmitForReview() && observation && !isCopied" type="submit" class="c-button -secondary">{{'Submit for review' | translate}}</button>
       <button *ngIf="!isDisabled() && observation && !isCopied && observation['validation-status'] !== 'Needs revision'"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
+      <button *ngIf="(!isDisabled() && !observation) || isCopied" type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
       <button *ngIf="observation && observation['validation-status'] === 'Ready for publication'" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
       <button *ngIf="observation && observation['validation-status'] === 'Needs revision' && needsRevisionState === 'amend'" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
     </otp-action-bar>
