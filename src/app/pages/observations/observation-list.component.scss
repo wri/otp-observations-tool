@@ -20,6 +20,10 @@
     color: $color-error;
   }
 
+  .scrolling-note {
+    font-size: $font-size-default;
+  }
+
   @media screen and (min-width: $break-tablet) {
     otp-navigation {
       margin-left: 20px;
