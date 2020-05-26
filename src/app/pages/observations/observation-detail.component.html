@@ -589,10 +589,9 @@
     </fieldset>
 
     <!-- 16. Publication date -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
+    <div class="form-group">
       <label for="publication_date">{{'Publication date' | translate}}</label>
-      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required [disabled]="isDisabled()"></otp-datepicker>
-      <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text">{{'Publication date is required' | translate}}</div>
+      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required disabled></otp-datepicker>
       <p class="note">
         {{ 'observation.publicationDate.note' | translate }}
       </p>
@@ -870,10 +869,9 @@
     </div>
 
     <!-- 12. Publication date -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !publication_date.valid }">
+    <div class="form-group">
       <label for="publication_date">{{'Publication date' | translate}}</label>
-      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required [disabled]="isDisabled()"></otp-datepicker>
-      <div *ngIf="f.submitted && publication_date.errors?.required" class="help-text">{{'Publication date is required' | translate}}</div>
+      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required disabled></otp-datepicker>
       <p class="note">
         {{ 'observation.publicationDate.note' | translate }}
       </p>

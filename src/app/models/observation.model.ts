@@ -21,7 +21,7 @@ import { Severity } from 'app/models/severity.model';
 export class Observation extends JsonApiModel {
 
   @Attribute() 'observation-type': string;
-  @Attribute() 'publication-date': Date;
+  @Attribute() 'publication-date'?: Date;
   @Attribute() pv?: string;
   @Attribute() 'validation-status'?: string;
   @Attribute() details?: string;
