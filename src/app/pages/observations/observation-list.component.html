@@ -90,7 +90,7 @@
         {{shortenText(value)}}
       </ng-template>
     </otp-table-column>
-    <otp-table-column [name]="'Comments from the operator' | translate" prop="concern-opinion">
+    <otp-table-column [name]="(observationType === 'operator' ? 'Comments from the operator' : 'observation.commentsFromGovernment.title') | translate" prop="concern-opinion">
       <ng-template let-value="value" table-cell-template>
         {{shortenText(value)}}
       </ng-template>
