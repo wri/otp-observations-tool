@@ -367,5 +367,9 @@
   "Industrial agriculture": "Industrial agriculture",
   "Mining company": "Mining company",
   "Sawmill": "Sawmill",
-  "Unknown": "Unknown"
+  "Unknown": "Unknown",
+  "multiselect.checked": "checked",
+  "multiselect.checkedPlural": "checked",
+  "multiselect.defaultTitle": "Select",
+  "multiselect.allSelected": "All selected"
 }

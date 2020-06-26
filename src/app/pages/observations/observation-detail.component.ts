@@ -27,7 +27,7 @@ import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
-import { IMultiSelectOption, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectTexts } from 'angular-2-dropdown-multiselect';
 import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
@@ -121,6 +121,9 @@ export class ObservationDetailComponent implements OnDestroy {
   };
   _mapMarker = null; // Layer with the marker
   _mapFmu = null; // Layer with the FMU
+
+  // Multi-select options
+  multiSelectTexts: IMultiSelectTexts = {};
 
   // Governments multi-select related
   governmentsOptions: IMultiSelectOption[] = [];
@@ -713,6 +716,8 @@ export class ObservationDetailComponent implements OnDestroy {
     this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
     this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
 
+    this.updateMultiSelectTexts();
+
     this.translateService.onLangChange.subscribe(() => {
       this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
       this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
@@ -849,6 +854,17 @@ export class ObservationDetailComponent implements OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  private async updateMultiSelectTexts() {
+    await Promise.all([
+      this.translateService.get('multiselect.checked').toPromise(),
+      this.translateService.get('multiselect.checkedPlural').toPromise(),
+      this.translateService.get('multiselect.defaultTitle').toPromise(),
+      this.translateService.get('multiselect.allSelected').toPromise(),
+    ]).then(([checked, checkedPlural, defaultTitle, allSelected]) => {
+      this.multiSelectTexts = { checked, checkedPlural, defaultTitle, allSelected };
+    });
   }
 
   private updateTranslatedOptions(phrases: string[], field: string): void {
