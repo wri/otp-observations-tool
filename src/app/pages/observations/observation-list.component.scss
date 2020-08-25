@@ -6,12 +6,17 @@
   padding-bottom: 20px;
 
   .table-actions {
+    flex-shrink: 0;
     align-items: flex-start;
     display: flex;
     flex-wrap: wrap;
 
     .upload-csv {
       margin: 0 10px 10px 0;
+    }
+
+    .go-to-button {
+      margin-right: 10px;
     }
   }
 

@@ -10,6 +10,28 @@
       <button type="button" class="c-button -primary" (click)="uploadFile.click()">{{'Upload CSV' | translate}}</button>
     </div>
   </otp-modal>
+  <otp-modal [title]="'Go to an observation' | translate" [opened]="goToModalOpen" [closeable]="true" (onClose)="goToModalOpen = false">
+    <h2>{{'Go to an observation' | translate}}</h2>
+    <form name="form" class="c-form" (ngSubmit)="f.valid && onGoTo(f.value)" #f="ngForm" novalidate>
+      <p>
+        {{'observation.search.description' | translate}}
+      </p>
+
+      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !observationId.valid }">
+        <label for="go-to-observation-id">{{'Observation ID' | translate}}</label>
+        <input id="go-to-observation-id" type="text" class="form-control" name="go-to-observation-id" ngModel #observationId="ngModel" required />
+        <div *ngIf="f.submitted && !observationId.valid" class="help-text">{{'The observation ID is required' | translate}}</div>
+      </div>
+
+      <div class="form-footer">
+        <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+          <div class="c-button-container -j-end form-group">
+            <button  type="submit" class="c-button -primary">{{'Go to...' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </otp-modal>
   <div class="c-table-header">
     <otp-filters>
       <otp-filter [name]="'Type' | translate" [values]="typeFilterValues" prop="observation-type" default="operator" [required]="true"></otp-filter>
@@ -25,6 +47,7 @@
       <otp-filter [name]="'Status' | translate" [values]="statusFilterValues" prop="validation-status"></otp-filter>
     </otp-filters>
     <div class="table-actions">
+      <button type="button" class="c-button -secondary go-to-button" (click)="goToModalOpen = true">{{'Go to...' | translate}}</button>
       <input #uploadFile type="file" (change)="uploadCSV($event.target.files)" accept=".csv" [style.display]="'none'" />
       <a class="c-button -secondary upload-csv" (click)="uploadWarningModalOpen = true">{{'Upload CSV' | translate}}</a>
       <a *ngIf="!draftObservation; else draftBlock" class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>

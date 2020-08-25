@@ -372,5 +372,10 @@
   "multiselect.checkedPlural": "checked",
   "multiselect.defaultTitle": "Select",
   "multiselect.allSelected": "All selected",
-  "results per page": "results per page"
+  "results per page": "results per page",
+  "Go to an observation": "Go to an observation",
+  "Observation ID": "Observation ID",
+  "The observation ID is required": "The observation ID is required",
+  "Go to...": "Go to...",
+  "observation.search.description": "If you want to see or edit a specific observation and know its ID, you can use the form below. You will be directly lead to its details."
 }

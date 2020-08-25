@@ -36,6 +36,7 @@ export class ObservationListComponent extends TableFilterBehavior {
   typeFilterValues: any = [];
   archivedFilterValues: any = [];
   uploadWarningModalOpen = false;
+  goToModalOpen = false;
 
   get isMyOTP(): boolean {
     return /my\-otp/.test(this.router.url);
@@ -215,5 +216,9 @@ export class ObservationListComponent extends TableFilterBehavior {
     } else {
       this.router.navigate([`../new`], { relativeTo: this.route });
     }
+  }
+
+  public onGoTo({ 'go-to-observation-id': observationId }: { 'go-to-observation-id': string }): void {
+    this.router.navigate(['/', 'private', 'observations', 'edit', observationId]);
   }
 }
