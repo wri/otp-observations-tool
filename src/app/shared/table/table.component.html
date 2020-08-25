@@ -53,13 +53,21 @@
 <div *ngIf="perPage" class="paginator">
   <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage">{{'Previous' | translate}}</button>
   <ul>
-    <li *ngIf="currentPage > firstPage + 1"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': firstPage }" (click)="currentPage = firstPage">{{firstPage}}</button></li>
-    <li *ngIf="currentPage > firstPage + 2">...</li>
-    <li *ngIf="previousPage"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': previousPage }" (click)="currentPage = previousPage">{{previousPage}}</button></li>
+    <li *ngIf="currentPage > firstPage + 5"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': firstPage }" (click)="currentPage = firstPage">{{firstPage}}</button></li>
+    <li *ngIf="currentPage > firstPage + 6">...</li>
+    <li *ngIf="currentPage > firstPage + 4"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 5 }" (click)="currentPage = currentPage - 5">{{currentPage - 5}}</button></li>
+    <li *ngIf="currentPage > firstPage + 3"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 4 }" (click)="currentPage = currentPage - 4">{{currentPage - 4}}</button></li>
+    <li *ngIf="currentPage > firstPage + 2"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 3 }" (click)="currentPage = currentPage - 3">{{currentPage - 3}}</button></li>
+    <li *ngIf="currentPage > firstPage + 1"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 2 }" (click)="currentPage = currentPage - 2">{{currentPage - 2}}</button></li>
+    <li *ngIf="currentPage > firstPage"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 1 }" (click)="currentPage = currentPage - 1">{{currentPage - 1}}</button></li>
     <li class="-active"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage }">{{currentPage}}</button></li>
-    <li *ngIf="nextPage"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': nextPage }" (click)="currentPage = nextPage">{{nextPage}}</button></li>
-    <li *ngIf="currentPage < lastPage - 2">...</li>
-    <li *ngIf="currentPage < lastPage - 1"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': lastPage }" (click)="currentPage = lastPage">{{lastPage}}</button></li>
+    <li *ngIf="currentPage < lastPage"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 1 }" (click)="currentPage = currentPage + 1">{{currentPage + 1}}</button></li>
+    <li *ngIf="currentPage < lastPage - 1"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 2 }" (click)="currentPage = currentPage + 2">{{currentPage + 2}}</button></li>
+    <li *ngIf="currentPage < lastPage - 2"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 3 }" (click)="currentPage = currentPage + 3">{{currentPage + 3}}</button></li>
+    <li *ngIf="currentPage < lastPage - 3"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 4 }" (click)="currentPage = currentPage + 4">{{currentPage + 4}}</button></li>
+    <li *ngIf="currentPage < lastPage - 4"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 5 }" (click)="currentPage = currentPage + 5">{{currentPage + 5}}</button></li>
+    <li *ngIf="currentPage < lastPage - 6">...</li>
+    <li *ngIf="currentPage < lastPage - 5"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': lastPage }" (click)="currentPage = lastPage">{{lastPage}}</button></li>
   </ul>
   <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage">{{'Next' | translate}}</button>
 </div>
