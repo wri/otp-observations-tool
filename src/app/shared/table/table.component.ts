@@ -22,7 +22,6 @@ export class TableComponent implements AfterContentInit {
   public rows: any[] = [];
   public rowCount: number; // Number of total rows (total results)
   @Input() caption: string;
-  @Input() perPage = 10;
   @Input() include: string[] = []; // Include param for the query
   @Input() defaultSort: string; // Default sort param (ex: "name" or "-name")
   @Input() options: any; // Additional options for the table
@@ -34,6 +33,8 @@ export class TableComponent implements AfterContentInit {
   columns: any[] = [];
   sortColumn: any; // Column used for sorting the table
   sortOrder: 'asc' | 'desc'; // Sort order
+  _perPage = 10;
+  perPageOptions = [10, 20, 50, 100];
 
   private _columnTemplates: QueryList<TableColumnDirective>;
   private _paginationIndex = 0; // Zero-based number of the page
@@ -165,6 +166,16 @@ export class TableComponent implements AfterContentInit {
     return this.currentPage === this.lastPage ? null : this.currentPage + 1;
   }
 
+  get perPage(): number {
+    return this._perPage;
+  }
+
+  set perPage(page: number) {
+    this._perPage = page;
+    this.currentPage = 1;
+    this.change.emit();
+  }
+
   get state(): TableState {
     const include = [
       ...this.columns.filter(col => col.include)
@@ -267,6 +278,8 @@ export class TableComponent implements AfterContentInit {
         this.sortOrder = isDesc ? 'desc' : 'asc';
       }
     }
+
+    this.perPage = this.previousState.page.size || this.perPage;
 
     this.change.emit();
   }

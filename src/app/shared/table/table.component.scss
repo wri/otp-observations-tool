@@ -304,5 +304,27 @@
         }
       }
     }
+
+    .per-page {
+      display: flex;
+      align-items: center;
+
+      select {
+        margin-right: 10px;
+        margin-bottom: 0;
+      }
+
+      span {
+        flex-shrink: 0;
+      }
+    }
+
+    .buttons-container {
+      display: flex;
+
+      button:first-of-type {
+        margin-right: 10px;
+      }
+    }
   }
 }

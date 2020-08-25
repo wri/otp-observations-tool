@@ -371,5 +371,6 @@
   "multiselect.checked": "checked",
   "multiselect.checkedPlural": "checked",
   "multiselect.defaultTitle": "Select",
-  "multiselect.allSelected": "All selected"
+  "multiselect.allSelected": "All selected",
+  "results per page": "results per page"
 }

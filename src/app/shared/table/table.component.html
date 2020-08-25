@@ -51,7 +51,12 @@
 </div>
 
 <div *ngIf="perPage" class="paginator">
-  <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage">{{'Previous' | translate}}</button>
+  <div class="per-page">
+    <select [(ngModel)]="perPage" [attr.aria-describedby]="'table-results-per-page'">
+      <option *ngFor="let option of perPageOptions" [ngValue]="option">{{option}}</option>
+    </select>
+    <span id="table-results-per-page">{{'results per page' | translate}}</span>
+  </div>
   <ul>
     <li *ngIf="currentPage > firstPage + 5"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': firstPage }" (click)="currentPage = firstPage">{{firstPage}}</button></li>
     <li *ngIf="currentPage > firstPage + 6">...</li>
@@ -69,5 +74,8 @@
     <li *ngIf="currentPage < lastPage - 6">...</li>
     <li *ngIf="currentPage < lastPage - 5"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': lastPage }" (click)="currentPage = lastPage">{{lastPage}}</button></li>
   </ul>
-  <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage">{{'Next' | translate}}</button>
+  <div class="buttons-container">
+    <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage">{{'Previous' | translate}}</button>
+    <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage">{{'Next' | translate}}</button>
+  </div>
 </div>
