@@ -377,5 +377,7 @@
   "Observation ID": "Observation ID",
   "The observation ID is required": "The observation ID is required",
   "Go to...": "Go to...",
-  "observation.search.description": "If you want to see or edit a specific observation and know its ID, you can use the form below. You will be directly lead to its details."
+  "observation.search.description": "If you want to see or edit a specific observation and know its ID, you can use the form below. You will be directly lead to its details.",
+  "Display contact information publicly (for inquiries on data uploaded)": "Display contact information publicly (for inquiries on data uploaded)",
+  "By checking this box, I authorize the display of my name and email address on the OTP public site for users to contact me in case they have a question on our data.": "By checking this box, I authorize the display of my name and email address on the OTP public site for users to contact me in case they have a question on our data."
 }

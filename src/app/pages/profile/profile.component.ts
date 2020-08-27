@@ -54,6 +54,9 @@ export class ProfileComponent {
       this.user['password-confirmation'] = null;
     }
 
+    // The value may be undefined
+    this.user['public-info'] = !!this.user['public-info'];
+
     this.user.save()
       .toPromise()
       .then(async () => alert(await this.translateService.get('profileUpdate.success').toPromise()))

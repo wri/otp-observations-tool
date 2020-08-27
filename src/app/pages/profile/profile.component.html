@@ -44,6 +44,14 @@
         <p *ngIf="f.submitted && email_field.errors?.email && !email_field.errors?.required" class="help-text">{{'Please enter your email address' | translate}}</p>
       </div>
 
+      <div class="form-group">
+        <input type="checkbox" name="public_info" id="public_info" [(ngModel)]="user['public-info']" #public_info="ngModel" />
+        <label for="public_info">{{'Display contact information publicly (for inquiries on data uploaded)' | translate}}</label>
+        <p class="note">
+          {{'By checking this box, I authorize the display of my name and email address on the OTP public site for users to contact me in case they have a question on our data.' | translate}}
+        </p>
+      </div>
+
       <fieldset>
         <legend>{{'Update your password' | translate}}</legend>
         <div class="fieldset-container">
