@@ -9,7 +9,7 @@
   </button>
 </div>
 
-<otp-table [caption]="'Laws' | translate" [options]="tableOptions">
+<otp-table [name]="'laws'" [caption]="'Laws' | translate" [options]="tableOptions">
   <otp-table-column prop="country.name" [name]="'Country' | translate" [include]="true"></otp-table-column>
   <otp-table-column prop="subcategory.name" [name]="'Subcategory' | translate" [include]="true"></otp-table-column>
   <otp-table-column prop="written-infraction" [name]="'Observation according to legal text' | translate">

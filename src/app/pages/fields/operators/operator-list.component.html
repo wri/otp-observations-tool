@@ -9,7 +9,7 @@
   </button>
 </div>
 
-<otp-table [caption]="'Operators' | translate">
+<otp-table [name]="'operators'" [caption]="'Operators' | translate">
   <otp-table-column [name]="'Name' | translate" prop="name"></otp-table-column>
   <otp-table-column prop="operator-type" [name]="'Type' | translate"></otp-table-column>
   <otp-table-column prop="country.name" [name]="'Country' | translate" [include]="true"></otp-table-column>

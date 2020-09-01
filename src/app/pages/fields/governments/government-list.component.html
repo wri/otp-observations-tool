@@ -7,7 +7,7 @@
     </a>
 </div>
 
-<otp-table [caption]="'Government entities' | translate">
+<otp-table [name]="'government-entities'" [caption]="'Government entities' | translate">
   <otp-table-column prop="government-entity" [name]="'Name' | translate"></otp-table-column>
   <otp-table-column prop="country.name" [name]="'Country' | translate" [include]="true"></otp-table-column>
   <otp-table-column prop="details" [name]="'Details' | translate">

@@ -9,7 +9,7 @@
   </button> -->
 </div>
 
-<otp-table [caption]="'Subcategories' | translate" defaultSort="category.name">
+<otp-table [name]="'subcategories'" [caption]="'Subcategories' | translate" defaultSort="category.name">
   <otp-table-column prop="name" [name]="'Name' | translate"></otp-table-column>
   <otp-table-column prop="category.name" [name]="'Category' | translate" [include]="true"></otp-table-column>
   <otp-table-column prop="details" [name]="'Details' | translate">

@@ -21,6 +21,7 @@ export class TableComponent implements AfterContentInit {
 
   public rows: any[] = [];
   public rowCount: number; // Number of total rows (total results)
+  @Input() name: string; // Unique name of the table
   @Input() caption: string;
   @Input() include: string[] = []; // Include param for the query
   @Input() defaultSort: string; // Default sort param (ex: "name" or "-name")
@@ -41,7 +42,7 @@ export class TableComponent implements AfterContentInit {
 
   get hiddenColumns(): string[] {
     try {
-      const storedValue = JSON.parse(localStorage.getItem('observations-hidden-columns'));
+      const storedValue = JSON.parse(localStorage.getItem(`${this.name}-hidden-columns`));
       return Array.isArray(storedValue) ? storedValue : [];
     } catch (e) {
       return [];
@@ -49,7 +50,7 @@ export class TableComponent implements AfterContentInit {
   }
 
   set hiddenColumns(hiddenColumns: string[]) {
-    localStorage.setItem('observations-hidden-columns', JSON.stringify(hiddenColumns));
+    localStorage.setItem(`${this.name}-hidden-columns`, JSON.stringify(hiddenColumns));
   }
 
   @ContentChildren(TableColumnDirective)

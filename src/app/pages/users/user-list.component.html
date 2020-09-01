@@ -6,7 +6,7 @@
     <button (click)="triggerNewUser()" class="c-button -primary" i18n="Button to create a new user">New user</button>
   </div>
 
-  <otp-table i18n-caption="Caption for the table which lists the users" caption="Users">
+  <otp-table name="users" i18n-caption="Caption for the table which lists the users" caption="Users">
     <otp-table-column i18n-name="Table of users|Name of the column corresponding to the name of the users" name="Name" prop="name"></otp-table-column>
     <otp-table-column i18n-name="Table of users|Name of the column corresponding to the username/nickname of the users"  name="Username" prop="nickname"></otp-table-column>
     <otp-table-column i18n-name="Table of users|Name of the column corresponding to the email of the users" name="Email" prop="email"></otp-table-column>

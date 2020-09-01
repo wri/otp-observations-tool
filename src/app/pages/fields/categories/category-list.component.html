@@ -5,7 +5,7 @@
   <!-- <button (click)="triggerNewCategory()" class="c-button -primary" i18n="Button to create a new category">New Category</button> -->
 </div>
 
-<otp-table [caption]="'Categories' | translate">
+<otp-table [name]="'categories'" [caption]="'Categories' | translate">
   <otp-table-column prop="name" [name]="'Name' | translate"></otp-table-column>
   <!-- <otp-table-column i18n-name="Table of categories|Name of the actions columns (containing the edit and delete button)" name="Actions">
      <ng-template let-row="row" table-cell-template>
