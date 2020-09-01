@@ -1,6 +1,14 @@
 <div class="overlay" *ngIf="loading"></div>
 <otp-loader *ngIf="loading" [attr.class]="rows && rows.length && rows.length > 1 ? '-has-data' : ''"></otp-loader>
-<p *ngIf="hiddenColumns.length" class="table-note">{{'Some columns are hidden.' | translate}} <button type="button" (click)="onClickResetColumnsVisibility()">{{'Click here to show them all.' | translate}}</button></p>
+<div class="columns-visibility">
+  <p>
+    {{'Visible columns:' | translate}}
+  </p>
+  <div *ngFor="let column of columns; let i = index">
+    <label [for]="'table-' + name + '-column-' + i">{{column.name}}</label>
+    <input [id]="'table-' + name + '-column-' + i" type="checkbox" [checked]="hiddenColumns.indexOf(column.name) === -1" (change)="onToggleColumnVisibility($event, column.name)" />
+  </div>
+</div>
 <div class="table-container">
   <table role="grid" aria-readonly="true" [attr.aria-rowcount]="rowCount">
     <caption>
@@ -22,9 +30,6 @@
           (click)="(column.sortable || column.sortable === undefined) && column.prop && sortByColumn(column)"
         >
           {{column.name || column.prop}}
-          <button type="button" (click)="onClickHide(column)" [attr.aria-label]="'Hide column' | translate">
-            <otp-icon name="#icon-slashed-eye"></otp-icon>
-          </button>
         </th>
       </tr>
     </thead>

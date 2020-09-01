@@ -26,6 +26,7 @@ export class TableComponent implements AfterContentInit {
   @Input() include: string[] = []; // Include param for the query
   @Input() defaultSort: string; // Default sort param (ex: "name" or "-name")
   @Input() options: any; // Additional options for the table
+  @Input() defaultHiddenColumns: string[] = [];
 
   @Output() change = new EventEmitter<void>();
 
@@ -43,9 +44,9 @@ export class TableComponent implements AfterContentInit {
   get hiddenColumns(): string[] {
     try {
       const storedValue = JSON.parse(localStorage.getItem(`${this.name}-hidden-columns`));
-      return Array.isArray(storedValue) ? storedValue : [];
+      return Array.isArray(storedValue) ? storedValue : this.defaultHiddenColumns;
     } catch (e) {
-      return [];
+      return this.defaultHiddenColumns;
     }
   }
 
@@ -354,12 +355,13 @@ export class TableComponent implements AfterContentInit {
     return -c / 2 * (t * (t - 2) - 1) + b;
   }
 
-  onClickHide(column: any) {
-    this.hiddenColumns = [...this.hiddenColumns, column.name];
-  }
+  onToggleColumnVisibility(e: Event, columnName: string): void {
+    const visible = (<HTMLInputElement>e.target).checked;
 
-  onClickResetColumnsVisibility() {
-    this.hiddenColumns = [];
+    if (visible) {
+      this.hiddenColumns = [...this.hiddenColumns].filter(column => column !== columnName);
+    } else {
+      this.hiddenColumns = [...this.hiddenColumns, columnName];
+    }
   }
-
 }

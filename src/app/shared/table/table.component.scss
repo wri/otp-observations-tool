@@ -44,13 +44,33 @@
     overflow-x: auto;
   }
 
-  .table-note {
-    font-size: $font-size-default;
+  .columns-visibility {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+    padding: 5px 10px;
+    border: 1px solid $lighter-grey;
+    border-radius: 4px;
 
-    button {
-      color: $color-primary;
-      text-decoration: underline;
-      cursor: pointer;
+    > p {
+      flex-basis: 100%;
+      margin: 0 0 5px;
+      font-size: $font-size-default;
+      font-weight: bold;
+      color: $dark-grey;
+    }
+
+    > div {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      margin-right: 15px;
+
+      input {
+        margin-right: 5px;
+        margin-bottom: 0;
+      }
     }
   }
 
@@ -117,18 +137,6 @@
 
         &.-no-sortable {
           cursor: initial;
-        }
-
-        /deep/ button {
-          padding: 5px;
-          vertical-align: middle;
-          cursor: pointer;
-
-          svg {
-            width: 15px;
-            height: 15px;
-            fill: rgba($black, .5);
-          }
         }
       }
     }

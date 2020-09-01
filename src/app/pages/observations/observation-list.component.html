@@ -65,7 +65,7 @@
 
   <p class="scrolling-note">{{'observation.scrollingNote' | translate}}</p>
 
-  <otp-table [name]="'observations'" [caption]="'Observations' | translate" defaultSort="-publication-date" [hidden]="isUploading" [options]="tableOptions">
+  <otp-table [name]="'observations'" [caption]="'Observations' | translate" defaultSort="-publication-date" [defaultHiddenColumns]="['Date' | translate, 'Country' | translate, 'Category' | translate, 'Observers' | translate, 'Government entities' | translate, 'Relevant operators' | translate, 'Severity' | translate, 'Observation according to legal text' | translate, 'Actions taken by operator' | translate, 'Comments from the operator' | translate, 'observation.commentsFromGovernment.title' | translate, 'Citation' | translate, 'Litigation status' | translate, 'Latitude' | translate, 'Longitude' | translate, 'Evidence' | translate]" [hidden]="isUploading" [options]="tableOptions">
     <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
     <otp-table-column [name]="'Date' | translate" prop="publication-date">
       <ng-template let-value="value" table-cell-template>
