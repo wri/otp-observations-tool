@@ -7,12 +7,14 @@
       </div>
     </div>
     <ul>
-      <li>
-        <select [(ngModel)]="lang">
-          <option value="en">English</option>
-          <option value="fr">Français</option>
-        </select>
-      </li>
+      <ng-template [ngIf]="!isLogged">
+        <li>
+          <select [(ngModel)]="lang">
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+          </select>
+        </li>
+      </ng-template>
       <ng-template [ngIf]="isLogged">
         <li *otpMinTablet><a routerLink="/private/profile" routerLinkActive="-active">{{ 'Profile' | translate }}</a></li>
       </ng-template>

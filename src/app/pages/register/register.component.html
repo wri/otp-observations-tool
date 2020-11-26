@@ -35,6 +35,16 @@
         <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
       </div>
 
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !locale_field.valid }">
+        <label for="locale_field">{{'Language' | translate}}</label>
+        <select id="locale_field" name="locale" ngModel #locale_field="ngModel" required>
+          <option value="" disabled>{{'Select a language' | translate}}</option>
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+        </select>
+        <div *ngIf="f.submitted && !locale_field.valid" class="help-text">{{'Please select a language' | translate}}</div>
+      </div>
+
       <div class="form-group">
         <input type="checkbox" name="manager_role" id="manager_role" ngModel #manager_role="ngModel" />
         <label for="manager_role">{{'Request a manager role' | translate}}</label>

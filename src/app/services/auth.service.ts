@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observer } from 'app/models/observer.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class AuthService {
@@ -25,8 +26,9 @@ export class AuthService {
   constructor(
     private http: Http,
     private tokenService: TokenService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private translateService: TranslateService,
+  ) { }
 
   /**
    * Trigger the login status to the component listening to the
@@ -93,6 +95,14 @@ export class AuthService {
       this.userCountryId = response.data.relationships.country.data
         && response.data.relationships.country.data.id;
 
+      const lang: string = response.data.attributes.locale;
+      if (lang) {
+        this.translateService.use(lang);
+      } else {
+        this.translateService.use('en');
+        alert(await this.translateService.get('noLanguageSet').toPromise());
+      }
+
       this.triggerLoginStatus(!!response);
       return !!response;
     } catch (e) {
@@ -114,18 +124,18 @@ export class AuthService {
   }
 
   logout() {
-      this.tokenService.token = null;
-      this.userId = null;
-      this.userRole = null;
-      this.triggerLoginStatus(false);
-      this.router.navigate(['/']);
+    this.tokenService.token = null;
+    this.userId = null;
+    this.userRole = null;
+    this.triggerLoginStatus(false);
+    this.router.navigate(['/']);
   }
 
   recoverPass(email: string): Promise<boolean> {
-      return new Promise((resolve, reject) => reject(false));
-      // To be updated and reviewed
-      // return this.http.post(`${environment.apiUrl}/api/v1/user/${email}/recover-password`, {})
-      // .map(response => response.json()).toPromise()
-      // .then((body:any) => this.tokenService.token = body.access_token);
+    return new Promise((resolve, reject) => reject(false));
+    // To be updated and reviewed
+    // return this.http.post(`${environment.apiUrl}/api/v1/user/${email}/recover-password`, {})
+    // .map(response => response.json()).toPromise()
+    // .then((body:any) => this.tokenService.token = body.access_token);
   }
 }

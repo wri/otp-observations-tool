@@ -13,6 +13,7 @@ export class User extends JsonApiModel {
   @Attribute() nickname: string;
   @Attribute() institution?: string;
   @Attribute() is_active?: boolean;
+  @Attribute() locale?: string;
   @Attribute() 'public-info'?: boolean;
   @Attribute() deactivated_at?: Date;
   @Attribute() password?: string;

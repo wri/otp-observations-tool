@@ -15,8 +15,9 @@ export class HeaderComponent {
   private isAdmin = false;
   isLogged = false;
   acceptedLang = ['en', 'fr'];
-  defaultLang = 'en';
-  _lang = 'en';
+  _lang = this.acceptedLang.includes(localStorage.getItem('lang'))
+    ? localStorage.getItem('lang')
+    : 'en';
   isStaging = false;
 
   get lang() { return this._lang; }
@@ -28,7 +29,9 @@ export class HeaderComponent {
     private route: ActivatedRoute,
     private translateService: TranslateService
   ) {
-    this.translateService.onLangChange.subscribe(({ lang }) => this._lang = lang);
+    this.translateService.onLangChange.subscribe(({ lang }) => {
+      this._lang = lang;
+    });
 
     // Each time the status of the login change, we update some variables
     this.authService.loginStatus.subscribe(isLogged => {

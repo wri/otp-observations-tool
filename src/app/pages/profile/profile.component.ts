@@ -59,7 +59,10 @@ export class ProfileComponent {
 
     this.user.save()
       .toPromise()
-      .then(async () => alert(await this.translateService.get('profileUpdate.success').toPromise()))
+      .then(async () => {
+        this.translateService.use(this.user.locale);
+        alert(await this.translateService.get('profileUpdate.success').toPromise());
+      })
       .catch(async () => alert(await this.translateService.get('profileUpdate.success').toPromise()))
       .then(() => this.saveLoading = false);
   }

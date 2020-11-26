@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit {
     private observersService: ObserversService,
     private http: Http,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.countriesService.getAll({ sort: 'name' })
