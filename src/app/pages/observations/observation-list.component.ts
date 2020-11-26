@@ -190,16 +190,25 @@ export class ObservationListComponent extends TableFilterBehavior {
   }
 
   /**
-   * Return whether the logged user can edit or delete an observation
-   * @param {Observation} observation
-   * @returns {boolean}
+   * Return whether the logged user can edit an observation
    */
   canEdit(observation: Observation): boolean {
-    if (observation.hidden || observation['validation-status'] !== 'Created') {
+    if (observation.hidden || !observation.observers.find(o => o.id === this.authService.userObserverId)) {
       return false;
     }
 
-    return !!observation.observers.find(o => o.id === this.authService.userObserverId);
+    return observation['validation-status'] === 'Created';
+  }
+
+  /**
+   * Return whether the logged user can delete an observation
+   */
+  canDelete(observation: Observation): boolean {
+    if (observation.hidden || !observation.observers.find(o => o.id === this.authService.userObserverId)) {
+      return false;
+    }
+
+    return observation['validation-status'] === 'Created' || observation['validation-status'] === 'Needs revision';
   }
 
   shortenText(text: string): string {
