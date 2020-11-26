@@ -1234,20 +1234,35 @@ export class ObservationDetailComponent implements OnDestroy {
    * @returns {boolean}
    */
   isDisabled(): boolean {
-    // The user is creating an observation, the form
-    // is not disabled
-    if (!this.route.snapshot.params.id || this.route.snapshot.params.copiedId) {
-      return false;
-    }
+    if (!this.observation) return false;
 
-    if (this.observation.hidden || this.observation['validation-status'] !== 'Created'
-      && (this.observation['validation-status'] !== 'Needs revision' || this.needsRevisionState !== 'amend')) {
-      return true;
-    }
+    const isHidden = this.observation.hidden;
+    const isCreating = !this.route.snapshot.params.id;
+    const isDuplicating = !!this.route.snapshot.params.copiedId;
+    const isAmending = this.needsRevisionState === 'amend';
+    const isCreated = this.observation['validation-status'] === 'Created';
+    const isReadyForQC = this.observation['validation-status'] === 'Ready for QC';
+    const isQCInProgress = this.observation['validation-status'] === 'QC in progress';
+    const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
+    const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
+    const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
+    const isPusblishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
+    const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
+    const isUserLinkedObserver = !!this.observation.observers.find(o => o.id === this.authService.userObserverId);
 
-    // If the observation is linked to their organization, then the form is
-    // not disabled
-    return !this.observation.observers.find(o => o.id === this.authService.userObserverId);
+    if (isHidden) return true;
+    if (isCreating) return false;
+    if (isDuplicating) return false;
+    if (isCreated && isUserLinkedObserver) return false;
+    if (isReadyForQC) return true;
+    if (isQCInProgress) return true;
+    if (isInNeedOfRevision && isUserLinkedObserver && isAmending) return false;
+    if (isReadyForPublication) return true;
+    if (isPublishedWithCommentsAndModified && isUserLinkedObserver && isAmending) return false;
+    if (isPusblishedWithCommentsAndNotModified && isUserLinkedObserver && isAmending) return false;
+    if (isPublishedWithoutComments && isUserLinkedObserver && isAmending) return false;
+
+    return true;
   }
 
   public get isCopied(): boolean {
@@ -1258,22 +1273,113 @@ export class ObservationDetailComponent implements OnDestroy {
     return this.route.snapshot.params.id || this.route.snapshot.params.copiedId;
   }
 
-  /**
-   * Return whether the user can submit the observation
-   * for review
-   * @returns {boolean}
-   */
+  canGoBack() {
+    const isDisabled = this.isDisabled();
+
+    if (isDisabled) return true;
+
+    return false;
+  }
+
+  canCancel() {
+    if (!this.observation) return true;
+
+    const isDuplicating = this.isCopied;
+    const isCreated = this.observation['validation-status'] === 'Created';
+    const isAmending = this.needsRevisionState === 'amend';
+    const isExplaining = this.needsRevisionState === 'explain';
+
+    if (!this.observation) return true;
+    if (isDuplicating) return true;
+    if (isCreated) return true;
+    if (isAmending) return true;
+    if (isExplaining) return true;
+
+    return false;
+  }
+
+  canCreate() {
+    const isDisabled = this.isDisabled();
+    const isDuplicating = this.isCopied;
+
+    if (!isDisabled && !this.observation) return true;
+    if (isDuplicating) return true;
+
+    return false;
+  }
+
+  canAmend() {
+    if (!this.observation) return false;
+
+    const isAmending = this.needsRevisionState === 'amend';
+    const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
+    const isPusblishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
+    const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
+
+    if (isPublishedWithCommentsAndModified && !isAmending) return true;
+    if (isPusblishedWithCommentsAndNotModified && !isAmending) return true;
+    if (isPublishedWithoutComments && !isAmending) return true;
+
+    return false;
+  }
+
   canSubmitForReview(): boolean {
-    if (!this.observation || this.isCopied) return true;
+    if (!this.observation) return false;
 
+    const isCreating = !this.observation;
+    const isDuplicating = this.isCopied;
     const isAdmin = this.authService.isAdmin();
-    const isAlreadySubmitted = this.observation['validation-status'] !== 'Created';
+    const isOwner = this.observation.user && this.observation.user.id === this.authService.userId;
+    const isUserLinkedObserver = !!this.observation.observers.find(o => o.id === this.authService.userObserverId);
+    const isAmending = this.needsRevisionState === 'amend';
+    const isCreated = this.observation['validation-status'] === 'Created';
+    const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
+    const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
+    const isPusblishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
+    const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
 
-    if (isAdmin) {
-      return !!this.observation.observers.find(o => o.id === this.authService.userObserverId) && !isAlreadySubmitted;
-    }
+    if (isCreating) return true;
+    if (isDuplicating) return true;
+    if (isCreated && isAdmin && isUserLinkedObserver) return true;
+    if (isCreated && isOwner) return true;
+    if (isInNeedOfRevision && isAmending) return true
+    if (isPublishedWithCommentsAndModified && isAmending) return true;
+    if (isPusblishedWithCommentsAndNotModified && isAmending) return true;
+    if (isPublishedWithoutComments && isAmending) return true;
 
-    return this.observation.user && this.observation.user.id === this.authService.userId && !isAlreadySubmitted;
+    return false;
+  }
+
+  canSave() {
+    if (!this.observation) return false;
+
+    const isCreated = this.observation['validation-status'] === 'Created';
+
+    if (!this.observation) return false;
+    if (isCreated) return true;
+
+    return false;
+  }
+
+  canPublishWithoutComments() {
+    if (!this.observation) return false;
+
+    const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
+
+    if (isReadyForPublication) return true;
+
+    return false;
+  }
+
+  canPublishWithModification() {
+    if (!this.observation) return false;
+
+    const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
+    const isAmending = this.needsRevisionState === 'amend';
+
+    if (isInNeedOfRevision && isAmending) return true;
+
+    return false;
   }
 
   /**
