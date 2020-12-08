@@ -212,7 +212,16 @@
       </p>
     </div>
 
-    <!-- 5. Observation category -->
+    <!-- 5. Relevant operators -->
+    <div class="form-group">
+      <label>{{'Relevant operators' | translate}}</label>
+      <ss-multiselect-dropdown [options]="relevantOperatorsOptions" [(ngModel)]="_relevantOperatorsSelection" (ngModelChange)="onChangeRelevantOperatorsOptions($event)" name="relevant_operators" [disabled]="isDisabled()"></ss-multiselect-dropdown>
+      <p class="note">
+        {{ 'observation.relevantOperators.note' | translate }}
+      </p>
+    </div>
+
+    <!-- 6. Observation category -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
       <label for="subcategory_id">{{'Observation category' | translate}}</label>
       <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required [disabled]="isDisabled()">
@@ -226,7 +235,7 @@
     </div>
 
 
-    <!-- 6. Due diligence category -->
+    <!-- 7. Due diligence category -->
     <div class="form-group">
       <label for="diligence_category">{{'Due diligence category' | translate}}</label>
       <input id="diligence_category" type="text" class="form-control" name="diligence_category" [(ngModel)]="subcategory && subcategory.category && subcategory.category.name" #diligence_category="ngModel" disabled />
@@ -235,12 +244,12 @@
       </p>
     </div>
 
-    <!-- 7. Location -->
+    <!-- 8. Location -->
     <fieldset>
       <legend>{{'Location' | translate}}</legend>
       <div class="fieldset-container">
         <ng-template [ngIf]="subcategory === null || subcategory === undefined || subcategory['location-required'] === true">
-          <!-- 7.0. Physical place -->
+          <!-- 8.0. Physical place -->
           <div class="form-group -radio">
             <p>{{'Did this observation occur at a physical place?' | translate}}</p>
             <label><input type="radio" name="physical_place" [value]="true"  [(ngModel)]="physicalPlace">{{'Yes' | translate}}</label>
@@ -249,7 +258,7 @@
         </ng-template>
 
         <ng-template [ngIf]="physicalPlace">
-          <!-- 7.1. Forest management unit -->
+          <!-- 8.1. Forest management unit -->
           <div [ngClass]="{ 'form-group': true, '-required': !!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
             <label for="fmu_field">{{'Forest management unit' | translate}}</label>
             <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="!!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
@@ -261,7 +270,7 @@
             </p>
           </div>
 
-          <!-- 7.2. GPS coordinates -->
+          <!-- 8.2. GPS coordinates -->
           <ng-template [ngIf]="isDisabled()">
             <div class="form-group">
               <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="mapLayers" (leafletMapReady)="onMapReady($event)" class="map">
@@ -280,14 +289,14 @@
           <fieldset *ngIf="!isDisabled()">
             <legend>{{'GPS coordinates' | translate}}</legend>
             <div class="fieldset-container">
-              <!-- 7.2.0. Map -->
+              <!-- 8.2.0. Map -->
               <div class="form-group">
                 <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="mapLayers" (leafletMapReady)="onMapReady($event)" class="map">
                 </div>
               </div>
 
               <div class="row">
-                <!-- 7.2.1. Coordinates -->
+                <!-- 8.2.1. Coordinates -->
                 <div class="small-12 medium-6 columns">
                   <div class="form-group" *ngIf="f.submitted && !fmu && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)">
                     <div class="help-text">{{'Please select a FMU or enter coordinates below' | translate}}</div>
@@ -338,7 +347,7 @@
                   </div>
                 </div>
 
-                <!-- 7.2.2. Coordinates from photo -->
+                <!-- 8.2.2. Coordinates from photo -->
                 <div class="small-12 medium-6 columns">
                   <h3>{{'Get coordinates from a photo' | translate}}</h3>
                   <p>{{"Instead of clicking on the map or manually filling the coordinates, you can get them from a georeferenced photo. This photo won't be part of the observation." | translate}}</p>
@@ -355,7 +364,7 @@
           </fieldset>
         </ng-template>
 
-        <!-- 7.3. Location information -->
+        <!-- 8.3. Location information -->
         <div class="form-group">
           <label for="location_information">{{'Location information' | translate}}</label>
           <textarea id="location_information" name="location_information" [(ngModel)]="locationInformation" #location_information="ngModel" [disabled]="isDisabled()"></textarea>
@@ -363,7 +372,7 @@
       </div>
     </fieldset>
 
-    <!-- 8. Observation details -->
+    <!-- 9. Observation details -->
     <div class="form-group">
       <label for="details_field">{{'Observation details' | translate}}</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
@@ -372,12 +381,12 @@
       </p>
     </div>
 
-    <!-- 9. Evidence -->
+    <!-- 10. Evidence -->
     <fieldset #evidenceBlock>
       <legend>{{'Evidence' | translate}}</legend>
       <div class="fieldset-container">
         <div [ngStyle]="{ 'margin-bottom': isEvidenceTypeOnReport(evidenceType) ? '0' : '30px'}">
-          <!-- 9.1.1 Type -->
+          <!-- 10.1.1 Type -->
           <div class="form-group -required">
             <label for="evidence_type">{{'observation.evidenceType.title' | translate}}</label>
             <select #selectTypeElement id="evidence_type" name="evidence_type" (ngModelChange)="onChangeEvidenceType(evidenceType, $event, selectTypeElement)" [ngModel]="evidenceType" #evidence_type="ngModel" required [disabled]="isDisabled()">
@@ -388,7 +397,7 @@
             <p class="note">{{'observation.evidenceType.note' | translate}}</p>
           </div>
 
-          <!-- 9.1.2 Details -->
+          <!-- 10.1.2 Details -->
           <div [hidden]="!isEvidenceTypeOnReport(evidenceType)" [ngClass]="{ 'form-group': true, '-required': isEvidenceTypeOnReport(evidenceType) }">
             <label for="evidence_details">{{'observation.evidenceDetails.title' | translate}}</label>
             <textarea id="evidence_details" name="evidence_details" [(ngModel)]="evidenceOnReport" #evidence_details="ngModel" [required]="isEvidenceTypeOnReport(evidenceType)" [disabled]="isDisabled()"></textarea>
@@ -412,7 +421,7 @@
             <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
           <div *ngIf="!isDisabled() && !isEvidenceTypeOnReport(evidenceType)" class="small-12 medium-6 columns">
-            <!-- 9.2 List of evidence -->
+            <!-- 10.2 List of evidence -->
             <h3>{{'List of evidence' | translate}}</h3>
             <ul class="documents-list" *ngIf="documents.length">
               <li *ngFor="let document of documents">
@@ -429,14 +438,14 @@
             <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
           </div>
           <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
-            <!-- 9.2.1 Title -->
+            <!-- 10.2.1 Title -->
             <div [hidden]="isEvidenceTypeOnReport(evidenceType)" [ngClass]="{ 'form-group': true, '-required': (!!evidence.attachment || !documents.length) && !isEvidenceTypeOnReport(evidenceType) }">
               <label for="evidence_title">{{'Title' | translate}}</label>
               <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="(!!evidence.attachment || !documents.length) && !isEvidenceTypeOnReport(evidenceType)" />
               <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
             </div>
 
-            <!-- 9.2.2 Evidence -->
+            <!-- 10.2.2 Evidence -->
             <p [hidden]="isEvidenceTypeOnReport(evidenceType)">{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
             <!-- This input is used to prevent the submitting until evidence are uploaded -->
             <input *ngIf="!documents.length && !isEvidenceTypeOnReport(evidenceType)" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length && !isEvidenceTypeOnReport(evidenceType)" />
@@ -451,7 +460,7 @@
               <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
             </div>
 
-            <!-- 9.2.3 Add to list -->
+            <!-- 10.2.3 Add to list -->
             <div [hidden]="isEvidenceTypeOnReport(evidenceType)" class="form-group">
               <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
             </div>
@@ -460,7 +469,7 @@
       </div>
     </fieldset>
 
-    <!-- 10. Severity -->
+    <!-- 11. Severity -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id">{{'Severity' | translate}}</label>
       <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
@@ -478,7 +487,7 @@
       </p>
     </div>
 
-    <!-- 11. Actions taken by operator -->
+    <!-- 12. Actions taken by operator -->
     <div class="form-group">
       <label for="actions_taken">{{'Actions taken by operator' | translate}}</label>
       <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
@@ -487,7 +496,7 @@
       </p>
     </div>
 
-    <!-- 12. Comments from the operator -->
+    <!-- 13. Comments from the operator -->
     <div class="form-group">
       <label for="concern_opinion">{{'Comments from the operator' | translate}}</label>
       <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
@@ -496,7 +505,7 @@
       </p>
     </div>
 
-    <!-- 13. Citation -->
+    <!-- 14. Citation -->
     <div class="form-group">
       <label for="pv_field">{{'Citation' | translate}}</label>
       <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" [disabled]="isDisabled()" />
@@ -505,7 +514,7 @@
       </p>
     </div>
 
-    <!-- 14. Litigation status -->
+    <!-- 15. Litigation status -->
     <div class="form-group">
       <label for="litigation_status">{{'Litigation status' | translate}}</label>
       <input id="litigation_status" type="text" class="form-control" name="litigation_status" [(ngModel)] ="litigationStatus" #litigation_status="ngModel" [disabled]="isDisabled()" />
@@ -514,11 +523,11 @@
       </p>
     </div>
 
-    <!-- 15. Legal -->
+    <!-- 16. Legal -->
     <fieldset>
       <legend>{{'Legal' | translate}}</legend>
       <div class="fieldset-container">
-        <!-- 15.1. Observation according to legal text -->
+        <!-- 16.1. Observation according to legal text -->
         <div class="form-group">
           <label>{{'Observation according to legal text' | translate}}</label>
           <select id="law_field" name="law_field" [(ngModel)]="law" #law_field="ngModel" [disabled]="isDisabled()">
@@ -530,7 +539,7 @@
           </p>
         </div>
 
-        <!-- 15.1. Legal reference (infraction) -->
+        <!-- 16.1. Legal reference (infraction) -->
         <div class="form-group">
           <label for="infraction">{{'Legal reference (infraction)' | translate}}</label>
           <input id="infraction" type="text" class="form-control" name="infraction" [(ngModel)]="law && law.infraction" #infraction="ngModel" disabled />
@@ -539,7 +548,7 @@
           </p>
         </div>
 
-        <!-- 15.2. Legal reference (sanction) -->
+        <!-- 16.2. Legal reference (sanction) -->
         <div class="form-group">
           <label for="sanction">{{'Legal reference (sanction)' | translate}}</label>
           <input id="sanction" type="text" class="form-control" name="sanction" [(ngModel)]="law && law.sanctions" #sanction="ngModel" disabled />
@@ -548,7 +557,7 @@
           </p>
         </div>
 
-        <!-- 15.3. Minimum fine -->
+        <!-- 16.3. Minimum fine -->
         <div class="form-group">
           <label for="min_fine">{{'Minimum fine' | translate}}</label>
           <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" disabled />
@@ -557,7 +566,7 @@
           </p>
         </div>
 
-        <!-- 15.4. Maximum fine -->
+        <!-- 16.4. Maximum fine -->
         <div class="form-group">
           <label for="max_fine">{{'Maximum fine' | translate}}</label>
           <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" disabled />
@@ -566,7 +575,7 @@
           </p>
         </div>
 
-        <!-- 15.5. Penal servitude -->
+        <!-- 16.5. Penal servitude -->
         <div class="form-group">
           <label for="penal_servitude">{{'Penal servitude' | translate}}</label>
           <input id="penal_servitude" type="text" class="form-control" name="penal_servitude" [(ngModel)]="law && law['penal-servitude']" #penal_servitude="ngModel" disabled />
@@ -575,7 +584,7 @@
           </p>
         </div>
 
-        <!-- 15.6. Other penalties -->
+        <!-- 16.6. Other penalties -->
         <div class="form-group">
           <label for="other_penalties">{{'Other penalties' | translate}}</label>
           <input id="other_penalties" type="text" class="form-control" name="other_penalties" [(ngModel)]="law && law['other-penalties']" #other_penalties="ngModel" disabled />
@@ -584,7 +593,7 @@
           </p>
         </div>
 
-        <!-- 15.7. APV -->
+        <!-- 16.7. APV -->
         <div class="form-group">
           <label for="apv">{{'APV' | translate}}</label>
           <input id="apv" type="text" class="form-control" name="apv" [(ngModel)]="law && law.apv" #flegt="ngModel" disabled />
@@ -595,7 +604,7 @@
       </div>
     </fieldset>
 
-    <!-- 16. Publication date -->
+    <!-- 17. Publication date -->
     <div class="form-group">
       <label for="publication_date">{{'Publication date' | translate}}</label>
       <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required disabled></otp-datepicker>
@@ -604,17 +613,17 @@
       </p>
     </div>
 
-    <!-- 17. Metadata -->
+    <!-- 18. Metadata -->
     <fieldset *ngIf="observation && !isCopied">
       <legend>{{'Metadata' | translate}}</legend>
       <div class="fieldset-container">
-        <!-- 17.1. Last modification by -->
+        <!-- 18.1. Last modification by -->
         <div class="form-group">
           <label for="last_modification_by">{{'Last modification by' | translate}}</label>
           <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'] && observation['modified-user'].name" #last_modification_by="ngModel" disabled />
         </div>
 
-        <!-- 17.1. Last modified on -->
+        <!-- 18.1. Last modified on -->
         <div class="form-group">
           <label for="last_modified_on">{{'Last modified on' | translate}}</label>
           <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>

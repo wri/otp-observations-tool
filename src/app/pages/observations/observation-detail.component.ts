@@ -273,6 +273,16 @@ export class ObservationDetailComponent implements OnDestroy {
         this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
           .then(operators => this.operators = operators)
           .then(() => {
+            // We update the list of options for the relevant operators field
+            if (this.observation) {
+              this._relevantOperatorsSelection = this.observation && this.observation.country.id === country.id
+                ? (this.observation['relevant-operators'] || []).map(relevantOperator => this.operators.findIndex(o => o.id === relevantOperator.id))
+                : [];
+            }
+
+            this.relevantOperatorsOptions = this.operators
+              .map((operator, index) => ({ id: index, name: operator.name }));
+
             // If we're editing an observation (or using draft), the object Operator of the observation won't
             // match any of the objects of this.operators, so we search for the "same" model
             // and set it
@@ -953,6 +963,7 @@ export class ObservationDetailComponent implements OnDestroy {
       draftModel.fmuId = this.physicalPlace && this.fmu && this.fmu.id || null;
       draftModel.locationAccuracy = this.physicalPlace ? this.locationAccuracy : null;
       draftModel.locationInformation = this.locationInformation;
+      draftModel.relevantOperators = this.operators.filter((o, index) => this._relevantOperatorsSelection.indexOf(index) !== -1).map(o => +o.id);
     } else {
       draftModel.governments = this.governments.filter((g, index) => this._governmentsSelection.indexOf(index) !== -1).map(g => +g.id);
       draftModel.relevantOperators = this.operators.filter((o, index) => this._relevantOperatorsSelection.indexOf(index) !== -1).map(o => +o.id);
@@ -1512,9 +1523,10 @@ export class ObservationDetailComponent implements OnDestroy {
           this.observation.fmu = null;
         } else {
           const decimalCoordinates = this.getDecimalCoordinates();
-          console.log(decimalCoordinates);
           this.observation.lat = decimalCoordinates && decimalCoordinates[0];
           this.observation.lng = decimalCoordinates && decimalCoordinates[1];
+          this.observation['relevant-operators'] = this.operators
+            .filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
         }
       }
 
@@ -1550,6 +1562,7 @@ export class ObservationDetailComponent implements OnDestroy {
         model.fmu = this.physicalPlace ? this.fmu : null;
         model['location-accuracy'] = this.locationAccuracy;
         model['location-information'] = this.locationInformation;
+        model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       } else {
         model.governments = this.governments.filter((government, index) => this._governmentsSelection.indexOf(index) !== -1);
         model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
