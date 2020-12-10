@@ -41,6 +41,12 @@ export class OrganizationProfileComponent {
   onSubmit(): void {
     this.saveLoading = true;
 
+    // The value may be undefined
+    this.observer['public-info'] = !!this.observer['public-info'];
+
+    // This crashes the API otherwise
+    this.observer.logo = undefined;
+
     this.observer.save()
       .toPromise()
       .then(async () => alert(await this.translateService.get('organizationProfile.success').toPromise()))

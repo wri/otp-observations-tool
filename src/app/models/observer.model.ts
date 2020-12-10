@@ -19,6 +19,7 @@ export class Observer extends JsonApiModel {
   @Attribute() 'data-name'?: string;
   @Attribute() 'data-email'?: string;
   @Attribute() 'data-phone'?: string;
+  @Attribute() 'public-info'?: boolean;
 
   @BelongsTo() users: User[];
 
