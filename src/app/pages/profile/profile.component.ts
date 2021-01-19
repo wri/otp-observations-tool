@@ -59,6 +59,9 @@ export class ProfileComponent {
       .then(async () => {
         this.translateService.use(this.user.locale);
         alert(await this.translateService.get('profileUpdate.success').toPromise());
+
+        // We reload to make sure the observations will be loaded in the correct language
+        location.reload();
       })
       .catch(async () => alert(await this.translateService.get('profileUpdate.success').toPromise()))
       .then(() => this.saveLoading = false);
