@@ -310,6 +310,7 @@
   "observation.statusNote.NeedsRevision": "The observation has been reviewed and received some comments. You can either (1) publish it anyway and explain why you don't want to update it, (2) amend it and publish it or (3) amend it and send it back for review. For options (2) and (3), select the 'Amend' option. For these options, you can also explain the changes.",
   "observation.statusNote.NeedsRevision.question": "What would you like to do?",
   "observation.scrollingNote": "In order to see all of the table's columns, you need to scroll horizontally. You can either use the scrollbar located at the bottom of the table or use your trackpad or mouse. If you use a trackpad, you can scroll horizontally when your cursor is above the table. If you use a mouse with 3 buttons, the middle one should let you do the same by holding the button down and moving the cursor to the sides or rotating the scrolling wheel sideways.",
+  "observation.language.note": "You are creating/editing the observation in this language.",
   "Comments": "Comments",
   "Amend": "Amend",
   "Explain and publish": "Explain and publish",

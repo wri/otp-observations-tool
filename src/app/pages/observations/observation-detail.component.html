@@ -73,6 +73,14 @@
   </div>
 
   <div class="form-container" *ngIf="type === 'operator'">
+    <div class="form-group" *ngIf="canSave() || canCreate()">
+      <label for="language_field">{{'Language' | translate}}</label>
+      <input id="language_field" type="text" class="form-control" name="language_field" [value]="languages[locale]" disabled />
+      <p class="note">
+        {{ 'observation.language.note' | translate }}
+      </p>
+    </div>
+
     <!-- 0. ID -->
     <div class="form-group" *ngIf="observation && !isCopied">
       <label for="id_field">{{'ID' | translate}}</label>
@@ -634,6 +642,14 @@
   </div>
 
   <div class="form-container" *ngIf="type === 'government'">
+    <div class="form-group" *ngIf="canSave() || canCreate()">
+      <label for="language_field">{{'Language' | translate}}</label>
+      <input id="language_field" type="text" class="form-control" name="language_field" [value]="languages[locale]" disabled />
+      <p class="note">
+        {{ 'observation.language.note' | translate }}
+      </p>
+    </div>
+
     <!-- 0. ID -->
     <div class="form-group" *ngIf="observation">
       <label for="id_field">{{'ID' | translate}}</label>

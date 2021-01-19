@@ -137,6 +137,13 @@ export class ObservationDetailComponent implements OnDestroy {
   relevantOperatorsOptions: IMultiSelectOption[] = [];
   _relevantOperatorsSelection: number[] = [];
 
+  // Language
+  locale = localStorage.getItem('lang') || 'en';
+  languages = {
+    'en': 'English',
+    'fr': 'Français'
+  };
+
   // User selection
   _type: string = null;
   _country: Country = null;
