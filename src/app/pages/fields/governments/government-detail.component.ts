@@ -39,7 +39,8 @@ export class GovernmentDetailComponent {
       .then(() => {
         if (this.government && this.government.id) {
           this.government.country = this.countries.find(c => c.id === this.government.country.id);
-        } else {
+        } else if(!this.route.snapshot.params.id) {
+          // Set default country if there is no id
           // By default, the selected country is one of the observer's
           this.setDefaultCountry();
         }
