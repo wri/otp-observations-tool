@@ -2,6 +2,7 @@ import { AuthService } from 'app/services/auth.service';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { Government } from './../../../models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
+import { ObserversService } from 'app/services/observers.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 
@@ -11,15 +12,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./government-list.component.scss']
 })
 export class GovernmentListComponent extends TableFilterBehavior {
-
+  
   isAdmin = this.authService.isAdmin();
 
+  // TRYING TO setObserversCountries here BUT is not available when needed at canEdit
+  observerCountriesIds = this.setObserverCountriesIds();
+  
   constructor(
     protected service: GovernmentsService,
     private router: Router,
     private route: ActivatedRoute,
-    public authService: AuthService
+    public authService: AuthService,
+    public observersService: ObserversService,
   ) {
+    
     super();
   }
 
@@ -51,13 +57,34 @@ export class GovernmentListComponent extends TableFilterBehavior {
     if (!this.isAdmin) {
       return false;
     }
-
-    return government.country.id === this.authService.userCountryId;
+    const countries = this.observerCountriesIds;
+    // PROBLEM HERE is that countries are not loaded yet! I guess...
+    if (countries && countries.length) {
+      // check if government.country is included into countries
+      return countries.includes(parseInt(government.country.id));
+    }else {
+      return government.country.id === this.authService.userCountryId;
+    }
+    // return government.country.id === this.authService.userCountryId;
   }
 
   onEdit(row): void {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate(['edit', row.id], { relativeTo: this.route });
+  }
+
+  // copy paste from class GovernmentDetailComponent.setDefaultCountry()
+  setObserverCountriesIds() {
+    this.observersService.getById(this.authService.userObserverId, {
+      include: 'countries',
+      fields: { countries: 'id' } // Just save bandwidth and load fastter
+    }).then((observer) => {
+      let countries_ids = []
+      observer.countries.forEach((country) => {
+        countries_ids.push(country['id']);
+      });
+      return countries_ids;
+    }).catch(err => console.error(err));
   }
 
 
