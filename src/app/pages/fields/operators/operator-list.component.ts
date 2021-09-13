@@ -77,8 +77,13 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
     if (!this.isAdmin) {
       return false;
     }
+    let countries = this.authService.observerCountriesIds;
 
-    return operator.country.id === this.authService.userCountryId;
+    if (countries.length) {
+      return countries.includes(parseInt(operator.country.id));
+    }else {
+      return operator.country.id === this.authService.userCountryId;
+    }
   }
 
   /**

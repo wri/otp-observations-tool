@@ -8,6 +8,7 @@ import 'rxjs/add/operator/toPromise';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observer } from 'app/models/observer.model';
 import { TranslateService } from '@ngx-translate/core';
+import { ObserversService } from 'app/services/observers.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
   public userRole: string;
   public userObserverId: string;
   public userCountryId: string;
+  public observerCountriesIds: Number[];
   // Observable of the login status of the user
   private logged$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -28,7 +30,9 @@ export class AuthService {
     private tokenService: TokenService,
     private router: Router,
     private translateService: TranslateService,
-  ) { }
+    private observersService: ObserversService,
+  ) {
+   }
 
   /**
    * Trigger the login status to the component listening to the
@@ -95,6 +99,17 @@ export class AuthService {
       this.userCountryId = response.data.relationships.country.data
         && response.data.relationships.country.data.id;
 
+      this.observersService.getById(this.userObserverId, {
+        include: 'countries',
+        fields: { countries: 'id' } // Just save bandwidth and load fastter
+      }).then((observer) => {
+        let countries_ids = [];
+        observer.countries.forEach((country) => {
+          countries_ids.push(parseInt(country['id']));
+        });
+        this.observerCountriesIds = countries_ids;
+      }).catch(err => console.error(err));
+
       const lang: string = response.data.attributes.locale;
       if (lang) {
         this.translateService.use(lang);
@@ -137,5 +152,23 @@ export class AuthService {
     // return this.http.post(`${environment.apiUrl}/api/v1/user/${email}/recover-password`, {})
     // .map(response => response.json()).toPromise()
     // .then((body:any) => this.tokenService.token = body.access_token);
+  }
+
+  // copy paste from class GovernmentDetailComponent.setDefaultCountry()
+  /**
+   */
+   setObserverCountriesIds() {
+     console.log('setObserverCountriesIds');
+    this.observersService.getById(this.userObserverId, {
+      include: 'countries',
+      fields: { countries: 'id' } // Just save bandwidth and load fastter
+    }).then((observer) => {
+      let countries_ids = [];
+      observer.countries.forEach((country) => {
+        countries_ids.push(parseInt(country['id']));
+      });
+      this.observerCountriesIds = countries_ids;
+      console.log(this.observerCountriesIds);
+    }).catch(err => console.error(err));
   }
 }

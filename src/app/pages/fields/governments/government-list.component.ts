@@ -14,8 +14,6 @@ import { Component } from '@angular/core';
 export class GovernmentListComponent extends TableFilterBehavior {
   isAdmin = this.authService.isAdmin();
 
-  observerCountriesIds = [];
-
   constructor(
     protected service: GovernmentsService,
     private router: Router,
@@ -24,7 +22,6 @@ export class GovernmentListComponent extends TableFilterBehavior {
     public observersService: ObserversService,
   ) {
     super();
-    this.setObserverCountriesIds();
   }
 
   /**
@@ -55,11 +52,11 @@ export class GovernmentListComponent extends TableFilterBehavior {
     if (!this.isAdmin) {
       return false;
     }
+    let countries = this.authService.observerCountriesIds;
 
-    if (this.observerCountriesIds.length) {
-      // check if government.country is included into countries
-      return this.observerCountriesIds.includes(parseInt(government.country.id));
-    } else {
+    if (countries.length) {
+      return countries.includes(parseInt(government.country.id));
+    }else {
       return government.country.id === this.authService.userCountryId;
     }
   }
@@ -67,15 +64,5 @@ export class GovernmentListComponent extends TableFilterBehavior {
   onEdit(row): void {
     // Without relativeTo, the navigation doesn't work properly
     this.router.navigate(['edit', row.id], { relativeTo: this.route });
-  }
-
-  // copy paste from class GovernmentDetailComponent.setDefaultCountry()
-  setObserverCountriesIds() {
-    this.observersService.getById(this.authService.userObserverId, {
-      include: 'countries',
-      fields: { countries: 'id' } // Just save bandwidth and load fastter
-    })
-      .then((observer) => observer.countries.map(country => country.id))
-      .catch(err => console.error(err));
   }
 }

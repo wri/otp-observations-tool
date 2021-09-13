@@ -92,8 +92,14 @@ export class LawListComponent extends TableFilterBehavior {
     if (!this.isAdmin) {
       return false;
     }
+    let countries = this.authService.observerCountriesIds;
 
-    return law.country.id === this.authService.userCountryId;
+    if (countries.length) {
+      // check if government.country is included into countries
+      return countries.includes(parseInt(law.country.id));
+    }else {
+      return law.country.id === this.authService.userCountryId;
+    }
   }
 
 }

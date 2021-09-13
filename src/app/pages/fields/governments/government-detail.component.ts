@@ -117,8 +117,13 @@ export class GovernmentDetailComponent {
     if (!this.route.snapshot.params.id) {
       return true;
     }
+    let countries = this.authService.observerCountriesIds;
 
-    return this.government.country.id === this.authService.userCountryId;
+    if (countries.length) {
+      return countries.includes(parseInt(this.government.country.id));
+    }else {
+      return this.government.country.id === this.authService.userCountryId;
+    }
   }
 
   /**
