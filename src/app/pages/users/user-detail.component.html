@@ -23,12 +23,6 @@
         <div *ngIf="f.submitted && !name.valid" class="help-text" i18n="User creation/edition|Error message if the name isn't supplied">Name is required</div>
       </div>
 
-      <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !nickname.valid }">
-        <label for="nickname" i18n="User creation/edition|Label for the username field (a nickname)">Username</label>
-        <input id="nickname" type="text" class="form-control" name="nickname" [(ngModel)]="user && user.nickname" #nickname="ngModel" required />
-        <div *ngIf="f.submitted && !nickname.valid" class="help-text" i18n="User creation/edition|Error message if the username/nickname isn't supplied">Username is required</div>
-      </div>
-
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
         <label for="email" i18n="User creation/edition|Label for the email field">Email</label>
         <input id="email" type="email" class="form-control" name="email" [(ngModel)]="user && user.email" #email="ngModel" email required />
