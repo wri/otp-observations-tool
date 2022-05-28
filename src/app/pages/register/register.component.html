@@ -10,12 +10,6 @@
         <div *ngIf="f.submitted && !name.valid" class="help-text">{{'Please enter your name' | translate}}</div>
       </div>
 
-      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !nickname.valid }">
-        <label for="nickname">{{'Username' | translate}}</label>
-        <input id="nickname" type="text" class="form-control" name="nickname" ngModel #nickname="ngModel" required />
-        <div *ngIf="f.submitted && !nickname.valid" class="help-text">{{'Please enter a username' | translate}}</div>
-      </div>
-
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !observer_id.valid }">
         <label for="observer_id">{{'Organization' | translate}}</label>
         <select id="observer_id" name="observer_id" ngModel #observer_id="ngModel" required>
@@ -95,7 +89,3 @@
     </otp-action-bar>
   </form>
 </div>
-
-
-
-
