@@ -68,6 +68,6 @@
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
     "typescript": "^2.4.0",
-    "webpack-bundle-analyzer": "^2.8.1"
+    "webpack-bundle-analyzer": "^3.3.2"
   }
 }
