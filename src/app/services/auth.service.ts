@@ -32,7 +32,7 @@ export class AuthService {
     private translateService: TranslateService,
     private observersService: ObserversService,
   ) {
-   }
+  }
 
   /**
    * Trigger the login status to the component listening to the
@@ -157,8 +157,7 @@ export class AuthService {
   // copy paste from class GovernmentDetailComponent.setDefaultCountry()
   /**
    */
-   setObserverCountriesIds() {
-     console.log('setObserverCountriesIds');
+  setObserverCountriesIds() {
     this.observersService.getById(this.userObserverId, {
       include: 'countries',
       fields: { countries: 'id' } // Just save bandwidth and load fastter
