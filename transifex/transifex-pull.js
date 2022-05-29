@@ -40,7 +40,7 @@ fetch(langUrl, fetchConfig)
         fetch(`${transUrl}/${lang}?format=json`, fetchConfig)
           .then(res => res.json())
           .then((json) => {
-            fs.writeFile(`${process.env.LOCALES_PATH}/${lang}.json`, JSON.stringify(JSON.parse(json.content), null, 4), (err) => {
+            fs.writeFile(`${process.env.LOCALES_PATH}/${lang}.json`, JSON.stringify(JSON.parse(json.content), null, 2), (err) => {
               if (err) throw err;
               console.info(`Translations for ${lang} successfully saved!`);
             });

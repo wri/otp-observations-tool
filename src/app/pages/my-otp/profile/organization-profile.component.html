@@ -24,7 +24,7 @@
       </div>
 
       <div class="form-group">
-        <label>{{'Countries' | translate}}</label>
+        <label>{{'Organization operates in' | translate}}</label>
         <ss-multiselect-dropdown [texts]="multiSelectTexts" [options]="countriesOptions" [(ngModel)]="countriesSelection" (ngModelChange)="onChangeObserverCountries($event)" name="countries" [disabled]="!isAdmin"></ss-multiselect-dropdown>
       </div>
 

@@ -385,5 +385,6 @@
   "Language": "Language",
   "Select a language": "Select a language",
   "Please select a language": "Please select a language",
-  "noLanguageSet": "[EN] There is now a setting in your profile to set the interface's language. Please update it to your preferred language. \n\n[FR] Un nouveau paramètre est désormais disponible dans votre profil pour séleccioner la langue de l'application.\nSi vous souhaitez continuer de l'utiliser en français, merci de bien vouloir cliquer sur “Profile” en haut à droite, de choisir ensuite Français dans le menu “Language” et enfin de cliquer sur “Save”."
+  "noLanguageSet": "[EN] There is now a setting in your profile to set the interface's language. Please update it to your preferred language. \n\n[FR] Un nouveau paramètre est désormais disponible dans votre profil pour séleccioner la langue de l'application.\nSi vous souhaitez continuer de l'utiliser en français, merci de bien vouloir cliquer sur “Profile” en haut à droite, de choisir ensuite Français dans le menu “Language” et enfin de cliquer sur “Save”.",
+  "Organization operates in": "Organization operates in"
 }
