@@ -25,7 +25,7 @@
 
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !countries.valid }">
         <label>{{'Organization operates in' | translate}}</label>
-        <ss-multiselect-dropdown name="countries" id="countries" #countries="ngModel" [texts]="multiSelectTexts" [options]="countriesOptions" [(ngModel)]="countriesSelection" (ngModelChange)="onChangeObserverCountries($event)" [disabled]="!isAdmin" required></ss-multiselect-dropdown>
+        <ss-multiselect-dropdown name="countries" id="countries" #countries="ngModel" [texts]="multiSelectTexts" [settings]="multiSelectSettings" [options]="countriesOptions" [(ngModel)]="countriesSelection" (ngModelChange)="onChangeObserverCountries($event)" [disabled]="!isAdmin" required></ss-multiselect-dropdown>
         <div *ngIf="f.submitted && countries.errors?.required" class="help-text">{{'At least one country is required' | translate}}</div>
       </div>
 

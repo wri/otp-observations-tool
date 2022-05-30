@@ -5,7 +5,7 @@ import { Country } from 'app/models/country.model';
 import { Observer } from 'app/models/observer.model';
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IMultiSelectOption, IMultiSelectTexts } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 
 @Component({
   selector: 'otp-organization-profile',
@@ -23,6 +23,9 @@ export class OrganizationProfileComponent {
   countriesOptions: IMultiSelectOption[] = [];
   countriesSelection: string[] = [];
   multiSelectTexts: IMultiSelectTexts = {};
+  multiSelectSettings: IMultiSelectSettings = {
+    enableSearch: true
+  };
 
   constructor(
     private authService: AuthService,
