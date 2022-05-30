@@ -374,6 +374,8 @@
   "multiselect.checkedPlural": "checked",
   "multiselect.defaultTitle": "Select",
   "multiselect.allSelected": "All selected",
+  "multiselect.searchPlaceholder": "Search...",
+  "multiselect.searchEmptyResult": "Nothing found...",
   "results per page": "results per page",
   "Go to an observation": "Go to an observation",
   "Observation ID": "Observation ID",

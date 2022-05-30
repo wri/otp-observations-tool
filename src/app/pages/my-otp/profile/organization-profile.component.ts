@@ -49,8 +49,10 @@ export class OrganizationProfileComponent {
       this.translateService.get('multiselect.checkedPlural').toPromise(),
       this.translateService.get('multiselect.defaultTitle').toPromise(),
       this.translateService.get('multiselect.allSelected').toPromise(),
-    ]).then(([checked, checkedPlural, defaultTitle, allSelected]) => {
-      this.multiSelectTexts = { checked, checkedPlural, defaultTitle, allSelected };
+      this.translateService.get('multiselect.searchPlaceholder').toPromise(),
+      this.translateService.get('multiselect.searchEmptyResult').toPromise(),
+    ]).then(([checked, checkedPlural, defaultTitle, allSelected, searchPlaceholder, searchEmptyResult]) => {
+      this.multiSelectTexts = { checked, checkedPlural, defaultTitle, allSelected, searchPlaceholder, searchEmptyResult };
     });
   }
 
