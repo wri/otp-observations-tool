@@ -28,6 +28,7 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
   operatorTypes = Object.keys(OperatorTypes);
   activeFilterValues: any = [];
   isAdmin = this.authService.isAdmin();
+  countryFilterParams: any = {};
 
   constructor(
     protected service: OperatorsService,
@@ -38,6 +39,9 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
   ) {
     super();
 
+    this.countryFilterParams = {
+      'filter[id]': (this.authService.observerCountriesIds || []).join(',')
+    };
     this.updateActiveFilterValues();
   }
 
@@ -45,6 +49,9 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
     // We set a default filter which is to show the
     // the operators whether active or not
     this.filters.getApiParams = () => {
+      const defaultFilters = {
+        'filter[country]': (this.authService.observerCountriesIds || []).join(',')
+      };
       const filters = this.filters.filters
         .filter(filter => filter.selected !== null)
         .reduce((res, filter) => {
@@ -53,13 +60,17 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
           });
         }, {});
 
-      return Object.assign({}, { 'filter[is-active]': 'true, false' }, filters);
+      return {
+        ...defaultFilters,
+        ...filters,
+        'filter[is-active]': 'true, false'
+      };
     };
 
     super.ngAfterViewInit();
   }
 
-  triggerNewOperator(): void{
+  triggerNewOperator(): void {
     this.router.navigate(['private/fields/operators/new']);
   }
 
@@ -81,7 +92,7 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
 
     if (countries.length) {
       return countries.includes(parseInt(operator.country.id));
-    }else {
+    } else {
       return operator.country.id === this.authService.userCountryId;
     }
   }

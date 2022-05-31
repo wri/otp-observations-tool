@@ -12,13 +12,15 @@ export class FilterDirective {
   // Attribute to use to list the options
   // in the UI, if fetched from the API
   @Input() 'name-attr': string;
+  // Attribute to use to append extra params to API query for async filters
+  @Input() 'extra-params': string;
   // Filter values:
   //  - if object, the keys are the name of the options,
   //    the values the filter values
   //  - if string, the name of the model to fetch the
   //    values from
   //  - if array, the values to use
-  @Input() values: string[]|string|object;
+  @Input() values: string[] | string | object;
   // Whether the filter is mandatory
   @Input() required: boolean;
   // Default value for the filter

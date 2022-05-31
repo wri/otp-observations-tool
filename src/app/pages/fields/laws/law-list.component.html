@@ -1,6 +1,6 @@
 <div class="c-table-header">
   <otp-filters>
-    <otp-filter [name]="'Country' | translate" values="countries" prop="country" name-attr="name"></otp-filter>
+    <otp-filter [name]="'Country' | translate" values="countries" prop="country" name-attr="name" [extra-params]="countryFilterParams"></otp-filter>
     <otp-filter [name]="'Subcategory' | translate" values="subcategories" prop="subcategory" name-attr="name"></otp-filter>
     <otp-filter [name]="'Complete' | translate" [values]="completeFilterValues" prop="complete"></otp-filter>
   </otp-filters>
@@ -32,4 +32,3 @@
     </ng-template>
   </otp-table-column>
 </otp-table>
-

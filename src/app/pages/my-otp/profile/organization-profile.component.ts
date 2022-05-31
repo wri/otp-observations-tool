@@ -24,7 +24,8 @@ export class OrganizationProfileComponent {
   countriesSelection: string[] = [];
   multiSelectTexts: IMultiSelectTexts = {};
   multiSelectSettings: IMultiSelectSettings = {
-    enableSearch: true
+    enableSearch: true,
+    dynamicTitleMaxItems: 8
   };
 
   constructor(
@@ -86,7 +87,10 @@ export class OrganizationProfileComponent {
 
     this.observer.save()
       .toPromise()
-      .then(async () => alert(await this.translateService.get('organizationProfile.success').toPromise()))
+      .then(async () => {
+        alert(await this.translateService.get('organizationProfile.success').toPromise());
+        this.authService.setObserverCountriesIds();
+      })
       .catch(async () => alert(await this.translateService.get('organizationProfile.error').toPromise()))
       .then(() => this.saveLoading = false);
   }

@@ -99,16 +99,7 @@ export class AuthService {
       this.userCountryId = response.data.relationships.country.data
         && response.data.relationships.country.data.id;
 
-      this.observersService.getById(this.userObserverId, {
-        include: 'countries',
-        fields: { countries: 'id' } // Just save bandwidth and load fastter
-      }).then((observer) => {
-        let countries_ids = [];
-        observer.countries.forEach((country) => {
-          countries_ids.push(parseInt(country['id']));
-        });
-        this.observerCountriesIds = countries_ids;
-      }).catch(err => console.error(err));
+      await this.setObserverCountriesIds();
 
       const lang: string = response.data.attributes.locale;
       if (lang) {
@@ -158,7 +149,7 @@ export class AuthService {
   /**
    */
   setObserverCountriesIds() {
-    this.observersService.getById(this.userObserverId, {
+    return this.observersService.getById(this.userObserverId, {
       include: 'countries',
       fields: { countries: 'id' } // Just save bandwidth and load fastter
     }).then((observer) => {
@@ -167,7 +158,6 @@ export class AuthService {
         countries_ids.push(parseInt(country['id']));
       });
       this.observerCountriesIds = countries_ids;
-      console.log(this.observerCountriesIds);
     }).catch(err => console.error(err));
   }
 }
