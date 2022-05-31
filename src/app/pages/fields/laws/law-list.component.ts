@@ -40,25 +40,9 @@ export class LawListComponent extends TableFilterBehavior {
   }
 
   ngAfterViewInit(): void {
-    // We set a default filter
-    this.filters.getApiParams = () => {
-      const defaultFilters = {
-        'filter[country]': (this.authService.observerCountriesIds || []).join(',')
-      };
-      const filters = this.filters.filters
-        .filter(filter => filter.selected !== null)
-        .reduce((res, filter) => {
-          return Object.assign({}, res, {
-            [`filter[${filter.prop}]`]: filter.selected
-          });
-        }, {});
-
-      return {
-        ...defaultFilters,
-        ...filters,
-      };
+    this.filters.defaultApiParams = {
+      'filter[country]': (this.authService.observerCountriesIds || []).join(',')
     };
-
     super.ngAfterViewInit();
   }
 

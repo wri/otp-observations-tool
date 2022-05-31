@@ -46,27 +46,10 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
   }
 
   ngAfterViewInit(): void {
-    // We set a default filter which is to show the
-    // the operators whether active or not
-    this.filters.getApiParams = () => {
-      const defaultFilters = {
-        'filter[country]': (this.authService.observerCountriesIds || []).join(',')
-      };
-      const filters = this.filters.filters
-        .filter(filter => filter.selected !== null)
-        .reduce((res, filter) => {
-          return Object.assign({}, res, {
-            [`filter[${filter.prop}]`]: filter.selected
-          });
-        }, {});
-
-      return {
-        ...defaultFilters,
-        ...filters,
-        'filter[is-active]': 'true, false'
-      };
+    this.filters.defaultApiParams = {
+      'filter[country]': (this.authService.observerCountriesIds || []).join(','),
+      'filter[is-active]': 'true, false'
     };
-
     super.ngAfterViewInit();
   }
 

@@ -29,6 +29,7 @@ export class FiltersComponent implements AfterContentInit {
   filters: Filter[] = [];
   modalOpen = false;
   objectKeys = Object.keys;
+  defaultApiParams = {};
 
   @Output() change = new EventEmitter<void>();
 
@@ -238,13 +239,18 @@ export class FiltersComponent implements AfterContentInit {
    * NOTE: overriden in the report library
    */
   getApiParams(): JsonApiParams {
-    return this.filters
+    const filters = this.filters
       .filter(filter => filter.selected !== null)
       .reduce((res, filter) => {
         return Object.assign({}, res, {
           [`filter[${filter.prop}]`]: filter.selected
         });
       }, {});
+
+    return {
+      ...this.defaultApiParams,
+      ...filters,
+    };
   }
 
   /**
