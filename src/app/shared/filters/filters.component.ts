@@ -236,7 +236,6 @@ export class FiltersComponent implements AfterContentInit {
 
   /**
    * Return the params for the API calls
-   * NOTE: overriden in the report library
    */
   getApiParams(): JsonApiParams {
     const filters = this.filters

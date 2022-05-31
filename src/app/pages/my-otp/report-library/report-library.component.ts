@@ -26,20 +26,9 @@ export class ReportLibraryComponent extends TableFilterBehavior implements After
   }
 
   ngAfterViewInit(): void {
-    // We set a default filter which is to only show the
-    // reports corresponding to the user's observer
-    this.filters.getApiParams = () => {
-      const filters = this.filters.filters
-        .filter(filter => filter.selected !== null)
-        .reduce((res, filter) => {
-          return Object.assign({}, res, {
-            [`filter[${filter.prop}]`]: filter.selected
-          });
-        }, {});
-
-      return Object.assign({}, filters, { 'filter[observer-id]': this.authService.userObserverId });
+    this.filters.defaultApiParams = {
+      'filter[observer-id]': this.authService.userObserverId
     };
-
     super.ngAfterViewInit();
   }
 
