@@ -19,6 +19,7 @@ export class EqualToValidatorDirective implements Validator {
 
     if (!this.hasSubscribed) {
       this.equalTo.valueChanges.subscribe(() => c.updateValueAndValidity());
+      this.hasSubscribed = true;
     }
 
     if (value === otherValue) {
@@ -28,6 +29,6 @@ export class EqualToValidatorDirective implements Validator {
     return { equalTo: true };
   }
 
-  registerOnValidatorChange(fn: () => void): void {}
+  registerOnValidatorChange(fn: () => void): void { }
 
 }
