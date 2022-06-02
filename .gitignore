@@ -45,3 +45,6 @@ Thumbs.db
 .env
 src/assets/locale/*.json
 !src/assets/locale/zu.json
+
+# local env config
+src/environments/environment.local.ts

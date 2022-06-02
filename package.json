@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "dev": "ng serve --env=local",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
