@@ -14,6 +14,7 @@ export class ProfileComponent {
   user: User = null;
   loading = true;
   saveLoading = false;
+  initialEmail = '';
 
   constructor(
     private auth: AuthService,
@@ -21,6 +22,10 @@ export class ProfileComponent {
     private translateService: TranslateService
   ) {
     this.loadUser();
+  }
+
+  get showCurrentPasswordField(): boolean {
+    return this.initialEmail !== this.user.email || (this.user.password && this.user.password.length > 0);
   }
 
   /**
@@ -35,6 +40,7 @@ export class ProfileComponent {
         // the equalTo validator
         this.user.password = '';
         this.user['password-confirmation'] = '';
+        this.initialEmail = this.user.email;
       })
       .catch(err => console.error(err)) // TODO: visual feedback
       .then(() => this.loading = false);
@@ -47,9 +53,8 @@ export class ProfileComponent {
   onSubmit(): void {
     this.saveLoading = true;
 
-    // We can't send empty string to the server without
-    // receiving an error
-    if (!this.user.password.length) {
+    // We can't send empty string to the server
+    if (this.user.password === '') {
       this.user.password = null;
       this.user['password-confirmation'] = null;
     }
@@ -63,7 +68,21 @@ export class ProfileComponent {
         // We reload to make sure the observations will be loaded in the correct language
         location.reload();
       })
-      .catch(async () => alert(await this.translateService.get('profileUpdate.success').toPromise()))
+      .catch(async (error) => {
+        const messageArray = [
+          await this.translateService.get('profileUpdate.error').toPromise()
+        ];
+        if (error && error.errors && error.errors.length) {
+          for (let er of error.errors) {
+            if (er.title === "is invalid" && er.source && er.source.pointer === '/data/attributes/current-password') {
+              messageArray.push(await this.translateService.get('Current password is invalid').toPromise());
+            } else {
+              messageArray.push(`${er.title} - ${er.detail}`);
+            }
+          }
+        }
+        alert(messageArray.join('\n'));
+      })
       .then(() => this.saveLoading = false);
   }
 
