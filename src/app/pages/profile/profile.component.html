@@ -51,26 +51,28 @@
       <fieldset>
         <legend>{{'Update your password' | translate}}</legend>
         <div class="fieldset-container">
-          <!-- <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid, '-required': !!new_password.value && !!new_password.value.length }">
-            <label for="password">Current password</label>
-            <input id="password" type="password" class="form-control" name="password" ngModel #password="ngModel" [required]="!!new_password.value" />
-            <div *ngIf="f.submitted && password.errors?.required" class="help-text">Please write your current password</div>
-          </div> -->
-
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !new_password.valid }">
             <label for="new_password">{{'New password' | translate}}</label>
-            <input id="new_password" type="password" class="form-control" name="new_password" [(ngModel)]="user.password" #new_password="ngModel" minlength="6" />
+            <input id="new_password" type="password" autocomplete="new-password" class="form-control" name="new_password" [(ngModel)]="user.password" #new_password="ngModel" minlength="6" />
             <div *ngIf="f.submitted && new_password.errors?.minlength && !new_password.errors?.required" class="help-text">{{'Your password needs at least 6 characters' | translate}}</div>
           </div>
 
           <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid, '-required': !!new_password.value && !!new_password.value.length }">
             <label for="password_confirmation">{{'Confirm your new password' | translate}}</label>
-            <input id="password_confirmation" type="password" [(ngModel)]="user['password-confirmation']" class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="new_password" [required]="!!new_password.value" />
+            <input id="password_confirmation" type="password" autocomplete="new-password" [(ngModel)]="user['password-confirmation']" class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="new_password" [required]="!!new_password.value" />
             <div *ngIf="f.submitted && password_confirmation.errors?.required" class="help-text">{{'Please confirm your new password' | translate}}</div>
             <div *ngIf="f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required" class="help-text">{{"Password values don't not coincide" | translate}}</div>
           </div>
         </div>
       </fieldset>
+
+      <div class="form-group" *ngIf="showCurrentPasswordField" [ngClass]="{ 'has-error': f.submitted && !current_password.valid, '-required': true }">
+        <label for="current_password">{{'Current password' | translate}}</label>
+        <input id="current_password" type="password" autocomplete="current-password" class="form-control" name="password" [(ngModel)]="user['current-password']" #current_password="ngModel" required />
+        <p [class]="f.submitted && !current_password.valid ? 'help-text' : 'note'">
+          {{'We need your current password to confirm your changes' | translate}}
+        </p>
+      </div>
     </div>
 
     <div class="form-footer">

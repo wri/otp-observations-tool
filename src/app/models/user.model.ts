@@ -16,6 +16,7 @@ export class User extends JsonApiModel {
   @Attribute() deactivated_at?: Date;
   @Attribute() password?: string;
   @Attribute() 'password-confirmation'?: string;
+  @Attribute() 'current-password'?: string;
 
   @BelongsTo() country: Country;
   @BelongsTo() observer: Observer;
