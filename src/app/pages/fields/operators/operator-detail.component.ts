@@ -37,7 +37,6 @@ export class OperatorDetailComponent {
     private countriesService: CountriesService,
     private operatorsService: OperatorsService,
     private datastoreService: DatastoreService,
-    private observersService: ObserversService,
     private router: Router,
     private route: ActivatedRoute,
     private translateService: TranslateService,
@@ -45,14 +44,13 @@ export class OperatorDetailComponent {
   ) {
     this.isAdmin = this.authService.isAdmin();
 
-    this.countriesService.getAll({ sort: 'name' })
+    this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
       .then((data) => this.countries = data)
       .then(() => {
         if (this.operator && this.operator.id) {
           this.operator.country = this.countries.find(c => c.id === this.operator.country.id);
         } else {
-          // By default, the selected country is one of the observer's
-          this.setDefaultCountry();
+          this.operator.country = this.countries[0];
         }
       })
       .catch(err => console.error(err)); // TODO: visual feedback
@@ -74,7 +72,7 @@ export class OperatorDetailComponent {
     }
   }
 
-  onCancel(): void{
+  onCancel(): void {
     this.router.navigate(['/', 'private', 'fields', 'operators']);
   }
 
@@ -126,25 +124,8 @@ export class OperatorDetailComponent {
 
     if (countries.length) {
       return countries.includes(parseInt(this.operator.country.id));
-    }else {
+    } else {
       return this.operator.country.id === this.authService.userCountryId;
     }
-  }
-
-  /**
-   * Set the default country value based on the observer's
-   * locations
-   * NOTE: do not call before loading this.countries
-   */
-  setDefaultCountry() {
-    this.observersService.getById(this.authService.userObserverId, {
-      include: 'countries',
-      fields: { countries: 'id' } // Just save bandwidth and load fastter
-    }).then((observer) => {
-      const countries = observer.countries;
-      if (countries && countries.length) {
-        this.operator.country = this.countries.find(c => c.id === countries[0].id);
-      }
-    }).catch(err => console.error(err));
   }
 }

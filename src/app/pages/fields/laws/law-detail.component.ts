@@ -38,49 +38,31 @@ export class LawDetailComponent {
       .then(subcategories => this.subcategories = subcategories)
       .catch((err) => console.error(err)); // TODO: visual feedback
 
+    this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
+      .then((data) => this.countries = data)
+      .then(() => {
+        if (this.law && this.law.id) {
+          this.law.country = this.countries.find(c => c.id === this.law.country.id);
+        } else {
+          this.law.country = this.countries[0];
+        }
+      })
+      .catch(err => console.error(err)); // TODO: visual feedback
+
     // If we're editing a law, we need to fetch the model
     // and do a bit more stuff
     if (this.route.snapshot.params.id) {
       this.loading = true;
-
-      this.countriesService.getAll({ sort: 'name' })
-        .then(countries => this.countries = countries)
-        .then(() => {
-          if (this.law) {
-            // NOTE: the object Country of the law won't match any of
-            // the objects of this.countries, so we search for
-            // the "same" model and set it
-            this.law.country = this.countries.find(c => c.id === this.law.country.id);
-          }
-        })
-        .catch(err => console.error(err)); // TODO: visual feedback
-
       this.lawsService.getById(this.route.snapshot.params.id, { include: 'country,subcategory' })
         .then(law => this.law = law)
-        .then(() => {
-          if (this.countries.length) {
-            // NOTE: the object Country of the law won't match any of
-            // the objects of this.countries, so we search for
-            // the "same" model and set it
-            this.law.country = this.countries.find(c => c.id === this.law.country.id);
-          }
-        })
         .catch(err => console.error(err))
         .then(() => this.loading = false); // TODO: visual feedback
     } else {
       this.law = this.datastoreService.createRecord(Law, {});
-
       // We need to force some properties to null to correctly display
       // the selectors in the UI
       this.law.country = null;
       this.law.subcategory = null;
-
-      this.countriesService.getAll({ sort: 'name' })
-        .then(countries => this.countries = countries)
-        .then(() => {
-          this.law.country = this.countries.find(c => c.id === this.authService.userCountryId);
-        })
-        .catch(err => console.error(err)); // TODO: visual feedback
     }
   }
 
@@ -136,9 +118,8 @@ export class LawDetailComponent {
 
     if (countries.length) {
       return countries.includes(parseInt(this.law.country.id));
-    }else {
+    } else {
       return this.law.country.id === this.authService.userCountryId;
     }
   }
-
 }
