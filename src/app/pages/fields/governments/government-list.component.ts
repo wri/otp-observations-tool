@@ -13,6 +13,7 @@ import { Component } from '@angular/core';
 })
 export class GovernmentListComponent extends TableFilterBehavior {
   isAdmin = this.authService.isAdmin();
+  countryFilterParams: any = {};
 
   constructor(
     protected service: GovernmentsService,
@@ -22,6 +23,17 @@ export class GovernmentListComponent extends TableFilterBehavior {
     public observersService: ObserversService,
   ) {
     super();
+
+    this.countryFilterParams = {
+      'filter[id]': (this.authService.observerCountriesIds || []).join(',')
+    };
+  }
+
+  ngAfterViewInit(): void {
+    this.filters.defaultApiParams = {
+      'filter[country]': (this.authService.observerCountriesIds || []).join(',')
+    };
+    super.ngAfterViewInit();
   }
 
   /**
@@ -56,7 +68,7 @@ export class GovernmentListComponent extends TableFilterBehavior {
 
     if (countries.length) {
       return countries.includes(parseInt(government.country.id));
-    }else {
+    } else {
       return government.country.id === this.authService.userCountryId;
     }
   }

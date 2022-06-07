@@ -26,7 +26,6 @@ export class GovernmentDetailComponent {
     private countriesService: CountriesService,
     private governmentsService: GovernmentsService,
     private datastoreService: DatastoreService,
-    private observersService: ObserversService,
     private router: Router,
     private route: ActivatedRoute,
     private translateService: TranslateService,
@@ -34,15 +33,13 @@ export class GovernmentDetailComponent {
   ) {
     this.isAdmin = this.authService.isAdmin();
 
-    this.countriesService.getAll({ sort: 'name' })
+    this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
       .then(data => this.countries = data)
       .then(() => {
         if (this.government && this.government.id) {
           this.government.country = this.countries.find(c => c.id === this.government.country.id);
-        } else if(!this.route.snapshot.params.id) {
-          // Set default country if there is no id
-          // By default, the selected country is one of the observer's
-          this.setDefaultCountry();
+        } else if (!this.route.snapshot.params.id) {
+          this.government.country = this.countries[0];
         }
       })
       .catch(err => console.error(err)); // TODO: visual feedback
@@ -121,25 +118,8 @@ export class GovernmentDetailComponent {
 
     if (countries.length) {
       return countries.includes(parseInt(this.government.country.id));
-    }else {
+    } else {
       return this.government.country.id === this.authService.userCountryId;
     }
-  }
-
-  /**
-   * Set the default country value based on the observer's
-   * locations
-   * NOTE: do not call before loading this.countries
-   */
-  setDefaultCountry() {
-    this.observersService.getById(this.authService.userObserverId, {
-      include: 'countries',
-      fields: { countries: 'id' } // Just save bandwidth and load fastter
-    }).then((observer) => {
-      const countries = observer.countries;
-      if (countries && countries.length) {
-        this.government.country = this.countries.find(c => c.id === countries[0].id);
-      }
-    }).catch(err => console.error(err));
   }
 }

@@ -1,9 +1,11 @@
 import { ObserversService } from 'app/services/observers.service';
 import { AuthService } from 'app/services/auth.service';
-import { DatastoreService } from 'app/services/datastore.service';
+import { CountriesService } from 'app/services/countries.service';
+import { Country } from 'app/models/country.model';
 import { Observer } from 'app/models/observer.model';
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 
 @Component({
   selector: 'otp-organization-profile',
@@ -17,14 +19,42 @@ export class OrganizationProfileComponent {
   saveLoading = false;
   showMore = false; // Are we showing all the details?
   observer: Observer = null;
+  countries: Country[] = [];
+  countriesOptions: IMultiSelectOption[] = [];
+  countriesSelection: string[] = [];
+  multiSelectTexts: IMultiSelectTexts = {};
+  multiSelectSettings: IMultiSelectSettings = {
+    enableSearch: true,
+    dynamicTitleMaxItems: 8
+  };
 
   constructor(
     private authService: AuthService,
     private observersService: ObserversService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private countriesService: CountriesService,
   ) {
     this.isAdmin = this.authService.isAdmin();
-    this.loadObserver();
+    this.updateMultiSelectTexts();
+    Promise.all([
+      this.loadObserver(),
+      this.loadCountries()
+    ]).then(() => {
+      this.countriesSelection = this.observer.countries.map((c) => c.id);
+    });
+  }
+
+  private async updateMultiSelectTexts() {
+    await Promise.all([
+      this.translateService.get('multiselect.checked').toPromise(),
+      this.translateService.get('multiselect.checkedPlural').toPromise(),
+      this.translateService.get('multiselect.defaultTitle').toPromise(),
+      this.translateService.get('multiselect.allSelected').toPromise(),
+      this.translateService.get('multiselect.searchPlaceholder').toPromise(),
+      this.translateService.get('multiselect.searchEmptyResult').toPromise(),
+    ]).then(([checked, checkedPlural, defaultTitle, allSelected, searchPlaceholder, searchEmptyResult]) => {
+      this.multiSelectTexts = { checked, checkedPlural, defaultTitle, allSelected, searchPlaceholder, searchEmptyResult };
+    });
   }
 
   /**
@@ -32,10 +62,19 @@ export class OrganizationProfileComponent {
    */
   loadObserver() {
     const observerId = this.authService.userObserverId;
-    this.observersService.getById(observerId)
+    return this.observersService.getById(observerId, { include: 'countries', fields: { countries: 'id' } })
       .then(observer => this.observer = observer)
       .catch(err => console.error(err)) // TODO: visual feedback
       .then(() => this.loading = false);
+  }
+
+  loadCountries() {
+    return this.countriesService.getAll({ sort: 'name' })
+      .then(countries => {
+        this.countries = countries;
+        this.countriesOptions = countries.map(c => ({ id: c.id, name: c.name }));
+      })
+      .catch(err => console.error(err)); // TODO: visual feedback
   }
 
   onSubmit(): void {
@@ -43,15 +82,21 @@ export class OrganizationProfileComponent {
 
     // The value may be undefined
     this.observer['public-info'] = !!this.observer['public-info'];
-
-    // This crashes the API otherwise
-    this.observer.logo = undefined;
+    this.observer.logo = undefined; // This crashes the API otherwise
+    this.observer.countries = this.countries.filter(c => this.countriesSelection.includes(c.id));
 
     this.observer.save()
       .toPromise()
-      .then(async () => alert(await this.translateService.get('organizationProfile.success').toPromise()))
+      .then(async () => {
+        alert(await this.translateService.get('organizationProfile.success').toPromise());
+        this.authService.setObserverCountriesIds();
+      })
       .catch(async () => alert(await this.translateService.get('organizationProfile.error').toPromise()))
       .then(() => this.saveLoading = false);
+  }
+
+  onChangeObserverCountries(options: string[]) {
+    this.countriesSelection = options;
   }
 
   onDiscard(): void {

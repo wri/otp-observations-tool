@@ -1,6 +1,6 @@
 <div class="c-table-header">
   <otp-filters>
-    <otp-filter [name]="'Country' | translate" values="countries" prop="country" name-attr="name"></otp-filter>
+    <otp-filter [name]="'Country' | translate" values="countries" prop="country" name-attr="name" [extra-params]="countryFilterParams"></otp-filter>
   </otp-filters>
    <a *ngIf="isAdmin" class="c-button -primary" routerLink="new">
      {{'New government entity' | translate}}

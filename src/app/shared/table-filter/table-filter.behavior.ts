@@ -46,7 +46,7 @@ export class TableFilterBehavior implements AfterViewInit {
           this.table.rowCount = res.meta['record-count'];
         }
       })
-      .catch(() => console.error('Error loading the table data'))
+      .catch((error) => console.error('Error loading the table data', error))
       .then(() => {
         if (this.latestRequestID === requestID) {
           this.table.loading = false;

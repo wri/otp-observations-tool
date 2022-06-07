@@ -29,6 +29,7 @@ export class FiltersComponent implements AfterContentInit {
   filters: Filter[] = [];
   modalOpen = false;
   objectKeys = Object.keys;
+  defaultApiParams = {};
 
   @Output() change = new EventEmitter<void>();
 
@@ -235,16 +236,20 @@ export class FiltersComponent implements AfterContentInit {
 
   /**
    * Return the params for the API calls
-   * NOTE: overriden in the report library
    */
   getApiParams(): JsonApiParams {
-    return this.filters
+    const filters = this.filters
       .filter(filter => filter.selected !== null)
       .reduce((res, filter) => {
         return Object.assign({}, res, {
           [`filter[${filter.prop}]`]: filter.selected
         });
       }, {});
+
+    return {
+      ...this.defaultApiParams,
+      ...filters,
+    };
   }
 
   /**
@@ -306,11 +311,13 @@ export class FiltersComponent implements AfterContentInit {
       const models = Reflect.getMetadata('JsonApiDatastoreConfig', this.datastoreService.constructor).models;
       const model = models[<string>asyncFiltersNode.values];
 
+      const extraParams = (asyncFiltersNode['extra-params'] as any) || {};
       let params = {
         sort: asyncFiltersNode['name-attr'],
         page: { size: 3000 },
         // We just request the field we need
-        fields: { [<string>asyncFiltersNode.values]: asyncFiltersNode['name-attr'] }
+        fields: { [<string>asyncFiltersNode.values]: asyncFiltersNode['name-attr'] },
+        ...extraParams
       };
 
       if (asyncFiltersNode.prop === 'country' || asyncFiltersNode.prop === 'country-id') {

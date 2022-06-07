@@ -19,6 +19,7 @@ export class LawListComponent extends TableFilterBehavior {
     }
   };
   completeFilterValues: any = {};
+  countryFilterParams: any = {};
 
   isAdmin = this.authService.isAdmin();
 
@@ -31,8 +32,18 @@ export class LawListComponent extends TableFilterBehavior {
   ) {
     super();
 
+    this.countryFilterParams = {
+      'filter[id]': (this.authService.observerCountriesIds || []).join(',')
+    };
     this.updateCompleteFilterValues();
     this.translateService.onLangChange.subscribe(() => this.updateCompleteFilterValues());
+  }
+
+  ngAfterViewInit(): void {
+    this.filters.defaultApiParams = {
+      'filter[country]': (this.authService.observerCountriesIds || []).join(',')
+    };
+    super.ngAfterViewInit();
   }
 
   /**
@@ -97,7 +108,7 @@ export class LawListComponent extends TableFilterBehavior {
     if (countries.length) {
       // check if government.country is included into countries
       return countries.includes(parseInt(law.country.id));
-    }else {
+    } else {
       return law.country.id === this.authService.userCountryId;
     }
   }
