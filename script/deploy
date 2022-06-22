@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+echo "set project directory"
+cd "$(dirname "$(readlink -f "$0")")"
+cd ".."
+
+export NVM_DIR="$HOME/.nvm"
+. $NVM_DIR/nvm.sh
+
+echo "--> Setting node version"
+nvm use
+
+echo "Installing dependencies..."
+yarn install
+
+echo "Fetching translations..."
+yarn transifex:pull
+
+echo "Building project..."
+if [ $1 = "staging" ]; then
+  yarn run dev-build
+else
+  yarn run prod-build
+fi
+
+echo "--> All done :)"
