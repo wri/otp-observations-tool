@@ -34,7 +34,7 @@ import { OrganizationProfileComponent } from 'app/pages/my-otp/profile/organizat
 import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { ReportLibraryComponent } from 'app/pages/my-otp/report-library/report-library.component';
-import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
+// import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
 
 
 const observationsChildren = [
@@ -68,10 +68,10 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent
   },
-  {
-    path: 'reset-password',
-    component: ResetPasswordComponent
-  },
+  // {
+  //   path: 'reset-password',
+  //   component: ResetPasswordComponent
+  // },
   {
     path: 'private',
     canActivate: [AuthGuard],
@@ -243,7 +243,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes)
-    ],
+  ],
   providers: [
     AuthGuard
   ],
