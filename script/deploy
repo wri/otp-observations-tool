@@ -12,7 +12,7 @@ echo "--> Setting node version"
 nvm use
 
 echo "Installing dependencies..."
-yarn install
+yarn install --production=false
 
 echo "Fetching translations..."
 yarn transifex:pull
