@@ -35,6 +35,11 @@ export class ObservationListComponent extends TableFilterBehavior {
   statusFilterValues: any = {};
   typeFilterValues: any = [];
   archivedFilterValues: any = [];
+  countryFilterParams: any = {};
+  operatorFilterParams: any = {};
+  govFilterParams: any = {};
+  fmuFilterParams: any = {};
+  reportFilterParams: any = {};
   uploadWarningModalOpen = false;
   goToModalOpen = false;
 
@@ -67,6 +72,13 @@ export class ObservationListComponent extends TableFilterBehavior {
     this.updateStatusFilterValues();
     this.updateTypeFilterValues();
     this.updateArchivedFilterValues();
+    this.countryFilterParams = {
+      'filter[id]': (this.authService.observerCountriesIds || []).join(',')
+    };
+    this.operatorFilterParams = { 'filter[obs_tool_filter]': true };
+    this.govFilterParams = { 'filter[obs_tool_filter]': true };
+    this.fmuFilterParams = { 'filter[obs_tool_filter]': true };
+    this.reportFilterParams = { 'filter[observer_id]': this.authService.userObserverId };
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateStatusFilterValues();

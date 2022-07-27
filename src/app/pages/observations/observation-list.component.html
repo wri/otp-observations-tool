@@ -36,14 +36,13 @@
     <otp-filters>
       <otp-filter [name]="'Type' | translate" [values]="typeFilterValues" prop="observation-type" default="operator" [required]="true"></otp-filter>
       <otp-filter [name]="'Archived' | translate" [values]="archivedFilterValues" prop="hidden" [default]="false" [required]="true"></otp-filter>
-      <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name"></otp-filter>
-      <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name"></otp-filter>
+      <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name" [extra-params]="countryFilterParams"></otp-filter>
+      <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name" [extra-params]="operatorFilterParams"></otp-filter>
       <otp-filter [name]="'Category' | translate" values="categories" prop="category-id" name-attr="name"></otp-filter>
       <otp-filter [name]="'Subcategory' | translate" values="subcategories" prop="subcategory" name-attr="name"></otp-filter>
-      <otp-filter [name]="'Observer' | translate" values="observers" prop="observer-id" name-attr="name"></otp-filter>
-      <otp-filter [name]="'Government entity' | translate" values="governments" prop="government-id" name-attr="government-entity"></otp-filter>
-      <otp-filter [name]="'FMU' | translate" values="fmus" prop="fmu-id" name-attr="name"></otp-filter>
-      <otp-filter [name]="'Report' | translate" values="observation-reports" prop="observation-report" name-attr="title"></otp-filter>
+      <otp-filter [name]="'Government entity' | translate" values="governments" prop="government-id" name-attr="government-entity" [extra-params]="govFilterParams"></otp-filter>
+      <otp-filter [name]="'FMU' | translate" values="fmus" prop="fmu-id" name-attr="name" [extra-params]="fmuFilterParams"></otp-filter>
+      <otp-filter [name]="'Report' | translate" values="observation-reports" prop="observation-report" name-attr="title" [extra-params]="reportFilterParams"></otp-filter>
       <otp-filter [name]="'Status' | translate" [values]="statusFilterValues" prop="validation-status"></otp-filter>
     </otp-filters>
     <div class="table-actions">

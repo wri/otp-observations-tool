@@ -14,6 +14,7 @@ export interface Filter {
   values: {};
   selected?: any;
   required: boolean;
+  extraParams?: any;
 }
 
 @Component({
@@ -131,6 +132,7 @@ export class FiltersComponent implements AfterContentInit {
         page: { size: 3000 },
         // We just request the field we need
         fields: { governments: 'government-entity' },
+        ...(governmentEntityFilter.extraParams || {}),
         ...(this.hasValue(countryFilter)
           ? { filter: { 'country': countryFilter.selected } }
           : {}
@@ -168,6 +170,7 @@ export class FiltersComponent implements AfterContentInit {
         page: { size: 3000 },
         // We just request the field we need
         fields: { operators: 'name' },
+        ...(operatorFilter.extraParams || {}),
         ...(this.hasValue(countryFilter)
           ? { filter: { 'country': countryFilter.selected } }
           : {}
@@ -209,6 +212,7 @@ export class FiltersComponent implements AfterContentInit {
         page: { size: 3000 },
         // We just request the field we need
         fields: { fmus: 'name' },
+        ...(fmuFilter.extraParams || {}),
         filter: {
           ...(this.hasValue(countryFilter) ? { 'country': countryFilter.selected } : {}),
           ...(this.hasValue(operatorFilter) ? { 'operator': operatorFilter.selected } : {}),
@@ -339,7 +343,8 @@ export class FiltersComponent implements AfterContentInit {
             prop: asyncFiltersNodes[index].prop,
             values: promise || {},
             selected: asyncFiltersNodes[index].default || null,
-            required: asyncFiltersNodes[index].required || false
+            required: asyncFiltersNodes[index].required || false,
+            extraParams: asyncFiltersNodes[index]['extra-params']
           }))
         ];
       })
