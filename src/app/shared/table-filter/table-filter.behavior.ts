@@ -2,6 +2,7 @@ import { ViewChild, AfterViewInit } from '@angular/core';
 import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
 import { TableComponent, TableState } from 'app/shared/table/table.component';
 import { FiltersComponent, Filter } from 'app/shared/filters/filters.component';
+import { debounce } from 'lodash';
 
 export class TableFilterBehavior implements AfterViewInit {
 
@@ -28,7 +29,11 @@ export class TableFilterBehavior implements AfterViewInit {
     setTimeout(() => this.restoreState(), 0);
   }
 
-  public loadData() {
+  // tired of tracking too many loadData caused by too many filter change
+  // and table change emits
+  public loadData = debounce(this._loadData, 200);
+
+  _loadData() {
     this.table.loading = true;
 
     const params = Object.assign({}, this.filters.getApiParams(), this.table.getApiParams());
