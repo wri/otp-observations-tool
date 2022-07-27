@@ -334,7 +334,7 @@ export class FiltersComponent implements AfterContentInit {
         .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
     });
 
-    Promise.all(promises)
+    await Promise.all(promises)
       .then(p => {
         this.filters = [
           ...syncFilters,
@@ -348,7 +348,6 @@ export class FiltersComponent implements AfterContentInit {
           }))
         ];
       })
-      .then(() => this.restoreState())
       .catch(err => console.error(err)); // TODO: visual feedback
 
     if (!silent) {
