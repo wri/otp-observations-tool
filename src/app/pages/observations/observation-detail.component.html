@@ -540,10 +540,16 @@
         <!-- 16.1. Observation according to legal text -->
         <div class="form-group">
           <label>{{'Observation according to legal text' | translate}}</label>
-          <select id="law_field" name="law_field" [(ngModel)]="law" #law_field="ngModel" [disabled]="isDisabled()">
-            <option [value]="null" disabled>{{'Select an observation' | translate}}</option>
-            <option *ngFor="let law of laws" [ngValue]="law">{{ law['written-infraction'] }}</option>
-          </select>
+          <ss-multiselect-dropdown
+            [texts]="multiSelectTexts"
+            [options]="lawsOptions"
+            [settings]="lawsSelectSettings"
+            [(ngModel)]="lawsSelection"
+            (ngModelChange)="onChangeLawsOptions($event)"
+            name="law_field"
+            #law_field="ngModel"
+            [disabled]="isDisabled()"
+          ></ss-multiselect-dropdown>
           <p class="note">
             {{ 'observation.illegalityAsWritten.note' | translate }}
           </p>
