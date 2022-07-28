@@ -478,20 +478,22 @@
     </fieldset>
 
     <!-- 11. Severity -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
+    <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id">{{'Severity' | translate}}</label>
-      <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
-        <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
-        <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
-      </select>
+      <!-- <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
+           <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
+           <option *ngFor="let severity of severities" [ngValue]="severity"></option>
+           </select> -->
+      <div class="buttons">
+        <label *ngFor="let s of severities">
+          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()">
+          <span>{{ s.level }} - {{ s.details }}</span>
+        </label>
+      </div>
+
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
       <p class="note">
         {{ 'observation.severity.note' | translate }}
-      </p>
-      <p *ngIf="severity" class="note">
-        <b>{{'Selected option:' | translate}}</b>
-        <br />
-        {{severity.details}}
       </p>
     </div>
 
@@ -865,20 +867,22 @@
     </fieldset>
 
     <!-- 9. Severity -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
+    <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id">{{'Severity' | translate}}</label>
-      <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
-        <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
-        <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
-      </select>
+      <!-- <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
+           <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
+           <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
+           </select> -->
+      <div class="buttons">
+        <label *ngFor="let s of severities">
+          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()">
+          <span>{{ s.level }} - {{ s.details }}</span>
+        </label>
+      </div>
+
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
       <p class="note">
         {{ 'observation.severity.note' | translate }}
-      </p>
-      <p *ngIf="severity" class="note">
-        <b>{{'Selected option:' | translate}}</b>
-        <br />
-        {{severity.details}}
       </p>
     </div>
 
