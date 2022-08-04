@@ -480,10 +480,7 @@
     <!-- 11. Severity -->
     <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id">{{'Severity' | translate}}</label>
-      <!-- <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
-           <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
-           <option *ngFor="let severity of severities" [ngValue]="severity"></option>
-           </select> -->
+
       <div class="buttons">
         <label *ngFor="let s of severities">
           <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()">
@@ -492,7 +489,11 @@
       </div>
 
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
-      <p class="note">
+
+      <p class="note" *ngIf="!subcategory_id.valid">
+        {{ 'Please pick sub-category first.' | translate }}
+      </p>
+      <p class="note" *ngIf="subcategory_id.valid">
         {{ 'observation.severity.note' | translate }}
       </p>
     </div>
@@ -875,10 +876,7 @@
     <!-- 9. Severity -->
     <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
       <label for="severity_id">{{'Severity' | translate}}</label>
-      <!-- <select id="severity_id" name="severity_id" [(ngModel)]="severity" #severity_id="ngModel" required [disabled]="isDisabled()">
-           <option [value]="null" disabled>{{'Select a severity' | translate}}</option>
-           <option *ngFor="let severity of severities" [ngValue]="severity">{{ severity.level }} - {{ severity.details }}</option>
-           </select> -->
+
       <div class="buttons">
         <label *ngFor="let s of severities">
           <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()">
@@ -887,7 +885,10 @@
       </div>
 
       <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
-      <p class="note">
+      <p class="note" *ngIf="!subcategory_id.valid">
+        {{ 'Please pick governance problem first.' | translate }}
+      </p>
+      <p class="note" *ngIf="subcategory_id.valid">
         {{ 'observation.severity.note' | translate }}
       </p>
     </div>
