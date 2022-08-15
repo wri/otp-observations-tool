@@ -478,7 +478,7 @@
     </fieldset>
 
     <!-- 11. Severity -->
-    <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
+    <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity }">
       <label for="severity_id">{{'Severity' | translate}}</label>
 
       <div class="buttons">
@@ -488,11 +488,10 @@
         </label>
       </div>
 
-      <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
-
       <p class="note" *ngIf="!subcategory_id.valid">
         {{ 'Please pick sub-category first.' | translate }}
       </p>
+      <div *ngIf="f.submitted && !severity" class="help-text">{{'Please select a severity' | translate}}</div>
       <p class="note" *ngIf="subcategory_id.valid">
         {{ 'observation.severity.note' | translate }}
       </p>
@@ -874,7 +873,7 @@
     </fieldset>
 
     <!-- 9. Severity -->
-    <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity_id.valid }">
+    <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity }">
       <label for="severity_id">{{'Severity' | translate}}</label>
 
       <div class="buttons">
@@ -884,10 +883,10 @@
         </label>
       </div>
 
-      <div *ngIf="f.submitted && !severity_id.valid" class="help-text">{{'Please select a severity' | translate}}</div>
       <p class="note" *ngIf="!subcategory_id.valid">
         {{ 'Please pick governance problem first.' | translate }}
       </p>
+      <div *ngIf="f.submitted && !severity" class="help-text">{{'Please select a severity' | translate}}</div>
       <p class="note" *ngIf="subcategory_id.valid">
         {{ 'observation.severity.note' | translate }}
       </p>
