@@ -69,7 +69,7 @@ export class ObservationDetailComponent implements OnDestroy {
   countries: Country[] = [];
   subcategories: Subcategory[] = [];
   severities: Severity[] = [];
-  operators: Operator[] = []; // Ordered by name, filtered by country
+  _operators: Operator[] = []; // Ordered by name, filtered by country
   governments: Government[] = [];
   observers: Observer[] = []; // Ordered by name
   fmus: Fmu[] = [];
@@ -123,6 +123,15 @@ export class ObservationDetailComponent implements OnDestroy {
 
   // Multi-select options
   multiSelectTexts: IMultiSelectTexts = {};
+
+  // operator/producer select
+  operatorsOptions: IMultiSelectOption[] = [];
+  operatorsSelectSettings: IMultiSelectSettings = {
+    enableSearch: true,
+    selectionLimit: 1,
+    autoUnselect: true
+  };
+  operatorsSelection: string[] = [];
 
   // Governments multi-select related
   governmentsOptions: IMultiSelectOption[] = [];
@@ -185,6 +194,7 @@ export class ObservationDetailComponent implements OnDestroy {
   // Report choosed between options
   _reportChoice: ObservationReport = null;
   _monitorComment: string = null;
+  _isCreatingNewProducer: boolean = false;
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -338,6 +348,18 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
+  get isCreatingNewProducer() { return this._isCreatingNewProducer; }
+  set isCreatingNewProducer(value) {
+    this._isCreatingNewProducer = value;
+    this.operatorChoice = null;
+  }
+
+  get operators() { return this._operators; }
+  set operators(collection) {
+    this._operators = collection;
+    this.operatorsOptions = collection.map((o) => ({ id: o.id, name: o.name }));
+  }
+
   get operatorName() { return this.operator.name; }
   set operatorName(operatorName) {
     this.operator.name = operatorName;
@@ -386,6 +408,7 @@ export class ObservationDetailComponent implements OnDestroy {
         })
         .catch(err => console.error(err)); // TODO: visual feedback
 
+      this.operatorsSelection = [operatorChoice.id];
       // If the user selects an operator, then the new
       // operator is discarded
       this.operatorName = null;
@@ -393,6 +416,7 @@ export class ObservationDetailComponent implements OnDestroy {
     } else {
       this.fmus = [];
       this.fmu = null;
+      this.operatorsSelection = [];
     }
   }
 
@@ -1209,6 +1233,10 @@ export class ObservationDetailComponent implements OnDestroy {
 
   onChangeLawsOptions(options: string[]) {
     this.law = this.laws.find(x => x.id == options[0]);
+  }
+
+  onChangeOperatorsOptions(options: string[]) {
+    this.operatorChoice = this.operators.find(x => x.id == options[0]);
   }
 
   /**

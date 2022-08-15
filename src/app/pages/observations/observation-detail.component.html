@@ -171,41 +171,56 @@
         <p class="fieldset-description" *otpMaxTablet>
           {{'Select one of the two options below: use an existing operator or create a new one.' | translate}}
         </p>
-        <div class="row">
-          <div class="small-12 medium-6 columns">
-            <!-- 3.1 Select operator -->
-            <h3>{{'Existing operator' | translate}}</h3>
-            <p>{{'Select an operator from the list below.' | translate}}</p>
-            <div [ngClass]="{ 'form-group': true,  '-required': !operator.name }" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
-              <label for="operator_id">{{'Operator' | translate}}</label>
-              <select id="operator_id" name="operator_id" [(ngModel)]="operatorChoice" #operator_id="ngModel" [required]="!operator.name">
-                <option [value]="null" disabled>{{'Select an operator' | translate}}</option>
-                <option *ngFor="let operator of operators" [ngValue]="operator">{{ operator.name }}</option>
-              </select>
-              <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
-            </div>
+        <div>
+          <!-- 3.1 Select operator -->
+          <h3>{{'Existing operator' | translate}}</h3>
+          <p>{{'Select an operator from the list below.' | translate}}</p>
+          <div [ngClass]="{ 'form-group': true,  '-required': !operator.name }" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
+            <label for="operator_id">{{'Operator' | translate}}</label>
+            <ss-multiselect-dropdown
+              [texts]="multiSelectTexts"
+              [options]="operatorsOptions"
+              [settings]="operatorsSelectSettings"
+              [(ngModel)]="operatorsSelection"
+              (ngModelChange)="onChangeOperatorsOptions($event)"
+              name="operator_id"
+              #operator_id="ngModel"
+              [disabled]="isDisabled()"
+            ></ss-multiselect-dropdown>
+
+            <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
           </div>
-          <div class="small-12 medium-6 columns">
+        </div>
+        <div>
+          <div class="form-group new-producer-checkbox">
+            <input type="checkbox" name="create_new_producer" id="create_new_producer" [(ngModel)]="isCreatingNewProducer" #create_new_producer="ngModel" />
+            <label for="create_new_producer">{{'Producer is not listing in the menu above' | translate}}</label>
+          </div>
+
+          <div *ngIf="isCreatingNewProducer === true" class="new-producer-form">
             <!-- 3.2 New operator -->
-            <h3>{{'New operator' | translate}}</h3>
-            <p>{{'Alternatively, you can quickly add new operator.' | translate}}</p>
+            <fieldset>
+              <div class="fieldset-container">
+                <h3>{{'New operator' | translate}}</h3>
 
-            <!-- 3.2.1. Name -->
-            <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
-              <label for="operator_name">{{'Name' | translate}}</label>
-              <input id="operator_name" type="text" class="form-control" name="operator_name" [(ngModel)]="operatorName" #operator_name="ngModel" [required]="!operatorChoice" />
-              <div *ngIf="f.submitted && !operator_name.valid" class="help-text">{{'Please enter the name' | translate}}</div>
-            </div>
+                <!-- 3.2.1. Name -->
+                <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
+                  <label for="operator_name">{{'Name' | translate}}</label>
+                  <input id="operator_name" type="text" class="form-control" name="operator_name" [(ngModel)]="operatorName" #operator_name="ngModel" [required]="!operatorChoice" />
+                  <div *ngIf="f.submitted && !operator_name.valid" class="help-text">{{'Please enter the name' | translate}}</div>
+                </div>
 
-            <!-- 3.2.1. Type -->
-            <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
-              <label for="operator_type">{{'Type' | translate}}</label>
-              <select if="operator_type" name="operator_type" [(ngModel)]="operatorType" #operator_type="ngModel" [required]="!operatorChoice">
-                <option [value]="null" disabled>{{'Select an operator type' | translate}}</option>
-                <option *ngFor="let type of objectKeys(operatorTypeOptions)" [ngValue]="operatorTypeOptions[type]">{{ type }}</option>
-              </select>
-              <div *ngIf="f.submitted && !operator_type.valid" class="help-text">{{'Please select an operator type' | translate}}</div>
-            </div>
+                <!-- 3.2.1. Type -->
+                <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
+                  <label for="operator_type">{{'Type' | translate}}</label>
+                  <select if="operator_type" name="operator_type" [(ngModel)]="operatorType" #operator_type="ngModel" [required]="!operatorChoice">
+                    <option [value]="null" disabled>{{'Select an operator type' | translate}}</option>
+                    <option *ngFor="let type of objectKeys(operatorTypeOptions)" [ngValue]="operatorTypeOptions[type]">{{ type }}</option>
+                  </select>
+                  <div *ngIf="f.submitted && !operator_type.valid" class="help-text">{{'Please select an operator type' | translate}}</div>
+                </div>
+              </div>
+            </fieldset>
           </div>
         </div>
       </div>
