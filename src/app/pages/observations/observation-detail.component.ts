@@ -370,6 +370,13 @@ export class ObservationDetailComponent implements OnDestroy {
       this.operatorChoice = null;
     }
   }
+  get operatorAlreadyExists() {
+    if (!this.operatorName || this.operators.length === 0) return false;
+
+    return !!this.operators
+      .map(o => o.name.toLowerCase())
+      .find(name => this.operatorName.toLowerCase() === name);
+  }
 
   get operatorType() { return this.operator['operator-type']; }
   set operatorType(operatorType) {
@@ -1560,6 +1567,11 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   onSubmit(): void {
+    if (this.operatorAlreadyExists) {
+      window.alert('Form is not valid.');
+      return;
+    }
+
     this.loading = true;
 
     let observation: Observation;

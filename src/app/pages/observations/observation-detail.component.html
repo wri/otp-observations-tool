@@ -206,6 +206,7 @@
                   <label for="operator_name">{{'Name' | translate}}</label>
                   <input id="operator_name" type="text" class="form-control" name="operator_name" [(ngModel)]="operatorName" #operator_name="ngModel" [required]="!operatorChoice" />
                   <div *ngIf="f.submitted && !operator_name.valid" class="help-text">{{'Please enter the name' | translate}}</div>
+                  <div *ngIf="operatorAlreadyExists" class="help-text">{{'Producer with this name already exists' | translate}}</div>
                 </div>
 
                 <!-- 3.2.1. Type -->
