@@ -1317,7 +1317,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
-    const isPusblishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
+    const isPublishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
     const isUserLinkedObserver = !!this.observation.observers.find(o => o.id === this.authService.userObserverId);
 
@@ -1330,7 +1330,7 @@ export class ObservationDetailComponent implements OnDestroy {
     if (isInNeedOfRevision && isUserLinkedObserver && isAmending) return false;
     if (isReadyForPublication) return true;
     if (isPublishedWithCommentsAndModified && isUserLinkedObserver && isAmending) return false;
-    if (isPusblishedWithCommentsAndNotModified && isUserLinkedObserver && isAmending) return false;
+    if (isPublishedWithCommentsAndNotModified && isUserLinkedObserver && isAmending) return false;
     if (isPublishedWithoutComments && isUserLinkedObserver && isAmending) return false;
 
     return true;
@@ -1384,11 +1384,11 @@ export class ObservationDetailComponent implements OnDestroy {
 
     const isAmending = this.needsRevisionState === 'amend';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
-    const isPusblishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
+    const isPublishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
 
     if (isPublishedWithCommentsAndModified && !isAmending) return true;
-    if (isPusblishedWithCommentsAndNotModified && !isAmending) return true;
+    if (isPublishedWithCommentsAndNotModified && !isAmending) return true;
     if (isPublishedWithoutComments && !isAmending) return true;
 
     return false;
@@ -1406,7 +1406,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const isCreated = this.observation['validation-status'] === 'Created';
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
-    const isPusblishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
+    const isPublishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
 
     if (isCreating) return true;
@@ -1415,7 +1415,7 @@ export class ObservationDetailComponent implements OnDestroy {
     if (isCreated && isOwner) return true;
     if (isInNeedOfRevision && isAmending) return true
     if (isPublishedWithCommentsAndModified && isAmending) return true;
-    if (isPusblishedWithCommentsAndNotModified && isAmending) return true;
+    if (isPublishedWithCommentsAndNotModified && isAmending) return true;
     if (isPublishedWithoutComments && isAmending) return true;
 
     return false;

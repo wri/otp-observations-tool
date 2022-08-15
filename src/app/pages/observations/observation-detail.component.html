@@ -173,8 +173,6 @@
         </p>
         <div>
           <!-- 3.1 Select operator -->
-          <h3>{{'Existing operator' | translate}}</h3>
-          <p>{{'Select an operator from the list below.' | translate}}</p>
           <div [ngClass]="{ 'form-group': true,  '-required': !operator.name }" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
             <label for="operator_id">{{'Operator' | translate}}</label>
             <ss-multiselect-dropdown
