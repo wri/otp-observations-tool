@@ -9,9 +9,14 @@
   </button> -->
 </div>
 
-<otp-table [name]="'subcategories'" [caption]="'Subcategories' | translate" defaultSort="category.name">
+<otp-table [name]="'subcategories'" [caption]="'Subcategories' | translate" defaultSort="category.name,name">
   <otp-table-column prop="name" [name]="'Name' | translate"></otp-table-column>
-  <otp-table-column prop="category.name" [name]="'Category' | translate" [include]="true"></otp-table-column>
+  <!-- hack to sort by 2 columns category name and name -->
+  <otp-table-column prop="category.name,name" [name]="'Category' | translate" [include]="true">
+    <ng-template let-row="row" table-cell-template>
+      {{row.category.name}}
+    </ng-template>
+  </otp-table-column>
   <otp-table-column prop="details" [name]="'Details' | translate">
     <ng-template let-value="value" table-cell-template>{{ value ? value : '–' }}</ng-template>
   </otp-table-column>
