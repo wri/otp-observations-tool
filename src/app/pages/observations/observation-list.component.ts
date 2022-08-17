@@ -75,10 +75,11 @@ export class ObservationListComponent extends TableFilterBehavior {
     this.countryFilterParams = {
       'filter[id]': (this.authService.observerCountriesIds || []).join(',')
     };
-    this.operatorFilterParams = { 'filter[obs_tool_filter]': true };
-    this.govFilterParams = { 'filter[obs_tool_filter]': true };
-    this.fmuFilterParams = { 'filter[obs_tool_filter]': true };
-    this.reportFilterParams = { 'filter[observer_id]': this.authService.userObserverId };
+    const observerIdFilter = { 'filter[observer_id]': this.authService.userObserverId };
+    this.operatorFilterParams = observerIdFilter;
+    this.govFilterParams = observerIdFilter;
+    this.fmuFilterParams = observerIdFilter;
+    this.reportFilterParams = observerIdFilter;
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateStatusFilterValues();
