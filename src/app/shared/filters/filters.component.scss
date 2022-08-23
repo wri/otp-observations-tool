@@ -54,7 +54,6 @@
     select {
       margin-bottom: 0;
       padding: 0 35px 0 15px;
-      text-transform: capitalize;
       background: transparent;
       border: 1px solid $lighter-grey;
       border-radius: 4px;
@@ -90,10 +89,6 @@
       font-size: $font-size-default;
       letter-spacing: .5px;
       text-transform: uppercase;
-    }
-
-    select {
-      text-transform: capitalize;
     }
 
     .c-container {

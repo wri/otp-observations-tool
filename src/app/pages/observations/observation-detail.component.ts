@@ -27,7 +27,7 @@ import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
-import { IMultiSelectOption, IMultiSelectTexts } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
@@ -99,7 +99,6 @@ export class ObservationDetailComponent implements OnDestroy {
     photo: 'GPS coordinates extracted from photo',
     manually: 'Accurate GPS coordinates'
   };
-  laws: Law[] = []; // Filtered by country and subcategory
   isChangedCoordinates = false; // User entered the coordinates manually
   georeferencedPhoto: GeoreferencedPhoto = {
     attachment: null,
@@ -136,6 +135,16 @@ export class ObservationDetailComponent implements OnDestroy {
   // Relevant operatos multi-select related
   relevantOperatorsOptions: IMultiSelectOption[] = [];
   _relevantOperatorsSelection: number[] = [];
+
+  // laws options
+  _laws: Law[] = []; // Filtered by country and subcategory
+  lawsOptions: IMultiSelectOption[] = [];
+  lawsSelectSettings: IMultiSelectSettings = {
+    dynamicTitleMaxItems: 8,
+    selectionLimit: 1,
+    autoUnselect: true
+  };
+  lawsSelection: string[] = [];
 
   // Language
   locale = localStorage.getItem('lang') || 'en';
@@ -307,7 +316,7 @@ export class ObservationDetailComponent implements OnDestroy {
       // We update the list of laws
       if (country && this.subcategory) {
         this.lawsService.getAll({ filter: { country: country.id, subcategory: this.subcategory.id } })
-          .then(laws => this.laws = laws)
+          .then(laws => { this.laws = laws; })
           .then(() => {
             // If we're editing an observation (or using draft), the object Law of the observation won't
             // match any of the objects of this.laws, so we search for the "same" model
@@ -579,12 +588,24 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
+  get laws() { return this._laws; }
+  set laws(collection) {
+    this._laws = collection;
+    this.lawsOptions = collection.map((law) => ({ id: law.id, name: law["written-infraction"] }));
+  }
+
   get law() { return this.observation ? this.observation.law : this._law; }
   set law(law) {
     if (this.observation) {
       this.observation.law = law;
     } else {
       this._law = law;
+    }
+
+    if (law) {
+      this.lawsSelection = [law.id];
+    } else {
+      this.lawsSelection = [];
     }
   }
 
@@ -1102,7 +1123,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const self = this;
 
     if (photo) {
-      EXIF.getData(photo, async function () {
+      EXIF.getData(photo, async function() {
         // We get the coordinated in minutes, seconds
         const minLatitude: any[] = EXIF.getTag(this, 'GPSLatitude');
         const minLongitude: any[] = EXIF.getTag(this, 'GPSLongitude');
@@ -1184,6 +1205,10 @@ export class ObservationDetailComponent implements OnDestroy {
 
   onChangeGovernmentsOptions(options: number[]): void {
     this._governmentsSelection = options;
+  }
+
+  onChangeLawsOptions(options: string[]) {
+    this.law = this.laws.find(x => x.id == options[0]);
   }
 
   /**
