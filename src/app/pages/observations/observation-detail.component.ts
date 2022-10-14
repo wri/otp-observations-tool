@@ -265,17 +265,17 @@ export class ObservationDetailComponent implements OnDestroy {
     if (this.type === 'government') {
       this.governments = country && country.governments || [];
       this.governmentsOptions = orderBy(
-        this.governments.map((government, index) => ({ id: index, name: government['government-entity'] })),
+        this.governments.map((government) => ({ id: parseInt(government.id, 10), name: government['government-entity'] })),
         [(g) => g.name.toLowerCase()]
       );
       if (this.observation) {
         this._governmentsSelection = this.observation && this.observation.country.id === country.id
-          ? (this.observation.governments || []).map(government => this.governments.findIndex(g => g.id === government.id))
+          ? (this.observation.governments || []).map(government => parseInt(government.id, 10))
           : [];
       }
       if (this.draft) {
         this._governmentsSelection = country && this.draft.countryId === country.id && this.draft.governments
-          ? this.draft.governments.map(id => this.governments.findIndex(g => +g.id === id))
+          ? this.draft.governments
           : [];
       }
       if (country) {
@@ -1030,7 +1030,7 @@ export class ObservationDetailComponent implements OnDestroy {
       draftModel.locationInformation = this.locationInformation;
       draftModel.relevantOperators = this.operators.filter((o, index) => this._relevantOperatorsSelection.indexOf(index) !== -1).map(o => +o.id);
     } else {
-      draftModel.governments = this.governments.filter((g, index) => this._governmentsSelection.indexOf(index) !== -1).map(g => +g.id);
+      draftModel.governments = this._governmentsSelection;
       draftModel.relevantOperators = this.operators.filter((o, index) => this._relevantOperatorsSelection.indexOf(index) !== -1).map(o => +o.id);
     }
 
@@ -1261,7 +1261,7 @@ export class ObservationDetailComponent implements OnDestroy {
     this.governmentsService.getAll({ filter: { country: this.country.id } }).then((data) => {
       this.governments = data;
       this.governmentsOptions = orderBy(
-        this.governments.map((government, index) => ({ id: index, name: government['government-entity'] })),
+        this.governments.map((government) => ({ id: parseInt(government.id, 10), name: government['government-entity'] })),
         [(g) => g.name.toLowerCase()]
       );
     });
@@ -1606,7 +1606,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
       if (this.type !== 'operator') {
         this.observation.governments = this.governments
-          .filter((government, index) => this._governmentsSelection.indexOf(index) !== -1);
+          .filter((government) => this._governmentsSelection.indexOf(parseInt(government.id, 10)) !== -1);
         this.observation['relevant-operators'] = this.operators
           .filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       } else {
@@ -1657,7 +1657,7 @@ export class ObservationDetailComponent implements OnDestroy {
         model['location-information'] = this.locationInformation;
         model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       } else {
-        model.governments = this.governments.filter((government, index) => this._governmentsSelection.indexOf(index) !== -1);
+        model.governments = this.governments.filter((government) => this._governmentsSelection.indexOf(parseInt(government.id, 10)) !== -1);
         model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       }
 

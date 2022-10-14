@@ -39,13 +39,15 @@ export class GovernmentDetailComponent {
     private authService: AuthService
   ) {
     this.isAdmin = this.authService.isAdmin();
+  }
 
+  ngOnInit() {
     this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
       .then(data => this.countries = data)
       .then(() => {
         if (this.government && this.government.id) {
           this.government.country = this.countries.find(c => c.id === this.government.country.id);
-        } else if (!this.route.snapshot.params.id) {
+        } else if (!(this.useRouter && this.route.snapshot.params.id)) {
           this.government.country = this.countries[0];
         }
       })
@@ -53,7 +55,7 @@ export class GovernmentDetailComponent {
 
     // If we're editing a government entity, we need to fetch the model
     // and do a bit more stuff
-    if (this.route.snapshot.params.id) {
+    if (this.useRouter && this.route.snapshot.params.id) {
       this.loading = true;
       this.governmentsService.getById(this.route.snapshot.params.id, { include: 'country' })
         .then(government => this.government = government)
@@ -125,7 +127,7 @@ export class GovernmentDetailComponent {
       return false;
     }
 
-    if (!this.route.snapshot.params.id) {
+    if (!(this.useRouter && this.route.snapshot.params.id)) {
       return true;
     }
     let countries = this.authService.observerCountriesIds;

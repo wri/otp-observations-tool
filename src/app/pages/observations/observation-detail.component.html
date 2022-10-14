@@ -1,4 +1,9 @@
 <otp-loader *ngIf="loading" overlay fixed></otp-loader>
+
+<otp-modal [title]="'New Gov' | translate" [opened]="newGovEntityModalOpen" (onClose)="newGovEntityModalOpen = false">
+  <otp-government-detail *ngIf="newGovEntityModalOpen" [showSuccessMessage]="false" [showActionsOnTop]="false" [useRouter]="false" (afterSave)="onNewGovEntityAdded()" (afterCancel)="newGovEntityModalOpen = false"></otp-government-detail>
+</otp-modal>
+
 <form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && f.valid && onSubmitForReview()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 *ngIf="isDisabled() && !isCopied">{{'Observation details' | translate}}</h2>
@@ -754,13 +759,11 @@
       <ss-multiselect-dropdown [texts]="multiSelectTexts" [options]="governmentsOptions" [(ngModel)]="_governmentsSelection" (ngModelChange)="onChangeGovernmentsOptions($event)" #government_id="ngModel" name="government_id" [disabled]="isDisabled()" required></ss-multiselect-dropdown>
       <div *ngIf="f.submitted && !government_id.valid" class="help-text">{{'Please select government entities' | translate}}</div>
       <p class="note">
-        {{ 'observation.governmentEntity.note' | translate }}
+        {{ 'Choose the government entity your observation is related to.' | translate }}
       </p>
-      <button type="button" class="c-button -primary" (click)="onClickAddGovernanceEntity()">{{'Add new governance entity to the list' | translate}}</button>
-
-      <otp-modal [title]="'New Gov' | translate" [opened]="newGovEntityModalOpen" (onClose)="newGovEntityModalOpen = false">
-        <otp-government-detail *ngIf="newGovEntityModalOpen" [showSuccessMessage]="false" [showActionsOnTop]="false" [useRouter]="false" (afterSave)="onNewGovEntityAdded()" (afterCancel)="newGovEntityModalOpen = false"></otp-government-detail>
-      </otp-modal>
+      <div class="note">
+        <button type="button" class="c-button -primary" (click)="onClickAddGovernanceEntity()">{{'Add new governance entity to the list' | translate}}</button>
+      </div>
     </div>
 
     <!-- 4. Governance problem -->
