@@ -756,6 +756,11 @@
       <p class="note">
         {{ 'observation.governmentEntity.note' | translate }}
       </p>
+      <button type="button" class="c-button -primary" (click)="onClickAddGovernanceEntity()">{{'Add new governance entity to the list' | translate}}</button>
+
+      <otp-modal [title]="'New Gov' | translate" [opened]="newGovEntityModalOpen" (onClose)="newGovEntityModalOpen = false">
+        <otp-government-detail *ngIf="newGovEntityModalOpen" [showSuccessMessage]="false" [showActionsOnTop]="false" [useRouter]="false" (afterSave)="onNewGovEntityAdded()" (afterCancel)="newGovEntityModalOpen = false"></otp-government-detail>
+      </otp-modal>
     </div>
 
     <!-- 4. Governance problem -->

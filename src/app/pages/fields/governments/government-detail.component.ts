@@ -7,7 +7,7 @@ import { GovernmentsService } from 'app/services/governments.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'otp-government-detail',
@@ -21,6 +21,13 @@ export class GovernmentDetailComponent {
   countries: Country[] = [];
   government: Government = null;
   loading = false;
+
+  @Input() useRouter: boolean = true;
+  @Input() showActionsOnTop: boolean = true;
+  @Input() showSuccessMessage: boolean = true;
+
+  @Output() afterCancel: EventEmitter<void> = new EventEmitter<void>();
+  @Output() afterSave: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     private countriesService: CountriesService,
@@ -67,7 +74,10 @@ export class GovernmentDetailComponent {
   }
 
   onCancel(): void {
-    this.router.navigate(['/', 'private', 'fields', 'government-entities']);
+    this.afterCancel.emit();
+    if (this.useRouter) {
+      this.router.navigate(['/', 'private', 'fields', 'government-entities']);
+    }
   }
 
   onSubmit(formValues): void {
@@ -78,13 +88,17 @@ export class GovernmentDetailComponent {
     this.government.save()
       .toPromise()
       .then(async () => {
-        if (isEdition) {
-          alert(await this.translateService.get('governmentUpdate.success').toPromise());
-        } else {
-          alert(await this.translateService.get('governmentCreation.success').toPromise());
+        if (this.showSuccessMessage) {
+          if (isEdition) {
+            alert(await this.translateService.get('governmentUpdate.success').toPromise());
+          } else {
+            alert(await this.translateService.get('governmentCreation.success').toPromise());
+          }
         }
-
-        this.router.navigate(['/', 'private', 'fields', 'government-entities']);
+        this.afterSave.emit();
+        if (this.useRouter) {
+          this.router.navigate(['/', 'private', 'fields', 'government-entities']);
+        }
       })
       .catch(async (err) => {
         if (isEdition) {

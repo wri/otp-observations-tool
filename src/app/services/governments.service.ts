@@ -18,8 +18,12 @@ export class GovernmentsService extends JsonApiService<Government> {
     super();
   }
 
-  getAll() {
-    return this.datastoreService.query(Government, { page: { size: 1000 } }).toPromise();
+  getAll(params = {}) {
+    return this.datastoreService.query(Government, Object.assign(
+      {},
+      { page: { size: 1000 } },
+      params
+    )).toPromise();
   }
 
   /**
@@ -31,10 +35,6 @@ export class GovernmentsService extends JsonApiService<Government> {
   getById(id: string, params = {}): Promise<Government> {
     return this.datastoreService.findRecord(Government, id, params)
       .toPromise();
-  }
-
-  getByCountry(countryId) {
-    return this.datastoreService.query(Government, { country_id: countryId }).toPromise();
   }
 
   createGovernment(formValues): Promise<any> {

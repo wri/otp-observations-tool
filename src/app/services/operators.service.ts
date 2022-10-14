@@ -25,7 +25,7 @@ export class OperatorsService extends JsonApiService<Operator> {
   getAll(params = {}): Promise<Operator[]> {
     return this.datastoreService.query(Operator, Object.assign(
       {},
-      { page: { size: 3000 }},
+      { page: { size: 3000 } },
       params
     )).toPromise();
   }
@@ -39,10 +39,6 @@ export class OperatorsService extends JsonApiService<Operator> {
   getById(id: string, params = {}): Promise<Operator> {
     return this.datastoreService.findRecord(Operator, id, params)
       .toPromise();
-  }
-
-  getByCountry(countryId): Promise<Operator[]> {
-    return this.datastoreService.query(Operator, { countr_id: countryId, page: { size: 10000 }}).toPromise();
   }
 
   deleteOperator(operator: Operator): Promise<any> {

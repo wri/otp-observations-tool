@@ -1,5 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import * as cloneDeep from 'lodash/cloneDeep';
+import * as orderBy from 'lodash/orderBy';
 import * as EXIF from 'exif-js';
 import proj4 from 'proj4';
 import { Law } from 'app/models/law.model';
@@ -136,6 +137,7 @@ export class ObservationDetailComponent implements OnDestroy {
   // Governments multi-select related
   governmentsOptions: IMultiSelectOption[] = [];
   _governmentsSelection: number[] = [];
+  newGovEntityModalOpen = false;
 
   // Monitors multi-select related
   additionalObserversOptions: IMultiSelectOption[] = [];
@@ -262,7 +264,10 @@ export class ObservationDetailComponent implements OnDestroy {
     // We automatically update the governments options
     if (this.type === 'government') {
       this.governments = country && country.governments || [];
-      this.governmentsOptions = this.governments.map((government, index) => ({ id: index, name: government['government-entity'] }));
+      this.governmentsOptions = orderBy(
+        this.governments.map((government, index) => ({ id: index, name: government['government-entity'] })),
+        [(g) => g.name.toLowerCase()]
+      );
       if (this.observation) {
         this._governmentsSelection = this.observation && this.observation.country.id === country.id
           ? (this.observation.governments || []).map(government => this.governments.findIndex(g => g.id === government.id))
@@ -773,6 +778,7 @@ export class ObservationDetailComponent implements OnDestroy {
     private observationReportsService: ObservationReportsService,
     private observationDocumentsService: ObservationDocumentsService,
     private countriesService: CountriesService,
+    private governmentsService: GovernmentsService,
     private subcategoriesService: SubcategoriesService,
     private operatorsService: OperatorsService,
     private lawsService: LawsService,
@@ -1244,6 +1250,21 @@ export class ObservationDetailComponent implements OnDestroy {
 
   onChangeOperatorsOptions(options: string[]) {
     this.operatorChoice = this.operators.find(x => x.id == options[0]);
+  }
+
+  onClickAddGovernanceEntity() {
+    this.newGovEntityModalOpen = true;
+  }
+
+  onNewGovEntityAdded() {
+    this.newGovEntityModalOpen = false;
+    this.governmentsService.getAll({ filter: { country: this.country.id } }).then((data) => {
+      this.governments = data;
+      this.governmentsOptions = orderBy(
+        this.governments.map((government, index) => ({ id: index, name: government['government-entity'] })),
+        [(g) => g.name.toLowerCase()]
+      );
+    });
   }
 
   /**
