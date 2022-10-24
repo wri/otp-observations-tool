@@ -6,7 +6,6 @@ import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from 
 import { Country } from 'app/models/country.model';
 import { Species } from 'app/models/species.model';
 import { User } from 'app/models/user.model';
-import { Photo } from 'app/models/photo.model';
 import { Document } from 'app/models/document.model';
 import { Comment } from 'app/models/comment.model';
 import { Observer } from 'app/models/observer.model';
@@ -58,6 +57,5 @@ export class Observation extends JsonApiModel {
 
   @HasMany() species: Species[];
   @HasMany() comments: Comment[];
-  @HasMany() photos: Photo[];
 
 }
