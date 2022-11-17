@@ -20,15 +20,4 @@ export class CategoriesService extends JsonApiService<Category> {
   getAll() {
     return this.datastoreService.query(Category).toPromise();
   }
-
-  createCategory(formValues): Promise<Category> {
-    const payload = { category: formValues };
-    return this.http.post(`${environment.apiUrl}/categories`, payload)
-      .map(response => response.json())
-      .toPromise();
-  }
-
-  deleteCategory(category: Category): Promise<any> {
-    return this.datastoreService.deleteRecord(Category, category.id).toPromise();
-  }
 }

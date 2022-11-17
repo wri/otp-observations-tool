@@ -31,21 +31,12 @@ import { ResponsiveService } from 'app/services/responsive.service';
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
 import { IconComponent } from 'app/shared/icons/icon.component';
 import { SubcategoryListComponent } from 'app/pages/fields/subcategories/subcategory-list.component';
-import { SubcategoriesComponent } from 'app/pages/fields/subcategories/subcategories.component';
 import { CategoriesService } from 'app/services/categories.service';
-import { CategoryDetailComponent } from 'app/pages/fields/categories/category-detail.component';
 import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
 import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
-import { CountryListComponent } from 'app/pages/fields/countries/country-list.component';
-import { CountryDetailComponent } from 'app/pages/fields/countries/country-detail.component';
-import { SpeciesListComponent } from 'app/pages/fields/species/species-list.component';
-import { SpeciesService } from 'app/services/species.service';
-import { ObserverListComponent } from 'app/pages/fields/observers/observer-list.component';
 import { WebWorkerService } from 'app/services/webworker.service';
 import { Base64FileInputDirective } from 'app/directives/base64-file-input.directive';
 import { ActionBarComponent } from 'app/shared/action-bar/action-bar.component';
-import { SpeciesDetailComponent } from 'app/pages/fields/species/species-detail.component';
-import { ObserverDetailComponent } from 'app/pages/fields/observers/observer-detail.component';
 import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
 import { GovernmentListComponent } from 'app/pages/fields/governments/government-list.component';
 import { OperatorsService } from 'app/services/operators.service';
@@ -54,14 +45,12 @@ import { GovernmentsService } from 'app/services/governments.service';
 import { CategoryListComponent } from 'app/pages/fields/categories/category-list.component';
 import { HeaderComponent } from 'app/shared/header/header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
-// import { UserDetailComponent } from 'app/pages/users/user-detail.component';
 import { UsersService } from 'app/services/users.service';
 // import { TabsComponent } from 'app/shared/tabs/tabs.component';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 import { FieldListComponent } from 'app/pages/fields/field-list.component';
 import { FieldDetailComponent } from 'app/pages/fields/field-detail.component';
 import { ProfileComponent } from 'app/pages/profile/profile.component';
-// import { UserListComponent } from 'app/pages/users/user-list.component';
 import { BottombarComponent } from 'app/shared/bottom-bar/bottom-bar.component';
 import { DatastoreService } from 'app/services/datastore.service';
 import { CountriesService } from 'app/services/countries.service';
@@ -90,7 +79,7 @@ import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.
 import { UploadFileComponent } from './shared/upload-file/upload-file.component';
 
 export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/locale/', '.json');
+  return new TranslateHttpLoader(http, './assets/locale/', '.json');
 }
 
 @NgModule({
@@ -103,8 +92,6 @@ export function createTranslateLoader(http: HttpClient) {
     ObservationDetailComponent,
     RegisterComponent,
     BottombarComponent,
-    // UserListComponent,
-    // UserDetailComponent,
     ProfileComponent,
     FieldListComponent,
     FieldDetailComponent,
@@ -114,19 +101,11 @@ export function createTranslateLoader(http: HttpClient) {
     HeaderComponent,
     GovernmentListComponent,
     GovernmentDetailComponent,
-    ObserverDetailComponent,
-    ObserverListComponent,
-    SpeciesDetailComponent,
-    SpeciesListComponent,
     CategoryListComponent,
-    CategoryDetailComponent,
     ActionBarComponent,
-    CountryDetailComponent,
-    CountryListComponent,
     OperatorDetailComponent,
     OperatorListComponent,
     SubcategoryListComponent,
-    SubcategoriesComponent,
     ReportLibraryComponent,
     LawListComponent,
     LawDetailComponent,
@@ -184,7 +163,6 @@ export function createTranslateLoader(http: HttpClient) {
     SubcategoriesService,
     ObserversService,
     OperatorsService,
-    SpeciesService,
     CategoriesService,
     ObservationReportsService,
     ObservationDocumentsService,
