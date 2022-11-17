@@ -44,25 +44,4 @@ export class CategoryListComponent extends TableFilterBehavior {
         .reduce((res, filter) => Object.assign(res, filter), {});
     }).then(typeFilterValues => this.typeFilterValues = typeFilterValues);
   }
-
-  // triggerNewCategory(): void {
-  //   this.router.navigate(['private/fields/categories/new']);
-  // }
-
-  // onEdit(row): void {
-
-  // }
-
-  // private onDelete(category: Category): void {
-  //   if (confirm(`Are you sure to delete the category: ${category.name}?`) ) {
-  //     this.service.deleteCategory(category)
-  //     .then((data) => {
-  //       this.loadData();
-  //       alert(data.json().messages[0].title);
-  //     })
-  //     .catch((e) => alert('Unable to delete the category: ${category.name} '));
-  //   }
-  // }
-
-
 }

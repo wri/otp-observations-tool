@@ -4,9 +4,6 @@
      <otp-filter [name]="'Category' | translate" prop="category-id" values="categories" name-attr="name"></otp-filter>
      <otp-filter [name]="'Required location' | translate" prop="location-required" [values]="requiredLocationFilterValues"></otp-filter>
   </otp-filters>
-  <!-- <button class="c-button -primary" i18n="Button to create a new sub-category">
-    New sub-category
-  </button> -->
 </div>
 
 <otp-table [name]="'subcategories'" [caption]="'Subcategories' | translate" defaultSort="category.name,name">
@@ -23,10 +20,4 @@
   <otp-table-column prop="location-required" [name]="'Required location' | translate">
     <ng-template let-value="value" table-cell-template>{{ (value ? 'Yes' : 'No') | translate }}</ng-template>
   </otp-table-column>
-  <!-- <otp-table-column i18n-name="Table of sub-categories|Name of the actions columns (containing the edit and delete button)" name="Actions">
-     <ng-template let-row="row" table-cell-template>
-       <button class="action" (click)="onEdit(row)"><otp-icon name="#icon-edit"></otp-icon></button>
-       <button class="action" (click)="onDelete(row)"><otp-icon name="#icon-delete"></otp-icon></button>
-     </ng-template>
-  </otp-table-column> -->
 </otp-table>
