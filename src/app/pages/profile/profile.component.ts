@@ -60,20 +60,13 @@ export class ProfileComponent {
     }
     // Temp Workaround to not send email to API if it was not changed
     // # TODO: change API to check if email changed instead
-    let emailWorkaround = false;
     if (this.user.email == this.initialEmail) {
-      emailWorkaround = true;
-      this.user.email = undefined;
+      // @ts-ignore
+      this.user[Object.getOwnPropertySymbols(this.user)[0]]['email'].hasDirtyAttributes = false;
     }
 
     this.user.save()
       .toPromise()
-      .then(() => {
-        if (!emailWorkaround) return;
-
-        this.user.email = this.initialEmail;
-        return new Promise(resolve => setTimeout(resolve, 100));
-      })
       .then(async () => {
         this.translateService.use(this.user.locale);
         alert(await this.translateService.get('profileUpdate.success').toPromise());
