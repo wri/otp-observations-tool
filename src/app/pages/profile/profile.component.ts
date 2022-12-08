@@ -58,9 +58,22 @@ export class ProfileComponent {
       this.user.password = null;
       this.user['password-confirmation'] = null;
     }
+    // Temp Workaround to not send email to API if it was not changed
+    // # TODO: change API to check if email changed instead
+    let emailWorkaround = false;
+    if (this.user.email == this.initialEmail) {
+      emailWorkaround = true;
+      this.user.email = undefined;
+    }
 
     this.user.save()
       .toPromise()
+      .then(() => {
+        if (!emailWorkaround) return;
+
+        this.user.email = this.initialEmail;
+        return new Promise(resolve => setTimeout(resolve, 100));
+      })
       .then(async () => {
         this.translateService.use(this.user.locale);
         alert(await this.translateService.get('profileUpdate.success').toPromise());
