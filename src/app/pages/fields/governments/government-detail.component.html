@@ -25,7 +25,7 @@
     <!-- 2. Country -->
     <div class="form-group -required">
       <label for="country_field">{{'Country' | translate}}</label>
-      <select id="country_field" name="country_field" [(ngModel)]="government.country" #country_field="ngModel" [disabled]="!canEdit()" required>
+      <select id="country_field" name="country_field" [(ngModel)]="government.country" #country_field="ngModel" [disabled]="!canEdit() || country" required>
         <option disabled [value]="null">{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>

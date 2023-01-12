@@ -29,6 +29,7 @@ export class OperatorDetailComponent {
   @Input() showActionsOnTop: boolean = true;
   @Input() showSuccessMessage: boolean = true;
   @Input() longForm: boolean = true;
+  @Input() country: Country = null;
 
   @Output() afterCancel: EventEmitter<void> = new EventEmitter<void>();
   @Output() afterSave: EventEmitter<void> = new EventEmitter<void>();
@@ -54,16 +55,18 @@ export class OperatorDetailComponent {
   }
 
   ngOnInit() {
-    this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
-      .then((data) => this.countries = data)
-      .then(() => {
-        if (this.operator && this.operator.id) {
-          this.operator.country = this.countries.find(c => c.id === this.operator.country.id);
-        } else {
-          this.operator.country = this.countries[0];
-        }
-      })
-      .catch(err => console.error(err)); // TODO: visual feedback
+    if (!this.country) {
+      this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
+        .then((data) => this.countries = data)
+        .then(() => {
+          if (this.operator && this.operator.id) {
+            this.operator.country = this.countries.find(c => c.id === this.operator.country.id);
+          } else {
+            this.operator.country = this.countries[0];
+          }
+        })
+        .catch(err => console.error(err)); // TODO: visual feedback
+    }
 
     // If we're editing an operator, we need to fetch the model
     // and do a bit more stuff
@@ -75,10 +78,11 @@ export class OperatorDetailComponent {
         .then(() => this.loading = false);
     } else {
       this.operator = this.datastoreService.createRecord(Operator, {});
+    }
 
-      // We need to force some properties to null to correctly display
-      // the selectors in the UI
-      this.operator.country = null;
+    if (this.country) {
+      this.countries = [this.country];
+      this.operator.country = this.country;
     }
   }
 

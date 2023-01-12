@@ -3,6 +3,7 @@
 <otp-modal [title]="'New Gov' | translate" [opened]="newGovEntityModalOpen" (onClose)="newGovEntityModalOpen = false">
   <otp-government-detail
     *ngIf="newGovEntityModalOpen"
+    [country]="country"
     [showSuccessMessage]="false"
     [showActionsOnTop]="false"
     [useRouter]="false"
@@ -14,6 +15,7 @@
 <otp-modal [title]="'New Producer' | translate" [opened]="newOperatorModalOpen" (onClose)="newOperatorModalOpen = false">
   <otp-operator-detail
     *ngIf="newOperatorModalOpen"
+    [country]="country"
     [longForm]="false"
     [showSuccessMessage]="false"
     [showActionsOnTop]="false"

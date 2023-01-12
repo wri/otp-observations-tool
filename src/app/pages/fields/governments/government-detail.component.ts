@@ -25,6 +25,7 @@ export class GovernmentDetailComponent {
   @Input() useRouter: boolean = true;
   @Input() showActionsOnTop: boolean = true;
   @Input() showSuccessMessage: boolean = true;
+  @Input() country: Country = null;
 
   @Output() afterCancel: EventEmitter<void> = new EventEmitter<void>();
   @Output() afterSave: EventEmitter<void> = new EventEmitter<void>();
@@ -42,16 +43,18 @@ export class GovernmentDetailComponent {
   }
 
   ngOnInit() {
-    this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
-      .then(data => this.countries = data)
-      .then(() => {
-        if (this.government && this.government.id) {
-          this.government.country = this.countries.find(c => c.id === this.government.country.id);
-        } else if (!(this.useRouter && this.route.snapshot.params.id)) {
-          this.government.country = this.countries[0];
-        }
-      })
-      .catch(err => console.error(err)); // TODO: visual feedback
+    if (!this.country) {
+      this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
+        .then(data => this.countries = data)
+        .then(() => {
+          if (this.government && this.government.id) {
+            this.government.country = this.countries.find(c => c.id === this.government.country.id);
+          } else if (!(this.useRouter && this.route.snapshot.params.id)) {
+            this.government.country = this.countries[0];
+          }
+        })
+        .catch(err => console.error(err)); // TODO: visual feedback
+    }
 
     // If we're editing a government entity, we need to fetch the model
     // and do a bit more stuff
@@ -68,10 +71,11 @@ export class GovernmentDetailComponent {
         .then(() => this.loading = false);
     } else {
       this.government = this.datastoreService.createRecord(Government, {});
+    }
 
-      // We need to force some properties to null to correctly display
-      // the selectors in the UI
-      this.government.country = null;
+    if (this.country) {
+      this.countries = [this.country];
+      this.government.country = this.country;
     }
   }
 
