@@ -1,12 +1,27 @@
 <otp-loader *ngIf="loading" overlay fixed></otp-loader>
 
 <otp-modal [title]="'New Gov' | translate" [opened]="newGovEntityModalOpen" (onClose)="newGovEntityModalOpen = false">
-  <otp-government-detail *ngIf="newGovEntityModalOpen" [showSuccessMessage]="false" [showActionsOnTop]="false" [useRouter]="false" (afterSave)="onNewGovEntityAdded()" (afterCancel)="newGovEntityModalOpen = false"></otp-government-detail>
+  <otp-government-detail
+    *ngIf="newGovEntityModalOpen"
+    [showSuccessMessage]="false"
+    [showActionsOnTop]="false"
+    [useRouter]="false"
+    (afterSave)="onNewGovEntityAdded()"
+    (afterCancel)="newGovEntityModalOpen = false">
+  </otp-government-detail>
 </otp-modal>
 
-<!-- <otp-modal [title]="'New Producer' | translate" [opened]="newOperatorModalOpen" (onClose)="newOperatorModalOpen = false">
-     <otp-operator-detail *ngIf="newOperatorModalOpen" [showSuccessMessage]="false" [showActionsOnTop]="false" [useRouter]="false" (afterSave)="onNewOperatorAdded()" (afterCancel)="newOperatorModalOpen = false"></otp-operator-detail>
-     </otp-modal> -->
+<otp-modal [title]="'New Producer' | translate" [opened]="newOperatorModalOpen" (onClose)="newOperatorModalOpen = false">
+  <otp-operator-detail
+    *ngIf="newOperatorModalOpen"
+    [longForm]="false"
+    [showSuccessMessage]="false"
+    [showActionsOnTop]="false"
+    [useRouter]="false"
+    (afterSave)="onNewOperatorAdded()"
+    (afterCancel)="newOperatorModalOpen = false">
+  </otp-operator-detail>
+</otp-modal>
 
 <form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && f.valid && onSubmitForReview()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
@@ -167,72 +182,23 @@
     </div>
 
     <!-- 3. Operator -->
-    <div *ngIf="isDisabled()" class="form-group -required">
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
       <label for="operator_id">{{'Operator' | translate}}</label>
-      <select id="operator_id" name="operator_id" [(ngModel)]="operatorChoice" #operator_id="ngModel" [required]="!operator.name" disabled>
-        <option [value]="null" disabled>{{'Select an operator' | translate}}</option>
-        <option *ngFor="let operator of operators" [ngValue]="operator">{{ operator.name }}</option>
-      </select>
-    </div>
-    <fieldset *ngIf="!isDisabled()">
-      <legend>{{'Operator' | translate}}</legend>
-      <div class="fieldset-container">
-        <p class="fieldset-description" *otpMaxTablet>
-          {{'Select one of the two options below: use an existing operator or create a new one.' | translate}}
-        </p>
-        <div>
-          <!-- 3.1 Select operator -->
-          <div [ngClass]="{ 'form-group': true,  '-required': !operator.name }" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
-            <label for="operator_id">{{'Operator' | translate}}</label>
-            <ss-multiselect-dropdown
-              [texts]="multiSelectTexts"
-              [options]="operatorsOptions"
-              [settings]="operatorsSelectSettings"
-              [(ngModel)]="operatorsSelection"
-              (ngModelChange)="onChangeOperatorsOptions($event)"
-              name="operator_id"
-              #operator_id="ngModel"
-              [disabled]="isDisabled()"
-            ></ss-multiselect-dropdown>
-
-            <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
-          </div>
-        </div>
-        <div>
-          <div class="form-group new-producer-checkbox">
-            <input type="checkbox" name="create_new_producer" id="create_new_producer" [(ngModel)]="isCreatingNewProducer" #create_new_producer="ngModel" />
-            <label for="create_new_producer">{{'Producer is not listing in the menu above' | translate}}</label>
-          </div>
-
-          <div *ngIf="isCreatingNewProducer === true" class="new-producer-form">
-            <!-- 3.2 New operator -->
-            <fieldset>
-              <div class="fieldset-container">
-                <h3>{{'New operator' | translate}}</h3>
-
-                <!-- 3.2.1. Name -->
-                <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
-                  <label for="operator_name">{{'Name' | translate}}</label>
-                  <input id="operator_name" type="text" class="form-control" name="operator_name" [(ngModel)]="operatorName" #operator_name="ngModel" [required]="!operatorChoice" />
-                  <div *ngIf="f.submitted && !operator_name.valid" class="help-text">{{'Please enter the name' | translate}}</div>
-                  <div *ngIf="operatorAlreadyExists" class="help-text">{{'Producer with this name already exists' | translate}}</div>
-                </div>
-
-                <!-- 3.2.1. Type -->
-                <div [ngClass]="{ 'form-group': true, '-required': !operatorChoice }" [ngClass]="{ 'has-error': f.submitted && !operator_name.valid }">
-                  <label for="operator_type">{{'Type' | translate}}</label>
-                  <select if="operator_type" name="operator_type" [(ngModel)]="operatorType" #operator_type="ngModel" [required]="!operatorChoice">
-                    <option [value]="null" disabled>{{'Select an operator type' | translate}}</option>
-                    <option *ngFor="let type of objectKeys(operatorTypeOptions)" [ngValue]="operatorTypeOptions[type]">{{ type }}</option>
-                  </select>
-                  <div *ngIf="f.submitted && !operator_type.valid" class="help-text">{{'Please select an operator type' | translate}}</div>
-                </div>
-              </div>
-            </fieldset>
-          </div>
-        </div>
+      <ss-multiselect-dropdown
+        [texts]="multiSelectTexts"
+        [options]="operatorsOptions"
+        [settings]="operatorsSelectSettings"
+        [(ngModel)]="operatorsSelection"
+        (ngModelChange)="onChangeOperatorsOptions($event)"
+        name="operator_id"
+        #operator_id="ngModel"
+        [disabled]="isDisabled()"
+      ></ss-multiselect-dropdown>
+      <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
+      <div class="note">
+        <button type="button" class="c-button -primary" (click)="onClickAddOperator()">{{'Add new producer to the list' | translate}}</button>
       </div>
-    </fieldset>
+    </div>
 
     <!-- 4. Additional monitors -->
     <div class="form-group">
@@ -250,6 +216,9 @@
       <p class="note">
         {{ 'observation.relevantOperators.note' | translate }}
       </p>
+      <div class="note">
+        <button type="button" class="c-button -primary" (click)="onClickAddOperator()">{{'Add new producer to the list' | translate}}</button>
+      </div>
     </div>
 
     <!-- 6. Observation category -->

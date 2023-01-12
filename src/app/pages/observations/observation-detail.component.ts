@@ -133,7 +133,7 @@ export class ObservationDetailComponent implements OnDestroy {
     autoUnselect: true
   };
   operatorsSelection: string[] = [];
-  newOperatorModelOpen = false;
+  newOperatorModalOpen = false;
 
   // Governments multi-select related
   governmentsOptions: IMultiSelectOption[] = [];
@@ -197,7 +197,6 @@ export class ObservationDetailComponent implements OnDestroy {
   // Report choosed between options
   _reportChoice: ObservationReport = null;
   _monitorComment: string = null;
-  _isCreatingNewProducer: boolean = false;
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -312,12 +311,6 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
-  get isCreatingNewProducer() { return this._isCreatingNewProducer; }
-  set isCreatingNewProducer(value) {
-    this._isCreatingNewProducer = value;
-    this.operatorChoice = null;
-  }
-
   get operators() { return this._operators; }
   set operators(collection) {
     this._operators = collection;
@@ -342,35 +335,6 @@ export class ObservationDetailComponent implements OnDestroy {
       } else {
         this.operatorChoice = null;
       }
-    }
-  }
-
-  get operatorName() { return this.operator.name; }
-  set operatorName(operatorName) {
-    this.operator.name = operatorName;
-
-    // If the user wants to add a new operator,
-    // we discard the choice they've made in the selector
-    if (operatorName) {
-      this.operatorChoice = null;
-    }
-  }
-  get operatorAlreadyExists() {
-    if (!this.operatorName || this.operators.length === 0) return false;
-
-    return !!this.operators
-      .map(o => o.name.toLowerCase())
-      .find(name => this.operatorName.toLowerCase() === name);
-  }
-
-  get operatorType() { return this.operator['operator-type']; }
-  set operatorType(operatorType) {
-    this.operator['operator-type'] = operatorType;
-
-    // If the user wants to add a new operator,
-    // we discard the choice they've made in the selector
-    if (operatorType) {
-      this.operatorChoice = null;
     }
   }
 
@@ -401,10 +365,6 @@ export class ObservationDetailComponent implements OnDestroy {
         .catch(err => console.error(err)); // TODO: visual feedback
 
       this.operatorsSelection = [operatorChoice.id];
-      // If the user selects an operator, then the new
-      // operator is discarded
-      this.operatorName = null;
-      this.operatorType = null;
     } else {
       this.fmus = [];
       this.fmu = null;
@@ -879,9 +839,6 @@ export class ObservationDetailComponent implements OnDestroy {
           // If we were going to add an evidence
           this.evidence.name = this.draft.evidenceTitle;
           this.evidence.attachment = this.draft.evidenceAttachment;
-          // If we were going to add a new producer (operator)
-          this.operatorName = this.draft.operatorName;
-          this.operatorType = this.draft.operatorType || null;
           // if we were going to upload a new report
           this.report.title = this.draft.reportTitle;
           this.reportAttachment = this.draft.reportAttachment;
@@ -994,9 +951,6 @@ export class ObservationDetailComponent implements OnDestroy {
 
       if (this.operatorChoice) {
         draftModel.operatorId = this.operatorChoice && this.operatorChoice.id;
-      } else {
-        draftModel.operatorName = this.operatorName;
-        draftModel.operatorType = this.operatorType;
       }
 
       draftModel.isPhysicalPlace = this.physicalPlace;
@@ -1233,11 +1187,17 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   onClickAddOperator() {
-    this.newOperatorModelOpen = true;
+    this.newOperatorModalOpen = true;
   }
 
   onNewOperatorAdded() {
-    this.newOperatorModelOpen = false;
+    this.newOperatorModalOpen = false;
+    if (this.country) {
+      this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
+        .then((operators) => {
+          this.operators = operators;
+        });
+    }
   }
 
   onClickAddGovernanceEntity() {
@@ -1498,28 +1458,6 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   /**
-   * Upload the operator, if the user created a
-   * new one
-   * @returns {Promise<{}>}
-   */
-  uploadOperator(): Promise<{}> {
-    return new Promise((resolve, reject) => {
-      if (!this.operator.name) {
-        // If the user didn't create a new operator,
-        // we just resolve
-        resolve();
-      } else {
-        this.operator.country = this.country;
-        // Otherwise, we upload it
-        this.operator.save()
-          .toPromise()
-          .then(resolve)
-          .catch(reject);
-      }
-    });
-  }
-
-  /**
    * Upload the report, if any
    * @returns {Promise<{}>}
    */
@@ -1576,11 +1514,6 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.operatorAlreadyExists) {
-      window.alert('Form is not valid.');
-      return;
-    }
-
     this.loading = true;
 
     let observation: Observation;
@@ -1659,15 +1592,6 @@ export class ObservationDetailComponent implements OnDestroy {
           observation['observation-report'] = this.report;
         } else {
           observation['observation-report'] = this.reportChoice;
-        }
-      })
-      .then(() => this.uploadOperator())
-      .then(() => {
-        // If we created an operator, we link it to the observation
-        if (this.operator.id) {
-          observation.operator = this.operator;
-        } else {
-          observation.operator = this.operatorChoice;
         }
       })
       .then(() => observation.save().toPromise())

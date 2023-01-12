@@ -20,10 +20,6 @@ export interface DraftObservation {
   reportAttachment?: string; // Base64
   reportDate?: Date;
 
-  // New operator
-  operatorName?: string;
-  operatorType?: string;
-
   // New evidence
   evidenceTitle?: string;
   evidenceAttachment?: string; // Base64
