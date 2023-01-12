@@ -4,6 +4,10 @@
   <otp-government-detail *ngIf="newGovEntityModalOpen" [showSuccessMessage]="false" [showActionsOnTop]="false" [useRouter]="false" (afterSave)="onNewGovEntityAdded()" (afterCancel)="newGovEntityModalOpen = false"></otp-government-detail>
 </otp-modal>
 
+<!-- <otp-modal [title]="'New Producer' | translate" [opened]="newOperatorModalOpen" (onClose)="newOperatorModalOpen = false">
+     <otp-operator-detail *ngIf="newOperatorModalOpen" [showSuccessMessage]="false" [showActionsOnTop]="false" [useRouter]="false" (afterSave)="onNewOperatorAdded()" (afterCancel)="newOperatorModalOpen = false"></otp-operator-detail>
+     </otp-modal> -->
+
 <form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && f.valid && onSubmitForReview()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 *ngIf="isDisabled() && !isCopied">{{'Observation details' | translate}}</h2>
