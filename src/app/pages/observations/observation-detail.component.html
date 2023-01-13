@@ -205,7 +205,15 @@
     <!-- 4. Additional monitors -->
     <div class="form-group">
       <label>{{'Additional monitors' | translate}}</label>
-      <ss-multiselect-dropdown [texts]="multiSelectTexts" [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers" [disabled]="isDisabled()"></ss-multiselect-dropdown>
+      <ss-multiselect-dropdown
+        [texts]="multiSelectTexts"
+        [options]="additionalObserversOptions"
+        [settings]="additionalObserversSelectSettings"
+        [(ngModel)]="_additionalObserversSelection"
+        (ngModelChange)="onChangeAdditionalObserversOptions($event)"
+        name="additional_observers"
+        [disabled]="isDisabled()">
+      </ss-multiselect-dropdown>
       <p class="note">
         {{ 'observation.additionalMonitors.note' | translate }}
       </p>
@@ -214,7 +222,15 @@
     <!-- 5. Relevant operators -->
     <div class="form-group">
       <label>{{'Relevant operators' | translate}}</label>
-      <ss-multiselect-dropdown [texts]="multiSelectTexts" [options]="relevantOperatorsOptions" [(ngModel)]="_relevantOperatorsSelection" (ngModelChange)="onChangeRelevantOperatorsOptions($event)" name="relevant_operators" [disabled]="isDisabled()"></ss-multiselect-dropdown>
+      <ss-multiselect-dropdown
+        [texts]="multiSelectTexts"
+        [options]="relevantOperatorsOptions"
+        [settings]="relevantOperatorsSelectSettings"
+        [(ngModel)]="_relevantOperatorsSelection"
+        (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
+        name="relevant_operators"
+        [disabled]="isDisabled()">
+      </ss-multiselect-dropdown>
       <p class="note">
         {{ 'observation.relevantOperators.note' | translate }}
       </p>
@@ -757,7 +773,15 @@
     <!-- 5. Additional monitors -->
     <div class="form-group">
       <label>{{'Additional monitors' | translate}}</label>
-      <ss-multiselect-dropdown [texts]="multiSelectTexts" [options]="additionalObserversOptions" [(ngModel)]="_additionalObserversSelection" (ngModelChange)="onChangeAdditionalObserversOptions($event)" name="additional_observers" [disabled]="isDisabled()"></ss-multiselect-dropdown>
+      <ss-multiselect-dropdown
+        [texts]="multiSelectTexts"
+        [options]="additionalObserversOptions"
+        [settings]="additionalObserversSelectSettings"
+        [(ngModel)]="_additionalObserversSelection"
+        (ngModelChange)="onChangeAdditionalObserversOptions($event)"
+        name="additional_observers"
+        [disabled]="isDisabled()">
+      </ss-multiselect-dropdown>
       <p class="note">
         {{ 'observation.additionalMonitors.note' | translate }}
       </p>
@@ -766,7 +790,15 @@
     <!-- 6. Relevant operators -->
     <div class="form-group">
       <label>{{'Relevant operators' | translate}}</label>
-      <ss-multiselect-dropdown [texts]="multiSelectTexts" [options]="relevantOperatorsOptions" [(ngModel)]="_relevantOperatorsSelection" (ngModelChange)="onChangeRelevantOperatorsOptions($event)" name="relevant_operators" [disabled]="isDisabled()"></ss-multiselect-dropdown>
+      <ss-multiselect-dropdown
+        [texts]="multiSelectTexts"
+        [options]="relevantOperatorsOptions"
+        [settings]="relevantOperatorsSelectSettings"
+        [(ngModel)]="_relevantOperatorsSelection"
+        (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
+        name="relevant_operators"
+        [disabled]="isDisabled()">
+      </ss-multiselect-dropdown>
       <p class="note">
         {{ 'observation.relevantOperators.note' | translate }}
       </p>

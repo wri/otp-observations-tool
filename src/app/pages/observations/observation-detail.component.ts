@@ -143,10 +143,16 @@ export class ObservationDetailComponent implements OnDestroy {
   // Monitors multi-select related
   additionalObserversOptions: IMultiSelectOption[] = [];
   _additionalObserversSelection: number[] = [];
+  additionalObserversSelectSettings: IMultiSelectSettings = {
+    enableSearch: true
+  }
 
   // Relevant operatos multi-select related
   relevantOperatorsOptions: IMultiSelectOption[] = [];
   _relevantOperatorsSelection: number[] = [];
+  relevantOperatorsSelectSettings: IMultiSelectSettings = {
+    enableSearch: true
+  }
 
   // laws options
   _laws: Law[] = []; // Filtered by country and subcategory
