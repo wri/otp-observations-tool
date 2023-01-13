@@ -32,7 +32,7 @@ export class OperatorDetailComponent {
   @Input() country: Country = null;
 
   @Output() afterCancel: EventEmitter<void> = new EventEmitter<void>();
-  @Output() afterSave: EventEmitter<void> = new EventEmitter<void>();
+  @Output() afterSave: EventEmitter<Operator> = new EventEmitter<Operator>();
 
   get logoUrl() {
     if (this.operator.logo && this.operator.logo.url) {
@@ -100,7 +100,7 @@ export class OperatorDetailComponent {
 
     this.operator.save()
       .toPromise()
-      .then(async () => {
+      .then(async (savedOperator) => {
         if (this.showSuccessMessage) {
           if (isEdition) {
             alert(await this.translateService.get('operatorUpdate.success').toPromise());
@@ -109,7 +109,7 @@ export class OperatorDetailComponent {
           }
         }
 
-        this.afterSave.emit();
+        this.afterSave.emit(savedOperator);
         if (this.useRouter) {
           this.router.navigate(['/', 'private', 'fields', 'operators']);
         }

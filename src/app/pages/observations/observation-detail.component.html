@@ -12,7 +12,7 @@
   </otp-government-detail>
 </otp-modal>
 
-<otp-modal [title]="'New Producer' | translate" [opened]="newOperatorModalOpen" (onClose)="newOperatorModalOpen = false">
+<otp-modal [title]="'New Producer' | translate" [opened]="newOperatorModalOpen" (onClose)="onNewOperatorModalClosed()">
   <otp-operator-detail
     *ngIf="newOperatorModalOpen"
     [country]="country"
@@ -20,8 +20,8 @@
     [showSuccessMessage]="false"
     [showActionsOnTop]="false"
     [useRouter]="false"
-    (afterSave)="onNewOperatorAdded()"
-    (afterCancel)="newOperatorModalOpen = false">
+    (afterSave)="onNewOperatorAdded($event)"
+    (afterCancel)="onNewOperatorModalClosed()">
   </otp-operator-detail>
 </otp-modal>
 
@@ -198,7 +198,7 @@
       ></ss-multiselect-dropdown>
       <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
       <div class="note">
-        <button type="button" class="c-button -primary" (click)="onClickAddOperator()">{{'Add new producer to the list' | translate}}</button>
+        <button type="button" class="c-button -primary" (click)="onClickAddOperator('operator')">{{'Add new producer to the list' | translate}}</button>
       </div>
     </div>
 
@@ -235,7 +235,7 @@
         {{ 'observation.relevantOperators.note' | translate }}
       </p>
       <div class="note">
-        <button type="button" class="c-button -primary" (click)="onClickAddOperator()">{{'Add new producer to the list' | translate}}</button>
+        <button type="button" class="c-button -primary" (click)="onClickAddOperator('relevantOperators')">{{'Add new producer to the list' | translate}}</button>
       </div>
     </div>
 

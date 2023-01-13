@@ -134,6 +134,7 @@ export class ObservationDetailComponent implements OnDestroy {
   };
   operatorsSelection: string[] = [];
   newOperatorModalOpen = false;
+  newOperatorModalSelect: string = null;
 
   // Governments multi-select related
   governmentsOptions: IMultiSelectOption[] = [];
@@ -180,7 +181,6 @@ export class ObservationDetailComponent implements OnDestroy {
   _severity: Severity = null;
   _subcategory: Subcategory = null;
   _publicationDate: Date;
-  operator: Operator = this.datastoreService.createRecord(Operator, { 'operator-type': null });
   _operatorChoice: Operator = null; // Only for type operator, chose between the options
   _opinion: string; // Only for type operator
   _litigationStatus: string; // Only for type operator
@@ -313,6 +313,26 @@ export class ObservationDetailComponent implements OnDestroy {
       this.operatorsService.getAll({ sort: 'name', filter: { country: country.id } })
         .then((operators) => {
           this.operators = operators;
+
+          if (this.draft) {
+            this._relevantOperatorsSelection = this.country && this.draft.countryId === this.country.id && this.draft.relevantOperators
+              ? this.draft.relevantOperators.filter(id => this.operators.find(g => +g === id))
+              : [];
+          } else if (this.observation) {
+            this._relevantOperatorsSelection = this.observation && this.observation.country.id === this.country.id
+              ? (this.observation['relevant-operators'] || []).map(o => Number(o.id))
+              : [];
+          }
+
+          if (this.type === 'operator') {
+            if (this.draft && this.draft.countryId === this.country.id) {
+              this.operatorChoice = this.operators.find((operator) => operator.id === this.draft.operatorId) || null;
+            } else if (this.observation && this.observation.country === this.country && this.observation.operator) {
+              this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
+            } else {
+              this.operatorChoice = null;
+            }
+          }
         });
     }
   }
@@ -321,27 +341,7 @@ export class ObservationDetailComponent implements OnDestroy {
   set operators(collection) {
     this._operators = collection;
     this.operatorsOptions = collection.map((o) => ({ id: o.id, name: o.name }));
-
-    this.relevantOperatorsOptions = this.operators.map((operator, index) => ({ id: index, name: operator.name }));
-    if (this.draft) {
-      this._relevantOperatorsSelection = this.country && this.draft.countryId === this.country.id && this.draft.relevantOperators
-        ? this.draft.relevantOperators.map(id => this.operators.findIndex(g => +g.id === id))
-        : [];
-    } else if (this.observation) {
-      this._relevantOperatorsSelection = this.observation && this.observation.country.id === this.country.id
-        ? (this.observation['relevant-operators'] || []).map(relevantOperator => this.operators.findIndex(o => o.id === relevantOperator.id))
-        : [];
-    }
-
-    if (this.type === 'operator') {
-      if (this.draft && this.draft.countryId === this.country.id) {
-        this.operatorChoice = this.operators.find((operator) => operator.id === this.draft.operatorId) || null;
-      } else if (this.observation && this.observation.country === this.country && this.observation.operator) {
-        this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
-      } else {
-        this.operatorChoice = null;
-      }
-    }
+    this.relevantOperatorsOptions = this.operators.map((operator) => ({ id: Number(operator.id), name: operator.name }));
   }
 
   get operatorChoice() { return this.observation ? this.observation.operator : this._operatorChoice; }
@@ -862,7 +862,7 @@ export class ObservationDetailComponent implements OnDestroy {
         }
       }
 
-      this.subscription = interval(15000).subscribe(() => {
+      this.subscription = interval(10000).subscribe(() => {
         this.saveAsDraftObservation();
       });
     }
@@ -968,10 +968,10 @@ export class ObservationDetailComponent implements OnDestroy {
       draftModel.fmuId = this.physicalPlace && this.fmu && this.fmu.id || null;
       draftModel.locationAccuracy = this.physicalPlace ? this.locationAccuracy : null;
       draftModel.locationInformation = this.locationInformation;
-      draftModel.relevantOperators = this.operators.filter((o, index) => this._relevantOperatorsSelection.indexOf(index) !== -1).map(o => +o.id);
+      draftModel.relevantOperators = this._relevantOperatorsSelection;
     } else {
       draftModel.governments = this._governmentsSelection;
-      draftModel.relevantOperators = this.operators.filter((o, index) => this._relevantOperatorsSelection.indexOf(index) !== -1).map(o => +o.id);
+      draftModel.relevantOperators = this._relevantOperatorsSelection;
     }
 
     localStorage.setItem('draftObservation', JSON.stringify(draftModel));
@@ -1192,18 +1192,30 @@ export class ObservationDetailComponent implements OnDestroy {
     this.operatorChoice = this.operators.find(x => x.id == options[0]);
   }
 
-  onClickAddOperator() {
+  onClickAddOperator(selectName) {
     this.newOperatorModalOpen = true;
+    this.newOperatorModalSelect = selectName;
   }
 
-  onNewOperatorAdded() {
+  onNewOperatorAdded(operator: Operator) {
     this.newOperatorModalOpen = false;
     if (this.country) {
       this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
         .then((operators) => {
           this.operators = operators;
+          // auto select newly added operator if none selected
+          if (this.newOperatorModalSelect === 'operator') {
+            if ((this.operatorsSelection || []).length === 0) this.operatorChoice = operator;
+          } else if (this.newOperatorModalSelect === 'relevantOperators') {
+            this._relevantOperatorsSelection.push(Number(operator.id));
+          }
         });
     }
+  }
+
+  onNewOperatorModalClosed() {
+    this.newOperatorModalOpen = false;
+    this.newOperatorModalSelect = null;
   }
 
   onClickAddGovernanceEntity() {
@@ -1534,8 +1546,6 @@ export class ObservationDetailComponent implements OnDestroy {
       if (this.type !== 'operator') {
         this.observation.governments = this.governments
           .filter((government) => this._governmentsSelection.indexOf(parseInt(government.id, 10)) !== -1);
-        this.observation['relevant-operators'] = this.operators
-          .filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       } else {
         if (!this.physicalPlace) {
           this.observation.lat = null;
@@ -1545,11 +1555,9 @@ export class ObservationDetailComponent implements OnDestroy {
           const decimalCoordinates = this.getDecimalCoordinates();
           this.observation.lat = decimalCoordinates && decimalCoordinates[0];
           this.observation.lng = decimalCoordinates && decimalCoordinates[1];
-          this.observation['relevant-operators'] = this.operators
-            .filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
         }
       }
-
+      this.observation['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(Number(operator.id)));
       this.observation['validation-status'] = this.validationStatus;
 
       observation = this.observation;
@@ -1582,11 +1590,10 @@ export class ObservationDetailComponent implements OnDestroy {
         model.fmu = this.physicalPlace ? this.fmu : null;
         model['location-accuracy'] = this.locationAccuracy;
         model['location-information'] = this.locationInformation;
-        model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       } else {
         model.governments = this.governments.filter((government) => this._governmentsSelection.indexOf(parseInt(government.id, 10)) !== -1);
-        model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       }
+      model['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(Number(operator.id)));
 
       observation = this.datastoreService.createRecord(Observation, model);
     }
