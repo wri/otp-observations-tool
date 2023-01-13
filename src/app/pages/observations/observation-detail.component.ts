@@ -138,19 +138,19 @@ export class ObservationDetailComponent implements OnDestroy {
 
   // Governments multi-select related
   governmentsOptions: IMultiSelectOption[] = [];
-  _governmentsSelection: number[] = [];
+  _governmentsSelection: string[] = [];
   newGovEntityModalOpen = false;
 
   // Monitors multi-select related
   additionalObserversOptions: IMultiSelectOption[] = [];
-  _additionalObserversSelection: number[] = [];
+  _additionalObserversSelection: string[] = [];
   additionalObserversSelectSettings: IMultiSelectSettings = {
     enableSearch: true
   }
 
   // Relevant operatos multi-select related
   relevantOperatorsOptions: IMultiSelectOption[] = [];
-  _relevantOperatorsSelection: number[] = [];
+  _relevantOperatorsSelection: string[] = [];
   relevantOperatorsSelectSettings: IMultiSelectSettings = {
     enableSearch: true
   }
@@ -232,8 +232,7 @@ export class ObservationDetailComponent implements OnDestroy {
         // match any of the objects of this.countries, so we search for the "same" model
         // and set it
         if (this.draft) {
-          this._additionalObserversSelection = this.draft.observers
-            ? this.draft.observers.map(id => this.observers.findIndex(o => +o.id === id)) : [];
+          this._additionalObserversSelection = this.draft.observers || [];
           this.country = this.countries.find((country) => country.id === this.draft.countryId);
         } else if (this.observation) {
           this.country = this.countries.find((country) => country.id === this.observation.country.id);
@@ -271,12 +270,12 @@ export class ObservationDetailComponent implements OnDestroy {
     if (this.type === 'government') {
       this.governments = country && country.governments || [];
       this.governmentsOptions = orderBy(
-        this.governments.map((government) => ({ id: parseInt(government.id, 10), name: government['government-entity'] })),
+        this.governments.map((government) => ({ id: government.id, name: government['government-entity'] })),
         [(g) => g.name.toLowerCase()]
       );
       if (this.observation) {
         this._governmentsSelection = this.observation && this.observation.country.id === country.id
-          ? (this.observation.governments || []).map(government => parseInt(government.id, 10))
+          ? (this.observation.governments || []).map(government => government.id)
           : [];
       }
       if (this.draft) {
@@ -316,11 +315,11 @@ export class ObservationDetailComponent implements OnDestroy {
 
           if (this.draft) {
             this._relevantOperatorsSelection = this.country && this.draft.countryId === this.country.id && this.draft.relevantOperators
-              ? this.draft.relevantOperators.filter(id => this.operators.find(g => +g === id))
+              ? this.draft.relevantOperators.filter(id => this.operators.find(g => g.id === id))
               : [];
           } else if (this.observation) {
             this._relevantOperatorsSelection = this.observation && this.observation.country.id === this.country.id
-              ? (this.observation['relevant-operators'] || []).map(o => Number(o.id))
+              ? (this.observation['relevant-operators'] || []).map(o => o.id)
               : [];
           }
 
@@ -341,7 +340,7 @@ export class ObservationDetailComponent implements OnDestroy {
   set operators(collection) {
     this._operators = collection;
     this.operatorsOptions = collection.map((o) => ({ id: o.id, name: o.name }));
-    this.relevantOperatorsOptions = this.operators.map((operator) => ({ id: Number(operator.id), name: operator.name }));
+    this.relevantOperatorsOptions = this.operators.map((operator) => ({ id: operator.id, name: operator.name }));
   }
 
   get operatorChoice() { return this.observation ? this.observation.operator : this._operatorChoice; }
@@ -752,7 +751,7 @@ export class ObservationDetailComponent implements OnDestroy {
         // We update the list of options for the additional observers field
         this.additionalObserversOptions = observers
           .filter(observer => observer.id !== this.authService.userObserverId)
-          .map((observer, index) => ({ id: index, name: observer.name }));
+          .map((observer) => ({ id: observer.id, name: observer.name }));
       })
       .catch((err) => console.error(err)); // TODO: visual feedback
 
@@ -799,9 +798,7 @@ export class ObservationDetailComponent implements OnDestroy {
         const additionalObserversIds = this.observation.observers
           .filter(observer => observer.id !== this.authService.userObserverId)
           .map(o => o.id);
-        this._additionalObserversSelection = this.observers.map((observer, index) => {
-          return additionalObserversIds.indexOf(observer.id) !== -1 ? index : null;
-        }).filter(v => v !== null);
+        this._additionalObserversSelection = additionalObserversIds;
 
         // We force some of the attributes to execute the setters
         this.type = this.observation['observation-type'];
@@ -931,7 +928,7 @@ export class ObservationDetailComponent implements OnDestroy {
       subcategoryId: this.subcategory && this.subcategory.id,
       details: this.details,
       severityId: this.severity && this.severity.id,
-      observers: this.observers.filter((o, index) => this._additionalObserversSelection.indexOf(index) !== -1).map(o => +o.id),
+      observers: this._additionalObserversSelection,
       actionsTaken: this.actions,
       validationStatus: this.validationStatus,
       concernOpinion: this.opinion,
@@ -1165,7 +1162,7 @@ export class ObservationDetailComponent implements OnDestroy {
    * https://github.com/softsimon/angular-2-dropdown-multiselect/issues/273
    * @param {number[]} options
    */
-  onChangeAdditionalObserversOptions(options: number[]) {
+  onChangeAdditionalObserversOptions(options: string[]) {
     this._additionalObserversSelection = options;
   }
 
@@ -1176,11 +1173,11 @@ export class ObservationDetailComponent implements OnDestroy {
    * https://github.com/softsimon/angular-2-dropdown-multiselect/issues/273
    * @param {number[]} options
    */
-  onChangeRelevantOperatorsOptions(options: number[]) {
+  onChangeRelevantOperatorsOptions(options: string[]) {
     this._relevantOperatorsSelection = options;
   }
 
-  onChangeGovernmentsOptions(options: number[]): void {
+  onChangeGovernmentsOptions(options: string[]): void {
     this._governmentsSelection = options;
   }
 
@@ -1207,7 +1204,7 @@ export class ObservationDetailComponent implements OnDestroy {
           if (this.newOperatorModalSelect === 'operator') {
             if ((this.operatorsSelection || []).length === 0) this.operatorChoice = operator;
           } else if (this.newOperatorModalSelect === 'relevantOperators') {
-            this._relevantOperatorsSelection.push(Number(operator.id));
+            this._relevantOperatorsSelection.push(operator.id);
           }
         });
     }
@@ -1222,14 +1219,15 @@ export class ObservationDetailComponent implements OnDestroy {
     this.newGovEntityModalOpen = true;
   }
 
-  onNewGovEntityAdded() {
+  onNewGovEntityAdded(govEntity: Government) {
     this.newGovEntityModalOpen = false;
     this.governmentsService.getAll({ filter: { country: this.country.id } }).then((data) => {
       this.governments = data;
       this.governmentsOptions = orderBy(
-        this.governments.map((government) => ({ id: parseInt(government.id, 10), name: government['government-entity'] })),
+        this.governments.map((government) => ({ id: government.id, name: government['government-entity'] })),
         [(g) => g.name.toLowerCase()]
       );
+      this._governmentsSelection.push(govEntity.id);
     });
   }
 
@@ -1540,12 +1538,11 @@ export class ObservationDetailComponent implements OnDestroy {
       // We update the list of observers
       // NOTE: we make sure to add our own observer
       this.observation.observers = this.observers
-        .filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1)
+        .filter((observer) => this._additionalObserversSelection.includes(observer.id))
         .concat([this.observers.find(o => o.id === this.authService.userObserverId)]);
 
       if (this.type !== 'operator') {
-        this.observation.governments = this.governments
-          .filter((government) => this._governmentsSelection.indexOf(parseInt(government.id, 10)) !== -1);
+        this.observation.governments = this.governments.filter((government) => this._governmentsSelection.includes(government.id));
       } else {
         if (!this.physicalPlace) {
           this.observation.lat = null;
@@ -1557,7 +1554,7 @@ export class ObservationDetailComponent implements OnDestroy {
           this.observation.lng = decimalCoordinates && decimalCoordinates[1];
         }
       }
-      this.observation['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(Number(operator.id)));
+      this.observation['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(operator.id));
       this.observation['validation-status'] = this.validationStatus;
 
       observation = this.observation;
@@ -1569,7 +1566,7 @@ export class ObservationDetailComponent implements OnDestroy {
         subcategory: this.subcategory,
         details: this.details,
         severity: this.severity,
-        observers: this.observers.filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1),
+        observers: this.observers.filter((observer) => this._additionalObserversSelection.includes(observer.id)),
         'actions-taken': this.actions,
         'validation-status': this.validationStatus,
         'concern-opinion': this.opinion,
@@ -1591,9 +1588,9 @@ export class ObservationDetailComponent implements OnDestroy {
         model['location-accuracy'] = this.locationAccuracy;
         model['location-information'] = this.locationInformation;
       } else {
-        model.governments = this.governments.filter((government) => this._governmentsSelection.indexOf(parseInt(government.id, 10)) !== -1);
+        model.governments = this.governments.filter((government) => this._governmentsSelection.includes(government.id));
       }
-      model['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(Number(operator.id)));
+      model['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(operator.id));
 
       observation = this.datastoreService.createRecord(Observation, model);
     }

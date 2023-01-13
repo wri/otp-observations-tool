@@ -28,7 +28,7 @@ export class GovernmentDetailComponent {
   @Input() country: Country = null;
 
   @Output() afterCancel: EventEmitter<void> = new EventEmitter<void>();
-  @Output() afterSave: EventEmitter<void> = new EventEmitter<void>();
+  @Output() afterSave: EventEmitter<Government> = new EventEmitter<Government>();
 
   constructor(
     private countriesService: CountriesService,
@@ -93,7 +93,7 @@ export class GovernmentDetailComponent {
 
     this.government.save()
       .toPromise()
-      .then(async () => {
+      .then(async (savedGovernment) => {
         if (this.showSuccessMessage) {
           if (isEdition) {
             alert(await this.translateService.get('governmentUpdate.success').toPromise());
@@ -101,7 +101,7 @@ export class GovernmentDetailComponent {
             alert(await this.translateService.get('governmentCreation.success').toPromise());
           }
         }
-        this.afterSave.emit();
+        this.afterSave.emit(savedGovernment);
         if (this.useRouter) {
           this.router.navigate(['/', 'private', 'fields', 'government-entities']);
         }

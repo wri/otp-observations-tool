@@ -7,7 +7,7 @@
     [showSuccessMessage]="false"
     [showActionsOnTop]="false"
     [useRouter]="false"
-    (afterSave)="onNewGovEntityAdded()"
+    (afterSave)="onNewGovEntityAdded($event)"
     (afterCancel)="newGovEntityModalOpen = false">
   </otp-government-detail>
 </otp-modal>
