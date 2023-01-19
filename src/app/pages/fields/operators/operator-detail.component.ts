@@ -98,7 +98,17 @@ export class OperatorDetailComponent {
         } else {
           alert(await this.translateService.get('operatorCreation.error').toPromise());
         }
-
+        if (err.errors && err.errors.length > 0) {
+          const errorMessages = [];
+          err.errors.forEach((error) => {
+            if (error.status === '422') {
+              errorMessages.push(error.detail);
+            }
+          })
+          if (errorMessages.length > 0) {
+            alert(errorMessages.join('\n'));
+          }
+        }
         console.error(err);
       })
       .then(() => this.loading = false);
