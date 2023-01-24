@@ -391,5 +391,7 @@
   "Organization operates in": "Organization operates in",
   "At least one country is required": "At least one country is required",
   "Please pick governance problem first.": "Please pick governance problem first.",
-  "Please pick sub-category first.": "Please pick sub-category first."
+  "Please pick sub-category first.": "Please pick sub-category first.",
+  "Add a new governance entity to the list": "Add a new governance entity to the list",
+  "Add a new producer to the list": "Add a new producer to the list"
 }
