@@ -24,6 +24,7 @@ export class OperatorDetailComponent {
   operator: Operator = null;
   operatorTypes = Object.keys(OperatorTypes);
   loading = false;
+  nameServerError: string = null;
 
   @Input() useRouter: boolean = true;
   @Input() showActionsOnTop: boolean = true;
@@ -97,6 +98,7 @@ export class OperatorDetailComponent {
     this.loading = true;
 
     const isEdition = !!this.operator.id;
+    this.nameServerError = null;
 
     this.operator.save()
       .toPromise()
@@ -124,7 +126,11 @@ export class OperatorDetailComponent {
           const errorMessages = [];
           err.errors.forEach((error) => {
             if (error.status === '422') {
-              errorMessages.push(error.detail);
+              if (error.source && error.source.pointer === '/data/attributes/name') {
+                this.nameServerError = error.title;
+              } else {
+                errorMessages.push(error.detail);
+              }
             }
           })
           if (errorMessages.length > 0) {

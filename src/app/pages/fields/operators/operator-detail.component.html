@@ -20,6 +20,7 @@
       <label for="name_field">{{'Name' | translate}}</label>
       <input id="name_field" type="text" class="form-control" name="name_field" [(ngModel)]="operator.name" #name_field="ngModel" [disabled]="!canEdit()" required />
       <div *ngIf="f.submitted && !name_field.valid" class="help-text">{{'Please enter the name' | translate}}</div>
+      <div *ngIf="nameServerError" class="help-text">{{ nameServerError }}</div>
     </div>
 
     <!-- 2. Type -->
