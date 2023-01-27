@@ -4,7 +4,7 @@
   <p>
     {{'Visible columns:' | translate}}
   </p>
-  <div *ngFor="let column of columns; let i = index">
+  <div *ngFor="let column of hideableColumns; let i = index">
     <label [for]="'table-' + name + '-column-' + i">{{column.name}}</label>
     <input [id]="'table-' + name + '-column-' + i" type="checkbox" [checked]="hiddenColumns.indexOf(column.name) === -1" (change)="onToggleColumnVisibility($event, column.name)" />
   </div>

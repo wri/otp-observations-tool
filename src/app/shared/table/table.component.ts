@@ -45,7 +45,9 @@ export class TableComponent implements AfterContentInit {
   get hiddenColumns(): string[] {
     try {
       const storedValue = JSON.parse(localStorage.getItem(`${this.name}-hidden-columns`));
-      return Array.isArray(storedValue) ? storedValue : this.defaultHiddenColumns;
+      const columns = Array.isArray(storedValue) ? storedValue : this.defaultHiddenColumns;
+      const alwaysVisibleColumns = this.columns.filter(c => !c.hideable).map(c => c.name);
+      return columns.filter((name) => !alwaysVisibleColumns.includes(name));
     } catch (e) {
       return this.defaultHiddenColumns;
     }
@@ -224,6 +226,10 @@ export class TableComponent implements AfterContentInit {
         row.__index__ = this.perPage * this.paginationIndex + index + 2;
         return row;
       });
+  }
+
+  get hideableColumns(): any[] {
+    return this.columns.filter(column => column.hideable);
   }
 
   get visibleColumns(): any[] {

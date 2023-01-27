@@ -11,6 +11,7 @@ export class TableColumnDirective {
   @Input() prop: string;
   @Input() include: boolean;
   @Input() sortable: boolean;
+  @Input() hideable: boolean = true;
 
   @Input()
   @ContentChild(TableColumnCellDirective, { read: TemplateRef })

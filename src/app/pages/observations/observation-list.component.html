@@ -182,7 +182,7 @@
       </ng-template>
     </otp-table-column>
     <!-- We need the user info for canEdit -->
-    <otp-table-column [name]="'Actions' | translate" prop="user" [include]="true" [sortable]="false">
+    <otp-table-column [name]="'Actions' | translate" prop="user" [include]="true" [sortable]="false" [hideable]="false">
       <ng-template let-row="row" table-cell-template>
         <ng-template [ngIf]="canEdit(row)">
           <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
