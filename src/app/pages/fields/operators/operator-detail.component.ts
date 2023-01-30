@@ -31,6 +31,7 @@ export class OperatorDetailComponent {
   @Input() showSuccessMessage: boolean = true;
   @Input() longForm: boolean = true;
   @Input() country: Country = null;
+  @Input() uniqueNameErrorMessage: string = null;
 
   @Output() afterCancel: EventEmitter<void> = new EventEmitter<void>();
   @Output() afterSave: EventEmitter<Operator> = new EventEmitter<Operator>();
@@ -124,10 +125,15 @@ export class OperatorDetailComponent {
         }
         if (err.errors && err.errors.length > 0) {
           const errorMessages = [];
+
           err.errors.forEach((error) => {
             if (error.status === '422') {
               if (error.source && error.source.pointer === '/data/attributes/name') {
-                this.nameServerError = error.title;
+                if (["n'est pas disponible", 'has already been taken'].includes(error.title) && this.uniqueNameErrorMessage) {
+                  this.nameServerError = this.uniqueNameErrorMessage;
+                } else {
+                  this.nameServerError = error.title;
+                }
               } else {
                 errorMessages.push(error.detail);
               }
