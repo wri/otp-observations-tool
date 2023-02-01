@@ -17,7 +17,7 @@ import { Subcategory } from 'app/models/subcategory.model';
 import { ObservationsService } from 'app/services/observations.service';
 import { Severity } from 'app/models/severity.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Operator, OperatorTypes } from 'app/models/operator.model';
+import { Operator } from 'app/models/operator.model';
 import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { Observer } from 'app/models/observer.model';
@@ -83,7 +83,6 @@ export class ObservationDetailComponent implements OnDestroy {
     'Testimony from local communities', 'Other', 'Evidence presented in the report'
   ];
   evidenceTypeOptions: any = {}; // Object of options for evidence type selection
-  operatorTypes = Object.keys(OperatorTypes);
 
   coordinatesFormats = [
     'Decimal',
@@ -730,14 +729,12 @@ export class ObservationDetailComponent implements OnDestroy {
     private translateService: TranslateService
   ) {
     this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
-    this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
     this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
 
     this.updateMultiSelectTexts();
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
-      this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
       this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
     });
 
