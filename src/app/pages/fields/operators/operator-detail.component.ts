@@ -1,15 +1,15 @@
-import { ObserversService } from 'app/services/observers.service';
 import { AuthService } from 'app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
-import { Operator } from 'app/models/operator.model';
+import { Operator, OperatorTypes } from 'app/models/operator.model';
 import { OperatorsService } from 'app/services/operators.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from 'environments/environment';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { OperatorTypes } from './operator-list.component';
+import { forkJoin } from "rxjs/observable/forkJoin";
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'otp-operator-detail',
@@ -19,10 +19,13 @@ import { OperatorTypes } from './operator-list.component';
 export class OperatorDetailComponent {
 
   isAdmin = false;
+  objectKeys = Object.keys;
 
   countries: Country[] = [];
   operator: Operator = null;
   operatorTypes = Object.keys(OperatorTypes);
+  operatorTypeOptions: any = {};
+
   loading = false;
   nameServerError: string = null;
 
@@ -54,6 +57,11 @@ export class OperatorDetailComponent {
     private authService: AuthService
   ) {
     this.isAdmin = this.authService.isAdmin();
+    this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
+
+    this.translateService.onLangChange.subscribe(() => {
+      this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
+    });
   }
 
   ngOnInit() {
@@ -100,6 +108,8 @@ export class OperatorDetailComponent {
 
     const isEdition = !!this.operator.id;
     this.nameServerError = null;
+
+    console.log('options', this.operatorTypeOptions);
 
     this.operator.save()
       .toPromise()
@@ -171,5 +181,16 @@ export class OperatorDetailComponent {
     } else {
       return this.operator.country.id === this.authService.userCountryId;
     }
+  }
+
+  private updateTranslatedOptions(phrases: string[], field: string): void {
+    this[`${field}Options`] = {};
+    const observables: Observable<string | any>[] =
+      phrases.map(phrase => this.translateService.get(phrase));
+    forkJoin(observables).subscribe((translatedPhrases: string[]) => {
+      translatedPhrases.forEach((term, i) => {
+        this[`${field}Options`][term] = phrases[i];
+      });
+    });
   }
 }

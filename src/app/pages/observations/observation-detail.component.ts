@@ -17,13 +17,12 @@ import { Subcategory } from 'app/models/subcategory.model';
 import { ObservationsService } from 'app/services/observations.service';
 import { Severity } from 'app/models/severity.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Operator } from 'app/models/operator.model';
+import { Operator, OperatorTypes } from 'app/models/operator.model';
 import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { Observer } from 'app/models/observer.model';
 import { Government } from 'app/models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
-import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
@@ -84,10 +83,8 @@ export class ObservationDetailComponent implements OnDestroy {
     'Testimony from local communities', 'Other', 'Evidence presented in the report'
   ];
   evidenceTypeOptions: any = {}; // Object of options for evidence type selection
-  operatorTypes = [ // Possible types of an operator
-    'Logging company', 'Artisanal', 'Community forest', 'Estate',
-    'Industrial agriculture', 'Mining company', 'Sawmill', 'Other', 'Unknown'
-  ];
+  operatorTypes = Object.keys(OperatorTypes);
+
   coordinatesFormats = [
     'Decimal',
     'Degrees and decimal minutes',

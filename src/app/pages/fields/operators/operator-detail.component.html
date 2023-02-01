@@ -28,7 +28,7 @@
       <label for="type_field">{{'Type' | translate}}</label>
       <select id="type_field" name="type_field" [(ngModel)]="operator['operator-type']" #type_field="ngModel" [disabled]="!canEdit()" required>
         <option disabled value="">{{'Select an operator type' | translate}}</option>
-        <option *ngFor="let type of operatorTypes" [ngValue]="type">{{ type }}</option>
+        <option *ngFor="let type of objectKeys(operatorTypeOptions)" [ngValue]="operatorTypeOptions[type]">{{ type }}</option>
       </select>
       <div *ngIf="f.submitted && !type_field.valid" class="help-text">{{'Please select an operator type' | translate}}</div>
     </div>

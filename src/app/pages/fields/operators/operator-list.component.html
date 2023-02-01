@@ -1,6 +1,6 @@
 <div class="c-table-header">
   <otp-filters>
-    <otp-filter [name]="'Type' | translate" [values]="operatorTypes" prop="operator-type"></otp-filter>
+    <otp-filter [name]="'Type' | translate" [values]="operatorTypeOptions" prop="operator-type"></otp-filter>
     <otp-filter [name]="'Country' | translate" values="countries" prop="country" name-attr="name" [extra-params]="countryFilterParams"></otp-filter>
     <otp-filter [name]="'Active' | translate" [values]="activeFilterValues" prop="is-active"></otp-filter>
   </otp-filters>
@@ -11,7 +11,11 @@
 
 <otp-table [name]="'operators'" [caption]="'Operators' | translate" defaultSort="name">
   <otp-table-column [name]="'Name' | translate" prop="name"></otp-table-column>
-  <otp-table-column prop="operator-type" [name]="'Type' | translate"></otp-table-column>
+  <otp-table-column prop="operator-type" [name]="'Type' | translate">
+    <ng-template let-row="row" table-cell-template>
+      {{row['operator-type'] | translate}}
+    </ng-template>
+  </otp-table-column>
   <otp-table-column prop="country.name" [name]="'Country' | translate" [include]="true"></otp-table-column>
   <otp-table-column [name]="'Active' | translate">
     <ng-template let-row="row" table-cell-template>
