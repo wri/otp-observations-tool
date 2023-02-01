@@ -21,11 +21,13 @@ export class GovernmentDetailComponent {
   countries: Country[] = [];
   government: Government = null;
   loading = false;
+  nameServerError: string = null;
 
   @Input() useRouter: boolean = true;
   @Input() showActionsOnTop: boolean = true;
   @Input() showSuccessMessage: boolean = true;
   @Input() country: Country = null;
+  @Input() uniqueNameErrorMessage: string = null;
 
   @Output() afterCancel: EventEmitter<void> = new EventEmitter<void>();
   @Output() afterSave: EventEmitter<Government> = new EventEmitter<Government>();
@@ -112,7 +114,26 @@ export class GovernmentDetailComponent {
         } else {
           alert(await this.translateService.get('governmentCreation.error').toPromise());
         }
+        if (err.errors && err.errors.length > 0) {
+          const errorMessages = [];
 
+          err.errors.forEach((error) => {
+            if (error.status === '422') {
+              if (error.source && error.source.pointer === '/data/attributes/government-entity') {
+                if (["n'est pas disponible", 'has already been taken'].includes(error.title) && this.uniqueNameErrorMessage) {
+                  this.nameServerError = this.uniqueNameErrorMessage;
+                } else {
+                  this.nameServerError = error.title;
+                }
+              } else {
+                errorMessages.push(error.detail);
+              }
+            }
+          })
+          if (errorMessages.length > 0) {
+            alert(errorMessages.join('\n'));
+          }
+        }
         console.error(err);
       })
       .then(() => this.loading = false);
