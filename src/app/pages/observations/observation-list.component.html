@@ -35,7 +35,6 @@
   <div class="c-table-header">
     <otp-filters>
       <otp-filter [name]="'Type' | translate" [values]="typeFilterValues" prop="observation-type"></otp-filter>
-      <otp-filter [name]="'Archived' | translate" [values]="archivedFilterValues" prop="hidden"></otp-filter>
       <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name" [extra-params]="countryFilterParams"></otp-filter>
       <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name" [extra-params]="operatorFilterParams"></otp-filter>
       <otp-filter [name]="'Category' | translate" values="categories" prop="category-id" name-attr="name"></otp-filter>
@@ -178,7 +177,6 @@
         <ng-template [ngIf]="row['validation-status'] === 'Ready for Revision'">{{'Ready for Revision' | translate}}</ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Rejected'">{{'Rejected' | translate}}</ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Approved'">{{'Approved' | translate}}</ng-template>
-        <ng-template [ngIf]="row['hidden'] === true">[{{'Archived' | translate}}]</ng-template>
       </ng-template>
     </otp-table-column>
     <!-- We need the user info for canEdit -->

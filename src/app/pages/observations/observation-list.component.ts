@@ -34,7 +34,6 @@ export class ObservationListComponent extends TableFilterBehavior {
   response: any = {};
   statusFilterValues: any = {};
   typeFilterValues: any = [];
-  archivedFilterValues: any = [];
   countryFilterParams: any = {};
   operatorFilterParams: any = {};
   govFilterParams: any = {};
@@ -71,7 +70,6 @@ export class ObservationListComponent extends TableFilterBehavior {
 
     this.updateStatusFilterValues();
     this.updateTypeFilterValues();
-    this.updateArchivedFilterValues();
     this.countryFilterParams = {
       'filter[id]': (this.authService.observerCountriesIds || []).join(',')
     };
@@ -84,7 +82,6 @@ export class ObservationListComponent extends TableFilterBehavior {
     this.translateService.onLangChange.subscribe(() => {
       this.updateStatusFilterValues();
       this.updateTypeFilterValues();
-      this.updateArchivedFilterValues();
     });
   }
 
@@ -139,26 +136,6 @@ export class ObservationListComponent extends TableFilterBehavior {
         .map(key => ({ [key]: values[key] }))
         .reduce((res, filter) => Object.assign(res, filter), {});
     }).then(typeFilterValues => this.typeFilterValues = typeFilterValues);
-  }
-
-  /**
-   * Update the values for the archived filter according to
-   * the current language
-   */
-  async updateArchivedFilterValues() {
-    await Promise.all([
-      this.translateService.get('Archived').toPromise(),
-      this.translateService.get('Not archived').toPromise()
-    ]).then(([archived, notArchived]) => {
-      const values = {
-        [archived]: true,
-        [notArchived]: false
-      };
-      return Object.keys(values)
-        .sort()
-        .map(key => ({ [key]: values[key] }))
-        .reduce((res, filter) => Object.assign(res, filter), {});
-    }).then(archivedFilterValues => this.archivedFilterValues = archivedFilterValues);
   }
 
   onEdit(row): void {
