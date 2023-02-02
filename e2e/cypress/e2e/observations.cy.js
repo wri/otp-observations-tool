@@ -94,6 +94,22 @@ describe('Observations', () => {
     ).should('be.visible');
   })
 
+  it('can add a new producer directly from observation form', () => {
+    cy.get('a').contains('New observation').click();
+    cy.get('select#observation_type').select('Producer');
+    cy.get("button:contains('Add a new producer to the list')").first().click();
+    cy.get('input#name_field').type('New Producer');
+    cy.get('select#type_field').select('Estate');
+    cy.get('button').contains('Create').click();
+    cy.expectSelectedOption('operator_id', 'New Producer');
+
+    cy.get("button:contains('Add a new producer to the list')").last().click();
+    cy.get('input#name_field').type('Another New Producer');
+    cy.get('select#type_field').select('Estate');
+    cy.get('button').contains('Create').click();
+    cy.expectSelectedOption('relevant_operators', ['Another New Producer']);
+  })
+
   it('can add a new governance observation and submit it for review', () => {
     cy.get('a').contains('New observation').click();
     cy.get('select#observation_type').select('Governance');
@@ -166,4 +182,14 @@ describe('Observations', () => {
       'This observation has been submitted. Once reviewed, you will be able to publish it.'
     ).should('be.visible');
   });
+
+  it('can add a new government entity directly from observation form', () => {
+    cy.get('a').contains('New observation').click();
+    cy.get('select#observation_type').select('Governance');
+    cy.selectOption('government_id', ['DGF', 'DGRAD']);
+    cy.get('button').contains('Add a new government entity to the list').click();
+    cy.get('input#name_field').type('New Test Entity');
+    cy.get('button').contains('Create').click();
+    cy.expectSelectedOption('government_id', ['DGF', 'DGRAD', 'New Test Entity']);
+  })
 })
