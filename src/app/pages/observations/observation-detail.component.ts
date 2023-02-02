@@ -1,5 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import * as cloneDeep from 'lodash/cloneDeep';
+import * as orderBy from 'lodash/orderBy';
 import * as EXIF from 'exif-js';
 import proj4 from 'proj4';
 import { Law } from 'app/models/law.model';
@@ -22,7 +23,6 @@ import { ObserversService } from 'app/services/observers.service';
 import { Observer } from 'app/models/observer.model';
 import { Government } from 'app/models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
-import { Http } from '@angular/http';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
@@ -69,7 +69,7 @@ export class ObservationDetailComponent implements OnDestroy {
   countries: Country[] = [];
   subcategories: Subcategory[] = [];
   severities: Severity[] = [];
-  operators: Operator[] = []; // Ordered by name, filtered by country
+  _operators: Operator[] = []; // Ordered by name, filtered by country
   governments: Government[] = [];
   observers: Observer[] = []; // Ordered by name
   fmus: Fmu[] = [];
@@ -83,10 +83,7 @@ export class ObservationDetailComponent implements OnDestroy {
     'Testimony from local communities', 'Other', 'Evidence presented in the report'
   ];
   evidenceTypeOptions: any = {}; // Object of options for evidence type selection
-  operatorTypes = [ // Possible types of an operator
-    'Logging company', 'Artisanal', 'Community forest', 'Estate',
-    'Industrial agriculture', 'Mining company', 'Sawmill', 'Other', 'Unknown'
-  ];
+
   coordinatesFormats = [
     'Decimal',
     'Degrees and decimal minutes',
@@ -124,17 +121,35 @@ export class ObservationDetailComponent implements OnDestroy {
   // Multi-select options
   multiSelectTexts: IMultiSelectTexts = {};
 
+  // operator/producer select
+  operatorsOptions: IMultiSelectOption[] = [];
+  operatorsSelectSettings: IMultiSelectSettings = {
+    enableSearch: true,
+    selectionLimit: 1,
+    autoUnselect: true
+  };
+  operatorsSelection: string[] = [];
+  newOperatorModalOpen = false;
+  newOperatorModalSelect: string = null;
+
   // Governments multi-select related
   governmentsOptions: IMultiSelectOption[] = [];
-  _governmentsSelection: number[] = [];
+  _governmentsSelection: string[] = [];
+  newGovEntityModalOpen = false;
 
   // Monitors multi-select related
   additionalObserversOptions: IMultiSelectOption[] = [];
-  _additionalObserversSelection: number[] = [];
+  _additionalObserversSelection: string[] = [];
+  additionalObserversSelectSettings: IMultiSelectSettings = {
+    enableSearch: true
+  }
 
   // Relevant operatos multi-select related
   relevantOperatorsOptions: IMultiSelectOption[] = [];
-  _relevantOperatorsSelection: number[] = [];
+  _relevantOperatorsSelection: string[] = [];
+  relevantOperatorsSelectSettings: IMultiSelectSettings = {
+    enableSearch: true
+  }
 
   // laws options
   _laws: Law[] = []; // Filtered by country and subcategory
@@ -162,7 +177,6 @@ export class ObservationDetailComponent implements OnDestroy {
   _severity: Severity = null;
   _subcategory: Subcategory = null;
   _publicationDate: Date;
-  operator: Operator = this.datastoreService.createRecord(Operator, { 'operator-type': null });
   _operatorChoice: Operator = null; // Only for type operator, chose between the options
   _opinion: string; // Only for type operator
   _litigationStatus: string; // Only for type operator
@@ -214,8 +228,7 @@ export class ObservationDetailComponent implements OnDestroy {
         // match any of the objects of this.countries, so we search for the "same" model
         // and set it
         if (this.draft) {
-          this._additionalObserversSelection = this.draft.observers
-            ? this.draft.observers.map(id => this.observers.findIndex(o => +o.id === id)) : [];
+          this._additionalObserversSelection = this.draft.observers || [];
           this.country = this.countries.find((country) => country.id === this.draft.countryId);
         } else if (this.observation) {
           this.country = this.countries.find((country) => country.id === this.observation.country.id);
@@ -252,67 +265,21 @@ export class ObservationDetailComponent implements OnDestroy {
     // We automatically update the governments options
     if (this.type === 'government') {
       this.governments = country && country.governments || [];
-      this.governmentsOptions = this.governments.map((government, index) => ({ id: index, name: government['government-entity'] }));
+      this.governmentsOptions = orderBy(
+        this.governments.map((government) => ({ id: government.id, name: government['government-entity'] })),
+        [(g) => g.name.toLowerCase()]
+      );
       if (this.observation) {
         this._governmentsSelection = this.observation && this.observation.country.id === country.id
-          ? (this.observation.governments || []).map(government => this.governments.findIndex(g => g.id === government.id))
+          ? (this.observation.governments || []).map(government => government.id)
           : [];
       }
       if (this.draft) {
         this._governmentsSelection = country && this.draft.countryId === country.id && this.draft.governments
-          ? this.draft.governments.map(id => this.governments.findIndex(g => +g.id === id))
+          ? this.draft.governments
           : [];
       }
-      if (country) {
-        this.operatorsService.getAll({ sort: 'name', filter: { country: country.id } })
-          .then((operators) => {
-            this.operators = operators;
-
-            // We update the list of options for the relevant operators field
-            if (this.observation) {
-              this._relevantOperatorsSelection = this.observation && this.observation.country.id === country.id
-                ? (this.observation['relevant-operators'] || []).map(relevantOperator => operators.findIndex(o => o.id === relevantOperator.id))
-                : [];
-            }
-            if (this.draft) {
-              this._relevantOperatorsSelection = country && this.draft.countryId === country.id && this.draft.relevantOperators
-                ? this.draft.relevantOperators.map(id => this.operators.findIndex(g => +g.id === id))
-                : [];
-            }
-            this.relevantOperatorsOptions = operators
-              .map((operator, index) => ({ id: index, name: operator.name }));
-          });
-      }
     } else {
-      // We update the list of operators
-      if (country) {
-        this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
-          .then(operators => this.operators = operators)
-          .then(() => {
-            // We update the list of options for the relevant operators field
-            if (this.observation) {
-              this._relevantOperatorsSelection = this.observation && this.observation.country.id === country.id
-                ? (this.observation['relevant-operators'] || []).map(relevantOperator => this.operators.findIndex(o => o.id === relevantOperator.id))
-                : [];
-            }
-
-            this.relevantOperatorsOptions = this.operators
-              .map((operator, index) => ({ id: index, name: operator.name }));
-
-            // If we're editing an observation (or using draft), the object Operator of the observation won't
-            // match any of the objects of this.operators, so we search for the "same" model
-            // and set it
-            if (this.draft && this.draft.countryId === country.id) {
-              this.operatorChoice = this.operators.find((operator) => operator.id === this.draft.operatorId) || null;
-            } else if (this.observation && this.observation.country === country && this.observation.operator) {
-              this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
-            } else {
-              this.operatorChoice = null;
-            }
-          })
-          .catch((err) => console.error(err)); // TODO: visual feedback
-      }
-
       // We update the list of laws
       if (country && this.subcategory) {
         this.lawsService.getAll({ filter: { country: country.id, subcategory: this.subcategory.id } })
@@ -336,28 +303,40 @@ export class ObservationDetailComponent implements OnDestroy {
         this.law = null;
       }
     }
-  }
 
-  get operatorName() { return this.operator.name; }
-  set operatorName(operatorName) {
-    this.operator.name = operatorName;
+    if (country) {
+      this.operatorsService.getAll({ sort: 'name', filter: { country: country.id } })
+        .then((operators) => {
+          this.operators = operators;
 
-    // If the user wants to add a new operator,
-    // we discard the choice they've made in the selector
-    if (operatorName) {
-      this.operatorChoice = null;
+          if (this.draft) {
+            this._relevantOperatorsSelection = this.country && this.draft.countryId === this.country.id && this.draft.relevantOperators
+              ? this.draft.relevantOperators.filter(id => this.operators.find(g => g.id === id))
+              : [];
+          } else if (this.observation) {
+            this._relevantOperatorsSelection = this.observation && this.observation.country.id === this.country.id
+              ? (this.observation['relevant-operators'] || []).map(o => o.id)
+              : [];
+          }
+
+          if (this.type === 'operator') {
+            if (this.draft && this.draft.countryId === this.country.id) {
+              this.operatorChoice = this.operators.find((operator) => operator.id === this.draft.operatorId) || null;
+            } else if (this.observation && this.observation.country === this.country && this.observation.operator) {
+              this.operatorChoice = this.operators.find((operator) => operator.id === this.observation.operator.id);
+            } else {
+              this.operatorChoice = null;
+            }
+          }
+        });
     }
   }
 
-  get operatorType() { return this.operator['operator-type']; }
-  set operatorType(operatorType) {
-    this.operator['operator-type'] = operatorType;
-
-    // If the user wants to add a new operator,
-    // we discard the choice they've made in the selector
-    if (operatorType) {
-      this.operatorChoice = null;
-    }
+  get operators() { return this._operators; }
+  set operators(collection) {
+    this._operators = collection;
+    this.operatorsOptions = collection.map((o) => ({ id: o.id, name: o.name }));
+    this.relevantOperatorsOptions = this.operators.map((operator) => ({ id: operator.id, name: operator.name }));
   }
 
   get operatorChoice() { return this.observation ? this.observation.operator : this._operatorChoice; }
@@ -386,13 +365,11 @@ export class ObservationDetailComponent implements OnDestroy {
         })
         .catch(err => console.error(err)); // TODO: visual feedback
 
-      // If the user selects an operator, then the new
-      // operator is discarded
-      this.operatorName = null;
-      this.operatorType = null;
+      this.operatorsSelection = [operatorChoice.id];
     } else {
       this.fmus = [];
       this.fmu = null;
+      this.operatorsSelection = [];
     }
   }
 
@@ -742,6 +719,7 @@ export class ObservationDetailComponent implements OnDestroy {
     private observationReportsService: ObservationReportsService,
     private observationDocumentsService: ObservationDocumentsService,
     private countriesService: CountriesService,
+    private governmentsService: GovernmentsService,
     private subcategoriesService: SubcategoriesService,
     private operatorsService: OperatorsService,
     private lawsService: LawsService,
@@ -751,14 +729,12 @@ export class ObservationDetailComponent implements OnDestroy {
     private translateService: TranslateService
   ) {
     this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
-    this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
     this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
 
     this.updateMultiSelectTexts();
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
-      this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
       this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
     });
 
@@ -769,7 +745,7 @@ export class ObservationDetailComponent implements OnDestroy {
         // We update the list of options for the additional observers field
         this.additionalObserversOptions = observers
           .filter(observer => observer.id !== this.authService.userObserverId)
-          .map((observer, index) => ({ id: index, name: observer.name }));
+          .map((observer) => ({ id: observer.id, name: observer.name }));
       })
       .catch((err) => console.error(err)); // TODO: visual feedback
 
@@ -816,9 +792,7 @@ export class ObservationDetailComponent implements OnDestroy {
         const additionalObserversIds = this.observation.observers
           .filter(observer => observer.id !== this.authService.userObserverId)
           .map(o => o.id);
-        this._additionalObserversSelection = this.observers.map((observer, index) => {
-          return additionalObserversIds.indexOf(observer.id) !== -1 ? index : null;
-        }).filter(v => v !== null);
+        this._additionalObserversSelection = additionalObserversIds;
 
         // We force some of the attributes to execute the setters
         this.type = this.observation['observation-type'];
@@ -862,9 +836,6 @@ export class ObservationDetailComponent implements OnDestroy {
           // If we were going to add an evidence
           this.evidence.name = this.draft.evidenceTitle;
           this.evidence.attachment = this.draft.evidenceAttachment;
-          // If we were going to add a new producer (operator)
-          this.operatorName = this.draft.operatorName;
-          this.operatorType = this.draft.operatorType || null;
           // if we were going to upload a new report
           this.report.title = this.draft.reportTitle;
           this.reportAttachment = this.draft.reportAttachment;
@@ -882,7 +853,7 @@ export class ObservationDetailComponent implements OnDestroy {
         }
       }
 
-      this.subscription = interval(15000).subscribe(() => {
+      this.subscription = interval(10000).subscribe(() => {
         this.saveAsDraftObservation();
       });
     }
@@ -951,7 +922,7 @@ export class ObservationDetailComponent implements OnDestroy {
       subcategoryId: this.subcategory && this.subcategory.id,
       details: this.details,
       severityId: this.severity && this.severity.id,
-      observers: this.observers.filter((o, index) => this._additionalObserversSelection.indexOf(index) !== -1).map(o => +o.id),
+      observers: this._additionalObserversSelection,
       actionsTaken: this.actions,
       validationStatus: this.validationStatus,
       concernOpinion: this.opinion,
@@ -977,9 +948,6 @@ export class ObservationDetailComponent implements OnDestroy {
 
       if (this.operatorChoice) {
         draftModel.operatorId = this.operatorChoice && this.operatorChoice.id;
-      } else {
-        draftModel.operatorName = this.operatorName;
-        draftModel.operatorType = this.operatorType;
       }
 
       draftModel.isPhysicalPlace = this.physicalPlace;
@@ -991,10 +959,10 @@ export class ObservationDetailComponent implements OnDestroy {
       draftModel.fmuId = this.physicalPlace && this.fmu && this.fmu.id || null;
       draftModel.locationAccuracy = this.physicalPlace ? this.locationAccuracy : null;
       draftModel.locationInformation = this.locationInformation;
-      draftModel.relevantOperators = this.operators.filter((o, index) => this._relevantOperatorsSelection.indexOf(index) !== -1).map(o => +o.id);
+      draftModel.relevantOperators = this._relevantOperatorsSelection;
     } else {
-      draftModel.governments = this.governments.filter((g, index) => this._governmentsSelection.indexOf(index) !== -1).map(g => +g.id);
-      draftModel.relevantOperators = this.operators.filter((o, index) => this._relevantOperatorsSelection.indexOf(index) !== -1).map(o => +o.id);
+      draftModel.governments = this._governmentsSelection;
+      draftModel.relevantOperators = this._relevantOperatorsSelection;
     }
 
     localStorage.setItem('draftObservation', JSON.stringify(draftModel));
@@ -1188,7 +1156,7 @@ export class ObservationDetailComponent implements OnDestroy {
    * https://github.com/softsimon/angular-2-dropdown-multiselect/issues/273
    * @param {number[]} options
    */
-  onChangeAdditionalObserversOptions(options: number[]) {
+  onChangeAdditionalObserversOptions(options: string[]) {
     this._additionalObserversSelection = options;
   }
 
@@ -1199,16 +1167,62 @@ export class ObservationDetailComponent implements OnDestroy {
    * https://github.com/softsimon/angular-2-dropdown-multiselect/issues/273
    * @param {number[]} options
    */
-  onChangeRelevantOperatorsOptions(options: number[]) {
+  onChangeRelevantOperatorsOptions(options: string[]) {
     this._relevantOperatorsSelection = options;
   }
 
-  onChangeGovernmentsOptions(options: number[]): void {
+  onChangeGovernmentsOptions(options: string[]): void {
     this._governmentsSelection = options;
   }
 
   onChangeLawsOptions(options: string[]) {
     this.law = this.laws.find(x => x.id == options[0]);
+  }
+
+  onChangeOperatorsOptions(options: string[]) {
+    this.operatorChoice = this.operators.find(x => x.id == options[0]);
+  }
+
+  onClickAddOperator(selectName) {
+    this.newOperatorModalOpen = true;
+    this.newOperatorModalSelect = selectName;
+  }
+
+  onNewOperatorAdded(operator: Operator) {
+    this.newOperatorModalOpen = false;
+    if (this.country) {
+      this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
+        .then((operators) => {
+          this.operators = operators;
+          // auto select newly added operator if none selected
+          if (this.newOperatorModalSelect === 'operator') {
+            if ((this.operatorsSelection || []).length === 0) this.operatorChoice = operator;
+          } else if (this.newOperatorModalSelect === 'relevantOperators') {
+            this._relevantOperatorsSelection.push(operator.id);
+          }
+        });
+    }
+  }
+
+  onNewOperatorModalClosed() {
+    this.newOperatorModalOpen = false;
+    this.newOperatorModalSelect = null;
+  }
+
+  onClickAddGovernanceEntity() {
+    this.newGovEntityModalOpen = true;
+  }
+
+  onNewGovEntityAdded(govEntity: Government) {
+    this.newGovEntityModalOpen = false;
+    this.governmentsService.getAll({ filter: { country: this.country.id } }).then((data) => {
+      this.governments = data;
+      this.governmentsOptions = orderBy(
+        this.governments.map((government) => ({ id: government.id, name: government['government-entity'] })),
+        [(g) => g.name.toLowerCase()]
+      );
+      this._governmentsSelection.push(govEntity.id);
+    });
   }
 
   /**
@@ -1289,7 +1303,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
-    const isPusblishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
+    const isPublishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
     const isUserLinkedObserver = !!this.observation.observers.find(o => o.id === this.authService.userObserverId);
 
@@ -1302,7 +1316,7 @@ export class ObservationDetailComponent implements OnDestroy {
     if (isInNeedOfRevision && isUserLinkedObserver && isAmending) return false;
     if (isReadyForPublication) return true;
     if (isPublishedWithCommentsAndModified && isUserLinkedObserver && isAmending) return false;
-    if (isPusblishedWithCommentsAndNotModified && isUserLinkedObserver && isAmending) return false;
+    if (isPublishedWithCommentsAndNotModified && isUserLinkedObserver && isAmending) return false;
     if (isPublishedWithoutComments && isUserLinkedObserver && isAmending) return false;
 
     return true;
@@ -1356,11 +1370,11 @@ export class ObservationDetailComponent implements OnDestroy {
 
     const isAmending = this.needsRevisionState === 'amend';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
-    const isPusblishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
+    const isPublishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
 
     if (isPublishedWithCommentsAndModified && !isAmending) return true;
-    if (isPusblishedWithCommentsAndNotModified && !isAmending) return true;
+    if (isPublishedWithCommentsAndNotModified && !isAmending) return true;
     if (isPublishedWithoutComments && !isAmending) return true;
 
     return false;
@@ -1378,7 +1392,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const isCreated = this.observation['validation-status'] === 'Created';
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
-    const isPusblishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
+    const isPublishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
 
     if (isCreating) return true;
@@ -1387,7 +1401,7 @@ export class ObservationDetailComponent implements OnDestroy {
     if (isCreated && isOwner) return true;
     if (isInNeedOfRevision && isAmending) return true
     if (isPublishedWithCommentsAndModified && isAmending) return true;
-    if (isPusblishedWithCommentsAndNotModified && isAmending) return true;
+    if (isPublishedWithCommentsAndNotModified && isAmending) return true;
     if (isPublishedWithoutComments && isAmending) return true;
 
     return false;
@@ -1451,28 +1465,6 @@ export class ObservationDetailComponent implements OnDestroy {
     return coordinate
       .map((value, index) => value / Math.pow(60, index))
       .reduce((res, n) => res + n);
-  }
-
-  /**
-   * Upload the operator, if the user created a
-   * new one
-   * @returns {Promise<{}>}
-   */
-  uploadOperator(): Promise<{}> {
-    return new Promise((resolve, reject) => {
-      if (!this.operator.name) {
-        // If the user didn't create a new operator,
-        // we just resolve
-        resolve();
-      } else {
-        this.operator.country = this.country;
-        // Otherwise, we upload it
-        this.operator.save()
-          .toPromise()
-          .then(resolve)
-          .catch(reject);
-      }
-    });
   }
 
   /**
@@ -1540,14 +1532,11 @@ export class ObservationDetailComponent implements OnDestroy {
       // We update the list of observers
       // NOTE: we make sure to add our own observer
       this.observation.observers = this.observers
-        .filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1)
+        .filter((observer) => this._additionalObserversSelection.includes(observer.id))
         .concat([this.observers.find(o => o.id === this.authService.userObserverId)]);
 
       if (this.type !== 'operator') {
-        this.observation.governments = this.governments
-          .filter((government, index) => this._governmentsSelection.indexOf(index) !== -1);
-        this.observation['relevant-operators'] = this.operators
-          .filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
+        this.observation.governments = this.governments.filter((government) => this._governmentsSelection.includes(government.id));
       } else {
         if (!this.physicalPlace) {
           this.observation.lat = null;
@@ -1557,11 +1546,9 @@ export class ObservationDetailComponent implements OnDestroy {
           const decimalCoordinates = this.getDecimalCoordinates();
           this.observation.lat = decimalCoordinates && decimalCoordinates[0];
           this.observation.lng = decimalCoordinates && decimalCoordinates[1];
-          this.observation['relevant-operators'] = this.operators
-            .filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
         }
       }
-
+      this.observation['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(operator.id));
       this.observation['validation-status'] = this.validationStatus;
 
       observation = this.observation;
@@ -1573,7 +1560,7 @@ export class ObservationDetailComponent implements OnDestroy {
         subcategory: this.subcategory,
         details: this.details,
         severity: this.severity,
-        observers: this.observers.filter((observer, index) => this._additionalObserversSelection.indexOf(index) !== -1),
+        observers: this.observers.filter((observer) => this._additionalObserversSelection.includes(observer.id)),
         'actions-taken': this.actions,
         'validation-status': this.validationStatus,
         'concern-opinion': this.opinion,
@@ -1594,11 +1581,10 @@ export class ObservationDetailComponent implements OnDestroy {
         model.fmu = this.physicalPlace ? this.fmu : null;
         model['location-accuracy'] = this.locationAccuracy;
         model['location-information'] = this.locationInformation;
-        model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
       } else {
-        model.governments = this.governments.filter((government, index) => this._governmentsSelection.indexOf(index) !== -1);
-        model['relevant-operators'] = this.operators.filter((operator, index) => this._relevantOperatorsSelection.indexOf(index) !== -1);
+        model.governments = this.governments.filter((government) => this._governmentsSelection.includes(government.id));
       }
+      model['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(operator.id));
 
       observation = this.datastoreService.createRecord(Observation, model);
     }
@@ -1610,15 +1596,6 @@ export class ObservationDetailComponent implements OnDestroy {
           observation['observation-report'] = this.report;
         } else {
           observation['observation-report'] = this.reportChoice;
-        }
-      })
-      .then(() => this.uploadOperator())
-      .then(() => {
-        // If we created an operator, we link it to the observation
-        if (this.operator.id) {
-          observation.operator = this.operator;
-        } else {
-          observation.operator = this.operatorChoice;
         }
       })
       .then(() => observation.save().toPromise())

@@ -27,6 +27,7 @@ export class TableComponent implements AfterContentInit {
   @Input() defaultSort: string; // Default sort param (ex: "name" or "-name")
   @Input() options: any; // Additional options for the table
   @Input() defaultHiddenColumns: string[] = [];
+  @Input() adjustToScreenHeight: boolean = false;
 
   @Output() change = new EventEmitter<void>();
 

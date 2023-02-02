@@ -314,6 +314,8 @@
   "observation.statusNote.NeedsRevision.question": "What would you like to do?",
   "observation.scrollingNote": "In order to see all of the table's columns, you need to scroll horizontally. You can either use the scrollbar located at the bottom of the table or use your trackpad or mouse. If you use a trackpad, you can scroll horizontally when your cursor is above the table. If you use a mouse with 3 buttons, the middle one should let you do the same by holding the button down and moving the cursor to the sides or rotating the scrolling wheel sideways.",
   "observation.language.note": "You are creating/editing the observation in this language.",
+  "observation.producer.uniqueNameError": "This producer already exists in the OTP. Please click \"Cancel\" below and select the producer in the drop-down list.",
+  "observation.government.uniqueNameError": "This government entity already exists in the OTP. Please click \"Cancel\" below and select the government entity in the drop-down list.",
   "Comments": "Comments",
   "Amend": "Amend",
   "Explain and publish": "Explain and publish",
@@ -391,5 +393,7 @@
   "Organization operates in": "Organization operates in",
   "At least one country is required": "At least one country is required",
   "Please pick governance problem first.": "Please pick governance problem first.",
-  "Please pick sub-category first.": "Please pick sub-category first."
+  "Please pick sub-category first.": "Please pick sub-category first.",
+  "Add a new government entity to the list": "Add a new government entity to the list",
+  "Add a new producer to the list": "Add a new producer to the list"
 }

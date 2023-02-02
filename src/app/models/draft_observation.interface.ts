@@ -10,7 +10,7 @@ export interface DraftObservation {
   countryId?: string;
   subcategoryId?: string;
   severityId?: string;
-  observers?: Array<number>; // Array of observer ids
+  observers?: Array<string>; // Array of observer ids
   observationReportId?: string;
   operatorId?: string;
   documents?: { name: string, attachement: string | { url: string } }[];
@@ -19,10 +19,6 @@ export interface DraftObservation {
   reportTitle?: string;
   reportAttachment?: string; // Base64
   reportDate?: Date;
-
-  // New operator
-  operatorName?: string;
-  operatorType?: string;
 
   // New evidence
   evidenceTitle?: string;
@@ -37,6 +33,6 @@ export interface DraftObservation {
   pv?: string;
   lawId?: string;
   fmuId?: string;
-  governments?: Array<number>; // Array of government ids
-  relevantOperators?: Array<number>; // Array of relevant operator ids
+  governments?: Array<string>; // Array of government ids
+  relevantOperators?: Array<string>; // Array of relevant operator ids
 }

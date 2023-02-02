@@ -2,21 +2,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'app/services/auth.service';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { OperatorsService } from 'app/services/operators.service';
-import { Operator } from 'app/models/operator.model';
+import { Operator, OperatorTypes } from 'app/models/operator.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, AfterViewInit } from '@angular/core';
-
-export enum OperatorTypes {
-  'Artisanal' = 'Artisanal',
-  'Community forest' = 'Community forest',
-  'Estate' = 'Estate',
-  'Industrial agriculture' = 'Industrial agriculture',
-  'Logging company' = 'Logging company',
-  'Mining company' = 'Mining company',
-  'Other' = 'Other',
-  'Sawmill' = 'Sawmill',
-  'Unknown' = 'Unknown'
-}
+import { forkJoin } from "rxjs/observable/forkJoin";
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'otp-operator-list',
@@ -25,6 +15,7 @@ export enum OperatorTypes {
 })
 export class OperatorListComponent extends TableFilterBehavior implements AfterViewInit {
 
+  operatorTypeOptions: any = {};
   operatorTypes = Object.keys(OperatorTypes);
   activeFilterValues: any = [];
   isAdmin = this.authService.isAdmin();
@@ -43,12 +34,17 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
       'filter[id]': (this.authService.observerCountriesIds || []).join(',')
     };
     this.updateActiveFilterValues();
+    this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
+
+    this.translateService.onLangChange.subscribe(() => {
+      this.updateActiveFilterValues();
+      this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
+    });
   }
 
   ngAfterViewInit(): void {
     this.filters.defaultApiParams = {
-      'filter[country]': (this.authService.observerCountriesIds || []).join(','),
-      'filter[is-active]': 'true, false'
+      'filter[country]': (this.authService.observerCountriesIds || []).join(',')
     };
     super.ngAfterViewInit();
   }
@@ -102,4 +98,14 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
     }).then(activeFilterValues => this.activeFilterValues = activeFilterValues);
   }
 
+  private updateTranslatedOptions(phrases: string[], field: string): void {
+    this[`${field}Options`] = {};
+    const observables: Observable<string | any>[] =
+      phrases.map(phrase => this.translateService.get(phrase));
+    forkJoin(observables).subscribe((translatedPhrases: string[]) => {
+      translatedPhrases.forEach((term, i) => {
+        this[`${field}Options`][term] = phrases[i];
+      });
+    });
+  }
 }

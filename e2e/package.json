@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "cypress": "^10"
+    "cypress": "^12.3.0"
   },
   "dependencies": {
     "cypress-file-upload": "^5.0.8",
