@@ -11,4 +11,4 @@ POSTGRES_DATABASE=fti_api_cypress bundle exec rails s &
 echo 'Starting Observations Tool...'
 cd ../otp-observations-tool/
 fnm use
-yarn dev
+yarn start:e2e

@@ -94,7 +94,8 @@ describe('User', () => {
         cy.get('button').contains('Save').click();
         cy.get('#email_field').should('not.exist'); // trick wait for page reload
 
-        // update password back
+        // update password and email back
+        cy.get('#email_field').clear().type('tsubik+ngomanager@gmail.com');
         cy.get('#new_password').clear().type('secret');
         cy.get('#password_confirmation').clear().type('secret');
         cy.get('#current_password').clear().type('secret12345');

@@ -12,26 +12,26 @@ Cypress.Commands.add('login', (username, password) => {
 Cypress.Commands.add('selectOption', (selector, option) => {
   const options = [].concat(option);
 
-  cy.get(`ss-multiselect-dropdown[ng-reflect-name=${selector}]`)
+  cy.get(`ss-multiselect-dropdown[name=${selector}]`)
     .find("button")
     .contains('Select')
     .click();
 
   options.forEach((option) => {
-    cy.get(`ss-multiselect-dropdown[ng-reflect-name=${selector}]`)
+    cy.get(`ss-multiselect-dropdown[name=${selector}]`)
     .find("li.dropdown-item")
     .contains(option, { matchCase: false })
     .click();
   });
 
-  cy.get(`ss-multiselect-dropdown[ng-reflect-name=${selector}]`).click();
+  cy.get(`ss-multiselect-dropdown[name=${selector}]`).click();
 });
 
 Cypress.Commands.add('expectSelectedOption', (selector, option) => {
   const options = [].concat(option);
 
   options.forEach((option) => {
-    cy.get(`ss-multiselect-dropdown[ng-reflect-name=${selector}]`)
+    cy.get(`ss-multiselect-dropdown[name=${selector}]`)
     .find("button.dropdown-toggle")
     .contains(option)
     .should('exist');

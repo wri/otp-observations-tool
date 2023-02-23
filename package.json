@@ -5,11 +5,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:e2e": "ng serve --prod --env=e2e",
     "dev": "ng serve --env=local",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
     "prod-build": "ng build --output-path=dist/ --base-href=/observations-tool/ --aot -prod",
     "dev-build": "ng build --output-path=dist/ --base-href=/observations-tool/ --aot",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
