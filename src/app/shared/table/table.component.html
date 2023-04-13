@@ -1,6 +1,6 @@
 <div class="overlay" *ngIf="loading"></div>
 <otp-loader *ngIf="loading" [attr.class]="rows && rows.length && rows.length > 1 ? '-has-data' : ''"></otp-loader>
-<div class="columns-visibility">
+<div *ngIf="!hideVisibleColumnsBox" class="columns-visibility">
   <p>
     {{'Visible columns:' | translate}}
   </p>

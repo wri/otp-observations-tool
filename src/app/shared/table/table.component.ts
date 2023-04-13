@@ -28,6 +28,7 @@ export class TableComponent implements AfterContentInit {
   @Input() options: any; // Additional options for the table
   @Input() defaultHiddenColumns: string[] = [];
   @Input() adjustToScreenHeight: boolean = false;
+  @Input() hideVisibleColumnsBox: boolean = false;
 
   @Output() change = new EventEmitter<void>();
 
