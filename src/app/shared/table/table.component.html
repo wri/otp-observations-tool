@@ -9,7 +9,7 @@
     <input [id]="'table-' + name + '-column-' + i" type="checkbox" [checked]="hiddenColumns.indexOf(column.name) === -1" (change)="onToggleColumnVisibility($event, column.name)" />
   </div>
 </div>
-<div [attr.class]="'table-container' + (adjustToScreenHeight ? ' -adjusted-to-screen-height' : '')">
+<div #tableContainer [attr.class]="'table-container' + (adjustToScreenHeight ? ' -adjusted-to-screen-height' : '')">
   <table role="grid" aria-readonly="true" [attr.aria-rowcount]="rowCount">
     <caption>
       <ng-template [ngIf]="caption">{{caption}}</ng-template>

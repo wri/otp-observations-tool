@@ -61,9 +61,9 @@
     </div>
   </div>
 
-  <p class="scrolling-note">{{'observation.scrollingNote' | translate}}</p>
+  <p *ngIf="table.isHorizontalScrollVisible" class="scrolling-note">{{'observation.scrollingNote' | translate}}</p>
 
-  <otp-table [name]="'observations'" adjustToScreenHeight="true" [hideVisibleColumnsBox]="true" [caption]="'Observations' | translate" defaultSort="-publication-date" include="observers" [hidden]="isUploading" [options]="tableOptions">
+  <otp-table #table [name]="'observations'" adjustToScreenHeight="true" [hideVisibleColumnsBox]="true" [caption]="'Observations' | translate" defaultSort="-publication-date" include="observers" [hidden]="isUploading" [options]="tableOptions">
     <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
     <otp-table-column [name]="'Type' | translate" prop="observation-type">
       <ng-template let-value="value" table-cell-template>

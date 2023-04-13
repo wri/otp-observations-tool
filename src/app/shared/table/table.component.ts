@@ -1,7 +1,7 @@
 import { JsonApiParams } from 'app/services/json-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TABLET_BREAKPOINT } from 'app/directives/responsive.directive';
-import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, AfterContentInit } from '@angular/core';
+import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
 
 export interface TableState {
@@ -32,6 +32,8 @@ export class TableComponent implements AfterContentInit {
 
   @Output() change = new EventEmitter<void>();
 
+  @ViewChild('tableContainer') tableContainer: ElementRef;
+
   previousState: JsonApiParams;
   loading = false;
   columns: any[] = [];
@@ -42,6 +44,10 @@ export class TableComponent implements AfterContentInit {
 
   private _columnTemplates: QueryList<TableColumnDirective>;
   private _paginationIndex = 0; // Zero-based number of the page
+
+  get isHorizontalScrollVisible() {
+    return this.tableContainer.nativeElement.scrollWidth > this.tableContainer.nativeElement.clientWidth;
+  }
 
   get hiddenColumns(): string[] {
     try {

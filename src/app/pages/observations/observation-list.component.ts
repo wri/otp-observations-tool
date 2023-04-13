@@ -1,8 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import * as truncate from 'lodash/truncate';
-import { JsonApiParams } from 'app/services/json-api.service';
 import { AuthService } from 'app/services/auth.service';
-import { NavigationItem } from 'app/shared/navigation/navigation.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
@@ -20,6 +18,7 @@ export class ObservationListComponent extends TableFilterBehavior {
   apiUrl: string = environment.apiUrl;
   draftObservation: DraftObservation = JSON.parse(localStorage.getItem('draftObservation'));
   @ViewChild('uploadFile') uploadFile: ElementRef;
+  @ViewChild('table') tableComponent: ElementRef;
 
   tableOptions = {
     rows: {
