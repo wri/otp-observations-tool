@@ -1,8 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import * as truncate from 'lodash/truncate';
-import { JsonApiParams } from 'app/services/json-api.service';
 import { AuthService } from 'app/services/auth.service';
-import { NavigationItem } from 'app/shared/navigation/navigation.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
@@ -20,6 +18,7 @@ export class ObservationListComponent extends TableFilterBehavior {
   apiUrl: string = environment.apiUrl;
   draftObservation: DraftObservation = JSON.parse(localStorage.getItem('draftObservation'));
   @ViewChild('uploadFile') uploadFile: ElementRef;
+  @ViewChild('table') tableComponent: ElementRef;
 
   tableOptions = {
     rows: {
@@ -34,7 +33,6 @@ export class ObservationListComponent extends TableFilterBehavior {
   response: any = {};
   statusFilterValues: any = {};
   typeFilterValues: any = [];
-  archivedFilterValues: any = [];
   countryFilterParams: any = {};
   operatorFilterParams: any = {};
   govFilterParams: any = {};
@@ -71,7 +69,6 @@ export class ObservationListComponent extends TableFilterBehavior {
 
     this.updateStatusFilterValues();
     this.updateTypeFilterValues();
-    this.updateArchivedFilterValues();
     this.countryFilterParams = {
       'filter[id]': (this.authService.observerCountriesIds || []).join(',')
     };
@@ -84,7 +81,6 @@ export class ObservationListComponent extends TableFilterBehavior {
     this.translateService.onLangChange.subscribe(() => {
       this.updateStatusFilterValues();
       this.updateTypeFilterValues();
-      this.updateArchivedFilterValues();
     });
   }
 
@@ -139,26 +135,6 @@ export class ObservationListComponent extends TableFilterBehavior {
         .map(key => ({ [key]: values[key] }))
         .reduce((res, filter) => Object.assign(res, filter), {});
     }).then(typeFilterValues => this.typeFilterValues = typeFilterValues);
-  }
-
-  /**
-   * Update the values for the archived filter according to
-   * the current language
-   */
-  async updateArchivedFilterValues() {
-    await Promise.all([
-      this.translateService.get('Archived').toPromise(),
-      this.translateService.get('Not archived').toPromise()
-    ]).then(([archived, notArchived]) => {
-      const values = {
-        [archived]: true,
-        [notArchived]: false
-      };
-      return Object.keys(values)
-        .sort()
-        .map(key => ({ [key]: values[key] }))
-        .reduce((res, filter) => Object.assign(res, filter), {});
-    }).then(archivedFilterValues => this.archivedFilterValues = archivedFilterValues);
   }
 
   onEdit(row): void {

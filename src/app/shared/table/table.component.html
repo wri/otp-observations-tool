@@ -1,15 +1,15 @@
 <div class="overlay" *ngIf="loading"></div>
 <otp-loader *ngIf="loading" [attr.class]="rows && rows.length && rows.length > 1 ? '-has-data' : ''"></otp-loader>
-<div class="columns-visibility">
+<div *ngIf="!hideVisibleColumnsBox" class="columns-visibility">
   <p>
     {{'Visible columns:' | translate}}
   </p>
-  <div *ngFor="let column of columns; let i = index">
+  <div *ngFor="let column of hideableColumns; let i = index">
     <label [for]="'table-' + name + '-column-' + i">{{column.name}}</label>
     <input [id]="'table-' + name + '-column-' + i" type="checkbox" [checked]="hiddenColumns.indexOf(column.name) === -1" (change)="onToggleColumnVisibility($event, column.name)" />
   </div>
 </div>
-<div [attr.class]="'table-container' + (adjustToScreenHeight ? ' -adjusted-to-screen-height' : '')">
+<div #tableContainer [attr.class]="'table-container' + (adjustToScreenHeight ? ' -adjusted-to-screen-height' : '')">
   <table role="grid" aria-readonly="true" [attr.aria-rowcount]="rowCount">
     <caption>
       <ng-template [ngIf]="caption">{{caption}}</ng-template>
