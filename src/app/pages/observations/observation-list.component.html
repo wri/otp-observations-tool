@@ -65,6 +65,7 @@
 
   <otp-table #table [name]="'observations'" adjustToScreenHeight="true" [hideVisibleColumnsBox]="true" [caption]="'Observations' | translate" defaultSort="-publication-date" include="observers" [hidden]="isUploading" [options]="tableOptions">
     <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
+    <otp-table-column name="publication-date" prop="publication-date" [hidden]="true"></otp-table-column>
     <otp-table-column [name]="'Type' | translate" prop="observation-type">
       <ng-template let-value="value" table-cell-template>
         {{ value | titlecase | translate }}

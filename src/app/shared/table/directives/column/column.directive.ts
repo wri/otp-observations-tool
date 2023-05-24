@@ -12,6 +12,7 @@ export class TableColumnDirective {
   @Input() include: boolean;
   @Input() sortable: boolean;
   @Input() hideable: boolean = true;
+  @Input() hidden: boolean;
 
   @Input()
   @ContentChild(TableColumnCellDirective, { read: TemplateRef })

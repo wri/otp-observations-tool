@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TABLET_BREAKPOINT } from 'app/directives/responsive.directive';
 import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
+import { uniq } from 'lodash';
 
 export interface TableState {
   page: number;
@@ -50,13 +51,16 @@ export class TableComponent implements AfterContentInit {
   }
 
   get hiddenColumns(): string[] {
+    const alwaysVisibleColumns = this.columns.filter(c => !c.hideable).map(c => c.name);
+    const alwaysHiddenColumns = this.columns.filter(c => c.hidden).map(c => c.name);
+
     try {
       const storedValue = JSON.parse(localStorage.getItem(`${this.name}-hidden-columns`));
       const columns = Array.isArray(storedValue) ? storedValue : this.defaultHiddenColumns;
-      const alwaysVisibleColumns = this.columns.filter(c => !c.hideable).map(c => c.name);
-      return columns.filter((name) => !alwaysVisibleColumns.includes(name));
+
+      return uniq([...columns.filter((name) => !alwaysVisibleColumns.includes(name)), ...alwaysHiddenColumns]);
     } catch (e) {
-      return this.defaultHiddenColumns;
+      return uniq([...this.defaultHiddenColumns, ...alwaysHiddenColumns]);
     }
   }
 
