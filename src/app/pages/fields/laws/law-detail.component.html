@@ -18,7 +18,7 @@
     <div class="form-group -required">
       <label for="country_id">{{'Country' | translate}}</label>
       <select id="country_id" name="country_id" [(ngModel)]="law && law.country" #country_id="ngModel" required>
-        <option [value]="null" disabled>{{'Select a country' | translate}}</option>
+        <option [ngValue]="null" disabled>{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
     </div>
@@ -27,7 +27,7 @@
     <div class="form-group -required">
       <label for="subcategory">{{'Subcategory' | translate}}</label>
       <select id="subcategory" name="subcategory" [(ngModel)]="law && law.subcategory" #subcategory="ngModel" required [disabled]="!canEdit()">
-        <option [value]="null" disabled>{{'Select a subcategory' | translate}}</option>
+        <option [ngValue]="null" disabled>{{'Select a subcategory' | translate}}</option>
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
       <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'lawDetail.selectSubcategory' | translate}}</div>

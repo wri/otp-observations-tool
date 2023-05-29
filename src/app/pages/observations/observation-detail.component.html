@@ -89,7 +89,7 @@
     <div class="form-group">
       <label for="observation_type">{{'Type' | translate}}</label>
       <select id="observation_type" name="observation_type" [(ngModel)]="type" #observation_type="ngModel" [required]="!observation" [disabled]="!!observation && !isCopied">
-        <option [value]="null" disabled>{{'Select an observation type' | translate}}</option>
+        <option [ngValue]="null" disabled>{{'Select an observation type' | translate}}</option>
         <option value="operator">{{'Operator' | translate}}</option>
         <option value="government">{{'Government' | translate}}</option>
       </select>
@@ -119,7 +119,7 @@
     <div *ngIf="isDisabled()" class="form-group">
       <label for="report_field">{{'Report' | translate}}</label>
       <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" disabled>
-        <option [value]="null">{{'Select a report' | translate}}</option>
+        <option [ngValue]="null">{{'Select a report' | translate}}</option>
         <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
       </select>
     </div>
@@ -137,7 +137,7 @@
             <div class="form-group">
               <label for="report_field">{{'Report' | translate}}</label>
               <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
-                <option [value]="null">{{'Select a report' | translate}}</option>
+                <option [ngValue]="null">{{'Select a report' | translate}}</option>
                 <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
               </select>
             </div>
@@ -176,7 +176,7 @@
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
       <label for="country_id">{{'Country' | translate}}</label>
       <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required [disabled]="isDisabled()">
-        <option [value]="null" disabled>{{'Select a country' | translate}}</option>
+        <option [ngValue]="null" disabled>{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
       <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
@@ -245,7 +245,7 @@
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
       <label for="subcategory_id">{{'Observation category' | translate}}</label>
       <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required [disabled]="isDisabled()">
-        <option [value]="null" disabled>{{'Select an observation category' | translate}}</option>
+        <option [ngValue]="null" disabled>{{'Select an observation category' | translate}}</option>
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
       <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">{{'Please select an observation category' | translate}}</div>
@@ -282,7 +282,7 @@
           <div [ngClass]="{ 'form-group': true, '-required': !!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
             <label for="fmu_field">{{'Forest management unit' | translate}}</label>
             <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="!!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
-              <option [value]="null">{{'Select a FMU' | translate}}</option>
+              <option [ngValue]="null">{{'Select a FMU' | translate}}</option>
               <option *ngFor="let fmu of fmus" [ngValue]="fmu">{{ fmu.name }}</option>
             </select>
             <p class="note">
@@ -680,7 +680,7 @@
     <div *ngIf="isDisabled()" class="form-group">
       <label for="report_field">{{'Report' | translate}}</label>
       <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" disabled>
-        <option [value]="null">{{'Select a report' | translate}}</option>
+        <option [ngValue]="null">{{'Select a report' | translate}}</option>
         <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
       </select>
     </div>
@@ -698,7 +698,7 @@
             <div class="form-group">
               <label for="report_field">{{'Report' | translate}}</label>
               <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
-                <option [value]="null">{{'Select a report' | translate}}</option>
+                <option [ngValue]="null">{{'Select a report' | translate}}</option>
                 <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
               </select>
             </div>
@@ -737,7 +737,7 @@
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
       <label for="country_id">{{'Country' | translate}}</label>
       <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required [disabled]="isDisabled()">
-        <option [value]="null" disabled>{{'Select a country' | translate}}</option>
+        <option [ngValue]="null" disabled>{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
       <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
@@ -763,7 +763,7 @@
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
       <label for="subcategory_id">{{'Governance problem' | translate}}</label>
       <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required [disabled]="isDisabled()">
-        <option [value]="null" disabled>{{'Select a governance problem' | translate}}</option>
+        <option [ngValue]="null" disabled>{{'Select a governance problem' | translate}}</option>
         <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
       </select>
       <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">{{'Please select a governance problem' | translate}}</div>
