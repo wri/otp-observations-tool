@@ -1048,7 +1048,7 @@ export class ObservationDetailComponent implements OnDestroy {
           return false;
         }
       default:
-        return false;
+        return true;
     }
   }
 
