@@ -199,7 +199,7 @@
         [disabled]="isDisabled()"
       ></ss-multiselect-dropdown>
       <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
-      <div class="note">
+      <div class="note" *ngIf="!isDisabled()">
         <button type="button" class="c-button -primary" (click)="onClickAddOperator('operator')">{{'Add a new producer to the list' | translate}}</button>
       </div>
     </div>
@@ -236,7 +236,7 @@
       <p class="note">
         {{ 'observation.relevantOperators.note' | translate }}
       </p>
-      <div class="note">
+      <div class="note" *ngIf="!isDisabled()">
         <button type="button" class="c-button -primary" (click)="onClickAddOperator('relevantOperators')">{{'Add a new producer to the list' | translate}}</button>
       </div>
     </div>
@@ -754,7 +754,7 @@
       <p class="note">
         {{ 'Choose the government entity your observation is related to.' | translate }}
       </p>
-      <div class="note">
+      <div class="note" *ngIf="!isDisabled()">
         <button type="button" class="c-button -primary" (click)="onClickAddGovernanceEntity()">{{'Add a new government entity to the list' | translate}}</button>
       </div>
     </div>
