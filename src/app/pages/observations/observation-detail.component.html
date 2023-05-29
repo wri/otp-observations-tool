@@ -119,7 +119,7 @@
     <div *ngIf="isDisabled()" class="form-group">
       <label for="report_field">{{'Report' | translate}}</label>
       <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" disabled>
-        <option disabled [value]="null">{{'Select a report' | translate}}</option>
+        <option [value]="null">{{'Select a report' | translate}}</option>
         <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
       </select>
     </div>
@@ -137,7 +137,7 @@
             <div class="form-group">
               <label for="report_field">{{'Report' | translate}}</label>
               <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
-                <option disabled [value]="null">{{'Select a report' | translate}}</option>
+                <option [value]="null">{{'Select a report' | translate}}</option>
                 <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
               </select>
             </div>
@@ -282,7 +282,7 @@
           <div [ngClass]="{ 'form-group': true, '-required': !!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
             <label for="fmu_field">{{'Forest management unit' | translate}}</label>
             <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="!!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
-              <option [value]="null" disabled>{{'Select a FMU' | translate}}</option>
+              <option [value]="null">{{'Select a FMU' | translate}}</option>
               <option *ngFor="let fmu of fmus" [ngValue]="fmu">{{ fmu.name }}</option>
             </select>
             <p class="note">
@@ -680,7 +680,7 @@
     <div *ngIf="isDisabled()" class="form-group">
       <label for="report_field">{{'Report' | translate}}</label>
       <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" disabled>
-        <option disabled [value]="null">{{'Select a report' | translate}}</option>
+        <option [value]="null">{{'Select a report' | translate}}</option>
         <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
       </select>
     </div>
@@ -698,7 +698,7 @@
             <div class="form-group">
               <label for="report_field">{{'Report' | translate}}</label>
               <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
-                <option disabled [value]="null">{{'Select a report' | translate}}</option>
+                <option [value]="null">{{'Select a report' | translate}}</option>
                 <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
               </select>
             </div>
