@@ -123,8 +123,9 @@
         <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
       </select>
     </div>
-    <fieldset *ngIf="!isDisabled()">
+    <fieldset class="-required" *ngIf="!isDisabled()" [ngClass]="{ 'has-error': f.submitted && !isReportChosen }">
       <legend>{{'Report' | translate}}</legend>
+      <div *ngIf="f.submitted && !isReportChosen" class="help-text">{{'Please select an existing report or upload a new one' | translate}}</div>
       <div class="fieldset-container">
         <p class="fieldset-description" *otpMaxTablet>
           {{'Select one of the two options below: use an existing report or upload a new one.' | translate}}
@@ -684,8 +685,9 @@
         <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
       </select>
     </div>
-    <fieldset *ngIf="!isDisabled()">
+    <fieldset class="-required" *ngIf="!isDisabled()" [ngClass]="{ 'has-error': f.submitted && !isReportChosen }">
       <legend>{{'Report' | translate}}</legend>
+      <div *ngIf="f.submitted && !isReportChosen" class="help-text">{{'Please select an existing report or upload a new one' | translate}}</div>
       <div class="fieldset-container">
         <p class="fieldset-description" *otpMaxTablet>
           {{'Select one of the two options below: use an existing report or upload a new one.' | translate}}

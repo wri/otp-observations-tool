@@ -133,6 +133,24 @@
     }
 
     fieldset {
+      &.has-error {
+        .help-text {
+          color: $color-error;
+        }
+      }
+
+      &.-required {
+        legend {
+          &::after {
+            content: ' *';
+          }
+        }
+      }
+
+      > .help-text {
+        margin: 5px 0;
+      }
+
       legend {
         font-size: $font-size-default;
         font-weight: $font-weight-default;

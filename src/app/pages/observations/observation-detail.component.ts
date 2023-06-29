@@ -664,6 +664,10 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
+  get isReportChosen() {
+    return this.reportChoice || (this.report.attachment && this.report.title && this.report['publication-date']);
+  }
+
   get reportDate() { return this.report['publication-date']; }
   set reportDate(date) {
     const similarReport = this.reports.find(report => report['publication-date'] === date);

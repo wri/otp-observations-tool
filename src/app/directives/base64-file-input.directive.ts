@@ -61,6 +61,13 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
       return;
     }
 
+    // this could happen when the user clicks on cancel
+    if (!this.file) {
+      this.base64 = null;
+      this.propagateChange();
+      return;
+    }
+
     this.loading.emit(true);
 
     const worker = this.webWorkerService
