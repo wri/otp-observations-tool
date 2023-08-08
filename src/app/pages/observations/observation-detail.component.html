@@ -81,7 +81,7 @@
     </div>
   </div>
 
-  <div class="callout primary" *ngIf="observation && (observation['validation-status'] === 'Published (no comments)' || observation['validation-status'] === 'Published (not modified)' || observation['validation-status'] === 'Published (modified)')">
+  <div class="callout primary" *ngIf="isObservationPublished">
     <p>{{'observation.statusNote.Published' | translate}}</p>
   </div>
 
@@ -96,6 +96,15 @@
       <div *ngIf="f.submitted && observation_type.invalid" class="help-text">{{'Please select an observation type' | translate}}</div>
       <p class="note">
         {{ 'observation.type.note' | translate }}
+      </p>
+    </div>
+
+    <!-- Publication date -->
+    <div class="form-group" *ngIf="isObservationPublished">
+      <label for="publication_date">{{'Publication date' | translate}}</label>
+      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required disabled></otp-datepicker>
+      <p class="note">
+        {{ 'observation.publicationDate.note' | translate }}
       </p>
     </div>
   </div>
@@ -633,15 +642,6 @@
       </div>
     </fieldset>
 
-    <!-- 17. Publication date -->
-    <div class="form-group">
-      <label for="publication_date">{{'Publication date' | translate}}</label>
-      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required disabled></otp-datepicker>
-      <p class="note">
-        {{ 'observation.publicationDate.note' | translate }}
-      </p>
-    </div>
-
     <!-- 18. Metadata -->
     <fieldset *ngIf="observation && !isCopied">
       <legend>{{'Metadata' | translate}}</legend>
@@ -940,15 +940,6 @@
       <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
       <p class="note">
         {{ 'observation.commentsFromGovernment.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 12. Publication date -->
-    <div class="form-group">
-      <label for="publication_date">{{'Publication date' | translate}}</label>
-      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required disabled></otp-datepicker>
-      <p class="note">
-        {{ 'observation.publicationDate.note' | translate }}
       </p>
     </div>
 

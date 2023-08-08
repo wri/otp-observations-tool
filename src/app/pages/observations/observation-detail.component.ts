@@ -214,7 +214,6 @@ export class ObservationDetailComponent implements OnDestroy {
       this.operatorChoice = null;
       this.opinion = null;
       this.pv = null;
-      this.publicationDate = null;
       this._governmentsSelection = [];
       this._additionalObserversSelection = [];
       this.actions = null;
@@ -596,13 +595,6 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   get publicationDate() { return this.observation ? this.observation['publication-date'] : this._publicationDate; }
-  set publicationDate(publicationDate) {
-    if (this.observation) {
-      this.observation['publication-date'] = publicationDate;
-    } else {
-      this._publicationDate = publicationDate;
-    }
-  }
 
   get actions() { return this.observation ? this.observation['actions-taken'] : this._actions; }
   set actions(actions) {
@@ -620,6 +612,14 @@ export class ObservationDetailComponent implements OnDestroy {
     } else {
       this._validationStatus = validationStatus;
     }
+  }
+
+  get isObservationPublished() {
+    return this.observation && (
+      this.observation['validation-status'] === 'Published (no comments)' ||
+      this.observation['validation-status'] === 'Published (not modified)' ||
+      this.observation['validation-status'] === 'Published (modified)'
+    );
   }
 
   get mapLayers(): any[] {
@@ -829,7 +829,6 @@ export class ObservationDetailComponent implements OnDestroy {
           this.actions = this.draft.actionsTaken;
           this.details = this.draft.details;
           this.opinion = this.draft.concernOpinion;
-          this.publicationDate = this.draft.publicationDate;
           this.evidenceType = this.draft.evidenceType;
           this.evidenceOnReport = this.draft.evidenceOnReport;
           this.documents = this.draft.documents.map(document => this.datastoreService.createRecord(ObservationDocument, {
@@ -921,7 +920,6 @@ export class ObservationDetailComponent implements OnDestroy {
   private saveAsDraftObservation(): void {
     const draftModel: DraftObservation = {
       observationType: this.type,
-      publicationDate: this.publicationDate,
       countryId: this.country && this.country.id,
       subcategoryId: this.subcategory && this.subcategory.id,
       details: this.details,
