@@ -1369,6 +1369,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
   canAmend() {
     if (!this.observation) return false;
+    if (this.observation.hidden) return false;
 
     const isAmending = this.needsRevisionState === 'amend';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
@@ -1384,6 +1385,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
   canSubmitForReview(): boolean {
     if (!this.observation) return false;
+    if (this.observation.hidden) return false;
 
     const isCreating = !this.observation;
     const isDuplicating = this.isCopied;
@@ -1415,6 +1417,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const isCreated = this.observation['validation-status'] === 'Created';
 
     if (!this.observation) return false;
+    if (this.observation.hidden) return false;
     if (isCreated) return true;
 
     return false;
@@ -1422,6 +1425,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
   canPublishWithoutComments() {
     if (!this.observation) return false;
+    if (this.observation.hidden) return false;
 
     const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
 
@@ -1432,6 +1436,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
   canPublishWithModification() {
     if (!this.observation) return false;
+    if (this.observation.hidden) return false;
 
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isAmending = this.needsRevisionState === 'amend';
