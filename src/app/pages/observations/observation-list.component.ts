@@ -33,6 +33,7 @@ export class ObservationListComponent extends TableFilterBehavior {
   response: any = {};
   statusFilterValues: any = {};
   typeFilterValues: any = [];
+  hiddenFilterValues: any = ["false", "all"];
   countryFilterParams: any = {};
   operatorFilterParams: any = {};
   govFilterParams: any = {};
@@ -82,6 +83,13 @@ export class ObservationListComponent extends TableFilterBehavior {
       this.updateStatusFilterValues();
       this.updateTypeFilterValues();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.filters.defaultApiParams = {
+      'filter[hidden]': 'all'
+    };
+    super.ngAfterViewInit();
   }
 
   /**

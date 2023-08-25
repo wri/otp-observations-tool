@@ -27,7 +27,7 @@
       <div class="form-group">
         <label for="country_id">{{'Country' | translate}}</label>
         <select id="country_id" name="country_id" disabled>
-          <option value="">{{ user.country.name }}</option>
+          <option value="">{{ user.country && user.country.name }}</option>
         </select>
       </div>
 
