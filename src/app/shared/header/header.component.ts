@@ -13,6 +13,7 @@ import { environment } from 'environments/environment';
 export class HeaderComponent {
 
   private isAdmin = false;
+  isBackendAdmin = false;
   isLogged = false;
   acceptedLang = ['en', 'fr'];
   _lang = this.acceptedLang.includes(localStorage.getItem('lang'))
@@ -37,6 +38,7 @@ export class HeaderComponent {
     this.authService.loginStatus.subscribe(isLogged => {
       this.isLogged = isLogged;
       this.isAdmin = this.authService.isAdmin();
+      this.isBackendAdmin = this.authService.isBackendAdmin();
     });
 
     if (!environment.production) {

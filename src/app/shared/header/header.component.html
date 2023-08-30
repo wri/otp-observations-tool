@@ -15,7 +15,7 @@
           </select>
         </li>
       </ng-template>
-      <ng-template [ngIf]="isLogged">
+      <ng-template [ngIf]="isLogged && !isBackendAdmin">
         <li *otpMinTablet><a routerLink="/private/profile" routerLinkActive="-active">{{ 'Profile' | translate }}</a></li>
       </ng-template>
       <li *ngIf="isLogged"><button type="button" (click)="logout()">{{ 'Log out' | translate }}</button></li>

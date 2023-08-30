@@ -67,6 +67,11 @@
     <otp-table-column [name]="'ID' | translate" prop="id" [sortable]="false"></otp-table-column>
     <!-- Updated at as a default sort must be as a column, it will be hidden -->
     <otp-table-column name="updated-at" prop="updated-at" [hidden]="true"></otp-table-column>
+    <otp-table-column [name]="'Organization' | translate" prop="observers" [hidden]="!isObserverColumnVisible">
+      <ng-template let-row="row" table-cell-template>
+        <div *ngFor="let observer of row.observers">{{observer.name}}</div>
+      </ng-template>
+    </otp-table-column>
     <otp-table-column [name]="'Type' | translate" prop="observation-type" [sortable]="false">
       <ng-template let-value="value" table-cell-template>
         {{ value | titlecase | translate }}

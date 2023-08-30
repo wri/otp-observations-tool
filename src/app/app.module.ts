@@ -29,6 +29,7 @@ import { EmailValidatorDirective } from 'app/directives/email.directive';
 import { NumberValidatorDirective } from 'app/directives/number.directive';
 import { ResponsiveService } from 'app/services/responsive.service';
 import { AlreadyLoggedGuard } from 'app/services/already-logged.guard';
+import { UserRoleGuard } from 'app/services/user-role.guard';
 import { IconComponent } from 'app/shared/icons/icon.component';
 import { SubcategoryListComponent } from 'app/pages/fields/subcategories/subcategory-list.component';
 import { CategoriesService } from 'app/services/categories.service';
@@ -181,6 +182,7 @@ export function createTranslateLoader(http: HttpClient) {
     TokenService,
     AuthService,
     AlreadyLoggedGuard,
+    UserRoleGuard,
     GovernmentsService,
     CountriesService,
     DatastoreService,

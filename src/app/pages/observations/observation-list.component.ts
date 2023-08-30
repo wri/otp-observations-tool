@@ -59,6 +59,10 @@ export class ObservationListComponent extends TableFilterBehavior {
     return this.defaultObservationType;
   }
 
+  get isObserverColumnVisible() {
+    return this.authService.isBackendAdmin();
+  }
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
