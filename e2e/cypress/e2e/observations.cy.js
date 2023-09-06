@@ -141,7 +141,6 @@ describe('Observations', () => {
     });
 
     // let's verify if everyting was correctly saved
-    cy.get('.filter select[aria-label=Type]').select('Governance');
     cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
     cy.location('pathname').should('include', '/observations/edit');
 

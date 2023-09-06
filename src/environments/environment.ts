@@ -8,4 +8,5 @@ export const environment = {
   apiUrl: '',
   OTP_API_KEY: '',
   GOOGLE_ANALYTICS_ID: '',
+  SENTRY_DSN: undefined
 };

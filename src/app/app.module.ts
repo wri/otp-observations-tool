@@ -63,7 +63,7 @@ import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { OauthRequestOptions } from 'app/services/oauth-request.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JsonApiModule } from 'angular2-jsonapi';
 import { HttpModule, RequestOptions, } from '@angular/http';
@@ -77,6 +77,32 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
 import { UploadFileComponent } from './shared/upload-file/upload-file.component';
+
+import * as Sentry from '@sentry/browser'
+import { RewriteFrames } from '@sentry/integrations'
+
+import { environment } from 'environments/environment';
+
+Sentry.init({
+  dsn: environment.SENTRY_DSN,
+  environment: (() => {
+    if (environment.apiUrl.includes('staging')) return 'staging';
+
+    return environment.production ? 'production' : 'development';
+  })(),
+  integrations: [
+    new RewriteFrames(),
+  ],
+})
+
+@Injectable()
+export class SentryErrorHandler implements ErrorHandler {
+  constructor() {}
+  handleError(error) {
+    Sentry.captureException(error.originalError || error);
+    console.error(error)
+  }
+}
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/locale/', '.json');
@@ -170,7 +196,8 @@ export function createTranslateLoader(http: HttpClient) {
     SeveritiesService,
     ResponsiveService,
     WebWorkerService,
-    { provide: RequestOptions, useClass: OauthRequestOptions }
+    { provide: RequestOptions, useClass: OauthRequestOptions },
+    { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],
   bootstrap: [AppComponent]
 })
