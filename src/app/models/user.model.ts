@@ -1,5 +1,5 @@
 import { Observer } from 'app/models/observer.model';
-import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from 'angular2-jsonapi';
 import { Country } from 'app/models/country.model';
 import { UserPermission } from 'app/models/user_permission.model';
 
@@ -20,5 +20,5 @@ export class User extends JsonApiModel {
 
   @BelongsTo() country: Country;
   @BelongsTo() observer: Observer;
-
+  @HasMany() 'managed-observers'?: Observer[];
 }

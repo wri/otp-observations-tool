@@ -26,7 +26,6 @@ export class UserRoleGuard implements CanActivate {
     }
 
     if (!result) {
-      console.log('redirectto', redirectTo);
       this.router.navigate([redirectTo]);
     }
 

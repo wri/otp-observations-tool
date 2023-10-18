@@ -80,8 +80,6 @@ const routes: Routes = [
           {
             path: 'profile',
             component: OrganizationProfileComponent,
-            data: { authExcludeRoles: ['admin'], redirectTo: 'private/my-otp/reports' },
-            canActivate: [UserRoleGuard]
           },
           {
             path: 'reports',

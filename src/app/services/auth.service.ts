@@ -9,13 +9,15 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observer } from 'app/models/observer.model';
 import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
+import { uniq } from 'lodash';
 
 @Injectable()
 export class AuthService {
 
   public userId: string;
   public userRole: string;
-  public userObserverId: string;
+  private _userObserverId: string;
+  public managedObserverIds: string[];
   public userCountryId: string;
   public observerCountriesIds: Number[];
   // Observable of the login status of the user
@@ -25,12 +27,25 @@ export class AuthService {
     return this.logged$;
   }
 
+  set userObserverId(val) {
+    this._userObserverId = val;
+    if (val) {
+      localStorage.setItem('userObserverId', val);
+    } else {
+      localStorage.removeItem('userObserverId');
+    }
+  }
+
+  get userObserverId() {
+    return this._userObserverId;
+  }
+
   constructor(
     private http: Http,
     private tokenService: TokenService,
     private router: Router,
     private translateService: TranslateService,
-    private observersService: ObserversService,
+    private observersService: ObserversService
   ) {
   }
 
@@ -86,18 +101,31 @@ export class AuthService {
     }
 
     try {
-      const response = await this.http.get(`${environment.apiUrl}/users/current-user?include=user-permission,observer,country`)
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user`)
         .map(data => data.json())
         .toPromise();
 
       this.userId = response.data.id;
-      this.userRole = response.included.length
-        && response.included.find(i => i.type === 'user-permissions')
-        && response.included.find(i => i.type === 'user-permissions').attributes['user-role'];
-      this.userObserverId = response.data.relationships.observer.data
-        && response.data.relationships.observer.data.id;
-      this.userCountryId = response.data.relationships.country.data
-        && response.data.relationships.country.data.id;
+      this.userRole = (response.included || []).find(i => i.type === 'user-permissions')?.attributes['user-role'];
+      const userObserverId = response.data.relationships.observer.data?.id;
+      const managedObserverIds = response.data.relationships['managed-observers']?.data?.map((d) => d.id) || [];
+      const allManagedOberverIds = uniq([userObserverId, ...managedObserverIds].filter(x => x));
+      const savedUserObserverId = localStorage.getItem('userObserverId');
+      this.managedObserverIds = allManagedOberverIds;
+      if (savedUserObserverId && (allManagedOberverIds.includes(savedUserObserverId) || this.isBackendAdmin())) {
+        this.userObserverId = savedUserObserverId;
+      } else {
+        this.userObserverId = allManagedOberverIds[0];
+      }
+
+      // if user is backend admin and has no observer context saved in localstorage
+      // take the first observer id
+      if (!this.userObserverId && this.isBackendAdmin()) {
+        await this.observersService.getAll({ sort: 'name' }).then(data => {
+          this.userObserverId = data[0].id;
+        });
+      }
+      this.userCountryId = response.data.relationships.country.data?.id;
 
       await this.setObserverCountriesIds();
 
@@ -137,6 +165,7 @@ export class AuthService {
     this.tokenService.token = null;
     this.userId = null;
     this.userRole = null;
+    this.userObserverId = null;
     this.triggerLoginStatus(false);
     this.router.navigate(['/']);
   }

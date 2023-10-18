@@ -15,6 +15,14 @@
           </select>
         </li>
       </ng-template>
+      <ng-template [ngIf]="isLogged && displayObserverSelector">
+        <li>
+          <select [(ngModel)]="selectedObserverId" style="max-width: 150px;">
+            <option value="" disabled>{{'Select an organization' | translate}}</option>
+            <option *ngFor="let observer of managedObservers" [value]="observer.id">{{ observer.name }}</option>
+          </select>
+        </li>
+      </ng-template>
       <ng-template [ngIf]="isLogged && !isBackendAdmin">
         <li *otpMinTablet><a routerLink="/private/profile" routerLinkActive="-active">{{ 'Profile' | translate }}</a></li>
       </ng-template>
