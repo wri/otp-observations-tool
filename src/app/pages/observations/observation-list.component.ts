@@ -170,6 +170,7 @@ export class ObservationListComponent extends TableFilterBehavior {
     const formData = new FormData();
     formData.append('import[file]', file);
     formData.append('import[importer_type]', 'observations');
+    formData.append('import[importer_params]', JSON.stringify({ observer_ids: [parseInt(this.authService.userObserverId, 10)] }));
     this.isUploading = true;
     this.service.uploadFile(formData).subscribe(
       (response) => {
