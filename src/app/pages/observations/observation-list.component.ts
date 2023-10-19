@@ -91,7 +91,8 @@ export class ObservationListComponent extends TableFilterBehavior {
 
   ngAfterViewInit(): void {
     this.filters.defaultApiParams = {
-      'filter[hidden]': 'all'
+      'filter[hidden]': 'all',
+      'filter[observer_id]': this.authService.userObserverId
     };
     super.ngAfterViewInit();
   }

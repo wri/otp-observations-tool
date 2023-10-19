@@ -118,6 +118,8 @@ export class ObservationDetailComponent implements OnDestroy {
   _mapMarker = null; // Layer with the marker
   _mapFmu = null; // Layer with the FMU
 
+  currentContextObserver = null;
+
   // Multi-select options
   multiSelectTexts: IMultiSelectTexts = {};
 
@@ -750,6 +752,8 @@ export class ObservationDetailComponent implements OnDestroy {
         this.additionalObserversOptions = observers
           .filter(observer => observer.id !== this.authService.userObserverId)
           .map((observer) => ({ id: observer.id, name: observer.name }));
+
+        this.currentContextObserver = observers.find(o => o.id === this.authService.userObserverId);
       })
       .catch((err) => console.error(err)); // TODO: visual feedback
 
@@ -1567,7 +1571,9 @@ export class ObservationDetailComponent implements OnDestroy {
         subcategory: this.subcategory,
         details: this.details,
         severity: this.severity,
-        observers: this.observers.filter((observer) => this._additionalObserversSelection.includes(observer.id)),
+        observers: this.observers
+          .filter((observer) => this._additionalObserversSelection.includes(observer.id))
+          .concat([this.observers.find(o => o.id === this.authService.userObserverId)]),
         'actions-taken': this.actions,
         'validation-status': this.validationStatus,
         'concern-opinion': this.opinion,

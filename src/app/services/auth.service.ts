@@ -187,7 +187,7 @@ export class AuthService {
       fields: { countries: 'id' } // Just save bandwidth and load fastter
     }).then((observer) => {
       let countries_ids = [];
-      observer.countries.forEach((country) => {
+      observer.countries?.forEach((country) => {
         countries_ids.push(parseInt(country['id']));
       });
       this.observerCountriesIds = countries_ids;
