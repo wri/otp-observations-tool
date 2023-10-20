@@ -17,7 +17,7 @@ export class AuthService {
   public userId: string;
   public userRole: string;
   private _userObserverId: string;
-  public managedObserverIds: string[];
+  public managedObserverIds: string[] = [];
   public userCountryId: string;
   public observerCountriesIds: Number[];
   // Observable of the login status of the user
