@@ -110,10 +110,10 @@ export class AuthService {
       const userObserverId = response.data.relationships.observer.data?.id;
       const managedObserverIds = response.data.relationships['managed-observers']?.data?.map((d) => d.id) || [];
       const allManagedOberverIds = uniq([userObserverId, ...managedObserverIds].filter(x => x));
-      const savedUserObserverId = localStorage.getItem('userObserverId');
+      const savedUserObserverId = parseInt(localStorage.getItem('userObserverId'), 10);
       this.managedObserverIds = allManagedOberverIds;
-      if (savedUserObserverId && (allManagedOberverIds.includes(savedUserObserverId) || this.isBackendAdmin())) {
-        this.userObserverId = savedUserObserverId;
+      if (!isNaN(savedUserObserverId) && (allManagedOberverIds.includes(savedUserObserverId.toString()) || this.isBackendAdmin())) {
+        this.userObserverId = savedUserObserverId.toString();
       } else {
         this.userObserverId = allManagedOberverIds[0];
       }
