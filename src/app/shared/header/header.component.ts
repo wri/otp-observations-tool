@@ -30,10 +30,16 @@ export class HeaderComponent {
   set lang(lang) { this.translateService.use(lang); }
 
   get selectedObserverId() { return this._selectedObserverId; }
+  // changing current observer context
   set selectedObserverId(val) {
     this._selectedObserverId = val;
     this.authService.userObserverId = val;
-    location.reload();
+    if (location.href.includes('observations/new') ||
+      location.href.includes('observations/edit')) {
+      window.location.href = '/private/observations';
+    } else {
+      location.reload();
+    }
   }
 
   get displayObserverSelector(): boolean {
