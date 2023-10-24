@@ -137,6 +137,22 @@ export class AuthService {
         alert(await this.translateService.get('noLanguageSet').toPromise());
       }
 
+      // TODO: remove after some time
+      // this is migration to keep old draft observation saved in under new key
+      // I'm only going to do this for users who manages one observer
+      // in different case let's just remove draft
+      try {
+        const oldDraftObservation = JSON.parse(localStorage.getItem('draftObservation'));
+        if (this.managedObserverIds.length === 1 && oldDraftObservation) {
+          const key = `draftObservation-${this.userId}-${this.userObserverId}`;
+          localStorage.setItem(key, JSON.stringify(oldDraftObservation))
+        }
+        localStorage.removeItem('draftObservation');
+      } catch {
+        // in case of error, just remove failing draftObservation
+        localStorage.removeItem('draftObservation');
+      }
+
       this.triggerLoginStatus(!!response);
       return !!response;
     } catch (e) {

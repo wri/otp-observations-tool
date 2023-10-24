@@ -826,7 +826,7 @@ export class ObservationDetailComponent implements OnDestroy {
       }
     } else {
       if (this.route.snapshot.params.useDraft) {
-        this.draft = JSON.parse(localStorage.getItem('draftObservation'));
+        this.draft = this.observationsService.getDraftObservation();
         // Set values from the draft observation
         if (this.draft) {
           this.type = this.draft.observationType;
@@ -971,7 +971,7 @@ export class ObservationDetailComponent implements OnDestroy {
       draftModel.relevantOperators = this._relevantOperatorsSelection;
     }
 
-    localStorage.setItem('draftObservation', JSON.stringify(draftModel));
+    this.observationsService.saveDraftObservation(draftModel);
   }
 
   /**
@@ -1617,7 +1617,7 @@ export class ObservationDetailComponent implements OnDestroy {
         if (this.observation && !this.isCopied) {
           alert(await this.translateService.get('observationUpdate.success').toPromise());
         } else {
-          localStorage.removeItem('draftObservation');
+          this.observationsService.removeDraftObservation();
           alert(await this.translateService.get('observationCreation.success').toPromise());
         }
 

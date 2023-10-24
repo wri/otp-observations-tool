@@ -16,7 +16,7 @@ import { DraftObservation } from 'app/models/draft_observation.interface';
 })
 export class ObservationListComponent extends TableFilterBehavior {
   apiUrl: string = environment.apiUrl;
-  draftObservation: DraftObservation = JSON.parse(localStorage.getItem('draftObservation'));
+  draftObservation: DraftObservation = null;
   @ViewChild('uploadFile') uploadFile: ElementRef;
   @ViewChild('table') tableComponent: ElementRef;
 
@@ -82,6 +82,8 @@ export class ObservationListComponent extends TableFilterBehavior {
     this.govFilterParams = observerIdFilter;
     this.fmuFilterParams = observerIdFilter;
     this.reportFilterParams = observerIdFilter;
+
+    this.draftObservation = this.service.getDraftObservation();
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateStatusFilterValues();

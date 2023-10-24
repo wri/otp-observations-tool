@@ -5,6 +5,8 @@ import { DatastoreService } from 'app/services/datastore.service';
 import { Observation } from 'app/models/observation.model';
 import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
 import { Observable } from 'rxjs/Observable';
+import { AuthService } from 'app/services/auth.service';
+import { DraftObservation } from 'app/models/draft_observation.interface';
 
 @Injectable()
 export class ObservationsService extends JsonApiService<Observation> {
@@ -13,7 +15,8 @@ export class ObservationsService extends JsonApiService<Observation> {
 
   constructor (
     protected datastoreService: DatastoreService,
-    protected http: Http
+    protected http: Http,
+    private authService: AuthService
   ) {
     super();
   }
@@ -83,4 +86,22 @@ export class ObservationsService extends JsonApiService<Observation> {
       .toPromise();
   }
 
+  getDraftObservation() : DraftObservation {
+    return JSON.parse(localStorage.getItem(this.draftObservationId));
+  }
+
+  saveDraftObservation(observation: DraftObservation) {
+    localStorage.setItem(this.draftObservationId, JSON.stringify(observation));
+  }
+
+  removeDraftObservation() {
+    localStorage.removeItem(this.draftObservationId);
+  }
+
+  private get draftObservationId() {
+    const userId = this.authService.userId;
+    const currentObserverId = this.authService.userObserverId;
+
+    return `draftObservation-${userId}-${currentObserverId}`;
+  }
 }
