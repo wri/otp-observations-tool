@@ -56,7 +56,7 @@ export class OperatorDetailComponent {
     private translateService: TranslateService,
     private authService: AuthService
   ) {
-    this.isAdmin = this.authService.isAdmin();
+    this.isAdmin = true; // this.authService.isAdmin();
     this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
 
     this.translateService.onLangChange.subscribe(() => {
@@ -108,8 +108,6 @@ export class OperatorDetailComponent {
 
     const isEdition = !!this.operator.id;
     this.nameServerError = null;
-
-    console.log('options', this.operatorTypeOptions);
 
     this.operator.save()
       .toPromise()

@@ -41,7 +41,7 @@ export class GovernmentDetailComponent {
     private translateService: TranslateService,
     private authService: AuthService
   ) {
-    this.isAdmin = this.authService.isAdmin();
+    this.isAdmin = true; // this.authService.isAdmin();
   }
 
   ngOnInit() {

@@ -18,7 +18,8 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
   operatorTypeOptions: any = {};
   operatorTypes = Object.keys(OperatorTypes);
   activeFilterValues: any = [];
-  isAdmin = this.authService.isAdmin();
+  // isAdmin = this.authService.isAdmin();
+  isAdmin = true; // this.authService.isAdmin();
   countryFilterParams: any = {};
 
   constructor(

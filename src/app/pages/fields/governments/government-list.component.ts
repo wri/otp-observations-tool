@@ -12,7 +12,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./government-list.component.scss']
 })
 export class GovernmentListComponent extends TableFilterBehavior {
-  isAdmin = this.authService.isAdmin();
+  // TODO: same for producer, when we are sure all users can do that then delete this
+  isAdmin = true; // this.authService.isAdmin();
   countryFilterParams: any = {};
 
   constructor(
