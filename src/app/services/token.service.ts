@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class TokenService {
     private _token: string = null;
+    tokenChange = new Subject<string>();
 
     set token(token: string) {
         if (!token) {
@@ -11,6 +13,7 @@ export class TokenService {
             localStorage.setItem('otp-token', token);
         }
         this._token = token;
+        this.tokenChange.next(this._token);
     }
 
     get token() {
