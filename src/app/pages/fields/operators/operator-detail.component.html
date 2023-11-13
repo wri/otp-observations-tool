@@ -15,7 +15,7 @@
   </div>
 
   <div class="form-container">
-    <!-- 1. Name -->
+    <!-- Name -->
     <div class="form-group -required">
       <label for="name_field">{{'Name' | translate}}</label>
       <input id="name_field" type="text" class="form-control" name="name_field" [(ngModel)]="operator.name" #name_field="ngModel" [disabled]="!canEdit()" required />
@@ -23,7 +23,7 @@
       <div *ngIf="nameServerError" class="help-text">{{ nameServerError }}</div>
     </div>
 
-    <!-- 2. Type -->
+    <!-- Type -->
     <div class="form-group -required">
       <label for="type_field">{{'Type' | translate}}</label>
       <select id="type_field" name="type_field" [(ngModel)]="operator['operator-type']" #type_field="ngModel" [disabled]="!canEdit()" required>
@@ -33,7 +33,7 @@
       <div *ngIf="f.submitted && !type_field.valid" class="help-text">{{'Please select an operator type' | translate}}</div>
     </div>
 
-    <!-- 3. Country -->
+    <!-- Country -->
     <div class="form-group -required">
       <label for="country_field">{{'Country' | translate}}</label>
       <select id="country_field" name="country_field" [(ngModel)]="operator.country" #country_field="ngModel" [disabled]="!canEdit() || country" required>
@@ -43,31 +43,25 @@
       <div *ngIf="f.submitted && !country_field.valid" class="help-text">{{'Please select a country' | translate}}</div>
     </div>
 
-    <!-- 4. Concession -->
-    <div class="form-group" *ngIf="longForm">
-      <label for="concession_field">{{'Concession' | translate}}</label>
-      <input id="concession_field" type="text" class="form-control" name="concession_field" [(ngModel)]="operator.concession" #concession_field="ngModel" [disabled]="!canEdit()" />
-    </div>
-
-    <!-- 5. Details -->
+    <!-- Details -->
     <div class="form-group" *ngIf="longForm">
       <label for="details_field">{{'Details' | translate}}</label>
       <textarea id="details_field" name="details_field" [(ngModel)]="operator.details" #details_field="ngModel" [disabled]="!canEdit()"></textarea>
     </div>
 
-    <!-- 6. Address -->
+    <!-- Address -->
     <div class="form-group" *ngIf="longForm">
       <label for="address_field">{{'Address' | translate}}</label>
       <textarea id="address_field" name="address_field" [(ngModel)]="operator.address" #address_field="ngModel" [disabled]="!canEdit()"></textarea>
     </div>
 
-    <!-- 7. Website -->
+    <!-- Website -->
     <div class="form-group" *ngIf="longForm">
       <label for="website_field">{{'Website' | translate}}</label>
       <input id="website_field" type="url" class="form-control" name="website_field" [(ngModel)]="operator.website" #website_field="ngModel" [disabled]="!canEdit()" />
     </div>
 
-    <!-- 8. Logo -->
+    <!-- Logo -->
     <fieldset *ngIf="longForm">
       <legend>{{'Logo' | translate}}</legend>
       <div class="fieldset-container">
