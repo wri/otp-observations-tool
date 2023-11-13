@@ -1,7 +1,7 @@
 describe('Observations', () => {
   beforeEach(() => {
     cy.visit('http://localhost:4200/');
-    cy.login('tsubik+ngomanager@gmail.com', 'secret');
+    cy.login('ngomanager@example.com', 'secret');
     cy.reload();
   })
 
@@ -75,7 +75,7 @@ describe('Observations', () => {
 
     cy.expectSelectedOption('law_field', 'Dépassement de volume');
 
-    cy.get('#last_modification_by').should('have.value', 'Tomasz Operator');
+    cy.get('#last_modification_by').should('have.value', 'NGO Manager');
 
     cy.get('button').contains('Submit for review').click();
     cy.then(() => {
@@ -163,7 +163,7 @@ describe('Observations', () => {
     cy.expectChosenOption('Severity', 'No enforcement mission required undertaken');
     cy.get('#action_taken').should('have.value', 'Actions taken by government');
     cy.get('#concern_opinion').should('have.value', 'Here are some comments');
-    cy.get('#last_modification_by').should('have.value', 'Tomasz Operator');
+    cy.get('#last_modification_by').should('have.value', 'NGO Manager');
 
     cy.get('button').contains('Submit for review').click();
     cy.then(() => {

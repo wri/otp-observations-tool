@@ -1,7 +1,7 @@
 describe('Severities', () => {
   beforeEach(() => {
     cy.visit('http://localhost:4200/');
-    cy.login('tsubik+ngomanager@gmail.com', 'secret');
+    cy.login('ngomanager@example.com', 'secret');
     cy.visit('http://localhost:4200/private/fields/severities');
   });
 
