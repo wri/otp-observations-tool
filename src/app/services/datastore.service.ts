@@ -3,7 +3,6 @@ import { ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
 import { UserPermission } from 'app/models/user_permission.model';
 import { Document } from 'app/models/document.model';
-import { TokenService } from 'app/services/token.service';
 import { User } from 'app/models/user.model';
 import { Species } from 'app/models/species.model';
 import { Operator } from 'app/models/operator.model';
@@ -20,6 +19,8 @@ import { Http, Headers } from '@angular/http';
 import { JsonApiDatastore, JsonApiDatastoreConfig } from 'angular2-jsonapi';
 import { Observation } from 'app/models/observation.model';
 import { Law } from 'app/models/law.model';
+
+import { TokenService } from 'app/services/token.service';
 
 @Injectable()
 @JsonApiDatastoreConfig({
@@ -46,17 +47,22 @@ import { Law } from 'app/models/law.model';
 })
 export class DatastoreService extends JsonApiDatastore {
 
-  constructor (http: Http, private tokenService: TokenService) {
+  constructor (
+    http: Http,
+    private tokenService: TokenService
+    ) {
     super(http);
 
-    const headers = new Headers();
+    this.tokenService.tokenChange.subscribe(() => this.setAPIHeaders());
+    this.setAPIHeaders();
+  }
 
+  setAPIHeaders() {
+    const headers = new Headers();
     if (this.tokenService.token) {
       headers.set('Authorization', `Bearer ${this.tokenService.token}`);
     }
     headers.set('OTP-API-KEY', environment.OTP_API_KEY);
-
     this.headers = headers;
   }
-
 }
