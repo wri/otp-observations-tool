@@ -36,12 +36,19 @@ export class LawDetailComponent {
 
     this.subcategoriesService.getAll({ sort: 'name' })
       .then(subcategories => this.subcategories = subcategories)
+      .then(() => {
+        if (this.law && this.law.id) {
+          this.law.subcategory = this.subcategories.find(c => c.id === this.law.subcategory.id);
+        }
+      })
       .catch((err) => console.error(err)); // TODO: visual feedback
 
     this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
       .then((data) => this.countries = data)
       .then(() => {
-        if (this.law && this.law.id) {
+        if (!this.law) return;
+
+        if (this.law.id) {
           this.law.country = this.countries.find(c => c.id === this.law.country.id);
         } else {
           this.law.country = this.countries[0];
