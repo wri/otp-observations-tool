@@ -27,7 +27,7 @@
   </otp-operator-detail>
 </otp-modal>
 
-<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && f.valid && onSubmitForReview()" #f="ngForm" novalidate>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && f.valid && onSubmitForReview()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 *ngIf="isDisabled() && !isCopied">{{'Observation details' | translate}}</h2>
     <h2 *ngIf="(!isDisabled() && !observation) || isCopied">{{'New observation' | translate}}</h2>
@@ -196,7 +196,7 @@
     </div>
 
     <!-- 3. Operator -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !operator_id.valid }">
+    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && (!operator_id.valid || unknownOperatorSelected) }">
       <label for="operator_id">{{'Operator' | translate}}</label>
       <ss-multiselect-dropdown
         [texts]="multiSelectTexts"
@@ -207,8 +207,10 @@
         name="operator_id"
         #operator_id="ngModel"
         [disabled]="isDisabled()"
+        required
       ></ss-multiselect-dropdown>
       <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
+      <div *ngIf="unknownOperatorSelected" class="help-text">{{'You will not be able to submit this observation to review with unknown operator selected' | translate}}</div>
       <div class="note" *ngIf="!isDisabled()">
         <button type="button" class="c-button -primary" (click)="onClickAddOperator('operator')">{{'Add a new producer to the list' | translate}}</button>
       </div>
