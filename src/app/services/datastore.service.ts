@@ -15,7 +15,7 @@ import { Severity } from 'app/models/severity.model';
 import { Country } from 'app/models/country.model';
 import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { JsonApiDatastore, JsonApiDatastoreConfig } from 'angular2-jsonapi';
 import { Observation } from 'app/models/observation.model';
 import { Law } from 'app/models/law.model';
@@ -47,10 +47,7 @@ import { TokenService } from 'app/services/token.service';
 })
 export class DatastoreService extends JsonApiDatastore {
 
-  constructor (
-    http: Http,
-    private tokenService: TokenService
-    ) {
+  constructor (http: HttpClient, private tokenService: TokenService) {
     super(http);
 
     this.tokenService.tokenChange.subscribe(() => this.setAPIHeaders());

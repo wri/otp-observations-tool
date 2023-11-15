@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { environment } from 'environments/environment';
 import { TokenService } from 'app/services/token.service';
 import { Router } from '@angular/router';
@@ -10,6 +9,7 @@ import { Observer } from 'app/models/observer.model';
 import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
 import { uniq } from 'lodash';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class AuthService {
@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private tokenService: TokenService,
     private router: Router,
     private translateService: TranslateService,
@@ -70,8 +70,7 @@ export class AuthService {
     const payload = { auth: { email, password } };
 
     return this.http.post(`${environment.apiUrl}/login`, payload)
-      .map(response => response.json())
-      .map(body => {
+      .map((body: any) => {
         if (!['ngo', 'ngo_manager', 'admin'].includes(body.role)) {
           this.triggerLoginStatus(false);
           return false;
@@ -101,9 +100,7 @@ export class AuthService {
     }
 
     try {
-      const response = await this.http.get(`${environment.apiUrl}/users/current-user`)
-        .map(data => data.json())
-        .toPromise();
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user`).toPromise() as any;
 
       this.userId = response.data.id;
       this.userRole = (response.included || []).find(i => i.type === 'user-permissions')?.attributes['user-role'];

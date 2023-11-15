@@ -2,12 +2,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
 import { Observer } from 'app/models/observer.model';
 import { environment } from 'environments/environment';
-import { Http } from '@angular/http';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService,
     private countriesService: CountriesService,
     private observersService: ObserversService,
-    private http: Http,
+    private http: HttpClient,
     private translateService: TranslateService
   ) { }
 
@@ -62,7 +62,6 @@ export class RegisterComponent implements OnInit {
     delete payload.user.has_rights;
 
     this.http.post(`${environment.apiUrl}/register`, payload)
-      .map(response => response.json())
       .toPromise()
       .then(async () => {
         alert(await this.translateService.get('register.success').toPromise());

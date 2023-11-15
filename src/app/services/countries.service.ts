@@ -1,9 +1,9 @@
 import { JsonApiService } from 'app/services/json-api.service';
-import { Http } from '@angular/http';
 import { Country } from 'app/models/country.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class CountriesService extends JsonApiService<Country> {
@@ -12,7 +12,7 @@ export class CountriesService extends JsonApiService<Country> {
 
   constructor(
     protected datastoreService: DatastoreService,
-    protected http: Http
+    protected http: HttpClient
   ) {
     super();
   }
@@ -30,9 +30,7 @@ export class CountriesService extends JsonApiService<Country> {
 
   createCountry(formValues): Promise<any> {
     const payload = { country: formValues };
-    return this.http.post(`${environment.apiUrl}/countries`, payload)
-      .map(response => response.json())
-      .toPromise();
+    return this.http.post(`${environment.apiUrl}/countries`, payload).toPromise();
   }
 
   deleteCountry(country: Country): Promise<any> {

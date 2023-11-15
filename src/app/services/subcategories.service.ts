@@ -3,7 +3,7 @@ import { environment } from 'environments/environment.dev';
 import { Subcategory } from 'app/models/subcategory.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class SubcategoriesService extends JsonApiService<Subcategory> {
@@ -12,7 +12,7 @@ export class SubcategoriesService extends JsonApiService<Subcategory> {
 
   constructor(
     protected datastoreService: DatastoreService,
-    protected http: Http
+    protected http: HttpClient
   ) {
     super();
   }

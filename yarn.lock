@@ -610,10 +610,10 @@ angular-2-dropdown-multiselect@~1.5.4:
   resolved "https://registry.yarnpkg.com/angular-2-dropdown-multiselect/-/angular-2-dropdown-multiselect-1.5.4.tgz#d596745ffdb877e4bc80170d64e8b5c52247926e"
   integrity sha512-FqJmnq1gYqrOeC3Hv2gd2plPo/wUkZjFMlJ0uamnh89MMT8O9XGCZoCyw/NlqW45+u3VxOYHuWTIjn5NnPcnuQ==
 
-angular2-jsonapi@^4.0.3:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/angular2-jsonapi/-/angular2-jsonapi-4.1.0.tgz#cb48dce16c65a2495a54bc41453fa1d774edf016"
-  integrity sha512-G0n6yC8YzRVsYuCfGmPOQgZE/PRkzu8uTLOMij08DcQzePNBsj9B9rypSjP1lMhM2WCo4SGQXb59MkVHTYs6oQ==
+angular2-jsonapi@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/angular2-jsonapi/-/angular2-jsonapi-5.1.2.tgz#3a8ab8470f3362e4de6be4448797101b1b4c3dc3"
+  integrity sha512-8OpQPiLWgGg6pmhsouMJBEftCWAIwGhKCsTwYsOPaKuwBt9uf9NlIsfqW5ELlXf61JuISrCjAN6iwP8klLcFgg==
   dependencies:
     date-fns "^1.29.0"
     lodash-es "^4.17.4"

@@ -3,7 +3,7 @@ import { User } from 'app/models/user.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { Http, RequestOptionsArgs, Headers } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class UsersService extends JsonApiService<User> {
@@ -12,7 +12,7 @@ export class UsersService extends JsonApiService<User> {
 
   constructor(
     protected datastoreService: DatastoreService,
-    protected http: Http
+    protected http: HttpClient
   ) {
     super();
   }

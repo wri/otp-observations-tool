@@ -1,8 +1,8 @@
-import { Http } from '@angular/http';
 import { DatastoreService } from 'app/services/datastore.service';
 import { ObservationDocument } from 'app/models/observation_document';
 import { JsonApiService } from 'app/services/json-api.service';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ObservationDocumentsService extends JsonApiService<ObservationDocument> {
@@ -11,7 +11,7 @@ export class ObservationDocumentsService extends JsonApiService<ObservationDocum
 
   constructor (
     protected datastoreService: DatastoreService,
-    protected http: Http
+    protected http: HttpClient
   ) {
     super();
   }

@@ -3,7 +3,7 @@ import { environment } from 'environments/environment.dev';
 import { Severity } from 'app/models/severity.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class SeveritiesService extends JsonApiService<Severity> {
@@ -12,7 +12,7 @@ export class SeveritiesService extends JsonApiService<Severity> {
 
   constructor(
     protected datastoreService: DatastoreService,
-    protected http: Http
+    protected http: HttpClient
   ) {
     super();
   }
