@@ -1,5 +1,4 @@
 import { JsonApiService } from 'app/services/json-api.service';
-import { environment } from 'environments/environment.dev';
 import { Category } from 'app/models/category.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
@@ -18,6 +17,6 @@ export class CategoriesService extends JsonApiService<Category> {
   }
 
   getAll() {
-    return this.datastoreService.query(Category).toPromise();
+    return this.datastoreService.findAll(Category).toPromise().then((data) => data.getModels());
   }
 }

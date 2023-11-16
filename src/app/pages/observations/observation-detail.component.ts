@@ -55,8 +55,8 @@ interface GeoreferencedPhoto { // Usage georefered photo as evidence
   styleUrls: ['./observation-detail.component.scss']
 })
 export class ObservationDetailComponent implements OnDestroy {
-  @ViewChild('evidenceBlock') evidenceBlock: ElementRef;
-  @ViewChild('evidenceInput') evidenceInput: ElementRef;
+  @ViewChild('evidenceBlock', { static: false }) evidenceBlock: ElementRef;
+  @ViewChild('evidenceInput', { static: false }) evidenceInput: ElementRef;
   loading = false;
   objectKeys = Object.keys;
   subscription: Subscription;

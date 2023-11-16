@@ -9,10 +9,10 @@ export class TableFilterBehavior implements AfterViewInit {
   private latestRequestID = 0;
   protected service: JsonApiService<any>;
 
-  @ViewChild(TableComponent)
+  @ViewChild(TableComponent, { static: true })
   protected table: TableComponent;
 
-  @ViewChild(FiltersComponent)
+  @ViewChild(FiltersComponent, { static: true })
   protected filters: FiltersComponent;
 
   ngAfterViewInit(): void {

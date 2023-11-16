@@ -24,8 +24,9 @@ export class CountriesService extends JsonApiService<Country> {
    */
   getAll(params: any = {}): Promise<Country[]> {
     return this.datastoreService
-      .query(Country, Object.assign({}, { page: { size: 3000 }, 'filter[is-active]': 'all' }, params))
-      .toPromise();
+      .findAll(Country, Object.assign({}, { page: { size: 3000 }, 'filter[is-active]': 'all' }, params))
+      .toPromise()
+      .then((data) => data.getModels());
   }
 
   createCountry(formValues): Promise<any> {

@@ -15,12 +15,9 @@ import { Severity } from 'app/models/severity.model';
 import { Country } from 'app/models/country.model';
 import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { JsonApiDatastore, JsonApiDatastoreConfig } from 'angular2-jsonapi';
+import { JsonApiDatastore, JsonApiDatastoreConfig, JsonApiModel, JsonApiQueryData, ModelType } from 'angular2-jsonapi';
 import { Observation } from 'app/models/observation.model';
 import { Law } from 'app/models/law.model';
-
-import { TokenService } from 'app/services/token.service';
 
 @Injectable()
 @JsonApiDatastoreConfig({
@@ -46,20 +43,4 @@ import { TokenService } from 'app/services/token.service';
   }
 })
 export class DatastoreService extends JsonApiDatastore {
-
-  constructor (http: HttpClient, private tokenService: TokenService) {
-    super(http);
-
-    this.tokenService.tokenChange.subscribe(() => this.setAPIHeaders());
-    this.setAPIHeaders();
-  }
-
-  setAPIHeaders() {
-    const headers = new Headers();
-    if (this.tokenService.token) {
-      headers.set('Authorization', `Bearer ${this.tokenService.token}`);
-    }
-    headers.set('OTP-API-KEY', environment.OTP_API_KEY);
-    this.headers = headers;
-  }
 }

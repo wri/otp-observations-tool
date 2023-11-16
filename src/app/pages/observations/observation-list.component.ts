@@ -17,8 +17,8 @@ import { DraftObservation } from 'app/models/draft_observation.interface';
 export class ObservationListComponent extends TableFilterBehavior {
   apiUrl: string = environment.apiUrl;
   draftObservation: DraftObservation = null;
-  @ViewChild('uploadFile') uploadFile: ElementRef;
-  @ViewChild('table') tableComponent: ElementRef;
+  @ViewChild('uploadFile', { static: true }) uploadFile: ElementRef;
+  @ViewChild('table', { static: true }) tableComponent: ElementRef;
 
   tableOptions = {
     rows: {

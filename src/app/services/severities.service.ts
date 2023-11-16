@@ -23,10 +23,10 @@ export class SeveritiesService extends JsonApiService<Severity> {
    * @returns {Promise<Severity[]>}
    */
   getAll(params = {}): Promise<Severity[]> {
-    return this.datastoreService.query(Severity, Object.assign(
+    return this.datastoreService.findAll(Severity, Object.assign(
       {},
       { page: { size: 3000 }},
       params
-    )).toPromise();
+    )).toPromise().then((data) => data.getModels());
   }
 }

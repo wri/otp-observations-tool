@@ -22,8 +22,8 @@ export class ObserversService extends JsonApiService<Observer> {
    * @returns Promise<Observer[]>
    */
   getAll(params: any = {}): Promise<Observer[]> {
-    return this.datastoreService.query(Observer, Object.assign({}, { page: { size: 3000 } }, params))
-      .toPromise();
+    return this.datastoreService.findAll(Observer, Object.assign({}, { page: { size: 3000 } }, params))
+      .toPromise().then((data) => data.getModels());
   }
 
   /**

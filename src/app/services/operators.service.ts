@@ -23,11 +23,11 @@ export class OperatorsService extends JsonApiService<Operator> {
    * @returns {Promise<Operator[]>}
    */
   getAll(params = {}): Promise<Operator[]> {
-    return this.datastoreService.query(Operator, Object.assign(
+    return this.datastoreService.findAll(Operator, Object.assign(
       {},
       { page: { size: 3000 } },
       params
-    )).toPromise();
+    )).toPromise().then((data) => data.getModels());
   }
 
   /**

@@ -103,11 +103,13 @@ export class AuthService {
 
     try {
       const response = await this.http.get(`${environment.apiUrl}/users/current-user`).toPromise() as any;
+      const relationships = response.data.relationships;
+      const userPermissions = (response.included || []).find(i => i.type === 'user-permissions');
 
       this.userId = response.data.id;
-      this.userRole = (response.included || []).find(i => i.type === 'user-permissions')?.attributes['user-role'];
-      const userObserverId = response.data.relationships.observer.data?.id;
-      const managedObserverIds = response.data.relationships['managed-observers']?.data?.map((d) => d.id) || [];
+      this.userRole = userPermissions && userPermissions.attributes['user-role'];
+      const userObserverId = relationships.observer.data && relationships.observer.data.id;
+      const managedObserverIds = relationships['managed-observers'] && (relationships['managed-observers'].data || []).map((d) => d.id) || [];
       const allManagedOberverIds = uniq([userObserverId, ...managedObserverIds].filter(x => x));
       const savedUserObserverId = parseInt(localStorage.getItem('userObserverId'), 10);
       this.managedObserverIds = allManagedOberverIds;
@@ -124,7 +126,7 @@ export class AuthService {
           this.userObserverId = data[0].id;
         });
       }
-      this.userCountryId = response.data.relationships.country.data?.id;
+      this.userCountryId = relationships.country && relationships.country.data && relationships.country.data.id;
 
       await this.setObserverCountriesIds();
 
@@ -202,7 +204,7 @@ export class AuthService {
       fields: { countries: 'id' } // Just save bandwidth and load fastter
     }).then((observer) => {
       let countries_ids = [];
-      observer.countries?.forEach((country) => {
+      (observer.countries || []).forEach((country) => {
         countries_ids.push(parseInt(country['id']));
       });
       this.observerCountriesIds = countries_ids;

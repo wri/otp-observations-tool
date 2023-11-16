@@ -22,7 +22,7 @@ export class ObservationsService extends JsonApiService<Observation> {
   }
 
   getAll(): Promise<Observation[]> {
-    return this.datastoreService.query(Observation).toPromise();
+    return this.datastoreService.findAll(Observation).toPromise().then((data) => data.getModels());
   }
 
   /**

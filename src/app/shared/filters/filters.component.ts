@@ -102,8 +102,9 @@ export class FiltersComponent implements AfterContentInit {
       };
 
       try {
-        const options = await this.datastoreService.query(Subcategory, params)
+        const options = await this.datastoreService.findAll(Subcategory, params)
           .toPromise()
+          .then((data) => data.getModels())
           .then(rows => rows.map(row => ({ [row.name]: row.id })))
           .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
 
@@ -140,8 +141,9 @@ export class FiltersComponent implements AfterContentInit {
       };
 
       try {
-        const options = await this.datastoreService.query(Government, params)
+        const options = await this.datastoreService.findAll(Government, params)
           .toPromise()
+          .then((data) => data.getModels())
           .then(rows => rows.map(row => ({ [row['government-entity']]: row.id })))
           .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
 
@@ -178,8 +180,9 @@ export class FiltersComponent implements AfterContentInit {
       };
 
       try {
-        const options = await this.datastoreService.query(Operator, params)
+        const options = await this.datastoreService.findAll(Operator, params)
           .toPromise()
+          .then((data) => data.getModels())
           .then(rows => rows.map(row => ({ [row.name]: row.id })))
           .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
 
@@ -220,8 +223,9 @@ export class FiltersComponent implements AfterContentInit {
       };
 
       try {
-        const options = await this.datastoreService.query(Fmu, params)
+        const options = await this.datastoreService.findAll(Fmu, params)
           .toPromise()
+          .then((data) => data.getModels())
           .then(rows => rows.map(row => ({ [row.name]: row.id })))
           .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
 
@@ -328,8 +332,9 @@ export class FiltersComponent implements AfterContentInit {
         params = Object.assign({}, params, { 'filter[is-active]': 'all' });
       }
 
-      return this.datastoreService.query(model, params)
+      return this.datastoreService.findAll(model, params)
         .toPromise()
+        .then((data) => data.getModels())
         .then(rows => rows.map(row => ({ [row[asyncFiltersNode['name-attr']]]: row.id })))
         .then(rows => rows.reduce((res, row) => Object.assign({}, res, row), {}));
     });

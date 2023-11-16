@@ -22,8 +22,8 @@ export class ObservationDocumentsService extends JsonApiService<ObservationDocum
    * @returns Promise<ObservationDocument[]>
    */
   getAll(params: any = {}): Promise<ObservationDocument[]> {
-    return this.datastoreService.query(ObservationDocument, Object.assign({}, { page: { size: 3000 }}, params))
-      .toPromise();
+    return this.datastoreService.findAll(ObservationDocument, Object.assign({}, { page: { size: 3000 }}, params))
+      .toPromise().then((data) => data.getModels());
   }
 
 }

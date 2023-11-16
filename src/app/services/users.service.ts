@@ -18,8 +18,9 @@ export class UsersService extends JsonApiService<User> {
   }
 
   public getAll(): Promise<User[]> {
-    return this.datastoreService.query(User, { page: { size: 3000 } })
-      .toPromise();
+    return this.datastoreService.findAll(User, { page: { size: 3000 } })
+      .toPromise()
+      .then((data) => data.getModels());
   }
 
   /**

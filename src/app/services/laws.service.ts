@@ -22,8 +22,8 @@ export class LawsService extends JsonApiService<Law> {
    * @returns Promise<Law[]>
    */
   getAll(params: any = {}): Promise<Law[]> {
-    return this.datastoreService.query(Law, Object.assign({}, { page: { size: 3000 }}, params))
-      .toPromise();
+    return this.datastoreService.findAll(Law, Object.assign({}, { page: { size: 3000 }}, params))
+      .toPromise().then((data) => data.getModels());
   }
 
   /**

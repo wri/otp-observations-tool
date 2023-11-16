@@ -24,8 +24,9 @@ export class SubcategoriesService extends JsonApiService<Subcategory> {
    */
   getAll(params: any = {}): Promise<Subcategory[]> {
     return this.datastoreService
-      .query(Subcategory, Object.assign({}, { page: { size: 3000 } }, params))
-      .toPromise();
+      .findAll(Subcategory, Object.assign({}, { page: { size: 3000 } }, params))
+      .toPromise()
+      .then((data) => data.getModels());
   }
 
   /**
@@ -36,11 +37,11 @@ export class SubcategoriesService extends JsonApiService<Subcategory> {
    * @returns {Promise<Subcategory[]>}
    */
   getByType(type: 'operator'|'government', params: any = {}): Promise<Subcategory[]> {
-    return this.datastoreService.query(Subcategory, Object.assign({}, {
+    return this.datastoreService.findAll(Subcategory, Object.assign({}, {
       page: { size: 3000 },
       filter: {
         'subcategory-type': type
       }
-    }, params)).toPromise();
+    }, params)).toPromise().then((data) => data.getModels());
   }
 }

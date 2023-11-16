@@ -19,11 +19,11 @@ export class GovernmentsService extends JsonApiService<Government> {
   }
 
   getAll(params = {}) {
-    return this.datastoreService.query(Government, Object.assign(
+    return this.datastoreService.findAll(Government, Object.assign(
       {},
       { page: { size: 1000 } },
       params
-    )).toPromise();
+    )).toPromise().then((data) => data.getModels());
   }
 
   /**
