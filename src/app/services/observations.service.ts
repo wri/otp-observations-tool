@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Observation } from 'app/models/observation.model';
 import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AuthService } from 'app/services/auth.service';
 import { DraftObservation } from 'app/models/draft_observation.interface';
 import { HttpClient } from '@angular/common/http';

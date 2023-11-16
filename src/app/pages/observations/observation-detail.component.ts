@@ -31,10 +31,7 @@ import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ang
 import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
-import { forkJoin } from "rxjs/observable/forkJoin";
-import { Observable } from 'rxjs/Observable';
-import { interval } from 'rxjs/observable/interval';
-import { Subscription } from 'rxjs/Subscription';
+import { forkJoin ,  Observable ,  interval ,  Subscription } from "rxjs";
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({

@@ -1,10 +1,12 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { TokenService } from 'app/services/token.service';
 import { Router } from '@angular/router';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+
+
+import { ReplaySubject } from 'rxjs';
 import { Observer } from 'app/models/observer.model';
 import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
@@ -69,8 +71,8 @@ export class AuthService {
   login(email: string, password: string): Promise<boolean> {
     const payload = { auth: { email, password } };
 
-    return this.http.post(`${environment.apiUrl}/login`, payload)
-      .map((body: any) => {
+    return this.http.post(`${environment.apiUrl}/login`, payload).pipe(
+      map((body: any) => {
         if (!['ngo', 'ngo_manager', 'admin'].includes(body.role)) {
           this.triggerLoginStatus(false);
           return false;
@@ -83,7 +85,7 @@ export class AuthService {
         this.triggerLoginStatus(true);
 
         return true;
-      }).toPromise();
+      })).toPromise();
   }
 
   /**

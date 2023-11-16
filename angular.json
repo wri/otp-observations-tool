@@ -194,5 +194,8 @@
     "@schematics/angular:directive": {
       "prefix": "otp"
     }
+  },
+  "cli": {
+    "packageManager": "yarn"
   }
 }

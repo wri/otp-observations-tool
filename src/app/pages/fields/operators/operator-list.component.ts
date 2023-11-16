@@ -5,8 +5,7 @@ import { OperatorsService } from 'app/services/operators.service';
 import { Operator, OperatorTypes } from 'app/models/operator.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, AfterViewInit } from '@angular/core';
-import { forkJoin } from "rxjs/observable/forkJoin";
-import { Observable } from 'rxjs/Observable';
+import { forkJoin ,  Observable } from "rxjs";
 
 @Component({
   selector: 'otp-operator-list',

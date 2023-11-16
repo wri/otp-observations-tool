@@ -6,9 +6,9 @@ import {
   HttpRequest,
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
+import { Observable } from 'rxjs';
+
+
 import { environment } from 'environments/environment';
 import { TokenService } from './token.service';
 

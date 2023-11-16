@@ -1,6 +1,6 @@
 import { Directive, OnInit, OnDestroy, TemplateRef, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
 import { ResponsiveService } from 'app/services/responsive.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 export const TABLET_BREAKPOINT = 768;
 

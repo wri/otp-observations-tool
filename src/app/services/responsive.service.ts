@@ -1,10 +1,12 @@
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+
+import {fromEvent as observableFromEvent,  ReplaySubject ,  Observable } from 'rxjs';
+
+import {startWith, defaultIfEmpty, map, debounceTime} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/defaultIfEmpty';
-import 'rxjs/add/operator/startWith';
+
+
+
+
 
 @Injectable()
 export class ResponsiveService {
@@ -16,11 +18,11 @@ export class ResponsiveService {
   }
 
   constructor() {
-    Observable.fromEvent(window, 'resize')
-      .debounceTime(300)
-      .map(() => window.innerWidth)
-      .defaultIfEmpty()
-      .startWith(window.innerWidth)
+    observableFromEvent(window, 'resize').pipe(
+      debounceTime(300),
+      map(() => window.innerWidth),
+      defaultIfEmpty(),
+      startWith(window.innerWidth),)
       .subscribe(width => this.resize$.next(width));
   }
 

@@ -1,3 +1,5 @@
+
+import {map} from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JsonApiModel, JsonApiDatastore } from 'angular2-jsonapi';
@@ -69,8 +71,8 @@ export class JsonApiService<T extends JsonApiModel> {
   public get(params: JsonApiParams): Promise<JsonApiResponse<T>> {
     const url = this.getUrl(params);
 
-    return this.http.get(url)
-      .map((body: any) => {
+    return this.http.get(url).pipe(
+      map((body: any) => {
         const models: T[] = [];
 
         body.data.forEach(data => {
@@ -89,7 +91,7 @@ export class JsonApiService<T extends JsonApiModel> {
           data: models,
           meta: body.meta
         };
-      })
+      }))
       .toPromise();
   }
 
