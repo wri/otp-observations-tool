@@ -112,7 +112,7 @@
       }
     }
 
-    /deep/ svg {
+    ::ng-deep svg {
       width: 15px;
       height: 15px;
       fill: rgba($black, .5);
@@ -149,7 +149,7 @@
   }
 }
 
-:host /deep/ .ngx-datatable .datatable-body-cell {
+:host ::ng-deep .ngx-datatable .datatable-body-cell {
   -webkit-user-select: initial!important;
   -moz-user-select: initial!important;
   -ms-user-select: initial!important;

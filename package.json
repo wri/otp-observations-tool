@@ -45,7 +45,6 @@
     "foundation-sites": "~6.6.3",
     "leaflet": "^1.2.0",
     "lodash": "^4.17.21",
-    "node-sass": "4",
     "proj4": "^2.6.1",
     "rxjs": "^6.6.7",
     "rxjs-compat": "6",

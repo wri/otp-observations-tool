@@ -201,7 +201,7 @@
             background: mix($white, $color-warning, 80%);
           }
 
-          /deep/ a {
+          ::ng-deep a {
             color: $color-primary;
             text-decoration: underline;
           }
@@ -256,8 +256,8 @@
         }
       }
 
-      /deep/ button.action,
-      /deep/ a.action {
+      ::ng-deep button.action,
+      ::ng-deep a.action {
         margin-right: 12px;
         cursor: pointer;
 
