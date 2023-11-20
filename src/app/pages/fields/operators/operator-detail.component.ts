@@ -17,8 +17,6 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./operator-detail.component.scss']
 })
 export class OperatorDetailComponent {
-
-  isAdmin = false;
   objectKeys = Object.keys;
 
   countries: Country[] = [];
@@ -56,7 +54,6 @@ export class OperatorDetailComponent {
     private translateService: TranslateService,
     private authService: AuthService
   ) {
-    this.isAdmin = this.authService.isAdmin();
     this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
 
     this.translateService.onLangChange.subscribe(() => {
@@ -108,8 +105,6 @@ export class OperatorDetailComponent {
 
     const isEdition = !!this.operator.id;
     this.nameServerError = null;
-
-    console.log('options', this.operatorTypeOptions);
 
     this.operator.save()
       .toPromise()
@@ -167,10 +162,6 @@ export class OperatorDetailComponent {
    * @returns {boolean}
    */
   canEdit(): boolean {
-    if (!this.isAdmin) {
-      return false;
-    }
-
     if (!(this.useRouter && this.route.snapshot.params.id)) {
       return true;
     }

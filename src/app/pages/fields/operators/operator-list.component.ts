@@ -18,7 +18,6 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
   operatorTypeOptions: any = {};
   operatorTypes = Object.keys(OperatorTypes);
   activeFilterValues: any = [];
-  isAdmin = this.authService.isAdmin();
   countryFilterParams: any = {};
 
   constructor(
@@ -64,9 +63,6 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
    * @returns {boolean}
    */
   canEdit(operator: Operator): boolean {
-    if (!this.isAdmin) {
-      return false;
-    }
     let countries = this.authService.observerCountriesIds;
 
     if (countries.length) {
