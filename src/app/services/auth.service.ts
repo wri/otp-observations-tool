@@ -9,13 +9,15 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observer } from 'app/models/observer.model';
 import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
+import { uniq } from 'lodash';
 
 @Injectable()
 export class AuthService {
 
   public userId: string;
   public userRole: string;
-  public userObserverId: string;
+  private _userObserverId: string;
+  public managedObserverIds: string[] = [];
   public userCountryId: string;
   public observerCountriesIds: Number[];
   // Observable of the login status of the user
@@ -25,12 +27,25 @@ export class AuthService {
     return this.logged$;
   }
 
+  set userObserverId(val) {
+    this._userObserverId = val;
+    if (val) {
+      localStorage.setItem('userObserverId', val);
+    } else {
+      localStorage.removeItem('userObserverId');
+    }
+  }
+
+  get userObserverId() {
+    return this._userObserverId;
+  }
+
   constructor(
     private http: Http,
     private tokenService: TokenService,
     private router: Router,
     private translateService: TranslateService,
-    private observersService: ObserversService,
+    private observersService: ObserversService
   ) {
   }
 
@@ -57,7 +72,7 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}/login`, payload)
       .map(response => response.json())
       .map(body => {
-        if (body.role !== 'ngo' && body.role !== 'ngo_manager') {
+        if (!['ngo', 'ngo_manager', 'admin'].includes(body.role)) {
           this.triggerLoginStatus(false);
           return false;
         }
@@ -86,18 +101,31 @@ export class AuthService {
     }
 
     try {
-      const response = await this.http.get(`${environment.apiUrl}/users/current-user?include=user-permission,observer,country`)
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user`)
         .map(data => data.json())
         .toPromise();
 
       this.userId = response.data.id;
-      this.userRole = response.included.length
-        && response.included.find(i => i.type === 'user-permissions')
-        && response.included.find(i => i.type === 'user-permissions').attributes['user-role'];
-      this.userObserverId = response.data.relationships.observer.data
-        && response.data.relationships.observer.data.id;
-      this.userCountryId = response.data.relationships.country.data
-        && response.data.relationships.country.data.id;
+      this.userRole = (response.included || []).find(i => i.type === 'user-permissions')?.attributes['user-role'];
+      const userObserverId = response.data.relationships.observer.data?.id;
+      const managedObserverIds = response.data.relationships['managed-observers']?.data?.map((d) => d.id) || [];
+      const allManagedOberverIds = uniq([userObserverId, ...managedObserverIds].filter(x => x));
+      const savedUserObserverId = parseInt(localStorage.getItem('userObserverId'), 10);
+      this.managedObserverIds = allManagedOberverIds;
+      if (!isNaN(savedUserObserverId) && (allManagedOberverIds.includes(savedUserObserverId.toString()) || this.isBackendAdmin())) {
+        this.userObserverId = savedUserObserverId.toString();
+      } else {
+        this.userObserverId = allManagedOberverIds[0];
+      }
+
+      // if user is backend admin and has no observer context saved in localstorage
+      // take the first observer id
+      if (!this.userObserverId && this.isBackendAdmin()) {
+        await this.observersService.getAll({ sort: 'name' }).then(data => {
+          this.userObserverId = data[0].id;
+        });
+      }
+      this.userCountryId = response.data.relationships.country.data?.id;
 
       await this.setObserverCountriesIds();
 
@@ -107,6 +135,22 @@ export class AuthService {
       } else {
         this.translateService.use('en');
         alert(await this.translateService.get('noLanguageSet').toPromise());
+      }
+
+      // TODO: remove after some time
+      // this is migration to keep old draft observation saved in under new key
+      // I'm only going to do this for users who manages one observer
+      // in different case let's just remove draft
+      try {
+        const oldDraftObservation = JSON.parse(localStorage.getItem('draftObservation'));
+        if (this.managedObserverIds.length === 1 && oldDraftObservation) {
+          const key = `draftObservation-${this.userId}-${this.userObserverId}`;
+          localStorage.setItem(key, JSON.stringify(oldDraftObservation))
+        }
+        localStorage.removeItem('draftObservation');
+      } catch {
+        // in case of error, just remove failing draftObservation
+        localStorage.removeItem('draftObservation');
       }
 
       this.triggerLoginStatus(!!response);
@@ -126,13 +170,18 @@ export class AuthService {
    * @returns {boolean}
    */
   isAdmin(): boolean {
-    return this.userRole === 'ngo_manager';
+    return this.userRole === 'ngo_manager' || this.isBackendAdmin();
+  }
+
+  isBackendAdmin(): boolean {
+    return this.userRole === 'admin';
   }
 
   logout() {
     this.tokenService.token = null;
     this.userId = null;
     this.userRole = null;
+    this.userObserverId = null;
     this.triggerLoginStatus(false);
     this.router.navigate(['/']);
   }
@@ -154,7 +203,7 @@ export class AuthService {
       fields: { countries: 'id' } // Just save bandwidth and load fastter
     }).then((observer) => {
       let countries_ids = [];
-      observer.countries.forEach((country) => {
+      observer.countries?.forEach((country) => {
         countries_ids.push(parseInt(country['id']));
       });
       this.observerCountriesIds = countries_ids;

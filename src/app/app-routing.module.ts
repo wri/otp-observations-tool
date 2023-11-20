@@ -24,6 +24,7 @@ import { OrganizationProfileComponent } from 'app/pages/my-otp/profile/organizat
 import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { ReportLibraryComponent } from 'app/pages/my-otp/report-library/report-library.component';
+import { UserRoleGuard } from 'app/services/user-role.guard';
 // import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
 
 
@@ -74,11 +75,11 @@ const routes: Routes = [
           {
             path: '',
             pathMatch: 'full',
-            redirectTo: 'profile'
+            redirectTo: 'profile',
           },
           {
             path: 'profile',
-            component: OrganizationProfileComponent
+            component: OrganizationProfileComponent,
           },
           {
             path: 'reports',
@@ -172,7 +173,9 @@ const routes: Routes = [
       },
       {
         path: 'profile',
-        component: ProfileComponent
+        component: ProfileComponent,
+        data: { authExcludeRoles: ['admin'] },
+        canActivate: [UserRoleGuard]
       }
     ]
   },

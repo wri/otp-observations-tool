@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from 'app/services/auth.service';
 import { ObservationsService } from 'app/services/observations.service';
 
 export interface ErrorLine {
@@ -24,7 +25,7 @@ export class UploadFileComponent {
   @Input() set response(response: any) {
     this._response = response;
 
-    // If the backend returns success after 
+    // If the backend returns success after
     // an invalid (empty or incorrectly composed) file
     if (!response) {
       this.errors.push({
@@ -49,6 +50,7 @@ export class UploadFileComponent {
   constructor(
     private service: ObservationsService,
     private translateService: TranslateService,
+    private authService: AuthService,
   ) { }
 
   private generateErrorLines(response: any, index: number): void {
@@ -75,6 +77,7 @@ export class UploadFileComponent {
     const formData = new FormData();
     formData.append('import[file]', file);
     formData.append('import[importer_type]', 'observations');
+    formData.append('import[importer_params]', JSON.stringify({ observer_ids: [parseInt(this.authService.userObserverId, 10)] }));
     this.service.uploadFile(formData).subscribe(
       (response) => {
         // For processing an empty object

@@ -7,7 +7,7 @@ describe('User', () => {
 
   context('Public user', () => {
     it('can log in and out', function () {
-      cy.login('tsubik+ngomanager@gmail.com', 'secret');
+      cy.login('ngomanager@example.com', 'secret');
       cy.get('button').contains('Log out').click();
       cy.get('button').contains('Login').should('exist')
     });
@@ -48,15 +48,15 @@ describe('User', () => {
 
   context('Logged in User', () => {
     beforeEach(() => {
-      cy.login('tsubik+ngomanager@gmail.com', 'secret');
+      cy.login('ngomanager@example.com', 'secret');
       cy.visit('http://localhost:4200/private/profile');
     });
 
     describe('updating user profile', function () {
       it('can update some profile info without current password', function () {
         /* cy.get('a').contains('Profile', { timeout: 10000 }).click(); */
-        cy.get('#name').clear().type('Tomasz Operator Test');
-        cy.get('#email_field').clear().type('tsubik+ngomanager@gmail.com');
+        cy.get('#name').clear().type('NGO Manager Test');
+        cy.get('#email_field').clear().type('ngomanger@example.com');
         cy.get('#locale_field').select('English');
 
         cy.then(() => {
@@ -70,7 +70,7 @@ describe('User', () => {
       it('can update user email and password', function () {
         cy.get('#current_password').should('not.exist');
         cy.get('#locale_field').select('English');
-        cy.get('#email_field').clear().type('tsubik+ngomanagertest@gmail.com');
+        cy.get('#email_field').clear().type('ngomanagertest@example.com');
         cy.get('#current_password').should('exist');
         cy.get('#current_password').clear().type('secret');
         cy.then(() => {
@@ -81,7 +81,7 @@ describe('User', () => {
         cy.get('button').contains('Save').click();
         cy.get('#email_field').should('not.exist'); // trick wait for page reload
 
-        cy.get('#email_field').should('have.value', 'tsubik+ngomanagertest@gmail.com');
+        cy.get('#email_field').should('have.value', 'ngomanagertest@example.com');
         cy.get('#current_password').should('not.exist');
         cy.get('#new_password').clear().type('secret12345');
         cy.get('#password_confirmation').clear().type('secret12345');
@@ -95,7 +95,7 @@ describe('User', () => {
         cy.get('#email_field').should('not.exist'); // trick wait for page reload
 
         // update password and email back
-        cy.get('#email_field').clear().type('tsubik+ngomanager@gmail.com');
+        cy.get('#email_field').clear().type('ngomanager@example.com');
         cy.get('#new_password').clear().type('secret');
         cy.get('#password_confirmation').clear().type('secret');
         cy.get('#current_password').clear().type('secret12345');

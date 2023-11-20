@@ -16,7 +16,7 @@ import { DraftObservation } from 'app/models/draft_observation.interface';
 })
 export class ObservationListComponent extends TableFilterBehavior {
   apiUrl: string = environment.apiUrl;
-  draftObservation: DraftObservation = JSON.parse(localStorage.getItem('draftObservation'));
+  draftObservation: DraftObservation = null;
   @ViewChild('uploadFile') uploadFile: ElementRef;
   @ViewChild('table') tableComponent: ElementRef;
 
@@ -59,6 +59,10 @@ export class ObservationListComponent extends TableFilterBehavior {
     return this.defaultObservationType;
   }
 
+  get isObserverColumnVisible() {
+    return this.authService.isBackendAdmin();
+  }
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -79,6 +83,8 @@ export class ObservationListComponent extends TableFilterBehavior {
     this.fmuFilterParams = observerIdFilter;
     this.reportFilterParams = observerIdFilter;
 
+    this.draftObservation = this.service.getDraftObservation();
+
     this.translateService.onLangChange.subscribe(() => {
       this.updateStatusFilterValues();
       this.updateTypeFilterValues();
@@ -87,7 +93,8 @@ export class ObservationListComponent extends TableFilterBehavior {
 
   ngAfterViewInit(): void {
     this.filters.defaultApiParams = {
-      'filter[hidden]': 'all'
+      'filter[hidden]': 'all',
+      'filter[observer_id]': this.authService.userObserverId
     };
     super.ngAfterViewInit();
   }
@@ -165,6 +172,7 @@ export class ObservationListComponent extends TableFilterBehavior {
     const formData = new FormData();
     formData.append('import[file]', file);
     formData.append('import[importer_type]', 'observations');
+    formData.append('import[importer_params]', JSON.stringify({ observer_ids: [parseInt(this.authService.userObserverId, 10)] }));
     this.isUploading = true;
     this.service.uploadFile(formData).subscribe(
       (response) => {

@@ -118,6 +118,8 @@ export class ObservationDetailComponent implements OnDestroy {
   _mapMarker = null; // Layer with the marker
   _mapFmu = null; // Layer with the FMU
 
+  currentContextObserver = null;
+
   // Multi-select options
   multiSelectTexts: IMultiSelectTexts = {};
 
@@ -750,6 +752,8 @@ export class ObservationDetailComponent implements OnDestroy {
         this.additionalObserversOptions = observers
           .filter(observer => observer.id !== this.authService.userObserverId)
           .map((observer) => ({ id: observer.id, name: observer.name }));
+
+        this.currentContextObserver = observers.find(o => o.id === this.authService.userObserverId);
       })
       .catch((err) => console.error(err)); // TODO: visual feedback
 
@@ -822,7 +826,7 @@ export class ObservationDetailComponent implements OnDestroy {
       }
     } else {
       if (this.route.snapshot.params.useDraft) {
-        this.draft = JSON.parse(localStorage.getItem('draftObservation'));
+        this.draft = this.observationsService.getDraftObservation();
         // Set values from the draft observation
         if (this.draft) {
           this.type = this.draft.observationType;
@@ -967,7 +971,7 @@ export class ObservationDetailComponent implements OnDestroy {
       draftModel.relevantOperators = this._relevantOperatorsSelection;
     }
 
-    localStorage.setItem('draftObservation', JSON.stringify(draftModel));
+    this.observationsService.saveDraftObservation(draftModel);
   }
 
   /**
@@ -1567,7 +1571,9 @@ export class ObservationDetailComponent implements OnDestroy {
         subcategory: this.subcategory,
         details: this.details,
         severity: this.severity,
-        observers: this.observers.filter((observer) => this._additionalObserversSelection.includes(observer.id)),
+        observers: this.observers
+          .filter((observer) => this._additionalObserversSelection.includes(observer.id))
+          .concat([this.observers.find(o => o.id === this.authService.userObserverId)]),
         'actions-taken': this.actions,
         'validation-status': this.validationStatus,
         'concern-opinion': this.opinion,
@@ -1611,7 +1617,7 @@ export class ObservationDetailComponent implements OnDestroy {
         if (this.observation && !this.isCopied) {
           alert(await this.translateService.get('observationUpdate.success').toPromise());
         } else {
-          localStorage.removeItem('draftObservation');
+          this.observationsService.removeDraftObservation();
           alert(await this.translateService.get('observationCreation.success').toPromise());
         }
 
