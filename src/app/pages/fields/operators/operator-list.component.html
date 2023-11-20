@@ -4,7 +4,7 @@
     <otp-filter [name]="'Country' | translate" values="countries" prop="country" name-attr="name" [extra-params]="countryFilterParams"></otp-filter>
     <otp-filter [name]="'Active' | translate" [values]="activeFilterValues" prop="is-active"></otp-filter>
   </otp-filters>
-  <button *ngIf="isAdmin" (click)="triggerNewOperator()" class="c-button -primary">
+  <button (click)="triggerNewOperator()" class="c-button -primary">
     {{'New operator' | translate}}
   </button>
 </div>

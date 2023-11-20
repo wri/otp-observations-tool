@@ -12,8 +12,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./government-list.component.scss']
 })
 export class GovernmentListComponent extends TableFilterBehavior {
-  // TODO: same for producer, when we are sure all users can do that then delete this
-  isAdmin = true; // this.authService.isAdmin();
   countryFilterParams: any = {};
 
   constructor(
@@ -62,9 +60,6 @@ export class GovernmentListComponent extends TableFilterBehavior {
    * @returns {boolean}
    */
   canEdit(government: Government): boolean {
-    if (!this.isAdmin) {
-      return false;
-    }
     let countries = this.authService.observerCountriesIds;
 
     if (countries.length) {

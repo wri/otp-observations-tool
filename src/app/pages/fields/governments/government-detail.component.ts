@@ -16,8 +16,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class GovernmentDetailComponent {
 
-  isAdmin = false;
-
   countries: Country[] = [];
   government: Government = null;
   loading = false;
@@ -41,7 +39,6 @@ export class GovernmentDetailComponent {
     private translateService: TranslateService,
     private authService: AuthService
   ) {
-    this.isAdmin = true; // this.authService.isAdmin();
   }
 
   ngOnInit() {
@@ -148,10 +145,6 @@ export class GovernmentDetailComponent {
    * @returns {boolean}
    */
   canEdit(): boolean {
-    if (!this.isAdmin) {
-      return false;
-    }
-
     if (!(this.useRouter && this.route.snapshot.params.id)) {
       return true;
     }
