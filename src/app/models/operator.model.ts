@@ -23,7 +23,6 @@ export class Operator extends JsonApiModel {
   @Attribute() 'operator-type'?: string;
   @Attribute() logo?: any;
   @Attribute() details?: string;
-  @Attribute() concession?: string;
   @Attribute() address?: string;
   @Attribute() website?: string;
 
