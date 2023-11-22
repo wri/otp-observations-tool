@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "prod-build": "ng build --output-path=dist/ --base-href=/observations-tool/ --aot --prod",
-    "dev-build": "ng build --output-path=dist/ --base-href=/observations-tool/ --aot --configuration=dev",
+    "staging-build": "ng build --output-path=dist/ --base-href=/observations-tool/ --aot --configuration=staging",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
     "transifex:push": "env $(grep ^TX_TOKEN -m 1 .env | xargs) tx push -s",
     "transifex:pull": "env $(grep ^TX_TOKEN -m 1 .env | xargs) tx pull -a && node transifex/format-locales.js"

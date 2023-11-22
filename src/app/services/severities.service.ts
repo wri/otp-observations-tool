@@ -1,5 +1,4 @@
 import { JsonApiService } from 'app/services/json-api.service';
-import { environment } from 'environments/environment.dev';
 import { Severity } from 'app/models/severity.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';

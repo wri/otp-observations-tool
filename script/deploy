@@ -19,7 +19,7 @@ yarn transifex:pull
 
 echo "Building project..."
 if [ $1 = "staging" ]; then
-  yarn run dev-build
+  yarn run staging-build
 else
   yarn run prod-build
 fi
