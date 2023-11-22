@@ -55,6 +55,7 @@
     "@angular-devkit/core": "^8.0.3",
     "@angular/cli": "8.3.29",
     "@angular/compiler-cli": "^8.2.14",
+    "@sentry/cli": "^2.21.5",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
     "codelyzer": "^5.0.1",

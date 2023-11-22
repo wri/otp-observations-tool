@@ -24,4 +24,9 @@ else
   yarn run prod-build
 fi
 
+echo "Uploading source maps to sentry"
+
+yarn run sentry-cli sourcemaps inject ./dist
+env $(grep ^SENTRY .env | xargs) yarn run sentry-cli sourcemaps upload ./dist
+
 echo "--> All done :)"
