@@ -35,7 +35,6 @@ import { SubcategoryListComponent } from 'app/pages/fields/subcategories/subcate
 import { CategoriesService } from 'app/services/categories.service';
 import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
 import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
-import { WebWorkerService } from 'app/services/webworker.service';
 import { Base64FileInputDirective } from 'app/directives/base64-file-input.directive';
 import { ActionBarComponent } from 'app/shared/action-bar/action-bar.component';
 import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
@@ -195,7 +194,6 @@ export function createTranslateLoader(http: HttpClient) {
     LawsService,
     SeveritiesService,
     ResponsiveService,
-    WebWorkerService,
     apiInterceptorProvider,
     { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],

@@ -35,7 +35,6 @@
     "angular-2-dropdown-multiselect": "~1.5.4",
     "angular2-jsonapi": "^8",
     "angular2-spinner": "^1.0.10",
-    "angular2-web-worker": "^0.0.6",
     "core-js": "^2.4.1",
     "date-fns": "1",
     "exif-js": "^2.3.0",
