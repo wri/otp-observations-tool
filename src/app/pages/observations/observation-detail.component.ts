@@ -101,19 +101,36 @@ export class ObservationDetailComponent implements OnDestroy {
 
   // Map related
   map: L.Map;
-  mapOptions = {
-    center: [10, 0],
-    zoom: 1,
-    layers: [
-      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
-          &copy;<a href="https://carto.com/attribution">CARTO</a>`
-      })
-    ]
-  };
   _mapMarker = null; // Layer with the marker
   _mapFmu = null; // Layer with the FMU
+
+  get mapOptions() {
+    if (this.map) {
+      return {
+        center: [this.map.getCenter().lat, this.map.getCenter().lng],
+        zoom: this.map.getZoom(),
+        layers: [
+          L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
+              &copy;<a href="https://carto.com/attribution">CARTO</a>`
+          })
+        ]
+      }
+    }
+
+    return {
+      center: [10, 0],
+      zoom: 1,
+      layers: [
+        L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+          maxZoom: 18,
+          attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
+            &copy;<a href="https://carto.com/attribution">CARTO</a>`
+        })
+      ]
+    };
+  }
 
   currentContextObserver = null;
 
