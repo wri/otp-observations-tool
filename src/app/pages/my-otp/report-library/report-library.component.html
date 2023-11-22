@@ -15,7 +15,7 @@
   </otp-table-column>
   <otp-table-column [name]="'Actions' | translate">
     <ng-template let-row="row" table-cell-template>
-      <a href="{{apiUrl}}{{row.attachment.url}}" class="action" [attr.aria-label]="'Download' | translate" target="_blank" download><otp-icon name="#icon-download"></otp-icon></a>
+      <a href="{{row.attachment.url}}" class="action" [attr.aria-label]="'Download' | translate" target="_blank" download><otp-icon name="#icon-download"></otp-icon></a>
       <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
     </ng-template>
   </otp-table-column>

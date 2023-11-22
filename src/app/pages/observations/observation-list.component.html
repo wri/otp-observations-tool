@@ -89,7 +89,7 @@
     <otp-table-column [name]="'Report' | translate" prop="observation-report.title" [include]="true" [sortable]="false">
       <ng-template let-row="row" table-cell-template>
         <ng-template [ngIf]="row['observation-report']">
-          <a href="{{apiUrl}}{{row['observation-report'].attachment.url}}" target="_blank" download>{{row['observation-report'].title}}</a>
+          <a href="{{row['observation-report'].attachment.url}}" target="_blank" download>{{row['observation-report'].title}}</a>
         </ng-template>
       </ng-template>
     </otp-table-column>

@@ -22,7 +22,7 @@
     <!-- 2. Current file -->
     <div *ngIf="report.id" class="form-group">
       <label>{{'Current file' | translate}}</label>
-      <a href="{{apiUrl}}{{report.attachment.url}}" target="_blank" download>{{'Download file' | translate}}</a>
+      <a href="{{report.attachment.url}}" target="_blank" download>{{'Download file' | translate}}</a>
     </div>
 
     <!-- 2. File -->
