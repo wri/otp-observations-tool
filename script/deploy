@@ -24,6 +24,10 @@ else
   yarn run prod-build
 fi
 
+echo "Moving files to dist folder"
+rm -rf dist
+mv build dist
+
 echo "Uploading source maps to sentry"
 
 yarn run sentry-cli sourcemaps inject ./dist
