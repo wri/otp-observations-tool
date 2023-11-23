@@ -1,8 +1,8 @@
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'environments/environment';
-import { Http } from '@angular/http';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class ResetPasswordComponent {
 
   constructor(
     private router: Router,
-    private http: Http,
+    private http: HttpClient,
     private translateService: TranslateService
   ) { }
 
@@ -26,7 +26,6 @@ export class ResetPasswordComponent {
     const payload = { password: formValues };
 
     this.http.post(`${environment.apiUrl}/reset-password`, payload)
-      .map(response => response.json())
       .toPromise()
       .then(async () => {
         alert(await this.translateService.get('register.success').toPromise());

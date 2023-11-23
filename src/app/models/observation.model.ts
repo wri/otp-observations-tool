@@ -6,13 +6,13 @@ import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from 
 import { Country } from 'app/models/country.model';
 import { Species } from 'app/models/species.model';
 import { User } from 'app/models/user.model';
-import { Document } from 'app/models/document.model';
 import { Comment } from 'app/models/comment.model';
 import { Observer } from 'app/models/observer.model';
 import { Operator } from 'app/models/operator.model';
 import { Government } from 'app/models/government.model';
 import { Subcategory } from 'app/models/subcategory.model';
 import { Severity } from 'app/models/severity.model';
+import { DateConverter } from './converters/date_converter';
 
 @JsonApiModelConfig({
   type: 'observations'
@@ -20,7 +20,7 @@ import { Severity } from 'app/models/severity.model';
 export class Observation extends JsonApiModel {
 
   @Attribute() 'observation-type': string;
-  @Attribute() 'publication-date'?: Date;
+  @Attribute({ converter: new DateConverter() }) 'publication-date'?: Date;
   @Attribute() pv?: string;
   @Attribute() 'validation-status'?: string;
   @Attribute() details?: string;

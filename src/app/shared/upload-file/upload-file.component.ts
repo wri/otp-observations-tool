@@ -19,7 +19,7 @@ export class UploadFileComponent {
   public recordsNumber: number;
   private _response: any = {};
 
-  @ViewChild('reuploadFileInput') reuploadFileInput: ElementRef;
+  @ViewChild('reuploadFileInput', { static: true }) reuploadFileInput: ElementRef;
   @Output() exit: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Input() set response(response: any) {

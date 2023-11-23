@@ -33,7 +33,7 @@ export class TableComponent implements AfterContentInit {
 
   @Output() change = new EventEmitter<void>();
 
-  @ViewChild('tableContainer') tableContainer: ElementRef;
+  @ViewChild('tableContainer', { static: true }) tableContainer: ElementRef;
 
   previousState: JsonApiParams;
   loading = false;

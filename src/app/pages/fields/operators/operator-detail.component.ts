@@ -8,8 +8,7 @@ import { environment } from 'environments/environment';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { forkJoin } from "rxjs/observable/forkJoin";
-import { Observable } from 'rxjs/Observable';
+import { forkJoin ,  Observable } from "rxjs";
 
 @Component({
   selector: 'otp-operator-detail',

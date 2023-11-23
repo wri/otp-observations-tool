@@ -1,12 +1,12 @@
 import { environment } from './../../environments/environment';
-import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Observation } from 'app/models/observation.model';
 import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AuthService } from 'app/services/auth.service';
 import { DraftObservation } from 'app/models/draft_observation.interface';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ObservationsService extends JsonApiService<Observation> {
@@ -15,14 +15,14 @@ export class ObservationsService extends JsonApiService<Observation> {
 
   constructor (
     protected datastoreService: DatastoreService,
-    protected http: Http,
+    protected http: HttpClient,
     private authService: AuthService
   ) {
     super();
   }
 
   getAll(): Promise<Observation[]> {
-    return this.datastoreService.query(Observation).toPromise();
+    return this.datastoreService.findAll(Observation).toPromise().then((data) => data.getModels());
   }
 
   /**
@@ -38,20 +38,15 @@ export class ObservationsService extends JsonApiService<Observation> {
 
   createObservation(formValues): Promise<any> {
     const payload = { observation: formValues };
-    return this.http.post(`${environment.apiUrl}/observations`, payload)
-      .map(response => response.json())
-      .toPromise();
+    return this.http.post(`${environment.apiUrl}/observations`, payload).toPromise();
   }
 
   deleteObservationWithId(id): Promise<any> {
-    return this.http.delete(`${environment.apiUrl}/observations/${id}`)
-      .map(response => response.json())
-      .toPromise();
+    return this.http.delete(`${environment.apiUrl}/observations/${id}`).toPromise();
   }
 
   uploadFile(file: FormData): Observable<any> {
-    return this.http.post(`${environment.apiUrl}imports`, file)
-      .map(response => response.json());
+    return this.http.post(`${environment.apiUrl}imports`, file);
   }
 
   updateObservation(observation: Observation): Promise<any> {
@@ -81,9 +76,7 @@ export class ObservationsService extends JsonApiService<Observation> {
     };
 
     const payload = { observation: observationUpdated };
-    return this.http.patch(`${environment.apiUrl}/observations/${observation.id}`, payload)
-      .map(response => response.json())
-      .toPromise();
+    return this.http.patch(`${environment.apiUrl}/observations/${observation.id}`, payload).toPromise();
   }
 
   getDraftObservation() : DraftObservation {

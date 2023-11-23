@@ -1,15 +1,17 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { environment } from 'environments/environment';
 import { TokenService } from 'app/services/token.service';
 import { Router } from '@angular/router';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+
+
+import { ReplaySubject } from 'rxjs';
 import { Observer } from 'app/models/observer.model';
 import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
 import { uniq } from 'lodash';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class AuthService {
@@ -41,7 +43,7 @@ export class AuthService {
   }
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private tokenService: TokenService,
     private router: Router,
     private translateService: TranslateService,
@@ -69,9 +71,8 @@ export class AuthService {
   login(email: string, password: string): Promise<boolean> {
     const payload = { auth: { email, password } };
 
-    return this.http.post(`${environment.apiUrl}/login`, payload)
-      .map(response => response.json())
-      .map(body => {
+    return this.http.post(`${environment.apiUrl}/login`, payload).pipe(
+      map((body: any) => {
         if (!['ngo', 'ngo_manager', 'admin'].includes(body.role)) {
           this.triggerLoginStatus(false);
           return false;
@@ -84,7 +85,7 @@ export class AuthService {
         this.triggerLoginStatus(true);
 
         return true;
-      }).toPromise();
+      })).toPromise();
   }
 
   /**
@@ -101,14 +102,14 @@ export class AuthService {
     }
 
     try {
-      const response = await this.http.get(`${environment.apiUrl}/users/current-user`)
-        .map(data => data.json())
-        .toPromise();
+      const response = await this.http.get(`${environment.apiUrl}/users/current-user`).toPromise() as any;
+      const relationships = response.data.relationships;
+      const userPermissions = (response.included || []).find(i => i.type === 'user-permissions');
 
       this.userId = response.data.id;
-      this.userRole = (response.included || []).find(i => i.type === 'user-permissions')?.attributes['user-role'];
-      const userObserverId = response.data.relationships.observer.data?.id;
-      const managedObserverIds = response.data.relationships['managed-observers']?.data?.map((d) => d.id) || [];
+      this.userRole = userPermissions && userPermissions.attributes['user-role'];
+      const userObserverId = relationships.observer.data && relationships.observer.data.id;
+      const managedObserverIds = relationships['managed-observers'] && (relationships['managed-observers'].data || []).map((d) => d.id) || [];
       const allManagedOberverIds = uniq([userObserverId, ...managedObserverIds].filter(x => x));
       const savedUserObserverId = parseInt(localStorage.getItem('userObserverId'), 10);
       this.managedObserverIds = allManagedOberverIds;
@@ -125,7 +126,7 @@ export class AuthService {
           this.userObserverId = data[0].id;
         });
       }
-      this.userCountryId = response.data.relationships.country.data?.id;
+      this.userCountryId = relationships.country && relationships.country.data && relationships.country.data.id;
 
       await this.setObserverCountriesIds();
 
@@ -203,7 +204,7 @@ export class AuthService {
       fields: { countries: 'id' } // Just save bandwidth and load fastter
     }).then((observer) => {
       let countries_ids = [];
-      observer.countries?.forEach((country) => {
+      (observer.countries || []).forEach((country) => {
         countries_ids.push(parseInt(country['id']));
       });
       this.observerCountriesIds = countries_ids;

@@ -1,9 +1,8 @@
 import { JsonApiService } from 'app/services/json-api.service';
-import { environment } from 'environments/environment.dev';
 import { Subcategory } from 'app/models/subcategory.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class SubcategoriesService extends JsonApiService<Subcategory> {
@@ -12,7 +11,7 @@ export class SubcategoriesService extends JsonApiService<Subcategory> {
 
   constructor(
     protected datastoreService: DatastoreService,
-    protected http: Http
+    protected http: HttpClient
   ) {
     super();
   }
@@ -24,8 +23,9 @@ export class SubcategoriesService extends JsonApiService<Subcategory> {
    */
   getAll(params: any = {}): Promise<Subcategory[]> {
     return this.datastoreService
-      .query(Subcategory, Object.assign({}, { page: { size: 3000 } }, params))
-      .toPromise();
+      .findAll(Subcategory, Object.assign({}, { page: { size: 3000 } }, params))
+      .toPromise()
+      .then((data) => data.getModels());
   }
 
   /**
@@ -36,11 +36,11 @@ export class SubcategoriesService extends JsonApiService<Subcategory> {
    * @returns {Promise<Subcategory[]>}
    */
   getByType(type: 'operator'|'government', params: any = {}): Promise<Subcategory[]> {
-    return this.datastoreService.query(Subcategory, Object.assign({}, {
+    return this.datastoreService.findAll(Subcategory, Object.assign({}, {
       page: { size: 3000 },
       filter: {
         'subcategory-type': type
       }
-    }, params)).toPromise();
+    }, params)).toPromise().then((data) => data.getModels());
   }
 }

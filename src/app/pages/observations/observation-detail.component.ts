@@ -31,10 +31,7 @@ import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ang
 import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
-import { forkJoin } from "rxjs/observable/forkJoin";
-import { Observable } from 'rxjs/Observable';
-import { interval } from 'rxjs/observable/interval';
-import { Subscription } from 'rxjs/Subscription';
+import { forkJoin ,  Observable ,  interval ,  Subscription } from "rxjs";
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -58,8 +55,8 @@ interface GeoreferencedPhoto { // Usage georefered photo as evidence
   styleUrls: ['./observation-detail.component.scss']
 })
 export class ObservationDetailComponent implements OnDestroy {
-  @ViewChild('evidenceBlock') evidenceBlock: ElementRef;
-  @ViewChild('evidenceInput') evidenceInput: ElementRef;
+  @ViewChild('evidenceBlock', { static: false }) evidenceBlock: ElementRef;
+  @ViewChild('evidenceInput', { static: false }) evidenceInput: ElementRef;
   loading = false;
   objectKeys = Object.keys;
   subscription: Subscription;
@@ -104,19 +101,36 @@ export class ObservationDetailComponent implements OnDestroy {
 
   // Map related
   map: L.Map;
-  mapOptions = {
-    center: [10, 0],
-    zoom: 1,
-    layers: [
-      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
-          &copy;<a href="https://carto.com/attribution">CARTO</a>`
-      })
-    ]
-  };
   _mapMarker = null; // Layer with the marker
   _mapFmu = null; // Layer with the FMU
+
+  get mapOptions() {
+    if (this.map) {
+      return {
+        center: [this.map.getCenter().lat, this.map.getCenter().lng],
+        zoom: this.map.getZoom(),
+        layers: [
+          L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
+              &copy;<a href="https://carto.com/attribution">CARTO</a>`
+          })
+        ]
+      }
+    }
+
+    return {
+      center: [10, 0],
+      zoom: 1,
+      layers: [
+        L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+          maxZoom: 18,
+          attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
+            &copy;<a href="https://carto.com/attribution">CARTO</a>`
+        })
+      ]
+    };
+  }
 
   currentContextObserver = null;
 

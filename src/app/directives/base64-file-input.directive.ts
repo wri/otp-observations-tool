@@ -1,6 +1,5 @@
 import { Directive, ElementRef, Input, HostListener, OnChanges, SimpleChanges, forwardRef, Output, EventEmitter } from '@angular/core';
 import { Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { WebWorkerService } from 'app/services/webworker.service';
 
 const MAX_SIZE_VALIDATOR: any = {
   provide: NG_VALIDATORS,
@@ -31,8 +30,12 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
   private file: File;
   private base64: string;
   private conversionError: boolean;
+  private worker: Worker;
 
-  constructor(private el: ElementRef, private webWorkerService: WebWorkerService) {
+  constructor(private el: ElementRef) {
+    if (typeof Worker !== 'undefined') {
+      this.worker = new Worker('app/base64-file-input.worker', { type: 'module' });
+    }
   }
 
   /**
@@ -70,22 +73,29 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
 
     this.loading.emit(true);
 
-    const worker = this.webWorkerService
-      .run(this.workerFunction, this.file)
-      .then(res => {
-        this.base64 = res;
-      })
-      .catch(e => {
-        this.conversionError = true;
-      })
-      .then(() => {
-        this.propagateChange();
-        this.loading.emit(false);
+    const fileReadError = () => {
+      this.base64 = null;
+      this.conversionError = true;
+      this.propagateChange();
+      this.loading.emit(false);
+    };
 
-        // We terminate the service worker
-        this.webWorkerService.terminate(worker);
-      });
+    const fileReadSuccess = ({ data }) => {
+      if (data.error) {
+        return fileReadError();
+      }
+      this.base64 = data;
+      this.propagateChange();
+      this.loading.emit(false);
+    };
 
+    if (this.worker) {
+      this.worker.onmessage = fileReadSuccess;
+      this.worker.onerror = fileReadError;
+      this.worker.postMessage({ file: this.file });
+    } else {
+      this.readFileNoWorker(this.file, fileReadSuccess);
+    }
   }
 
   /**
@@ -94,13 +104,18 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
    * @returns {ValidationErrors}
    */
   validate(c: AbstractControl): ValidationErrors {
-    if (!this.file || this.isSizeValid(this.file)) {
-      return null;
-    }
+    if (!this.file) return null;
 
-    return {
-      maxSize: !this.isSizeValid(this.file)
-    };
+    const errors = {};
+    if (!this.isSizeValid(this.file)) {
+      errors['maxSize'] = true;
+    }
+    if (this.conversionError) {
+      errors['conversion'] = true;
+    }
+    if (Object.keys(errors).length === 0) return null;
+
+    return errors;
   }
 
   /**
@@ -179,11 +194,11 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
   /**
    * Convert the file to base64
    */
-  workerFunction(postMessage: (_: string) => void, file: File): void {
+  readFileNoWorker(file: File, onSuccess: Function) {
     const fileReader = new FileReader();
 
     fileReader.addEventListener('load', ({ target}: Event) => {
-      postMessage((<string>(<FileReader>target).result));
+      onSuccess({ data: (<string>(<FileReader>target).result) });
     });
 
     fileReader.readAsDataURL(file);

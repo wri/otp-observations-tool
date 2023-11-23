@@ -46,7 +46,7 @@
           <ng-template
             [ngIf]="column.cellTemplate"
             [ngTemplateOutlet]="column.cellTemplate"
-            [ngOutletContext]="{ value: column.getValue(row), row: row, column: column }"
+            [ngTemplateOutletContext]="{ value: column.getValue(row), row: row, column: column }"
           >
           </ng-template>
         </td>

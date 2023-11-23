@@ -1,5 +1,7 @@
+
+import {map} from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { JsonApiModel, JsonApiDatastore } from 'angular2-jsonapi';
 import { DatastoreService } from 'app/services/datastore.service';
 
@@ -29,7 +31,7 @@ export class JsonApiService<T extends JsonApiModel> {
 
   public model: ModelType<T>;
   protected datastoreService: DatastoreService;
-  protected http: Http;
+  protected http: HttpClient;
 
   private getUrl(params: JsonApiParams): string {
     const baseUrl: string = Reflect.getMetadata('JsonApiDatastoreConfig', this.datastoreService.constructor).baseUrl;
@@ -69,9 +71,8 @@ export class JsonApiService<T extends JsonApiModel> {
   public get(params: JsonApiParams): Promise<JsonApiResponse<T>> {
     const url = this.getUrl(params);
 
-    return this.http.get(url)
-      .map(res => {
-        const body = res.json();
+    return this.http.get(url).pipe(
+      map((body: any) => {
         const models: T[] = [];
 
         body.data.forEach(data => {
@@ -79,7 +80,7 @@ export class JsonApiService<T extends JsonApiModel> {
           this.datastoreService.addToStore(model);
 
           if (body.included) {
-            model.syncRelationships(data, body.included, 0);
+            model.syncRelationships(data, body.included);
             this.datastoreService.addToStore(model);
           }
 
@@ -90,7 +91,7 @@ export class JsonApiService<T extends JsonApiModel> {
           data: models,
           meta: body.meta
         };
-      })
+      }))
       .toPromise();
   }
 

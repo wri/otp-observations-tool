@@ -15,7 +15,7 @@ export class TableColumnDirective {
   @Input() hidden: boolean;
 
   @Input()
-  @ContentChild(TableColumnCellDirective, { read: TemplateRef })
+  @ContentChild(TableColumnCellDirective, { read: TemplateRef, static: true })
   cellTemplate: TemplateRef<any>;
 
 }

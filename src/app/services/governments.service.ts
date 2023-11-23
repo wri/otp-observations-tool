@@ -4,7 +4,7 @@ import { Government } from './../models/government.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class GovernmentsService extends JsonApiService<Government> {
@@ -13,17 +13,17 @@ export class GovernmentsService extends JsonApiService<Government> {
 
   constructor(
     protected datastoreService: DatastoreService,
-    protected http: Http
+    protected http: HttpClient
   ) {
     super();
   }
 
   getAll(params = {}) {
-    return this.datastoreService.query(Government, Object.assign(
+    return this.datastoreService.findAll(Government, Object.assign(
       {},
       { page: { size: 1000 } },
       params
-    )).toPromise();
+    )).toPromise().then((data) => data.getModels());
   }
 
   /**
@@ -39,9 +39,7 @@ export class GovernmentsService extends JsonApiService<Government> {
 
   createGovernment(formValues): Promise<any> {
     const payload = { government: formValues };
-    return this.http.post(`${environment.apiUrl}/governments`, payload)
-      .map(response => response.json())
-      .toPromise();
+    return this.http.post(`${environment.apiUrl}/governments`, payload).toPromise();
   }
 
   deleteGovernment(government: Government): Promise<any> {

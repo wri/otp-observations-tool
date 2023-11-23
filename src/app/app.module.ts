@@ -35,7 +35,6 @@ import { SubcategoryListComponent } from 'app/pages/fields/subcategories/subcate
 import { CategoriesService } from 'app/services/categories.service';
 import { OperatorListComponent } from 'app/pages/fields/operators/operator-list.component';
 import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-detail.component';
-import { WebWorkerService } from 'app/services/webworker.service';
 import { Base64FileInputDirective } from 'app/directives/base64-file-input.directive';
 import { ActionBarComponent } from 'app/shared/action-bar/action-bar.component';
 import { GovernmentDetailComponent } from 'app/pages/fields/governments/government-detail.component';
@@ -62,12 +61,10 @@ import { TokenService } from 'app/services/token.service';
 import { LoginComponent } from 'app/pages/login/login.component';
 import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from 'app/app-routing.module';
-import { OauthRequestOptions } from 'app/services/oauth-request.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JsonApiModule } from 'angular2-jsonapi';
-import { HttpModule, RequestOptions, } from '@angular/http';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { SpinnerModule } from 'angular2-spinner/dist';
 import { ObservationsService } from 'app/services/observations.service';
@@ -78,6 +75,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
 import { UploadFileComponent } from './shared/upload-file/upload-file.component';
+import { apiInterceptorProvider } from 'app/services/api-interceptor';
 
 import * as Sentry from '@sentry/browser'
 import { RewriteFrames } from '@sentry/integrations'
@@ -164,7 +162,6 @@ export function createTranslateLoader(http: HttpClient) {
     JsonApiModule,
     BrowserModule,
     FormsModule,
-    HttpModule,
     AppRoutingModule,
     SpinnerModule,
     LeafletModule.forRoot(),
@@ -197,8 +194,7 @@ export function createTranslateLoader(http: HttpClient) {
     LawsService,
     SeveritiesService,
     ResponsiveService,
-    WebWorkerService,
-    { provide: RequestOptions, useClass: OauthRequestOptions },
+    apiInterceptorProvider,
     { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],
   bootstrap: [AppComponent]

@@ -2,7 +2,7 @@ import { JsonApiService } from 'app/services/json-api.service';
 import { Observer } from 'app/models/observer.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ObserversService extends JsonApiService<Observer> {
@@ -11,7 +11,7 @@ export class ObserversService extends JsonApiService<Observer> {
 
   constructor(
     protected datastoreService: DatastoreService,
-    protected http: Http
+    protected http: HttpClient
   ) {
     super();
   }
@@ -22,8 +22,8 @@ export class ObserversService extends JsonApiService<Observer> {
    * @returns Promise<Observer[]>
    */
   getAll(params: any = {}): Promise<Observer[]> {
-    return this.datastoreService.query(Observer, Object.assign({}, { page: { size: 3000 } }, params))
-      .toPromise();
+    return this.datastoreService.findAll(Observer, Object.assign({}, { page: { size: 3000 } }, params))
+      .toPromise().then((data) => data.getModels());
   }
 
   /**
