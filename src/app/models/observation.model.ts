@@ -6,7 +6,6 @@ import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from 
 import { Country } from 'app/models/country.model';
 import { Species } from 'app/models/species.model';
 import { User } from 'app/models/user.model';
-import { Comment } from 'app/models/comment.model';
 import { Observer } from 'app/models/observer.model';
 import { Operator } from 'app/models/operator.model';
 import { Government } from 'app/models/government.model';
@@ -56,6 +55,4 @@ export class Observation extends JsonApiModel {
   @HasMany() 'observation-documents': ObservationDocument[];
 
   @HasMany() species: Species[];
-  @HasMany() comments: Comment[];
-
 }

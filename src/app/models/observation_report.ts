@@ -13,7 +13,6 @@ export class ObservationReport extends JsonApiModel {
   @Attribute() attachment: string|{ url: string };
   @Attribute({ converter: new DateConverter() }) 'publication-date': Date;
 
-  @BelongsTo() user: User;
   @HasMany() observers: Observer[];
 
 }

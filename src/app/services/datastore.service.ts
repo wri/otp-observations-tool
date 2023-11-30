@@ -8,7 +8,6 @@ import { Species } from 'app/models/species.model';
 import { Operator } from 'app/models/operator.model';
 import { Observer } from 'app/models/observer.model';
 import { Government } from 'app/models/government.model';
-import { Comment } from 'app/models/comment.model';
 import { Category } from 'app/models/category.model';
 import { Subcategory } from 'app/models/subcategory.model';
 import { Severity } from 'app/models/severity.model';
@@ -27,7 +26,6 @@ import { Law } from 'app/models/law.model';
     countries: Country,
     severities: Severity,
     categories: Category,
-    comments: Comment,
     laws: Law,
     governments: Government,
     observers: Observer,

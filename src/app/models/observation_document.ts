@@ -11,6 +11,4 @@ export class ObservationDocument extends JsonApiModel {
   @Attribute() attachment: string|{ url: string };
 
   @BelongsTo() observation: Observation;
-  @BelongsTo() user: User;
-
 }
