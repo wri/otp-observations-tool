@@ -217,7 +217,7 @@
     <!-- Current monitor -->
     <div class="form-group">
       <label>{{'Monitor' | translate}}</label>
-      <input type="text" class="form-control" [value]="currentContextObserver.name" disabled />
+      <input type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
     </div>
 
     <!-- 4. Additional monitors -->
@@ -783,7 +783,7 @@
     <!-- Current monitor -->
     <div class="form-group">
       <label>{{'Monitor' | translate}}</label>
-      <input type="text" class="form-control" [value]="currentContextObserver.name" disabled />
+      <input type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
     </div>
 
     <!-- 5. Additional monitors -->
