@@ -1402,11 +1402,13 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   canSubmitForReview(): boolean {
-    if (!this.observation) return false;
-    if (this.observation.hidden) return false;
-
     const isCreating = !this.observation;
     const isDuplicating = this.isCopied;
+
+    if (isCreating) return true;
+    if (isDuplicating) return true;
+    if (this.observation.hidden) return false;
+
     const isAdmin = this.authService.isAdmin();
     const isOwner = this.observation.user && this.observation.user.id === this.authService.userId;
     const isUserLinkedObserver = !!this.observation.observers.find(o => o.id === this.authService.userObserverId);
@@ -1417,8 +1419,6 @@ export class ObservationDetailComponent implements OnDestroy {
     const isPublishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
 
-    if (isCreating) return true;
-    if (isDuplicating) return true;
     if (isCreated && isAdmin && isUserLinkedObserver) return true;
     if (isCreated && isOwner) return true;
     if (isInNeedOfRevision && isAmending) return true
