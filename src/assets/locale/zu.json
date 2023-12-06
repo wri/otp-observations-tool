@@ -397,5 +397,6 @@
   "Add a new government entity to the list": "Add a new government entity to the list",
   "Add a new producer to the list": "Add a new producer to the list",
   "Please select an existing report or upload a new one": "Please select an existing report or upload a new one",
-  "You will not be able to submit this observation to review with unknown operator selected": "You will not be able to submit this observation to review with unknown operator selected"
+  "You will not be able to submit this observation to review with unknown operator selected": "You will not be able to submit this observation to review with unknown operator selected",
+  "fmus": "FMUs"
 }

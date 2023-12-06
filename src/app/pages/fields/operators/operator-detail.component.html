@@ -36,11 +36,18 @@
     <!-- Country -->
     <div class="form-group -required">
       <label for="country_field">{{'Country' | translate}}</label>
-      <select id="country_field" name="country_field" [(ngModel)]="operator.country" #country_field="ngModel" [disabled]="!canEdit() || country" required>
+      <select id="country_field" name="country_field" [(ngModel)]="country" #country_field="ngModel" [disabled]="!canEdit() || fixedCountry" required>
         <option disabled [ngValue]="null">{{'Select a country' | translate}}</option>
         <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
       </select>
-      <div *ngIf="f.submitted && !country_field.valid" class="help-text">{{'Please select a country' | translate}}</div>
+      <div *ngIf="f.submitted && !country_field.valid && !fixedCountry" class="help-text">{{'Please select a country' | translate}}</div>
+    </div>
+
+    <!-- FMUs -->
+
+    <div class="form-group">
+      <label>{{'fmus' | translate}}</label>
+      <ss-multiselect-dropdown name="fmus" id="fmus" #fmus="ngModel" [texts]="multiSelectTexts" [settings]="multiSelectSettings" [options]="fmusOptions" [(ngModel)]="fmusSelection" (ngModelChange)="onChangeFmus($event)" [disabled]="!canEditFmus()"></ss-multiselect-dropdown>
     </div>
 
     <!-- Details -->
