@@ -40,6 +40,29 @@
       <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="report['publication-date']" #report_date="ngModel" [required]="true"></otp-datepicker>
       <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
     </div>
+
+    <!-- Current Monitor -->
+    <div class="form-group">
+      <label>{{'Monitor' | translate}}</label>
+      <input type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
+    </div>
+
+    <!-- Additional monitors -->
+    <div class="form-group">
+      <label>{{'Additional monitors' | translate}}</label>
+      <ss-multiselect-dropdown
+        [texts]="multiSelectTexts"
+        [options]="additionalObserversOptions"
+        [settings]="additionalObserversSelectSettings"
+        [(ngModel)]="_additionalObserversSelection"
+        (ngModelChange)="onChangeAdditionalObserversOptions($event)"
+        name="additional_observers"
+      >
+      </ss-multiselect-dropdown>
+      <p class="note">
+        {{ 'observation.additionalMonitors.note' | translate }}
+      </p>
+    </div>
   </div>
 
   <div class="form-footer">

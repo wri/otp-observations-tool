@@ -232,10 +232,13 @@
         [(ngModel)]="_additionalObserversSelection"
         (ngModelChange)="onChangeAdditionalObserversOptions($event)"
         name="additional_observers"
-        [disabled]="isDisabled()">
+        [disabled]="isDisabled() || !canChangeMonitors()">
       </ss-multiselect-dropdown>
       <p class="note">
         {{ 'observation.additionalMonitors.note' | translate }}
+      </p>
+      <p *ngIf="!canChangeMonitors()" class="note">
+        {{ 'observation.additionalMonitors.disabled.note' | translate }}
       </p>
     </div>
 

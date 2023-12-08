@@ -951,6 +951,10 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
+  private canChangeMonitors(): boolean {
+    return !Boolean(this.reportChoice);
+  }
+
   private saveAsDraftObservation(): void {
     const draftModel: DraftObservation = {
       observationType: this.type,
