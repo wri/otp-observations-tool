@@ -113,6 +113,7 @@ export class ObservationDetailComponent implements OnDestroy {
         layers: [
           L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
             maxZoom: 18,
+            noWrap: true,
             attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
               &copy;<a href="https://carto.com/attribution">CARTO</a>`
           })
@@ -122,10 +123,11 @@ export class ObservationDetailComponent implements OnDestroy {
 
     return {
       center: [10, 0],
-      zoom: 1,
+      zoom: 3,
       layers: [
         L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
           maxZoom: 18,
+          noWrap: true,
           attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
             &copy;<a href="https://carto.com/attribution">CARTO</a>`
         })
@@ -1012,10 +1014,12 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   private checkCoordinatesValidity(): number[] | boolean {
+    let result: number[];
     switch (this.coordinatesFormat) {
       case 'Decimal':
         try {
-          return proj4('WGS84', 'WGS84', [+this.latitude, +this.longitude]);
+          result = proj4('WGS84', 'WGS84', [+this.latitude, +this.longitude]);
+          break;
         } catch (e) {
           return false;
         }
@@ -1038,7 +1042,8 @@ export class ObservationDetailComponent implements OnDestroy {
         try {
           const decimalLatitude = convertCoordinateToDecimal(`${this.latitude}`);
           const decimalLongitude = convertCoordinateToDecimal(`${this.longitude}`);
-          return proj4('WGS84', 'WGS84', [decimalLatitude, decimalLongitude]);
+          result = proj4('WGS84', 'WGS84', [decimalLatitude, decimalLongitude]);
+          break;
         } catch (e) {
           return false;
         }
@@ -1064,7 +1069,8 @@ export class ObservationDetailComponent implements OnDestroy {
         try {
           const decimalLatitude = convertCoordinateToDecimal(`${this.latitude}`);
           const decimalLongitude = convertCoordinateToDecimal(`${this.longitude}`);
-          return proj4('WGS84', 'WGS84', [decimalLatitude, decimalLongitude]);
+          result = proj4('WGS84', 'WGS84', [decimalLatitude, decimalLongitude]);
+          break;
         } catch (e) {
           return false;
         }
@@ -1074,16 +1080,24 @@ export class ObservationDetailComponent implements OnDestroy {
           // We reverse the final result because the UTM coordinates are given by X first
           // (conventionally the longitude) and then Y (the latitude) which means the result of
           // proj4 is the longitude first and then the latitude
-          return proj4(
+          result = proj4(
             `+proj=utm +zone=${this.zone} +datum=WGS84 +units=m +no_defs ${this.hemisphere === 'South' ? ' +south' : ''}`,
             '+proj=longlat +datum=WGS84 +no_defs', [+this.latitude, +this.longitude],
           ).reverse();
+          break;
         } catch (e) {
           return false;
         }
       default:
         return true;
     }
+
+    // result is an array of two numbers: the latitude and the longitude
+    if (result[0] < -90 || result[0] > 90 || result[1] < -180 || result[1] > 180) {
+      return false;
+    }
+
+    return result;
   }
 
   private getDecimalCoordinates(): number[] {
