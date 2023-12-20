@@ -9,6 +9,10 @@ import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { forkJoin ,  Observable } from "rxjs";
+import { Fmu } from 'app/models/fmu.model';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import { FmusService } from 'app/services/fmus.service';
+import sortBy from 'lodash/sortBy';
 
 @Component({
   selector: 'otp-operator-detail',
@@ -26,11 +30,20 @@ export class OperatorDetailComponent {
   loading = false;
   nameServerError: string = null;
 
+  _fmus: Fmu[] = [];
+  fmusOptions: IMultiSelectOption[] = [];
+  fmusSelection: string[] = [];
+  multiSelectTexts: IMultiSelectTexts = {};
+  multiSelectSettings: IMultiSelectSettings = {
+    enableSearch: true,
+    dynamicTitleMaxItems: 8
+  };
+
   @Input() useRouter: boolean = true;
   @Input() showActionsOnTop: boolean = true;
   @Input() showSuccessMessage: boolean = true;
   @Input() longForm: boolean = true;
-  @Input() country: Country = null;
+  @Input() fixedCountry: Country = null;
   @Input() uniqueNameErrorMessage: string = null;
 
   @Output() afterCancel: EventEmitter<void> = new EventEmitter<void>();
@@ -44,9 +57,34 @@ export class OperatorDetailComponent {
     return this.operator.logo;
   }
 
+  get fmus() {
+    return this._fmus;
+  }
+  set fmus(data) {
+    this._fmus = data;
+    this.fmusOptions = sortBy(data.map(c => ({ id: c.id, name: c.name })), 'name');
+  }
+
+  get country() : Country {
+    return this.operator.country;
+  }
+  set country(country: Country) {
+    if (this.operator) {
+      this.operator.country = country;
+
+      // API.get('fmus', { locale: lang, 'filter[country]': countryId, 'filter[free]': true })
+      if (this.canEditFmus()) {
+        this.fmusService.getAll({ 'filter[country]': country.id, 'filter[free]': true }).then((data) => {
+          this.fmus = data;
+        });
+      }
+    }
+  }
+
   constructor(
     private countriesService: CountriesService,
     private operatorsService: OperatorsService,
+    private fmusService: FmusService,
     private datastoreService: DatastoreService,
     private router: Router,
     private route: ActivatedRoute,
@@ -54,6 +92,7 @@ export class OperatorDetailComponent {
     private authService: AuthService
   ) {
     this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
+    this.updateMultiSelectTexts();
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
@@ -61,34 +100,41 @@ export class OperatorDetailComponent {
   }
 
   ngOnInit() {
-    if (!this.country) {
-      this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
-        .then((data) => this.countries = data)
-        .then(() => {
-          if (this.operator && this.operator.id) {
-            this.operator.country = this.countries.find(c => c.id === this.operator.country.id);
-          } else {
-            this.operator.country = this.countries[0];
-          }
-        })
-        .catch(err => console.error(err)); // TODO: visual feedback
-    }
-
     // If we're editing an operator, we need to fetch the model
     // and do a bit more stuff
     if (this.useRouter && this.route.snapshot.params.id) {
       this.loading = true;
-      this.operatorsService.getById(this.route.snapshot.params.id, { include: 'country' })
-        .then(operator => this.operator = operator)
+      this.operatorsService.getById(this.route.snapshot.params.id, { include: 'country,fmus' })
+        .then(operator => {
+          this.operator = operator;
+          this.country = operator.country;
+          this.fmus = operator.fmus;
+          this.fmusSelection = operator.fmus.map(f => f.id);
+        })
         .catch(err => console.error(err)) // TODO: visual feedback
         .then(() => this.loading = false);
     } else {
       this.operator = this.datastoreService.createRecord(Operator, {});
     }
 
-    if (this.country) {
-      this.countries = [this.country];
-      this.operator.country = this.country;
+    if (!this.fixedCountry) {
+      this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
+        .then((data) => this.countries = data)
+        .then(() => {
+          if (!this.operator) return;
+
+          let country = null;
+          if (this.operator.id) {
+            country = this.countries.find(c => c.id === this.operator.country.id);
+          } else {
+            country = this.countries[0];
+          }
+          this.country = country;
+        })
+        .catch(err => console.error(err)); // TODO: visual feedback
+    } else {
+      this.countries = [this.fixedCountry];
+      this.country = this.fixedCountry;
     }
   }
 
@@ -105,6 +151,9 @@ export class OperatorDetailComponent {
     const isEdition = !!this.operator.id;
     this.nameServerError = null;
 
+    if (this.canEditFmus()) {
+      this.operator.fmus = this.fmus.filter(f => this.fmusSelection.includes(f.id));
+    }
     this.operator.save()
       .toPromise()
       .then(async (savedOperator) => {
@@ -171,6 +220,27 @@ export class OperatorDetailComponent {
     } else {
       return this.operator.country.id === this.authService.userCountryId;
     }
+  }
+
+  canEditFmus(): boolean {
+    return this.canEdit() && Boolean(this.operator && !this.operator.id);
+  }
+
+  onChangeFmus(options: string[]) {
+    this.fmusSelection = options;
+  }
+
+  private async updateMultiSelectTexts() {
+    await Promise.all([
+      this.translateService.get('multiselect.checked').toPromise(),
+      this.translateService.get('multiselect.checkedPlural').toPromise(),
+      this.translateService.get('multiselect.defaultTitle').toPromise(),
+      this.translateService.get('multiselect.allSelected').toPromise(),
+      this.translateService.get('multiselect.searchPlaceholder').toPromise(),
+      this.translateService.get('multiselect.searchEmptyResult').toPromise(),
+    ]).then(([checked, checkedPlural, defaultTitle, allSelected, searchPlaceholder, searchEmptyResult]) => {
+      this.multiSelectTexts = { checked, checkedPlural, defaultTitle, allSelected, searchPlaceholder, searchEmptyResult };
+    });
   }
 
   private updateTranslatedOptions(phrases: string[], field: string): void {

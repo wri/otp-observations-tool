@@ -46,6 +46,7 @@ import { CategoryListComponent } from 'app/pages/fields/categories/category-list
 import { HeaderComponent } from 'app/shared/header/header.component';
 import { NavigationComponent } from 'app/shared/navigation/navigation.component';
 import { UsersService } from 'app/services/users.service';
+import { FmusService } from 'app/services/fmus.service';
 // import { TabsComponent } from 'app/shared/tabs/tabs.component';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 import { FieldListComponent } from 'app/pages/fields/field-list.component';
@@ -187,6 +188,7 @@ export function createTranslateLoader(http: HttpClient) {
     ObservationsService,
     SubcategoriesService,
     ObserversService,
+    FmusService,
     OperatorsService,
     CategoriesService,
     ObservationReportsService,

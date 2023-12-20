@@ -24,7 +24,7 @@ export class GovernmentDetailComponent {
   @Input() useRouter: boolean = true;
   @Input() showActionsOnTop: boolean = true;
   @Input() showSuccessMessage: boolean = true;
-  @Input() country: Country = null;
+  @Input() fixedCountry: Country = null;
   @Input() uniqueNameErrorMessage: string = null;
 
   @Output() afterCancel: EventEmitter<void> = new EventEmitter<void>();
@@ -42,7 +42,7 @@ export class GovernmentDetailComponent {
   }
 
   ngOnInit() {
-    if (!this.country) {
+    if (!this.fixedCountry) {
       this.countriesService.getAll({ sort: 'name', filter: { id: this.authService.observerCountriesIds } })
         .then(data => this.countries = data)
         .then(() => {
@@ -72,9 +72,9 @@ export class GovernmentDetailComponent {
       this.government = this.datastoreService.createRecord(Government, {});
     }
 
-    if (this.country) {
-      this.countries = [this.country];
-      this.government.country = this.country;
+    if (this.fixedCountry) {
+      this.countries = [this.fixedCountry];
+      this.government.country = this.fixedCountry;
     }
   }
 
