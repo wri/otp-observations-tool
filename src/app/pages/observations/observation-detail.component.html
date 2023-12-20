@@ -27,7 +27,7 @@
   </otp-operator-detail>
 </otp-modal>
 
-<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && f.valid && onSubmitForReview()" #f="ngForm" novalidate>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && f.valid && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 *ngIf="isDisabled() && !isCopied">{{'Observation details' | translate}}</h2>
     <h2 *ngIf="(!isDisabled() && !observation) || isCopied">{{'New observation' | translate}}</h2>
