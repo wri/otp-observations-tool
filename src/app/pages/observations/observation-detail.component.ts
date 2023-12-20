@@ -67,6 +67,7 @@ export class ObservationDetailComponent implements OnDestroy {
   subcategories: Subcategory[] = [];
   severities: Severity[] = [];
   _operators: Operator[] = []; // Ordered by name, filtered by country
+  unknownOperator: Operator = null; // Special unknown operator
   governments: Government[] = [];
   observers: Observer[] = []; // Ordered by name
   fmus: Fmu[] = [];
@@ -349,9 +350,13 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get operators() { return this._operators; }
   set operators(collection) {
-    this._operators = collection;
-    this.operatorsOptions = collection.map((o) => ({ id: o.id, name: o.name }));
-    this.relevantOperatorsOptions = this.operators.map((operator) => ({ id: operator.id, name: operator.name }));
+    if (this.unknownOperator) {
+      this._operators = [this.unknownOperator, ...collection];
+    } else {
+      this._operators = collection;
+    }
+    this.operatorsOptions = this._operators.map((o) => ({ id: o.id, name: o.name }));
+    this.relevantOperatorsOptions = collection.map((o) => ({ id: o.id, name: o.name }));
   }
 
   get operatorChoice() { return this.observation ? this.observation.operator : this._operatorChoice; }
@@ -386,6 +391,9 @@ export class ObservationDetailComponent implements OnDestroy {
       this.fmu = null;
       this.operatorsSelection = [];
     }
+  }
+  get unknownOperatorSelected() {
+    return this.operatorChoice && this.unknownOperator && +this.operatorChoice.id === +this.unknownOperator.id;
   }
 
   get fmu() { return this.observation ? this.observation.fmu : this._fmu; }
@@ -756,6 +764,12 @@ export class ObservationDetailComponent implements OnDestroy {
     this.translateService.onLangChange.subscribe(() => {
       this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
       this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
+    });
+
+    this.operatorsService.getAll({ filter: { slug: 'unknown' }}).then((operators) => {
+      if (operators.length > 0) {
+        this.unknownOperator = operators[0];
+      }
     });
 
     this.observersService.getAll({ sort: 'name' })
