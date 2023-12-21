@@ -7,6 +7,11 @@
     margin-top: 20px;
   }
 
+  a[download] {
+    color: $color-primary;
+    text-decoration: underline;
+  }
+
   .callout {
     font-size: $font-size-medium;
 
