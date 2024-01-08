@@ -14,5 +14,6 @@ export class ObservationReport extends JsonApiModel {
   @Attribute({ converter: new DateConverter() }) 'publication-date': Date;
 
   @HasMany() observers: Observer[];
+  @HasMany() observations: Observation[];
 
 }

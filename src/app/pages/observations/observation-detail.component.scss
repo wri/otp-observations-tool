@@ -59,6 +59,8 @@
     padding: 0;
     border-top: 1px solid $lighter-grey;
     border-bottom: 1px solid $lighter-grey;
+    max-height: 400px;
+    overflow: auto;
 
     > li {
       display: flex;

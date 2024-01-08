@@ -397,5 +397,8 @@
   "Please select an existing report or upload a new one": "Please select an existing report or upload a new one",
   "You will not be able to submit this observation to review with unknown operator selected": "You will not be able to submit this observation to review with unknown operator selected",
   "fmus": "FMUs",
-  "You can upload a new report or select an existing one from the list.": "You can upload a new report or select an existing one from the list."
+  "You can upload a new report or select an existing one from the list.": "You can upload a new report or select an existing one from the list.",
+  "Document Type": "Document Type",
+  "Select a document type": "Select a document type",
+  "Please select a document type": "Please select a document type"
 }

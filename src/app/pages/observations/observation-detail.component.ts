@@ -1,6 +1,8 @@
 import { TranslateService } from '@ngx-translate/core';
-import * as cloneDeep from 'lodash/cloneDeep';
-import * as orderBy from 'lodash/orderBy';
+import cloneDeep from 'lodash/cloneDeep';
+import orderBy from 'lodash/orderBy';
+import uniqBy from 'lodash/uniqBy';
+import flatten from 'lodash/flatten';
 import * as EXIF from 'exif-js';
 import proj4 from 'proj4';
 import { Law } from 'app/models/law.model';
@@ -75,12 +77,26 @@ export class ObservationDetailComponent implements OnDestroy {
   documents: ObservationDocument[] = []; // Sorted by name initially
   documentsToDelete: ObservationDocument[] = []; // Existing document to delete
   documentsToUpload: ObservationDocument[] = []; // New document to upload
+  reportDocuments: ObservationDocument[] = []; // Documents of the selected report
   evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, {});
-  evidenceTypes = [ // Possible types of an evidence
-    'Government Documents', 'Company Documents', 'Photos',
-    'Testimony from local communities', 'Other', 'Evidence presented in the report'
+  evidenceTypes = [
+    'No evidence', 'Uploaded documents', 'Evidence presented in the report'
   ];
   evidenceTypeOptions: any = {}; // Object of options for evidence type selection
+  documentTypes = [ // Possible types of an observation document/evidence
+    'Government Documents', 'Company Documents', 'Photos',
+    'Testimony from local communities', 'Other'
+  ];
+  documentTypeOptions: any = {}; // Object of options for document type selection
+
+  evidenceTabs = [{
+    id: 'existing',
+    name: 'Select from report evidences'
+  }, {
+    id: 'new',
+    name: 'Upload a new evidence'
+  }]
+  currentEvidenceTab = this.evidenceTabs[0];
 
   coordinatesFormats = [
     'Decimal',
@@ -649,6 +665,10 @@ export class ObservationDetailComponent implements OnDestroy {
     );
   }
 
+  get isEvidenceOnReport() {
+    return this._evidenceType === 'Evidence presented in the report';
+  }
+
   get mapLayers(): any[] {
     const layers = [];
 
@@ -678,6 +698,23 @@ export class ObservationDetailComponent implements OnDestroy {
   set reportChoice(reportChoice) {
     const shouldSaveAdditionalObservers = this.reportChoice === null && reportChoice !== null;
     const shouldRestoreAdditionalObservers = this.reportChoice !== null && reportChoice === null;
+    if (reportChoice && reportChoice.id) {
+      this.observationDocumentsService.getAll({ filter: { 'observation-report-id': reportChoice.id } }).then((documents) => {
+        this.reportDocuments = orderBy(
+          uniqBy(documents, 'id'),
+          [(d) => d.name.toLowerCase()]
+        );
+      });
+
+      // this.observationReportsService.getById(reportChoice.id, { include: 'observations,observations.observation-documents' }).then((report) => {
+      //   if (report.observations && report.observations.length > 0) {
+      //     this.reportDocuments = orderBy(
+      //       uniqBy(flatten(report.observations.map(o => o['observation-documents'])), 'id'),
+      //       [(d) => d.name.toLowerCase()]
+      //     );
+      //   }
+      // });
+    }
 
     if (this.observation) {
       this.observation['observation-report'] = reportChoice;
@@ -771,12 +808,14 @@ export class ObservationDetailComponent implements OnDestroy {
     private translateService: TranslateService
   ) {
     this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
+    this.updateTranslatedOptions(this.documentTypes, 'documentType');
     this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
 
     this.updateMultiSelectTexts();
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
+      this.updateTranslatedOptions(this.documentTypes, 'documentType');
       this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
     });
 
@@ -886,6 +925,7 @@ export class ObservationDetailComponent implements OnDestroy {
           // If we were going to add an evidence
           this.evidence.name = this.draft.evidenceTitle;
           this.evidence.attachment = this.draft.evidenceAttachment;
+          this.evidence['document-type'] = this.draft.evidenceDocumentType;
           // if we were going to upload a new report
           this.report.title = this.draft.reportTitle;
           this.reportAttachment = this.draft.reportAttachment;
@@ -942,6 +982,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   public onChangeEvidenceType(previousType: string, type: string, typeElement: HTMLSelectElement): void {
+    console.log('on change evidence type', previousType, type, typeElement);
     if (!this.isEvidenceTypeOnReport(type) || !this.documents.length) {
       this.evidenceType = type;
     }
@@ -952,6 +993,7 @@ export class ObservationDetailComponent implements OnDestroy {
           if (confirm(phrase)) {
             this.evidenceType = type;
             this.evidence.name = null;
+            this.evidence['document-type'] = null;
             this.evidence.attachment = null;
             this.georeferencedPhoto.isUsed = false;
             this.evidenceInput.nativeElement.value = '';
@@ -959,8 +1001,6 @@ export class ObservationDetailComponent implements OnDestroy {
             typeElement.selectedIndex = this.evidenceTypes.indexOf(previousType) + 1;
           }
         });
-    } else {
-      this.evidenceOnReport = null;
     }
   }
 
@@ -983,6 +1023,7 @@ export class ObservationDetailComponent implements OnDestroy {
       evidenceOnReport: this.evidenceOnReport,
       evidenceTitle: this.evidence.name,
       evidenceAttachment: this.evidence.attachment && String(this.evidence.attachment),
+      evidenceDocumentType: this.evidence['document-type'],
       documents: this.documents.map(document => ({
         name: document.name,
         attachement: document.attachment
@@ -1294,9 +1335,12 @@ export class ObservationDetailComponent implements OnDestroy {
    * Event handler executed when the user clicks the "Add evidence" button
    */
   onClickAddEvidence() {
+    console.log('evidence name', this.evidence.name);
+    console.log('evidence type', this.evidence['document-type']);
+
     const evidence = this.datastoreService.createRecord(ObservationDocument, {
       name: this.evidence.name,
-      type: this.evidence.type,
+      ['document-type']: this.evidence['document-type'],
       attachment: this.evidence.attachment
     });
 
@@ -1312,6 +1356,12 @@ export class ObservationDetailComponent implements OnDestroy {
     this.georeferencedPhoto.isUsed = false;
   }
 
+  onClickAddReportDocument(document: ObservationDocument) {
+    let documentIndex = this.reportDocuments.findIndex(d => d === document);
+    this.reportDocuments.splice(documentIndex, 1);
+    document.fromReportLibrary = true;
+    this.documents.push(document);
+  }
   /**
    * Event handler executed when the user clicks the delete button
    * of an evidence
@@ -1325,9 +1375,13 @@ export class ObservationDetailComponent implements OnDestroy {
     this.documents.splice(documentIndex, 1);
 
     if (document.id) {
-      // If the document is an existing one, we add it
-      // to the list of documents to delete
-      this.documentsToDelete.push(cloneDeep(document));
+      this.reportDocuments.push(document);
+      this.reportDocuments = orderBy(this.reportDocuments, [(d) => d.name.toLowerCase()]);
+      // else {
+      //   // If the document is an existing one, we add it
+      //   // to the list of documents to delete
+      //   this.documentsToDelete.push(cloneDeep(document));
+      // }
     } else {
       // We get the index of the document within this.documentsToUpload
       documentIndex = this.documentsToUpload.findIndex((d) => {
@@ -1349,6 +1403,10 @@ export class ObservationDetailComponent implements OnDestroy {
 
   onClickExplainAndPublish(): void {
     this.needsRevisionState = 'explain';
+  }
+
+  onChangeEvidenceTab(tab) {
+    this.currentEvidenceTab = tab;
   }
 
   /**
@@ -1568,18 +1626,20 @@ export class ObservationDetailComponent implements OnDestroy {
    */
   updateDocuments(observation: Observation): Promise<{}> {
     // We create an array of the documents to delete
-    const deletePromises = this.documentsToDelete.map((d) => {
-      return this.datastoreService.deleteRecord(ObservationDocument, d.id)
-        .toPromise();
-    });
+    // const deletePromises = this.documentsToDelete.map((d) => {
+    //   return this.datastoreService.deleteRecord(ObservationDocument, d.id)
+    //     .toPromise();
+    // });
 
     // We create an array of the documents to upload
     const uploadPromises = !this.isEvidenceTypeOnReport(this.evidenceType) ? this.documentsToUpload.map((d) => {
       d.observation = observation; // We link the document to the observation
+      d['observation-report'] = observation['observation-report']; // We link the document to the report
       return d.save().toPromise();
     }) : [];
 
-    return Promise.all(deletePromises.concat(<any>uploadPromises));
+    // return Promise.all(deletePromises.concat(<any>uploadPromises));
+    return Promise.all(uploadPromises);
   }
 
   async onSubmitForReview() {
