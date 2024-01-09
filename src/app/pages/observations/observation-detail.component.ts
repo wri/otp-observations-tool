@@ -696,7 +696,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const shouldRestoreAdditionalObservers = this.reportChoice !== null && reportChoice === null;
     if (reportChoice && reportChoice.id) {
       this.observationDocumentsService.getAll({ filter: { 'observation-report-id': reportChoice.id } }).then((documents) => {
-        const notLinkedWithObservation = documents.filter((d) => !(this.observation['observation-documents'] || []).find((od) => od.id === d.id));
+        const notLinkedWithObservation = documents.filter((d) => !((this.observation && this.observation['observation-documents']) || []).find((od) => od.id === d.id));
         this.reportDocuments = orderBy(
           uniqBy(notLinkedWithObservation, 'id'),
           [(d) => d.name.toLowerCase()]
