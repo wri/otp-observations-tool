@@ -665,10 +665,6 @@ export class ObservationDetailComponent implements OnDestroy {
     );
   }
 
-  get isEvidenceOnReport() {
-    return this._evidenceType === 'Evidence presented in the report';
-  }
-
   get mapLayers(): any[] {
     const layers = [];
 
@@ -700,20 +696,12 @@ export class ObservationDetailComponent implements OnDestroy {
     const shouldRestoreAdditionalObservers = this.reportChoice !== null && reportChoice === null;
     if (reportChoice && reportChoice.id) {
       this.observationDocumentsService.getAll({ filter: { 'observation-report-id': reportChoice.id } }).then((documents) => {
+        const notLinkedWithObservation = documents.filter((d) => !(this.observation['observation-documents'] || []).find((od) => od.id === d.id));
         this.reportDocuments = orderBy(
-          uniqBy(documents, 'id'),
+          uniqBy(notLinkedWithObservation, 'id'),
           [(d) => d.name.toLowerCase()]
         );
       });
-
-      // this.observationReportsService.getById(reportChoice.id, { include: 'observations,observations.observation-documents' }).then((report) => {
-      //   if (report.observations && report.observations.length > 0) {
-      //     this.reportDocuments = orderBy(
-      //       uniqBy(flatten(report.observations.map(o => o['observation-documents'])), 'id'),
-      //       [(d) => d.name.toLowerCase()]
-      //     );
-      //   }
-      // });
     }
 
     if (this.observation) {
@@ -864,7 +852,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
       this.observationsService.getById(this.existingObservation, {
         // tslint:disable-next-line:max-line-length
-        include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,law,user,relevant-operators'
+        include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators'
       }).then((observation) => {
         this.observation = observation;
         if (this.route.snapshot.params.copiedId) {
@@ -889,6 +877,8 @@ export class ObservationDetailComponent implements OnDestroy {
         this.latitude = this.observation.lat;
         this.longitude = this.observation.lng;
         this.operatorChoice = this.observation.operator;
+        this.reportChoice = this.observation['observation-report'];
+        this.documents = this.observation['observation-documents'];
       })
         .catch(() => {
           // The only reason the request should fail is that the user
@@ -899,13 +889,13 @@ export class ObservationDetailComponent implements OnDestroy {
         .then(() => this.loading = false);
 
       // We load the list of documents only if we edit an observation
-      if (this.route.snapshot.params.id) {
-        this.observationDocumentsService.getAll({
-          sort: 'name',
-          filter: { observation_id: this.route.snapshot.params.id }
-        }).then(documents => this.documents = documents)
-          .catch(err => console.error(err)); // TODO: visual feedback
-      }
+      // if (this.route.snapshot.params.id) {
+      //   this.observationDocumentsService.getAll({
+      //     sort: 'name',
+      //     filter: { observation_id: this.route.snapshot.params.id }
+      //   }).then(documents => this.documents = documents)
+      //     .catch(err => console.error(err)); // TODO: visual feedback
+      // }
     } else {
       if (this.route.snapshot.params.useDraft) {
         this.draft = this.observationsService.getDraftObservation();
@@ -919,7 +909,7 @@ export class ObservationDetailComponent implements OnDestroy {
           this.evidenceOnReport = this.draft.evidenceOnReport;
           this.documents = this.draft.documents.map(document => this.datastoreService.createRecord(ObservationDocument, {
             name: document.name,
-            type: this.draft.evidenceType,
+            'document-type': this.draft.evidenceType,
             attachment: document.attachement
           }));
           // If we were going to add an evidence
@@ -1377,6 +1367,7 @@ export class ObservationDetailComponent implements OnDestroy {
     if (document.id) {
       this.reportDocuments.push(document);
       this.reportDocuments = orderBy(this.reportDocuments, [(d) => d.name.toLowerCase()]);
+
       // else {
       //   // If the document is an existing one, we add it
       //   // to the list of documents to delete
@@ -1633,7 +1624,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
     // We create an array of the documents to upload
     const uploadPromises = !this.isEvidenceTypeOnReport(this.evidenceType) ? this.documentsToUpload.map((d) => {
-      d.observation = observation; // We link the document to the observation
+      // d.observation = observation; // We link the document to the observation TODO:
       d['observation-report'] = observation['observation-report']; // We link the document to the report
       return d.save().toPromise();
     }) : [];
@@ -1733,8 +1724,11 @@ export class ObservationDetailComponent implements OnDestroy {
           observation['observation-report'] = this.reportChoice;
         }
       })
-      .then(() => observation.save().toPromise())
       .then(() => this.updateDocuments(observation))
+      .then(() => {
+        observation['observation-documents'] = this.documents;
+      })
+      .then(() => observation.save().toPromise())
       .then(async () => {
         if (this.observation && !this.isCopied) {
           alert(await this.translateService.get('observationUpdate.success').toPromise());

@@ -173,7 +173,7 @@
           <p class="note">{{'observation.evidenceType.note' | translate}}</p>
         </div>
 
-        <ng-template [ngIf]="isEvidenceOnReport">
+        <ng-template [ngIf]="evidenceType === 'Evidence presented in the report'">
           <div class="form-group -required">
             <label for="evidence_details">{{'observation.evidenceDetails.title' | translate}}</label>
             <textarea id="evidence_details" name="evidence_details" [(ngModel)]="evidenceOnReport" #evidence_details="ngModel" required [disabled]="isDisabled()"></textarea>
@@ -204,7 +204,10 @@
               <ul class="documents-list" *ngIf="documents.length">
                 <li *ngFor="let document of documents">
                   <div class="content">
-                    <div class="title">{{document.name}}</div>
+                    <div class="title" *ngIf="!document.id">{{document.name}}</div>
+                    <div class="title" *ngIf="document.id">
+                      <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
+                    </div>
                     <div class="status">{{document['document-type']}} | {{ (document.id ? 'Already uploaded' : 'To upload') | translate}}</div>
                   </div>
                   <div class="actions">
@@ -222,7 +225,9 @@
                   <ul class="documents-list" *ngIf="reportDocuments.length">
                     <li *ngFor="let document of reportDocuments">
                       <div class="content">
-                        <div class="title">{{document.name}}</div>
+                        <div class="title">
+                          <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
+                        </div>
                         <div class="status">{{document['document-type']}}</div>
                       </div>
                       <div class="actions">
