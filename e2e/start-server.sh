@@ -1,12 +1,11 @@
 #!/bin/sh
-
-./restore-db.sh
+set -e
 
 echo 'Starting API...'
 
 cd ../../otp-api
-POSTGRES_DATABASE=fti_api_cypress bundle exec rails db:migrate
-POSTGRES_DATABASE=fti_api_cypress bundle exec rails s &
+RAILS_ENV=e2e bundle exec rails e2e:setup
+RAILS_ENV=e2e bundle exec rails s &
 
 echo 'Starting Observations Tool...'
 cd ../otp-observations-tool/

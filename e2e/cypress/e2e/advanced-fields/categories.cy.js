@@ -1,8 +1,8 @@
 describe('Categories', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:4200/');
-    cy.login('ngomanager@example.com', 'secret');
-    cy.visit('http://localhost:4200/private/fields/categories');
+    cy.visit('/');
+    cy.login('ngo_manager@example.com', 'password');
+    cy.visit('/private/fields/categories');
   });
 
   it('displays a list of categories', () => {

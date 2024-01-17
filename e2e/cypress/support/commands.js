@@ -57,3 +57,8 @@ Cypress.Commands.add('expectChosenOption', (question, option) => {
     .find('input[type=radio]')
     .should('be.checked');
 });
+
+Cypress.Commands.add('resetDB', () => {
+  cy.exec('./restore-db.sh');
+});
+
