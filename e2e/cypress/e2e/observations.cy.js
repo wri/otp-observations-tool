@@ -1,8 +1,7 @@
 describe('Observations', () => {
   beforeEach(() => {
-    cy.visit('/');
     cy.login('ngo_manager@example.com', 'password');
-    cy.reload();
+    cy.visit('/');
   })
 
   afterEach(() => {

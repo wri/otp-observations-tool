@@ -6,6 +6,7 @@ describe('User', () => {
   context('Public user', () => {
     it('can log in and out', function () {
       cy.login('ngo_manager@example.com', 'password');
+      cy.visit('/');
       cy.get('button').contains('Log out').click();
       cy.get('button').contains('Login').should('exist')
     });
