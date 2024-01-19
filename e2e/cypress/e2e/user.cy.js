@@ -1,13 +1,12 @@
-const { nanoid } = require('nanoid')
-
 describe('User', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:4200/');
+    cy.visit('/');
   })
 
   context('Public user', () => {
     it('can log in and out', function () {
-      cy.login('ngomanager@example.com', 'secret');
+      cy.login('ngo_manager@example.com', 'password');
+      cy.visit('/');
       cy.get('button').contains('Log out').click();
       cy.get('button').contains('Login').should('exist')
     });
@@ -29,82 +28,63 @@ describe('User', () => {
       cy.contains('Please tick the box');
 
       cy.get('#name').type('James Watson');
-      cy.get('#observer_id').select('Greenpeace');
+      cy.get('#observer_id').select('OGF');
       cy.get('#country_id').select('Congo');
       cy.get('#locale_field').select('English');
-      cy.get('#email').type(`testngomanager+${nanoid(6)}@example.com`);
+      cy.get('#email').type(`testngomanager@example.com`);
       cy.get('#password').type('supersecret');
       cy.get('#password_confirmation').type('supersecret');
       cy.get('#has_rights').check();
 
-      cy.then(() => {
-        cy.once('window:alert', (str) => {
-          expect(str).to.match(/The request has been sent! We'll get back to you soon/)
-        });
-      });
+      const alert = cy.stub().as("alert");
+      cy.then(() => { cy.on('window:alert', alert); });
       cy.get('button').contains('Register').click();
+      cy.get("@alert").should("have.been.calledWithMatch", /The request has been sent! We'll get back to you soon/);
+      cy.resetDB();
     });
   });
 
   context('Logged in User', () => {
     beforeEach(() => {
-      cy.login('ngomanager@example.com', 'secret');
-      cy.visit('http://localhost:4200/private/profile');
+      cy.login('ngo_manager@example.com', 'password');
+      cy.visit('/private/profile');
     });
 
     describe('updating user profile', function () {
       it('can update some profile info without current password', function () {
         /* cy.get('a').contains('Profile', { timeout: 10000 }).click(); */
         cy.get('#name').clear().type('NGO Manager Test');
-        cy.get('#email_field').clear().type('ngomanger@example.com');
+        cy.get('#email_field').clear().type('ngo_manager@example.com');
         cy.get('#locale_field').select('English');
 
-        cy.then(() => {
-          cy.once('window:alert', (str) => {
-            expect(str).to.match(/Your profile has been sucessfully updated/);
-          });
-        });
-        cy.get('button').contains('Save').click();
+        const alert = cy.stub().as("alert");
+        cy.on('window:alert', alert);
+        cy.get('button').contains('Save').click(); //.then(() => {
+        cy.get("@alert").should("have.been.calledWithMatch", /Your profile has been sucessfully updated/);
+        cy.resetDB();
       });
 
       it('can update user email and password', function () {
         cy.get('#current_password').should('not.exist');
         cy.get('#locale_field').select('English');
-        cy.get('#email_field').clear().type('ngomanagertest@example.com');
+        cy.get('#email_field').clear().type('ngo_managertest@example.com');
         cy.get('#current_password').should('exist');
-        cy.get('#current_password').clear().type('secret');
-        cy.then(() => {
-          cy.once('window:alert', (str) => {
-            expect(str).to.match(/Your profile has been sucessfully updated/);
-          });
-        });
+        cy.get('#current_password').clear().type('password');
+        const alert = cy.stub().as("alert");
+        cy.on('window:alert', alert);
         cy.get('button').contains('Save').click();
+        cy.get("@alert").should("have.been.calledWithMatch", /Your profile has been sucessfully updated/);
+        cy.then(() => alert.reset());
         cy.get('#email_field').should('not.exist'); // trick wait for page reload
 
-        cy.get('#email_field').should('have.value', 'ngomanagertest@example.com');
+        cy.get('#email_field').should('have.value', 'ngo_managertest@example.com');
         cy.get('#current_password').should('not.exist');
         cy.get('#new_password').clear().type('secret12345');
         cy.get('#password_confirmation').clear().type('secret12345');
-        cy.get('#current_password').clear().type('secret');
-        cy.then(() => {
-          cy.once('window:alert', (str) => {
-            expect(str).to.match(/Your profile has been sucessfully updated/);
-          });
-        });
+        cy.get('#current_password').clear().type('password');
         cy.get('button').contains('Save').click();
-        cy.get('#email_field').should('not.exist'); // trick wait for page reload
-
-        // update password and email back
-        cy.get('#email_field').clear().type('ngomanager@example.com');
-        cy.get('#new_password').clear().type('secret');
-        cy.get('#password_confirmation').clear().type('secret');
-        cy.get('#current_password').clear().type('secret12345');
-        cy.then(() => {
-          cy.once('window:alert', (str) => {
-            expect(str).to.match(/Your profile has been sucessfully updated/);
-          });
-        });
-        cy.get('button').contains('Save').click();
+        cy.get("@alert").should("have.been.calledWithMatch", /Your profile has been sucessfully updated/);
+        cy.resetDB();
       })
     })
   });

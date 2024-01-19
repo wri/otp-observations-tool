@@ -1,16 +1,20 @@
 describe('Operators/Producers', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:4200/');
-    cy.login('ngomanager@example.com', 'secret');
-    cy.visit('http://localhost:4200/private/fields/operators');
+    cy.visit('/');
+    cy.login('ngo_manager@example.com', 'password');
+    cy.visit('/private/fields/operators');
+  });
+
+  after(() => {
+    cy.resetDB();
   });
 
   it('displays a list of producers', () => {
-    cy.get('otp-table tbody tr').should('have.length.least', 2);
+    cy.get('otp-table tbody tr').should('have.length.least', 1);
   });
 
   it('can create and update a producer', () => {
-    cy.get('otp-table tbody tr').should('have.length.least', 2);
+    cy.get('otp-table tbody tr').should('have.length.least', 1);
     cy.get('button').contains('New producer').click();
     cy.get('input#name_field').type('! New Producer');
     cy.get('select#type_field').select('Estate');

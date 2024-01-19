@@ -1,17 +1,21 @@
 describe('Observations', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:4200/');
-    cy.login('ngomanager@example.com', 'secret');
-    cy.reload();
+    cy.login('ngo_manager@example.com', 'password');
+    cy.visit('/');
   })
+
+  afterEach(() => {
+    cy.resetDB();
+  });
 
   it('can add a new producer observation and submit it for review', () => {
     cy.get('a').contains('New observation').click();
     cy.get('select#observation_type').select('Producer');
     cy.get('select#report_field').select('2013 Rapport 1 OGF');
-    cy.selectOption('operator_id', 'BONI');
-    cy.selectOption('additional_observers', ['AOE', 'CED']);
-    cy.selectOption('relevant_operators', ['CFT', 'ENRA']);
+    cy.get('select#country_id').select('Cameroon');
+    cy.selectOption('operator_id', 'CFC');
+    cy.selectOption('additional_observers', ['CADDE', 'CAGDF']);
+    cy.selectOption('relevant_operators', ['LOREMA', 'SAB']);
     cy.get('select[name=subcategory_id]').select('Overharvesting');
     cy.chooseOption('Did this observation occur at a physical place?', 'NO');
     cy.get('#location_information').clear().type('Custom info about location');
@@ -35,27 +39,26 @@ describe('Observations', () => {
     cy.get('#pv_field').clear().type('Citation example');
     cy.get('#litigation_status').clear().type('Litigation status example');
 
-    cy.selectOption('law_field', 'Dépassement de volume');
+    cy.selectOption('law_field', 'Exploitation par autorisation');
     cy.get('button').contains('Create').click();
-    cy.then(() => {
-      cy.once('window:alert', (str) => {
-        expect(str).to.match(/The observation has been successfully created/);
-      });
-    });
-
+    const alert = cy.stub().as("alert");
+    cy.then(() => { cy.on('window:alert', alert); });
     // let's verify if everyting was correctly saved
     cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
+    cy.get("@alert").should("have.been.calledWithMatch", /The observation has been successfully created/);
+    cy.then(() => alert.reset());
     cy.location('pathname').should('include', '/observations/edit');
 
     cy.get('select#observation_type').find('option').contains('Producer').should('be.selected');
     cy.get('select#report_field').find('option').contains('2013 Rapport 1 OGF').should('be.selected');
+    cy.get('select#country_id').find('option').contains('Cameroon').should('be.selected');
     let observationId;
     cy.get('#id_field').invoke('val').then((value) => {
       observationId = value;
     });
-    cy.expectSelectedOption('operator_id', 'BONI');
-    cy.expectSelectedOption('additional_observers', ['AOE', 'CED']);
-    cy.expectSelectedOption('relevant_operators', ['CFT', 'ENRA']);
+    cy.expectSelectedOption('operator_id', 'CFC');
+    cy.expectSelectedOption('additional_observers', ['CADDE', 'CAGDF']);
+    cy.expectSelectedOption('relevant_operators', ['LOREMA', 'SAB']);
     cy.get('select[name=subcategory_id]').find('option').contains('Overharvesting').should('be.selected');
 
     cy.expectChosenOption('Did this observation occur at a physical place?', 'NO');
@@ -73,7 +76,7 @@ describe('Observations', () => {
     cy.get('#pv_field').should('have.value', 'Citation example');
     cy.get('#litigation_status').should('have.value', 'Litigation status example');
 
-    cy.expectSelectedOption('law_field', 'Dépassement de volume');
+    cy.expectSelectedOption('law_field', 'Exploitation par autorisation');
 
     cy.get('#last_modification_by').should('have.value', 'NGO Manager');
 
@@ -116,8 +119,7 @@ describe('Observations', () => {
     cy.get('select#report_field').select('2013 Rapport 1 OGF');
     cy.selectOption('government_id', ['DGF', 'DGRAD']);
     cy.get('select[name=subcategory_id]').select('Poor control/follow-up');
-    cy.selectOption('additional_observers', ['AOE', 'CED']);
-    cy.selectOption('relevant_operators', ['CFT', 'ENRA']);
+    cy.selectOption('additional_observers', ['CADDE', 'CAGDF']);
     cy.get('#details_field').clear().type('Here are some custom observation details');
 
     cy.get('select#evidence_type').select('Company documents');
@@ -133,12 +135,11 @@ describe('Observations', () => {
     cy.chooseOption('Severity', 'No enforcement mission required undertaken');
     cy.get('#action_taken').clear().type('Actions taken by government');
     cy.get('#concern_opinion').clear().type('Here are some comments');
+
+    const alert = cy.stub().as("alert");
+    cy.then(() => { cy.on('window:alert', alert); });
     cy.get('button').contains('Create').click();
-    cy.then(() => {
-      cy.once('window:alert', (str) => {
-        expect(str).to.match(/The observation has been successfully created/);
-      });
-    });
+    cy.get("@alert").should("have.been.calledWithMatch", /The observation has been successfully created/);
 
     // let's verify if everyting was correctly saved
     cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
@@ -152,8 +153,7 @@ describe('Observations', () => {
     });
     cy.expectSelectedOption('government_id', ['DGF', 'DGRAD']);
     cy.get('select[name=subcategory_id]').find('option').contains('Poor control/follow-up').should('be.selected');
-    cy.expectSelectedOption('additional_observers', ['AOE', 'CED']);
-    cy.expectSelectedOption('relevant_operators', ['CFT', 'ENRA']);
+    cy.expectSelectedOption('additional_observers', ['CADDE', 'CAGDF']);
     cy.get('#details_field').should('have.value', 'Here are some custom observation details');
 
     cy.get('select#evidence_type').find('option').contains('Company documents').should('be.selected');
