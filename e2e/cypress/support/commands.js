@@ -27,24 +27,29 @@ Cypress.Commands.add('selectDate', (selector, date) => {
   const [year, month, day] = date.split('-');
   cy.get('.flatpickr-calendar .numInput.cur-year').clear().type(year);
   cy.get('.flatpickr-calendar .flatpickr-monthDropdown-months').select(Number(month) - 1); // flatpickr uses 0-indexed months
-  cy.get('.flatpickr-calendar .flatpickr-day').contains(day).click();
+  cy.get('.flatpickr-calendar .flatpickr-day:not(.prevMonthDay)').contains(day).click();
 });
 
 Cypress.Commands.add('selectOption', (selector, option) => {
   const options = [].concat(option);
+  const toggleOption = (optionText) => {
+    cy.get(`ss-multiselect-dropdown[name=${selector}]`)
+      .find("li.dropdown-item")
+      .contains(optionText, { matchCase: false })
+      .click();
+  };
 
   cy.get(`ss-multiselect-dropdown[name=${selector}]`)
-    .find("button")
-    .contains('Select')
-    .click();
+    .find("button.dropdown-toggle")
+    .click()
+    .then(($btn) => {
+      const selectedOptions = $btn.text();
+      if (selectedOptions !== 'Select') {
+        selectedOptions.split(',').map((o) => o.trim()).forEach(toggleOption); // to unselect all
+      }
+    })
 
-  options.forEach((option) => {
-    cy.get(`ss-multiselect-dropdown[name=${selector}]`)
-    .find("li.dropdown-item")
-    .contains(option, { matchCase: false })
-    .click();
-  });
-
+  options.forEach(toggleOption);
   cy.get(`ss-multiselect-dropdown[name=${selector}]`).click();
 });
 
