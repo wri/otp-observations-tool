@@ -4017,10 +4017,10 @@ findup-sync@~0.3.0:
   dependencies:
     glob "~5.0.0"
 
-flatpickr@~4.2.3:
-  version "4.2.4"
-  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.2.4.tgz#abd6dedd0fa41e2118acb96a22f49819ba2d0157"
-  integrity sha512-mDek7X2v7EJzx/6e6ISSKLKAVEPgTgzfydgV5jU1rTtuLA0CMfTm1nhvT0UUz5GVcItEPWtUmhM+dK2L3LCDRQ==
+flatpickr@~4.6.13:
+  version "4.6.13"
+  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.6.13.tgz#8a029548187fd6e0d670908471e43abe9ad18d94"
+  integrity sha512-97PMG/aywoYpB4IvbvUJi0RQi8vearvU0oov1WW3k0WZPBMrTQVqekSX5CjSG/M4Q3i6A/0FKXC7RyAoAUUSPw==
 
 flatted@^2.0.0:
   version "2.0.2"

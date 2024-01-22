@@ -11,10 +11,10 @@ describe('Observations', () => {
   it('can add a new producer observation and submit it for review', () => {
     cy.get('a').contains('New observation').click();
     cy.get('select#observation_type').select('Producer');
-    cy.get('select#report_field').select('2013 Rapport 1 OGF');
+    cy.get('select#report_field').select('RAPPORT 011 - OGF');
     cy.get('select#country_id').select('Cameroon');
     cy.selectOption('operator_id', 'CFC');
-    cy.selectOption('additional_observers', ['CADDE', 'CAGDF']);
+    cy.expectSelectedOption('additional_observers', ['RENOI']); // from selected report
     cy.selectOption('relevant_operators', ['LOREMA', 'SAB']);
     cy.get('select[name=subcategory_id]').select('Overharvesting');
     cy.chooseOption('Did this observation occur at a physical place?', 'NO');
@@ -50,14 +50,14 @@ describe('Observations', () => {
     cy.location('pathname').should('include', '/observations/edit');
 
     cy.get('select#observation_type').find('option').contains('Producer').should('be.selected');
-    cy.get('select#report_field').find('option').contains('2013 Rapport 1 OGF').should('be.selected');
+    cy.get('select#report_field').find('option').contains('RAPPORT 011 - OGF').should('be.selected');
     cy.get('select#country_id').find('option').contains('Cameroon').should('be.selected');
     let observationId;
     cy.get('#id_field').invoke('val').then((value) => {
       observationId = value;
     });
     cy.expectSelectedOption('operator_id', 'CFC');
-    cy.expectSelectedOption('additional_observers', ['CADDE', 'CAGDF']);
+    cy.expectSelectedOption('additional_observers', ['RENOI']);
     cy.expectSelectedOption('relevant_operators', ['LOREMA', 'SAB']);
     cy.get('select[name=subcategory_id]').find('option').contains('Overharvesting').should('be.selected');
 
@@ -116,12 +116,14 @@ describe('Observations', () => {
   it('can add a new governance observation and submit it for review', () => {
     cy.get('a').contains('New observation').click();
     cy.get('select#observation_type').select('Governance');
-    cy.get('select#report_field').select('2013 Rapport 1 OGF');
+    cy.get('select#report_field').select('Upload a new report');
+    cy.get('input#report_file').attachFile('test_document.docx');
+    cy.get('#report_title').clear().type('New uploaded report');
+    cy.selectDate('report_date', '2023-12-30');
+    cy.selectOption('additional_observers', ['CADDE', 'CAGDF']);
     cy.selectOption('government_id', ['DGF', 'DGRAD']);
     cy.get('select[name=subcategory_id]').select('Poor control/follow-up');
-    cy.selectOption('additional_observers', ['CADDE', 'CAGDF']);
     cy.get('#details_field').clear().type('Here are some custom observation details');
-
     cy.get('select#evidence_type').select('Company documents');
     cy.get('#evidence_title').clear().type('Evidence number 1');
     cy.get('input#evidence_field').attachFile('test_document.docx');
@@ -146,14 +148,14 @@ describe('Observations', () => {
     cy.location('pathname').should('include', '/observations/edit');
 
     cy.get('select#observation_type').find('option').contains('Governance').should('be.selected');
-    cy.get('select#report_field').find('option').contains('2013 Rapport 1 OGF').should('be.selected');
+    cy.get('select#report_field').find('option').contains('New uploaded report').should('be.selected');
+    cy.expectSelectedOption('additional_observers', ['CADDE', 'CAGDF']);
     let observationId;
     cy.get('#id_field').invoke('val').then((value) => {
       observationId = value;
     });
     cy.expectSelectedOption('government_id', ['DGF', 'DGRAD']);
     cy.get('select[name=subcategory_id]').find('option').contains('Poor control/follow-up').should('be.selected');
-    cy.expectSelectedOption('additional_observers', ['CADDE', 'CAGDF']);
     cy.get('#details_field').should('have.value', 'Here are some custom observation details');
 
     cy.get('select#evidence_type').find('option').contains('Company documents').should('be.selected');

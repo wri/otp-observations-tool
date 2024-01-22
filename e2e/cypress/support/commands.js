@@ -18,6 +18,18 @@ Cypress.Commands.add('login', (username, password) => {
   );
 });
 
+Cypress.Commands.add('selectDate', (selector, date) => {
+  // .flatpickr-calendar
+  // .flatpickr-day
+  cy.get(`#${selector}`).click();
+
+  // date in format YYYY-MM-DD
+  const [year, month, day] = date.split('-');
+  cy.get('.flatpickr-calendar .numInput.cur-year').clear().type(year);
+  cy.get('.flatpickr-calendar .flatpickr-monthDropdown-months').select(Number(month) - 1); // flatpickr uses 0-indexed months
+  cy.get('.flatpickr-calendar .flatpickr-day').contains(day).click();
+});
+
 Cypress.Commands.add('selectOption', (selector, option) => {
   const options = [].concat(option);
 
