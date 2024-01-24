@@ -86,20 +86,13 @@
   </div>
 
   <ng-template #reportTemplate>
-    <div *ngIf="isDisabled()" class="form-group">
-      <label for="report_field">{{'Report' | translate}}</label>
-      <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" disabled>
-        <option [ngValue]="null">{{'Select a report' | translate}}</option>
-        <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
-      </select>
-    </div>
-    <fieldset class="-required" *ngIf="!isDisabled()" [ngClass]="{ 'has-error': f.submitted && !isReportChosen }">
+    <fieldset class="-required" [ngClass]="{ 'has-error': f.submitted && !isReportChosen }">
       <legend>{{'Report' | translate}}</legend>
       <div *ngIf="f.submitted && !isReportChosen" class="help-text">{{'Please select an existing report or upload a new one' | translate}}</div>
       <div class="fieldset-container">
         <div class="form-group">
           <label for="report_field">{{'Report' | translate}}</label>
-          <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
+          <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" [disabled]="isDisabled()">
             <option [ngValue]="null">{{'Upload a new report' | translate}}</option>
             <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
           </select>
@@ -115,7 +108,7 @@
           </div>
         </ng-template>
 
-        <ng-template [ngIf]="!reportChoice">
+        <ng-template [ngIf]="!reportChoice && !isDisabled()">
           <!-- File -->
           <div class="form-group">
             <label for="report_file">{{'File' | translate}}</label>
