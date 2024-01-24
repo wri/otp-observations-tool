@@ -97,9 +97,6 @@
       <legend>{{'Report' | translate}}</legend>
       <div *ngIf="f.submitted && !isReportChosen" class="help-text">{{'Please select an existing report or upload a new one' | translate}}</div>
       <div class="fieldset-container">
-        <p class="fieldset-description" *otpMaxTablet>
-          {{'Select one of the two options below: use an existing report or upload a new one.' | translate}}
-        </p>
         <div class="form-group">
           <label for="report_field">{{'Report' | translate}}</label>
           <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
@@ -107,7 +104,7 @@
             <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
           </select>
           <p class="note">
-            You can upload a new report or select an existing one from the list.
+            {{ 'You can upload a new report or select an existing one from the list.' | translate }}
           </p>
         </div>
 
@@ -164,8 +161,7 @@
             {{ 'observation.additionalMonitors.note' | translate }}
           </p>
           <p *ngIf="!canChangeMonitors()" class="note">
-            You cannot change monitors if you preselected existing report. To change monitors for report please go to the Report Library.
-            <!-- {{ 'observation.additionalMonitors.disabled.note' | translate }} -->
+            {{ 'observation.additionalMonitors.disabled.note' | translate }}
           </p>
         </div>
       </div>
