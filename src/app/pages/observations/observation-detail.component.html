@@ -85,6 +85,82 @@
     <p>{{'observation.statusNote.Published' | translate}}</p>
   </div>
 
+  <ng-template #reportTemplate>
+    <fieldset class="-required" [ngClass]="{ 'has-error': f.submitted && !isReportChosen }">
+      <legend>{{'Report' | translate}}</legend>
+      <div *ngIf="f.submitted && !isReportChosen" class="help-text">{{'Please select an existing report or upload a new one' | translate}}</div>
+      <div class="fieldset-container">
+        <div class="form-group">
+          <label for="report_field">{{'Report' | translate}}</label>
+          <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" [disabled]="isDisabled()">
+            <option [ngValue]="null">{{'Upload a new report' | translate}}</option>
+            <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
+          </select>
+          <p class="note">
+            {{ 'You can upload a new report or select an existing one from the list.' | translate }}
+          </p>
+        </div>
+
+        <ng-template [ngIf]="reportChoice">
+          <div class="form-group">
+            <label>{{'Current file' | translate}}</label>
+            <a href="{{reportChoice.attachment.url}}" target="_blank" download>{{'Download file' | translate}}</a>
+          </div>
+        </ng-template>
+
+        <ng-template [ngIf]="!reportChoice && !isDisabled()">
+          <!-- File -->
+          <div class="form-group">
+            <label for="report_file">{{'File' | translate}}</label>
+            <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="41943040" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
+            <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 40MB' | translate}}</div>
+            <div *ngIf="f.submitted && !report_file.valid" class="help-text">{{'The file is not valid' | translate}}</div>
+          </div>
+
+          <!-- Title -->
+          <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
+            <label for="report_title">{{'Title' | translate}}</label>
+            <input id="report_title" type="text" class="form-control" name="report_title" [(ngModel)]="report.title" #report_title="ngModel" [required]="!!report_file.value" />
+            <div *ngIf="f.submitted && !report_title.valid" class="help-text">{{'Please enter the name' | translate}}</div>
+          </div>
+
+          <!-- Publication date -->
+          <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
+            <label for="report_date">{{'Publication date' | translate}}</label>
+            <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="reportDate" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
+            <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
+          </div>
+        </ng-template>
+
+        <!-- Current monitor -->
+        <div class="form-group">
+          <label>{{'Monitor' | translate}}</label>
+          <input type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
+        </div>
+
+        <!-- 4. Additional monitors -->
+        <div class="form-group">
+          <label>{{'Additional monitors' | translate}}</label>
+          <ss-multiselect-dropdown
+            [texts]="multiSelectTexts"
+            [options]="additionalObserversOptions"
+            [settings]="additionalObserversSelectSettings"
+            [(ngModel)]="_additionalObserversSelection"
+            (ngModelChange)="onChangeAdditionalObserversOptions($event)"
+            name="additional_observers"
+            [disabled]="isDisabled() || !canChangeMonitors()">
+          </ss-multiselect-dropdown>
+          <p class="note">
+            {{ 'observation.additionalMonitors.note' | translate }}
+          </p>
+          <p *ngIf="!canChangeMonitors()" class="note">
+            {{ 'observation.additionalMonitors.disabled.note' | translate }}
+          </p>
+        </div>
+      </div>
+    </fieldset>
+  </ng-template>
+
   <div class="form-header">
     <div class="form-group">
       <label for="observation_type">{{'Type' | translate}}</label>
@@ -125,62 +201,7 @@
     </div>
 
     <!-- 1. Report -->
-    <div *ngIf="isDisabled()" class="form-group">
-      <label for="report_field">{{'Report' | translate}}</label>
-      <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" disabled>
-        <option [ngValue]="null">{{'Select a report' | translate}}</option>
-        <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
-      </select>
-    </div>
-    <fieldset class="-required" *ngIf="!isDisabled()" [ngClass]="{ 'has-error': f.submitted && !isReportChosen }">
-      <legend>{{'Report' | translate}}</legend>
-      <div *ngIf="f.submitted && !isReportChosen" class="help-text">{{'Please select an existing report or upload a new one' | translate}}</div>
-      <div class="fieldset-container">
-        <p class="fieldset-description" *otpMaxTablet>
-          {{'Select one of the two options below: use an existing report or upload a new one.' | translate}}
-        </p>
-        <div class="row">
-          <div class="small-12 medium-6 columns">
-            <!-- 1.1 Select report -->
-            <h3>{{'Existing report' | translate}}</h3>
-            <p>{{'Select a report from the report library of your organization.' | translate}}</p>
-            <div class="form-group">
-              <label for="report_field">{{'Report' | translate}}</label>
-              <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
-                <option [ngValue]="null">{{'Select a report' | translate}}</option>
-                <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="small-12 medium-6 columns">
-            <!-- 1.2 Upload report -->
-            <h3>{{'Upload report' | translate}}</h3>
-            <p>{{'Alternatively, you can upload a new report to the library and use it for this observation.' | translate}}</p>
-            <!-- 1.2.A File -->
-            <div class="form-group">
-              <label for="report_file">{{'File' | translate}}</label>
-              <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="41943040" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-              <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 40MB' | translate}}</div>
-              <div *ngIf="f.submitted && !report_file.valid" class="help-text">{{'The file is not valid' | translate}}</div>
-            </div>
-
-            <!-- 1.2.2 Title -->
-            <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-              <label for="report_title">{{'Title' | translate}}</label>
-              <input id="report_title" type="text" class="form-control" name="report_title" [(ngModel)]="report.title" #report_title="ngModel" [required]="!!report_file.value" />
-              <div *ngIf="f.submitted && !report_title.valid" class="help-text">{{'Please enter the name' | translate}}</div>
-            </div>
-
-            <!-- 1.2.3 Publication date -->
-            <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-              <label for="report_date">{{'Publication date' | translate}}</label>
-              <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="reportDate" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
-              <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </fieldset>
+    <ng-container *ngTemplateOutlet="reportTemplate"></ng-container>
 
     <!-- 2. Country -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
@@ -214,29 +235,6 @@
       <div class="note" *ngIf="!isDisabled()">
         <button type="button" class="c-button -primary" (click)="onClickAddOperator('operator')">{{'Add a new producer to the list' | translate}}</button>
       </div>
-    </div>
-
-    <!-- Current monitor -->
-    <div class="form-group">
-      <label>{{'Monitor' | translate}}</label>
-      <input type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
-    </div>
-
-    <!-- 4. Additional monitors -->
-    <div class="form-group">
-      <label>{{'Additional monitors' | translate}}</label>
-      <ss-multiselect-dropdown
-        [texts]="multiSelectTexts"
-        [options]="additionalObserversOptions"
-        [settings]="additionalObserversSelectSettings"
-        [(ngModel)]="_additionalObserversSelection"
-        (ngModelChange)="onChangeAdditionalObserversOptions($event)"
-        name="additional_observers"
-        [disabled]="isDisabled()">
-      </ss-multiselect-dropdown>
-      <p class="note">
-        {{ 'observation.additionalMonitors.note' | translate }}
-      </p>
     </div>
 
     <!-- 5. Relevant operators -->
@@ -686,62 +684,7 @@
     </div>
 
     <!-- 1. Report -->
-    <div *ngIf="isDisabled()" class="form-group">
-      <label for="report_field">{{'Report' | translate}}</label>
-      <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" disabled>
-        <option [ngValue]="null">{{'Select a report' | translate}}</option>
-        <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
-      </select>
-    </div>
-    <fieldset class="-required" *ngIf="!isDisabled()" [ngClass]="{ 'has-error': f.submitted && !isReportChosen }">
-      <legend>{{'Report' | translate}}</legend>
-      <div *ngIf="f.submitted && !isReportChosen" class="help-text">{{'Please select an existing report or upload a new one' | translate}}</div>
-      <div class="fieldset-container">
-        <p class="fieldset-description" *otpMaxTablet>
-          {{'Select one of the two options below: use an existing report or upload a new one.' | translate}}
-        </p>
-        <div class="row">
-          <div class="small-12 medium-6 columns">
-            <!-- 1.1 Select report -->
-            <h3>{{'Existing report' | translate}}</h3>
-            <p>{{'Select a report from the report library of your organization.' | translate}}</p>
-            <div class="form-group">
-              <label for="report_field">{{'Report' | translate}}</label>
-              <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel">
-                <option [ngValue]="null">{{'Select a report' | translate}}</option>
-                <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="small-12 medium-6 columns">
-            <!-- 1.2 Upload report -->
-            <h3>{{'Upload report' | translate}}</h3>
-            <p>{{'Alternatively, you can upload a new report to the library and use it for this observation.' | translate}}</p>
-            <!-- 1.2.A File -->
-            <div class="form-group">
-              <label for="report_file">{{'File' | translate}}</label>
-              <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="41943040" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-              <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 40MB' | translate}}</div>
-              <div *ngIf="f.submitted && !report_file.valid" class="help-text">{{'The file is not valid' | translate}}</div>
-            </div>
-
-            <!-- 1.2.2 Title -->
-            <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-              <label for="report_title">{{'Title' | translate}}</label>
-              <input id="report_title" type="text" class="form-control" name="report_title" [(ngModel)]="report.title" #report_title="ngModel" [required]="!!report_file.value" />
-              <div *ngIf="f.submitted && !report_title.valid" class="help-text">{{'Please enter the name' | translate}}</div>
-            </div>
-
-            <!-- 1.2.3 Publication date -->
-            <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-              <label for="report_date">{{'Publication date' | translate}}</label>
-              <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="reportDate" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
-              <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </fieldset>
+    <ng-container *ngTemplateOutlet="reportTemplate"></ng-container>
 
     <!-- 2. Country -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
@@ -779,29 +722,6 @@
       <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">{{'Please select a governance problem' | translate}}</div>
       <p class="note">
         {{ 'observation.governanceProblem.note' | translate }}
-      </p>
-    </div>
-
-    <!-- Current monitor -->
-    <div class="form-group">
-      <label>{{'Monitor' | translate}}</label>
-      <input type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
-    </div>
-
-    <!-- 5. Additional monitors -->
-    <div class="form-group">
-      <label>{{'Additional monitors' | translate}}</label>
-      <ss-multiselect-dropdown
-        [texts]="multiSelectTexts"
-        [options]="additionalObserversOptions"
-        [settings]="additionalObserversSelectSettings"
-        [(ngModel)]="_additionalObserversSelection"
-        (ngModelChange)="onChangeAdditionalObserversOptions($event)"
-        name="additional_observers"
-        [disabled]="isDisabled()">
-      </ss-multiselect-dropdown>
-      <p class="note">
-        {{ 'observation.additionalMonitors.note' | translate }}
       </p>
     </div>
 

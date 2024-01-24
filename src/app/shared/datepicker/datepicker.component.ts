@@ -1,10 +1,10 @@
 import { Component, forwardRef, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import flatpickr from 'flatpickr';
-import { CustomLocale } from 'flatpickr/dist/l10n/types/locale';
 import fr from 'flatpickr/dist/l10n/fr.js';
 import en from 'flatpickr/dist/l10n/default.js';
 import { dateFormat } from '../formatted-date/formatted-date.component';
+import { CustomLocale } from 'flatpickr/dist/types/locale';
 
 const REQUIRED_VALIDATOR: any = {
   provide: NG_VALIDATORS,

@@ -159,6 +159,7 @@ export class ObservationDetailComponent implements OnDestroy {
   // Monitors multi-select related
   additionalObserversOptions: IMultiSelectOption[] = [];
   _additionalObserversSelection: string[] = [];
+  _additionalObserversSelectionSaved: string[] = []; // for saving when selecting and unselecting report
   additionalObserversSelectSettings: IMultiSelectSettings = {
     enableSearch: true
   }
@@ -675,10 +676,17 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get reportChoice() { return this.observation ? (this.observation['observation-report'] || null) : this._reportChoice; }
   set reportChoice(reportChoice) {
+    const shouldSaveAdditionalObservers = this.reportChoice === null && reportChoice !== null;
+    const shouldRestoreAdditionalObservers = this.reportChoice !== null && reportChoice === null;
+
     if (this.observation) {
       this.observation['observation-report'] = reportChoice;
     } else {
       this._reportChoice = reportChoice;
+    }
+
+    if (shouldRestoreAdditionalObservers && this._additionalObserversSelectionSaved.length > 0) {
+      this._additionalObserversSelection = this._additionalObserversSelectionSaved;
     }
 
     // If the user selects a report, then the uploaded
@@ -687,6 +695,10 @@ export class ObservationDetailComponent implements OnDestroy {
       this.report.attachment = null;
       this.report.title = null;
       this.report['publication-date'] = null;
+      if (shouldSaveAdditionalObservers) {
+        this._additionalObserversSelectionSaved = this._additionalObserversSelection;
+      }
+      this._additionalObserversSelection = reportChoice.observers.map(o => o.id).filter(id => id !== this.authService.userObserverId);
     }
   }
 
@@ -790,7 +802,8 @@ export class ObservationDetailComponent implements OnDestroy {
     // We load the list of reports we can use
     this.observationReportsService.getAll({
       sort: 'title',
-      filter: { observer_id: this.authService.userObserverId }
+      filter: { observer_id: this.authService.userObserverId },
+      include: 'observers'
     }).then(reports => this.reports = reports)
       .then(() => {
         // If we're editing an observation (or using draft), the object ObservationReport of the observation won't
@@ -949,6 +962,10 @@ export class ObservationDetailComponent implements OnDestroy {
     } else {
       this.evidenceOnReport = null;
     }
+  }
+
+  private canChangeMonitors(): boolean {
+    return !Boolean(this.reportChoice);
   }
 
   private saveAsDraftObservation(): void {
@@ -1532,6 +1549,9 @@ export class ObservationDetailComponent implements OnDestroy {
         resolve();
       } else {
         // Otherwise, we upload the report first
+        this.report.observers = this.observers
+          .filter((observer) => this._additionalObserversSelection.includes(observer.id))
+          .concat([this.observers.find(o => o.id === this.authService.userObserverId)]),
         this.report.save()
           .toPromise()
           .then(resolve)

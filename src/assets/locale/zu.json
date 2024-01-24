@@ -69,12 +69,10 @@
   "Select an observation type": "Select an observation type",
   "Government": "Government",
   "Please select an observation type": "Please select an observation type",
-  "Select one of the two options below: use an existing report or upload a new one.": "Select one of the two options below: use an existing report or upload a new one.",
   "Existing report": "Existing report",
   "Select a report from the report library of your organization.": "Select a report from the report library of your organization.",
   "Select a report": "Select a report",
   "Upload report": "Upload report",
-  "Alternatively, you can upload a new report to the library and use it for this observation.": "Alternatively, you can upload a new report to the library and use it for this observation.",
   "File": "File",
   "The file should weight less than 20MB": "The file should weight less than 20MB",
   "The file should weight less than 40MB": "The file should weight less than 40MB",
@@ -89,7 +87,6 @@
   "Select an operator": "Select an operator",
   "Please select an operator": "Please select an operator",
   "New operator": "New operator",
-  "Alternatively, you can quickly add new operator.": "Alternatively, you can quickly add new operator.",
   "Select an operator type": "Select an operator type",
   "Please select an operator type": "Please select an operator type",
   "Additional monitors": "Additional monitors",
@@ -272,6 +269,7 @@
   "observation.type.note": "Description for the type field of the observation form. Set me empty if you don't need me.",
   "observation.country.note": "Description for the country field of the observation form. Set me empty if you don't need me.",
   "observation.additionalMonitors.note": "Description for the additional monitors field of the observation form. Set me empty if you don't need me.",
+  "observation.additionalMonitors.disabled.note": "You cannot change monitors if you preselected existing report. To change monitors for report please go to the Report Library.",
   "observation.fmu.note": "Description for the FMU field of the observation form. Set me empty if you don't need me.",
   "observation.observationCategory.note": "Description for the observation category field of the observation form. Set me empty if you don't need me.",
   "observation.diligenceCategory.note": "Description for the diligence category field of the observation form. Set me empty if you don't need me.",
@@ -398,5 +396,6 @@
   "Add a new producer to the list": "Add a new producer to the list",
   "Please select an existing report or upload a new one": "Please select an existing report or upload a new one",
   "You will not be able to submit this observation to review with unknown operator selected": "You will not be able to submit this observation to review with unknown operator selected",
-  "fmus": "FMUs"
+  "fmus": "FMUs",
+  "You can upload a new report or select an existing one from the list.": "You can upload a new report or select an existing one from the list."
 }
