@@ -75,8 +75,6 @@ export class ObservationDetailComponent implements OnDestroy {
   fmus: Fmu[] = [];
   reports: ObservationReport[] = []; // Ordered by title
   documents: ObservationDocument[] = []; // Sorted by name initially
-  documentsToDelete: ObservationDocument[] = []; // Existing document to delete
-  documentsToUpload: ObservationDocument[] = []; // New document to upload
   reportDocuments: ObservationDocument[] = []; // Documents of the selected report
   evidence: ObservationDocument = this.datastoreService.createRecord(ObservationDocument, {});
   evidenceTypes = [
@@ -692,8 +690,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get reportChoice() { return this.observation ? (this.observation['observation-report'] || null) : this._reportChoice; }
   set reportChoice(reportChoice) {
-    const shouldSaveAdditionalObservers = this.reportChoice === null && reportChoice !== null;
-    const shouldRestoreAdditionalObservers = this.reportChoice !== null && reportChoice === null;
+    // changing report documents section
     if (reportChoice && reportChoice.id) {
       this.observationDocumentsService.getAll({ filter: { 'observation-report-id': reportChoice.id } }).then((documents) => {
         const notLinkedWithObservation = documents.filter((d) => !((this.observation && this.observation['observation-documents']) || []).find((od) => od.id === d.id));
@@ -702,7 +699,12 @@ export class ObservationDetailComponent implements OnDestroy {
           [(d) => d.name.toLowerCase()]
         );
       });
+    } else {
+      this.reportDocuments = [];
     }
+
+    const shouldSaveAdditionalObservers = this.reportChoice === null && reportChoice !== null;
+    const shouldRestoreAdditionalObservers = this.reportChoice !== null && reportChoice === null;
 
     if (this.observation) {
       this.observation['observation-report'] = reportChoice;
@@ -1336,7 +1338,6 @@ export class ObservationDetailComponent implements OnDestroy {
 
     // We push the evidence to the array of documents
     this.documents.push(evidence);
-    this.documentsToUpload.push(evidence);
 
     // We reset the model used for the uploading
     // NOTE: we need to create a new model instead of modifying
@@ -1367,19 +1368,6 @@ export class ObservationDetailComponent implements OnDestroy {
     if (document.id) {
       this.reportDocuments.push(document);
       this.reportDocuments = orderBy(this.reportDocuments, [(d) => d.name.toLowerCase()]);
-
-      // else {
-      //   // If the document is an existing one, we add it
-      //   // to the list of documents to delete
-      //   this.documentsToDelete.push(cloneDeep(document));
-      // }
-    } else {
-      // We get the index of the document within this.documentsToUpload
-      documentIndex = this.documentsToUpload.findIndex((d) => {
-        return d.name === document.name && d.attachment === document.attachment;
-      });
-
-      this.documentsToUpload.splice(documentIndex, 1);
     }
   }
 
@@ -1616,20 +1604,14 @@ export class ObservationDetailComponent implements OnDestroy {
    * @returns {Promise<{}>}
    */
   updateDocuments(observation: Observation): Promise<{}> {
-    // We create an array of the documents to delete
-    // const deletePromises = this.documentsToDelete.map((d) => {
-    //   return this.datastoreService.deleteRecord(ObservationDocument, d.id)
-    //     .toPromise();
-    // });
-
     // We create an array of the documents to upload
-    const uploadPromises = !this.isEvidenceTypeOnReport(this.evidenceType) ? this.documentsToUpload.map((d) => {
+    const documentsToUpload = this.documents.filter((d) => !d.id);
+    const uploadPromises = !this.isEvidenceTypeOnReport(this.evidenceType) ? documentsToUpload.map((d) => {
       // d.observation = observation; // We link the document to the observation TODO:
       d['observation-report'] = observation['observation-report']; // We link the document to the report
       return d.save().toPromise();
     }) : [];
 
-    // return Promise.all(deletePromises.concat(<any>uploadPromises));
     return Promise.all(uploadPromises);
   }
 
