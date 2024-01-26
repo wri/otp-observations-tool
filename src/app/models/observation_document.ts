@@ -9,6 +9,7 @@ export class ObservationDocument extends JsonApiModel {
 
   @Attribute() name: string;
   @Attribute() 'document-type': string;
+  @Attribute() 'observation-report-id'?: number;
   @Attribute() attachment: string|{ url: string };
 
   @HasMany() observations: Observation[];

@@ -702,6 +702,8 @@ export class ObservationDetailComponent implements OnDestroy {
     } else {
       this.reportDocuments = [];
     }
+    // remove documents that belongs to different report
+    this.documents = this.documents.filter(r => !r['observation-report-id'] || (r['observation-report-id'].toString() === (reportChoice && reportChoice.id)));
 
     const shouldSaveAdditionalObservers = this.reportChoice === null && reportChoice !== null;
     const shouldRestoreAdditionalObservers = this.reportChoice !== null && reportChoice === null;
@@ -1229,6 +1231,27 @@ export class ObservationDetailComponent implements OnDestroy {
     if (decimalCoordinates) {
       this.isChangedCoordinates = true;
       this.locationAccuracy = this.locationChoice.manually;
+    }
+  }
+
+  public async onChangeReport(event) {
+    const selectElement = event.target;
+    const newReportId = event.target.value;
+    const anyDocumentsFromDifferentReport = this.documents.find(d => d.id && d['observation-report-id'] && d['observation-report-id'].toString() !== newReportId);
+    let updateReport = false;
+
+    if (anyDocumentsFromDifferentReport) {
+      if (window.confirm(await this.translateService.get('Changing the report will unlink all linked evidences from the previous report. Do you want to continue?').toPromise())) {
+        updateReport = true;
+      }
+    } else {
+      updateReport = true;
+    }
+
+    if (updateReport) {
+      this.reportChoice = this.reports.find(r => r.id === event.target.value);
+    } else {
+      selectElement.value = this.reportChoice.id;  // back to previous value
     }
   }
 

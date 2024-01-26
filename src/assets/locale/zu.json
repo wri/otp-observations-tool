@@ -400,5 +400,6 @@
   "You can upload a new report or select an existing one from the list.": "You can upload a new report or select an existing one from the list.",
   "Document Type": "Document Type",
   "Select a document type": "Select a document type",
-  "Please select a document type": "Please select a document type"
+  "Please select a document type": "Please select a document type",
+  "Changing the report will unlink all linked evidences from the previous report. Do you want to continue?" : "Changing the report will unlink all linked evidences from the previous report. Do you want to continue?"
 }
