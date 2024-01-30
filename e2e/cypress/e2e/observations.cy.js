@@ -76,7 +76,6 @@ describe('Observations', () => {
     cy.get('#location_information').should('have.value', 'Custom info about location');
     cy.get('#details_field').should('have.value', 'Here are some custom observation details');
     cy.get('select#evidence_type').find('option').contains('Uploaded documents').should('be.selected');
-
     cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Lettre').should('be.visible');
     cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Evidence photo').should('be.visible');
 
@@ -199,5 +198,39 @@ describe('Observations', () => {
     cy.get('input#name_field').type('New Test Entity');
     cy.get('button').contains('Create').click();
     cy.expectSelectedOption('government_id', ['DGF', 'DGRAD', 'New Test Entity']);
+  })
+
+  describe('evidences', () => {
+    it('added evidence is correctly associated with observation report', () => {
+      cy.get('a').contains('New observation').click();
+      cy.get('select#observation_type').select('Producer');
+      cy.get('select#report_field').select('Rapport 10 OGF');
+      cy.get('select#evidence_type').select('Uploaded documents');
+      cy.get('[data-test-id="documents-list-selected"]').contains('No evidence').should('be.visible');
+      // upload a new evidence
+      cy.get('otp-tabs').find('li').contains('Upload a new evidence').click();
+      cy.get('select#document_type').select('Company documents');
+      cy.get('#evidence_title').clear().type('Some document');
+      cy.get('input#evidence_field').attachFile('test_document.docx');
+      cy.get('button').contains('Add to list').click();
+      // verify it was added
+      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Some document').should('be.visible');
+      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Some document').contains('To upload');
+      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Some document').contains('Company Documents');
+      cy.get('button').contains('Create').click();
+
+      cy.get('a').contains('New observation').click();
+      cy.get('select#observation_type').select('Producer');
+      cy.get('select#report_field').select('Rapport 10 OGF');
+      // let's verify if Some document is on the report document list
+      cy.get('select#evidence_type').select('Uploaded documents');
+      cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('Some document').should('be.visible');
+      cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('li', 'Some document').contains('Company Documents');
+    });
+
+    // TODO
+    // it('shows a warning when changing obervation report while having evidences from previous one', () => {
+
+    // })
   })
 })
