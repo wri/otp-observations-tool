@@ -185,7 +185,7 @@
         <ng-template [ngIf]="evidenceType === 'Uploaded documents'">
           <br />
           <div class="row">
-            <div *ngIf="isDisabled()" class="small-12 columns">
+            <div *ngIf="isDisabled()" data-test-id="documents-list-selected" class="small-12 columns">
               <h3>{{'List of evidence' | translate}}</h3>
               <ul class="documents-list" *ngIf="documents.length">
                 <li *ngFor="let document of documents">
@@ -198,7 +198,7 @@
               </ul>
               <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
             </div>
-            <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
+            <div *ngIf="!isDisabled()" data-test-id="documents-list-selected" class="small-12 medium-6 columns">
               <!-- List of evidence -->
               <h3>{{'List of evidence' | translate}}</h3>
               <ul class="documents-list" *ngIf="documents.length">
@@ -217,10 +217,11 @@
               </ul>
               <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
             </div>
-            <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
+            <div *ngIf="!isDisabled()"  class="small-12 medium-6 columns">
               <otp-tabs [tabs]="evidenceTabs" (change)="onChangeEvidenceTab($event)"></otp-tabs>
 
               <ng-template [ngIf]="currentEvidenceTab.id === 'existing'">
+                <div data-test-id="documents-list-report">
                   <!-- List of evidences from the report -->
                   <ul class="documents-list" *ngIf="reportDocuments.length">
                     <li *ngFor="let document of reportDocuments">
@@ -236,6 +237,7 @@
                     </li>
                   </ul>
                   <p *ngIf="!reportDocuments.length">{{'No evidence' | translate}}</p>
+                </div>
               </ng-template>
 
               <ng-template [ngIf]="currentEvidenceTab.id === 'new'">
