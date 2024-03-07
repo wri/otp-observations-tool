@@ -158,7 +158,9 @@ jobs:
           sed -i "/OTP_API_KEY/c\  OTP_API_KEY: 'Bearer ${{ steps.api_key.outputs.VALUE }}'," src/environments/environment.e2e.ts
 
       - name: Run Observation Tool
-        run: yarn start:e2e &
+        run: |
+          yarn start:e2e &
+          npx --yes wait-on -t 80000 http://localhost:4200
 
       - name: Run E2E Tests
         working-directory: e2e
