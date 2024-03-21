@@ -25,5 +25,4 @@ export class ObservationDocumentsService extends JsonApiService<ObservationDocum
     return this.datastoreService.findAll(ObservationDocument, Object.assign({}, { page: { size: 3000 }}, params))
       .toPromise().then((data) => data.getModels());
   }
-
 }

@@ -720,7 +720,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
     // If the user selects a report, then the uploaded
     // file is discarded
-    if (reportChoice !== null) {
+    if (reportChoice !== null && reportChoice !== undefined) {
       this.report.attachment = null;
       this.report.title = null;
       this.report['publication-date'] = null;
@@ -871,7 +871,7 @@ export class ObservationDetailComponent implements OnDestroy {
         this.observation['updated-at'] = new Date(this.observation['updated-at']);
 
         // We set the list of additional observer ids for the additional observers field
-        const additionalObserversIds = this.observation.observers
+        const additionalObserversIds = (this.observation.observers || [])
           .filter(observer => observer.id !== this.authService.userObserverId)
           .map(o => o.id);
         this._additionalObserversSelection = additionalObserversIds;
@@ -884,7 +884,8 @@ export class ObservationDetailComponent implements OnDestroy {
         this.reportChoice = this.observation['observation-report'];
         this.documents = this.observation['observation-documents'];
       })
-        .catch(() => {
+        .catch((err) => {
+          console.error(err);
           // The only reason the request should fail is that the user
           // don't have the permission to edit this observation
           // In such a case, we redirect them to the 404 page
@@ -976,7 +977,6 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   public onChangeEvidenceType(previousType: string, type: string, typeElement: HTMLSelectElement): void {
-    console.log('on change evidence type', previousType, type, typeElement);
     if (!this.isEvidenceTypeOnReport(type) || !this.documents.length) {
       this.evidenceType = type;
     }
@@ -1104,8 +1104,6 @@ export class ObservationDetailComponent implements OnDestroy {
         const convertCoordinateToDecimal = (coordinate: string) => {
           const convert = (degrees: string, minutes: string, seconds: string, direction: string) => {
             let res = (+degrees) + (+minutes / 60) + (+seconds / (60 * 60));
-
-            console.log(degrees, minutes, seconds, direction);
 
             if (direction == 'S' || direction == 'W') {
               res *= -1;
@@ -1350,9 +1348,6 @@ export class ObservationDetailComponent implements OnDestroy {
    * Event handler executed when the user clicks the "Add evidence" button
    */
   onClickAddEvidence() {
-    console.log('evidence name', this.evidence.name);
-    console.log('evidence type', this.evidence['document-type']);
-
     const evidence = this.datastoreService.createRecord(ObservationDocument, {
       name: this.evidence.name,
       ['document-type']: this.evidence['document-type'],
@@ -1624,18 +1619,19 @@ export class ObservationDetailComponent implements OnDestroy {
    * Upload and delete documents according to the
    * user choice
    * @param {Observation} observation Existing observation in the database
-   * @returns {Promise<{}>}
+   * @returns {Promise<any>}
    */
-  updateDocuments(observation: Observation): Promise<{}> {
+  updateDocuments(observation: Observation): Promise<any> {
     // We create an array of the documents to upload
-    const documentsToUpload = this.documents.filter((d) => !d.id);
-    const uploadPromises = !this.isEvidenceTypeOnReport(this.evidenceType) ? documentsToUpload.map((d) => {
-      // d.observation = observation; // We link the document to the observation TODO:
+    if (this.evidenceType !== 'Uploaded documents') return Promise.resolve();
+
+    const documentsToUploadOrLink = this.documents.filter((d) => !d.id || !d['observation-report-id']);
+    const uploadOrLinkPromises = documentsToUploadOrLink.map((d) => {
       d['observation-report'] = observation['observation-report']; // We link the document to the report
       return d.save().toPromise();
-    }) : [];
+    });
 
-    return Promise.all(uploadPromises);
+    return Promise.all(uploadOrLinkPromises);
   }
 
   async onSubmitForReview() {
