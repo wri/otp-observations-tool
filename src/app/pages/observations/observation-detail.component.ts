@@ -973,30 +973,33 @@ export class ObservationDetailComponent implements OnDestroy {
     });
   }
 
-  public isEvidenceTypeOnReport(type: string): boolean {
-    return type === 'Evidence presented in the report';
-  }
-
   public onChangeEvidenceType(previousType: string, type: string, typeElement: HTMLSelectElement): void {
-    if (!this.isEvidenceTypeOnReport(type) || !this.documents.length) {
-      this.evidenceType = type;
+    this.evidenceType = type;
+
+    if (type !== 'Uploaded documents') {
+      this.evidence.name = null;
+      this.evidence['document-type'] = null;
+      this.evidence.attachment = null;
+      this.georeferencedPhoto.isUsed = false;
+      this.currentEvidenceTab = this.evidenceTabs[0];
     }
 
-    if (this.isEvidenceTypeOnReport(type) && this.documents.length) {
-      this.translateService.get('observation.evidence.filesDeleteNotification')
-        .subscribe((phrase: string) => {
-          if (confirm(phrase)) {
-            this.evidenceType = type;
-            this.evidence.name = null;
-            this.evidence['document-type'] = null;
-            this.evidence.attachment = null;
-            this.georeferencedPhoto.isUsed = false;
-            this.evidenceInput.nativeElement.value = '';
-          } else {
-            typeElement.selectedIndex = this.evidenceTypes.indexOf(previousType) + 1;
-          }
-        });
-    }
+    // TODO: rethink the message here
+    // if (this.isEvidenceTypeOnReport(type) && this.documents.length) {
+    //   this.translateService.get('observation.evidence.filesDeleteNotification')
+    //     .subscribe((phrase: string) => {
+    //       if (confirm(phrase)) {
+    //         this.evidenceType = type;
+    //         this.evidence.name = null;
+    //         this.evidence['document-type'] = null;
+    //         this.evidence.attachment = null;
+    //         this.georeferencedPhoto.isUsed = false;
+    //         this.evidenceInput.nativeElement.value = '';
+    //       } else {
+    //         typeElement.selectedIndex = this.evidenceTypes.indexOf(previousType) + 1;
+    //       }
+    //     });
+    // }
   }
 
   private canChangeMonitors(): boolean {
