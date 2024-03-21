@@ -95,6 +95,7 @@ export class ObservationDetailComponent implements OnDestroy {
     name: 'Upload a new evidence'
   }]
   currentEvidenceTab = this.evidenceTabs[0];
+  currentEvidenceTabIndex = 0;
 
   coordinatesFormats = [
     'Decimal',
@@ -1264,8 +1265,12 @@ export class ObservationDetailComponent implements OnDestroy {
   public uploadAsEvidencePhoto(): void {
     this.georeferencedPhoto.isUsed = true;
     this.evidence.attachment = this.georeferencedPhoto.attachment;
-    this.evidenceInput.nativeElement.value = '';
-    this.evidenceBlock.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    this.currentEvidenceTab = this.evidenceTabs.find(tab => tab.id === 'new');
+    this.currentEvidenceTabIndex = this.evidenceTabs.indexOf(this.currentEvidenceTab);
+    setTimeout(() => {
+      this.evidenceInput.nativeElement.value = '';
+      this.evidenceBlock.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
   }
 
   /**
