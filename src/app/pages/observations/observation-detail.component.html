@@ -218,7 +218,7 @@
               <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
             </div>
             <div *ngIf="!isDisabled()"  class="small-12 medium-6 columns">
-              <otp-tabs [tabs]="evidenceTabs" (change)="onChangeEvidenceTab($event)"></otp-tabs>
+              <otp-tabs [tabs]="evidenceTabs" [currentTab]="currentEvidenceTabIndex" (change)="onChangeEvidenceTab($event)"></otp-tabs>
 
               <ng-template [ngIf]="currentEvidenceTab.id === 'existing'">
                 <div data-test-id="documents-list-report">
