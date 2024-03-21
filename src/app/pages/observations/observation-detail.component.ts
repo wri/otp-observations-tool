@@ -1268,6 +1268,7 @@ export class ObservationDetailComponent implements OnDestroy {
   public uploadAsEvidencePhoto(): void {
     this.georeferencedPhoto.isUsed = true;
     this.evidence.attachment = this.georeferencedPhoto.attachment;
+    this.evidenceType = 'Uploaded documents';
     this.currentEvidenceTab = this.evidenceTabs.find(tab => tab.id === 'new');
     this.currentEvidenceTabIndex = this.evidenceTabs.indexOf(this.currentEvidenceTab);
     setTimeout(() => {
