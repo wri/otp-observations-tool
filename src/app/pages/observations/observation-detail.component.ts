@@ -1202,7 +1202,7 @@ export class ObservationDetailComponent implements OnDestroy {
         self.isChangedCoordinates = !!(minLatitude && minLongitude);
 
         if (!minLatitude || !minLongitude) {
-          alert(await this.translateService.get('imageGeoreference.error').toPromise());
+          alert(await self.translateService.get('imageGeoreference.error').toPromise());
           return;
         } else {
           self.locationAccuracy = self.locationChoice.photo;
