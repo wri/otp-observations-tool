@@ -1380,6 +1380,26 @@ export class ObservationDetailComponent implements OnDestroy {
     document.fromReportLibrary = true;
     this.documents.push(document);
   }
+
+  async onClickRemoveReportDocument(document: ObservationDocument) {
+    if (window.confirm(await this.translateService.get('observation.evidence.removalNotification').toPromise())) {
+      try {
+        const fetchedDocument = await this.datastoreService.findRecord(
+          ObservationDocument, document.id, { include: 'observations', fields: { observations: 'id' } }
+        ).toPromise();
+        const otherObservationsLinkedIds = (fetchedDocument.observations || []).filter(x => x.id !== this.observation.id).map(x => x.id);
+        if (otherObservationsLinkedIds.length > 0) {
+          alert(await this.translateService.get('observation.evidence.cannotRemoveNotification', { ids: otherObservationsLinkedIds }).toPromise());
+        } else {
+          await this.datastoreService.deleteRecord(ObservationDocument, document.id).toPromise();
+          let documentIndex = this.reportDocuments.findIndex(d => d === document);
+          this.reportDocuments.splice(documentIndex, 1);
+        }
+      } catch {
+        alert(await this.translateService.get('observation.evidence.removalError').toPromise());
+      }
+    }
+  }
   /**
    * Event handler executed when the user clicks the delete button
    * of an evidence

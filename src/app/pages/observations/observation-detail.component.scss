@@ -67,6 +67,16 @@
       text-decoration: underline;
     }
 
+    .actions {
+      display: flex;
+      gap: 5px;
+      max-width: 40%;
+
+      button {
+        white-space: nowrap;
+      }
+    }
+
     > li {
       display: flex;
       justify-content: space-between;
