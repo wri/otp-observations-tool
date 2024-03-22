@@ -13,7 +13,7 @@
     "staging-build": "ng build --output-path=build/ --base-href=/observations-tool/ --aot --configuration=staging",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
     "transifex:push": "env $(grep ^TX_TOKEN -m 1 .env | xargs) tx push -s",
-    "transifex:pull": "env $(grep ^TX_TOKEN -m 1 .env | xargs) tx pull -a && node transifex/format-locales.js"
+    "transifex:pull": "env $(grep ^TX_TOKEN -m 1 .env | xargs) tx pull -a -f && node transifex/format-locales.js"
   },
   "private": true,
   "dependencies": {
