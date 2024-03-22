@@ -893,15 +893,6 @@ export class ObservationDetailComponent implements OnDestroy {
           this.router.navigate(['/', '404']);
         })
         .then(() => this.loading = false);
-
-      // We load the list of documents only if we edit an observation
-      // if (this.route.snapshot.params.id) {
-      //   this.observationDocumentsService.getAll({
-      //     sort: 'name',
-      //     filter: { observation_id: this.route.snapshot.params.id }
-      //   }).then(documents => this.documents = documents)
-      //     .catch(err => console.error(err)); // TODO: visual feedback
-      // }
     } else {
       if (this.route.snapshot.params.useDraft) {
         this.draft = this.observationsService.getDraftObservation();
@@ -983,23 +974,6 @@ export class ObservationDetailComponent implements OnDestroy {
       this.georeferencedPhoto.isUsed = false;
       this.currentEvidenceTab = this.evidenceTabs[0];
     }
-
-    // TODO: rethink the message here
-    // if (this.isEvidenceTypeOnReport(type) && this.documents.length) {
-    //   this.translateService.get('observation.evidence.filesDeleteNotification')
-    //     .subscribe((phrase: string) => {
-    //       if (confirm(phrase)) {
-    //         this.evidenceType = type;
-    //         this.evidence.name = null;
-    //         this.evidence['document-type'] = null;
-    //         this.evidence.attachment = null;
-    //         this.georeferencedPhoto.isUsed = false;
-    //         this.evidenceInput.nativeElement.value = '';
-    //       } else {
-    //         typeElement.selectedIndex = this.evidenceTypes.indexOf(previousType) + 1;
-    //       }
-    //     });
-    // }
   }
 
   private canChangeMonitors(): boolean {
