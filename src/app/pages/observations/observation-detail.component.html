@@ -232,7 +232,8 @@
                         <div class="status">{{document['document-type']}}</div>
                       </div>
                       <div class="actions">
-                        <button type="button" class="c-button -secondary" (click)="onClickAddReportDocument(document)">{{'Add to list' | translate}}</button>
+                        <button type="button" class="c-button -secondary" (click)="onClickRemoveReportDocument(document)">{{'Remove' | translate}}</button>
+                        <button type="button" class="c-button -primary" (click)="onClickAddReportDocument(document)">{{'Add to list' | translate}}</button>
                       </div>
                     </li>
                   </ul>
