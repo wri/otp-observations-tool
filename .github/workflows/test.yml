@@ -1,26 +1,178 @@
+env:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: localhost
+  POSTGRES_PORT: 5432
+  RAILS_ENV: e2e
+  SECRET_KEY_BASE: f54c9d76c42e397e17cbc0d0a024da5a762a7a0d934839b417a77dac6fda65a49a37b32bcd229ac5fd5c1fedef8ed6acf7a57ed6465d6339862cdc0dfab8886f
+  AUTH_SECRET: secret
+  CONTACT_EMAIL: contact@example.com
+  RESPONSIBLE_EMAIL: responsible@example.com
+  CYPRESS_API_PATH: ../otp_api
+
 name: Run tests
 
 on: push
 
 jobs:
-  test:
-    name: Testing build
+  build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Read .nvmrc
+        id: nvm
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
       - uses: actions/setup-node@v2
         with:
-          node-version: 16
-      - run: yarn install
-      - name: Cache Node Modules
-        id: cache-node-modules
-        uses: actions/cache@v2
+          node-version: "${{ steps.nvm.outputs.NVMRC }}"
+
+      - name: Restore Observation Tool Node Modules Cache
+        id: cache-portal-modules
+        uses: actions/cache/restore@v3
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('yarn.lock') }}
-      - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+
+      - name: Install Observation Tool Dependencies
+        run: yarn install --immutable
+
+      - name: Save Observation Tool Node Modules Cache
+        uses: actions/cache/save@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('yarn.lock') }}
+
       - name: Run Build
         run: yarn prod-build
+
+  test:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis
+        ports: ["6379:6379"]
+      postgres:
+        image: postgis/postgis:12-3.1-alpine
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+        ports: ["5432:5432"]
+
+    steps:
+      - name: Checkout Observation Tool
+        uses: actions/checkout@v4
+
+      - name: Checkout OTP API
+        uses: actions/checkout@v4
+        with:
+          repository: wri/fti_api
+          ref: master
+          path: otp_api
+
+      - name: Save OTP API Commit SHA
+        id: otp_api_commit_sha
+        working-directory: otp_api
+        run: echo "VALUE=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Install API dependencies
+        run: |
+          sudo apt update --fix-missing
+          sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev gdal-bin
+          npm install -g mjml
+
+      - name: Setup API Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          working-directory: otp_api
+
+      - name: Restore API Precompiled Assets Cache
+        id: cache-api-precompiled-assets
+        uses: actions/cache/restore@v3
+        with:
+          path: otp_api/public/assets
+          key: api-precompiled-assets-${{ steps.otp_api_commit_sha.outputs.VALUE }}
+
+      - name: Setup API
+        working-directory: otp_api
+        env:
+          APP_URL: http://localhost:3000
+        run: |
+          bin/rails e2e:setup ${{ steps.cache-api-precompiled-assets.outputs.cache-hit == 'true' && 'SKIP_ASSETS_RESET=true' || '' }}
+
+      - name: Save API Precompiled Assets Cache
+        uses: actions/cache/save@v3
+        with:
+          path: otp_api/public/assets
+          key: api-precompiled-assets-${{ steps.otp_api_commit_sha.outputs.VALUE }}
+
+      - name: Read API Access Token
+        id: api_key
+        working-directory: otp_api
+        run: |
+          bin/rails runner 'puts "VALUE=#{User.find_by(email: "webuser@example.com").api_key.access_token}"' > $GITHUB_OUTPUT
+
+      - name: Run API Server
+        working-directory: otp_api
+        env:
+          APP_URL: http://localhost:3000
+        run: |
+          bin/rails s &
+
+      - name: Read .nvmrc
+        id: nvm
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "${{ steps.nvm.outputs.NVMRC }}"
+
+      - name: Restore Observation Tool Node Modules Cache
+        id: cache-portal-modules
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Observation Tool Dependencies
+        run: yarn install --immutable
+
+      - name: Save Observation Tool Node Modules Cache
+        uses: actions/cache/save@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install E2E Dependencies
+        working-directory: e2e
+        run: yarn install --immutable
+
+      - name: Set ENV Variables
+        run: |
+          sed -i "/OTP_API_KEY/c\  OTP_API_KEY: 'Bearer ${{ steps.api_key.outputs.VALUE }}'," src/environments/environment.e2e.ts
+
+      - name: Run Observation Tool
+        run: |
+          yarn start:e2e &
+          npx --yes wait-on -t 80000 http://localhost:4200
+
+      - name: Run E2E Tests
+        working-directory: e2e
+        run: yarn cypress run
+
+      - name: Uploading Test Artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: e2e-tests-artifacts
+          path: |
+            e2e/cypress/screenshots
+            e2e/cypress/videos
+            e2e/cypress/e2e/__image_snapshots__
+            otp_api/log

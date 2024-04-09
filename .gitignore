@@ -33,18 +33,12 @@ npm-debug.log
 testem.log
 /typings
 
-# e2e
-/e2e/*.js
-/e2e/*.map
-
 # System Files
 .DS_Store
 Thumbs.db
 
 # i18n
 .env
-src/assets/locale/*.json
-!src/assets/locale/zu.json
 
 # local env config
 src/environments/environment.local.ts
