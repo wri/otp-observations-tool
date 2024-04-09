@@ -27,7 +27,7 @@
   </otp-operator-detail>
 </otp-modal>
 
-<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && f.valid && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && f.valid && isReportChosen && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 *ngIf="isDisabled() && !isCopied">{{'Observation details' | translate}}</h2>
     <h2 *ngIf="(!isDisabled() && !observation) || isCopied">{{'New observation' | translate}}</h2>
@@ -167,9 +167,10 @@
       <div class="fieldset-container">
         <div class="form-group -required">
           <label for="evidence">{{'Evidence' | translate}}</label>
-          <select #selectTypeElement id="evidence_type" name="evidence_type" (ngModelChange)="onChangeEvidenceType(evidence_type, $event, selectTypeElement)" [ngModel]="evidenceType" #evidence_type="ngModel" [disabled]="isDisabled()">
+          <select #selectTypeElement id="evidence_type" name="evidence_type" (ngModelChange)="onChangeEvidenceType(evidence_type, $event, selectTypeElement)" [ngModel]="evidenceType" #evidence_type="ngModel" [disabled]="isDisabled()" required>
             <option *ngFor="let type of objectKeys(evidenceTypeOptions)" [ngValue]="evidenceTypeOptions[type]">{{ type }}</option>
           </select>
+          <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
           <p class="note">{{'observation.evidenceType.note' | translate}}</p>
         </div>
 
@@ -552,7 +553,7 @@
 
       <div class="buttons">
         <label *ngFor="let s of severities">
-          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()">
+          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()" required>
           <span>{{ s.level }} - {{ s.details }}</span>
         </label>
       </div>
