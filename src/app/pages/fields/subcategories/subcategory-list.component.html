@@ -6,7 +6,7 @@
   </otp-filters>
 </div>
 
-<otp-table [name]="'subcategories'" [caption]="'Subcategories' | translate" defaultSort="category.name,name">
+<otp-table [name]="'subcategories'" [caption]="'Subcategories' | translate" defaultSort="category.name,name" [hideVisibleColumnsBox]="true">
   <otp-table-column prop="name" [name]="'Name' | translate"></otp-table-column>
   <!-- hack to sort by 2 columns category name and name -->
   <otp-table-column prop="category.name,name" [name]="'Category' | translate" [include]="true">

@@ -9,7 +9,7 @@
   </button>
 </div>
 
-<otp-table [name]="'operators'" [caption]="'Operators' | translate" defaultSort="name">
+<otp-table [name]="'operators'" [caption]="'Operators' | translate" defaultSort="name" [hideVisibleColumnsBox]="true">
   <otp-table-column [name]="'Name' | translate" prop="name"></otp-table-column>
   <otp-table-column prop="operator-type" [name]="'Type' | translate">
     <ng-template let-row="row" table-cell-template>

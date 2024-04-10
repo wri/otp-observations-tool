@@ -4,7 +4,7 @@
   </otp-filters>
 </div>
 
-<otp-table [name]="'severities'" [caption]="'Severities' | translate" defaultSort="subcategory.name,level">
+<otp-table [name]="'severities'" [caption]="'Severities' | translate" defaultSort="subcategory.name,level" [hideVisibleColumnsBox]="true">
   <!-- hack to sort by 2 columns subcategory name and level -->
   <otp-table-column prop="subcategory.name,level" [name]="'Subcategory' | translate" [include]="true">
     <ng-template let-row="row" table-cell-template>
