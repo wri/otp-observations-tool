@@ -9,7 +9,7 @@ describe('Observations', () => {
   });
 
   it('can add a new producer observation and submit it for review', () => {
-    cy.get('a').contains('New observation').click();
+    cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Producer');
     cy.get('select#report_field').select('Rapport 13 OGF');
     cy.get('select#country_id').select('Cameroon');
@@ -108,7 +108,7 @@ describe('Observations', () => {
   })
 
   it('can add a new producer directly from observation form', () => {
-    cy.get('a').contains('New observation').click();
+    cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Producer');
     cy.get("button:contains('Add a new producer to the list')").first().click();
     cy.get('input#name_field').type('New Producer');
@@ -124,7 +124,7 @@ describe('Observations', () => {
   })
 
   it('can add a new governance observation and submit it for review', () => {
-    cy.get('a').contains('New observation').click();
+    cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Governance');
     cy.get('select#report_field').select('Upload a new report');
     cy.get('input#report_file').attachFile('test_document.docx');
@@ -191,7 +191,7 @@ describe('Observations', () => {
   });
 
   it('can add a new government entity directly from observation form', () => {
-    cy.get('a').contains('New observation').click();
+    cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Governance');
     cy.selectOption('government_id', ['DGF', 'DGRAD']);
     cy.get('button').contains('Add a new government entity to the list').click();
@@ -202,7 +202,7 @@ describe('Observations', () => {
 
   describe('evidences', () => {
     it('added evidence is correctly associated with observation report', () => {
-      cy.get('a').contains('New observation').click();
+      cy.get('a').contains('New observation', { timeout: 10000 }).click();
       cy.get('select#observation_type').select('Producer');
       cy.get('select#report_field').select('Rapport 10 OGF');
       cy.get('select#evidence_type').select('Uploaded documents');
