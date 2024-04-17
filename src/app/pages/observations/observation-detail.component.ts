@@ -94,7 +94,6 @@ export class ObservationDetailComponent implements OnDestroy {
     photo: 'GPS coordinates extracted from photo',
     manually: 'Accurate GPS coordinates'
   };
-  isChangedCoordinates = false; // User entered the coordinates manually
   georeferencedPhoto: GeoreferencedPhoto = {
     attachment: null,
     isUsed: false,
@@ -124,6 +123,7 @@ export class ObservationDetailComponent implements OnDestroy {
     return {
       center: [10, 0],
       zoom: 3,
+      minZoom: 2,
       layers: [
         L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
           maxZoom: 18,
@@ -512,10 +512,12 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get latitude() { return this.observation ? this.observation.lat : this._latitude; }
   set latitude(latitude) {
+     // @ts-ignore
+    const value = latitude === '' ? null : latitude;
     if (this.observation) {
-      this.observation.lat = latitude;
+      this.observation.lat = value;
     } else {
-      this._latitude = latitude;
+      this._latitude = value;
     }
 
     const decimalCoordinates = this.getDecimalCoordinates();
@@ -530,10 +532,12 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get longitude() { return this.observation ? this.observation.lng : this._longitude; }
   set longitude(longitude) {
+    // @ts-ignore
+    const value = longitude === '' ? null : longitude;
     if (this.observation) {
-      this.observation.lng = longitude;
+      this.observation.lng = value;
     } else {
-      this._longitude = longitude;
+      this._longitude = value;
     }
 
     const decimalCoordinates = this.getDecimalCoordinates();
@@ -1027,7 +1031,6 @@ export class ObservationDetailComponent implements OnDestroy {
    */
   onMapReady(map: L.Map) {
     this.map = map;
-    this.map.on('click', this.onClickMap.bind(this));
   }
 
   private checkCoordinatesValidity(): number[] | boolean {
@@ -1118,6 +1121,8 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   private getDecimalCoordinates(): number[] {
+    if (this.latitude === null || this.longitude === null) return null;
+
     switch (this.coordinatesFormat) {
       case 'Decimal':
       case 'Degrees and decimal minutes':
@@ -1134,23 +1139,6 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
-  /**
-   * Event handler executed when the user clicks on the map
-   * @param {any} e
-   */
-  onClickMap(e: any) {
-    if (this.canSetMapPin) {
-      this.locationAccuracy = this.locationChoice.clickMap;
-      this.coordinatesFormat = 'Decimal';
-      this.latitude = e.latlng.lat;
-      this.longitude = e.latlng.lng;
-    }
-  }
-
-  public get canSetMapPin(): boolean {
-    return !this.isChangedCoordinates;
-  }
-
   onChangePhoto(e: any) {
     const photo = e.target.files[0];
     const self = this;
@@ -1164,9 +1152,6 @@ export class ObservationDetailComponent implements OnDestroy {
         // We determine in for which hemisphere the coordinates are for
         const latitudeRef = EXIF.getTag(this, 'GPSLatitudeRef') || 'N';
         const longitudeRef = EXIF.getTag(this, 'GPSLongitudeRef') || 'W';
-
-        // Disable map if user fills in the coordinates through the photo
-        self.isChangedCoordinates = !!(minLatitude && minLongitude);
 
         if (!minLatitude || !minLongitude) {
           alert(await this.translateService.get('imageGeoreference.error').toPromise());
@@ -1194,7 +1179,6 @@ export class ObservationDetailComponent implements OnDestroy {
   public onChangeCoordinates(): void {
     const decimalCoordinates = this.getDecimalCoordinates();
     if (decimalCoordinates) {
-      this.isChangedCoordinates = true;
       this.locationAccuracy = this.locationChoice.manually;
     }
   }
