@@ -74,6 +74,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ForgotPasswordComponent } from 'app/pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
 import { UploadFileComponent } from './shared/upload-file/upload-file.component';
 import { apiInterceptorProvider } from 'app/services/api-interceptor';
@@ -156,6 +157,7 @@ export function createTranslateLoader(http: HttpClient) {
     TagComponent,
     FormattedDateComponent,
     ResetPasswordComponent,
+    ForgotPasswordComponent,
     ReportLibraryDetailComponent,
     UploadFileComponent,
   ],
