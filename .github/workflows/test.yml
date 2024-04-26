@@ -10,6 +10,8 @@ env:
   CONTACT_EMAIL: contact@example.com
   RESPONSIBLE_EMAIL: responsible@example.com
   CYPRESS_API_PATH: ../otp_api
+  CYPRESS_RECORD_HAR: true
+  ELECTRON_EXTRA_LAUNCH_ARGS: --remote-debugging-port=9222
 
 name: Run tests
 
@@ -173,6 +175,7 @@ jobs:
         with:
           name: e2e-tests-artifacts
           path: |
+            e2e/cypress/hars
             e2e/cypress/screenshots
             e2e/cypress/videos
             e2e/cypress/e2e/__image_snapshots__

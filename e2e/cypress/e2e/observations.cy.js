@@ -1,10 +1,23 @@
 describe('Observations', () => {
+  function sanitizeFilename(filename) {
+    return filename.replace(/ /g, '_').replace(/[^a-zA-Z0-9-_]/g, '');
+  }
+
   beforeEach(() => {
+    const recordHar = Cypress.env('RECORD_HAR');
+    if (recordHar) {
+      cy.recordHar();
+    }
     cy.login('ngo_manager@example.com', 'password');
     cy.visit('/');
   })
 
   afterEach(() => {
+    const recordHar = Cypress.env('RECORD_HAR');
+    const state = Cypress.mocha.getRunner().suite.ctx.currentTest.state;
+    if (recordHar && state !== 'passed') {
+      cy.saveHar({ fileName: sanitizeFilename(`observations ${Cypress.currentTest.title}`) });
+    }
     cy.resetDB();
   });
 
