@@ -299,6 +299,11 @@
   "observation.useAsEvidence": "Utiliser comme preuve",
   "observation.geoPhotoUploaded.note": "Photo géoréférencée ajoutée. Veuillez ajouter un titre et cliquer sur 'Ajouter à la liste' pour l'enregistrer. ",
   "observation.evidence.filesDeleteNotification": "Si vous avez choisi l'option « preuve avancée dans le rapport », tous les fichiers de preuve qui ont été téléversés seront effacés. Voulez-vous continuer?  ",
+  "observation.evidence.removalNotification": "Are you sure you want to remove this evidence?",
+  "observation.evidence.cannotRemoveNotification": "This document is linked with another observation. To remove it, first remove it from observations with these IDs: {{ids}}",
+  "observation.evidence.removalError": "Error while removing the evidence.",
+  "observation.evidence.selectFromReport": "Select from evidence already uploaded from this report",
+  "observation.evidence.uploadNewEvidence": "Upload a new evidence",
   "observation.evidenceType.title": "Type",
   "observation.evidenceType.select": "Sélectionner un type de preuve",
   "observation.evidenceType.invalid": "Sélectionnez un type de preuve SVP",
@@ -397,5 +402,9 @@
   "Please select an existing report or upload a new one": "Veuillez sélectionner un rapport existant ou en télécharger un nouveau",
   "You will not be able to submit this observation to review with unknown operator selected": "Vous ne pourrez pas soumettre cette observation avec un opérateur inconnu sélectionné.",
   "fmus": "UGF",
-  "You can upload a new report or select an existing one from the list.": "You can upload a new report or select an existing one from the list."
+  "You can upload a new report or select an existing one from the list.": "You can upload a new report or select an existing one from the list.",
+  "Document Type": "Document Type",
+  "Select a document type": "Select a document type",
+  "Please select a document type": "Please select a document type",
+  "observation.evidence.filesFromDifferentReport": "Changing the report will unlink all linked evidences from the previous report. Do you want to continue?"
 }

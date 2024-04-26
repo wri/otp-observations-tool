@@ -89,10 +89,12 @@ export class ObservationDetailComponent implements OnDestroy {
 
   evidenceTabs = [{
     id: 'existing',
-    name: 'Select from report evidences'
+    name: 'Select from evidence already uploaded from this report',
+    nameTranslateKey: 'observation.evidence.selectFromReport'
   }, {
     id: 'new',
-    name: 'Upload a new evidence'
+    name: 'Upload a new evidence',
+    nameTranslateKey: 'observation.evidence.uploadNewEvidence'
   }]
   currentEvidenceTab = this.evidenceTabs[0];
   currentEvidenceTabIndex = 0;
@@ -803,6 +805,7 @@ export class ObservationDetailComponent implements OnDestroy {
     this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
     this.updateTranslatedOptions(this.documentTypes, 'documentType');
     this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
+    this.evidenceTabs = this.evidenceTabs.map(tab => ({ ...tab, name: this.translateService.instant(tab.nameTranslateKey) }));
 
     this.updateMultiSelectTexts();
 
@@ -810,6 +813,7 @@ export class ObservationDetailComponent implements OnDestroy {
       this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
       this.updateTranslatedOptions(this.documentTypes, 'documentType');
       this.updateTranslatedOptions(this.coordinatesFormats, 'coordinatesFormat');
+      this.evidenceTabs = this.evidenceTabs.map(tab => ({ ...tab, name: this.translateService.instant(tab.nameTranslateKey) }));
     });
 
     this.operatorsService.getAll({ filter: { slug: 'unknown' }}).then((operators) => {
@@ -1217,7 +1221,7 @@ export class ObservationDetailComponent implements OnDestroy {
     let updateReport = false;
 
     if (anyDocumentsFromDifferentReport) {
-      if (window.confirm(await this.translateService.get('Changing the report will unlink all linked evidences from the previous report. Do you want to continue?').toPromise())) {
+      if (window.confirm(await this.translateService.get('observation.evidence.filesFromDifferentReport').toPromise())) {
         updateReport = true;
       }
     } else {

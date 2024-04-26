@@ -234,7 +234,7 @@
                       </div>
                       <div class="actions">
                         <button type="button" class="c-button -secondary" (click)="onClickRemoveReportDocument(document)">{{'Remove' | translate}}</button>
-                        <button type="button" class="c-button -primary" (click)="onClickAddReportDocument(document)">{{'Add to list' | translate}}</button>
+                        <button type="button" class="c-button -primary" (click)="onClickAddReportDocument(document)">{{'observation.useAsEvidence' | translate}}</button>
                       </div>
                     </li>
                   </ul>
@@ -278,7 +278,7 @@
 
                 <!-- Add to list -->
                 <div class="form-group">
-                  <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
+                  <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'observation.useAsEvidence' | translate}}</button>
                 </div>
               </ng-template>
             </div>

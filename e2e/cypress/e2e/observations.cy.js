@@ -24,21 +24,21 @@ describe('Observations', () => {
     cy.get('select#evidence_type').select('Uploaded documents');
     cy.get('[data-test-id="documents-list-selected"]').contains('No evidence').should('be.visible');
     cy.get('[data-test-id="documents-list-report"] ul li').should('have.length', 5);
-    cy.get('[data-test-id="documents-list-report"] ul li').contains('li', 'Lettre').find('button').contains('Add to list').click();
+    cy.get('[data-test-id="documents-list-report"] ul li').contains('li', 'Lettre').find('button').contains('Use as evidence').click();
     cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('Lettre').should('not.exist');
     cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Lettre').should('be.visible');
     cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Lettre').contains('Already uploaded');
     // let's remove it and add it again
     cy.get('[data-test-id="documents-list-selected"] ul li').contains('li', 'Lettre').find('button').contains('Remove').click();
     cy.get('[data-test-id="documents-list-selected"]').contains('No evidence').should('be.visible');
-    cy.get('[data-test-id="documents-list-report"] ul li').contains('li', 'Lettre').find('button').contains('Add to list').click();
+    cy.get('[data-test-id="documents-list-report"] ul li').contains('li', 'Lettre').find('button').contains('Use as evidence').click();
     cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Lettre').should('be.visible');
     // upload a new evidence
     cy.get('otp-tabs').find('li').contains('Upload a new evidence').click();
     cy.get('select#document_type').select('Photos');
     cy.get('#evidence_title').clear().type('Evidence photo');
     cy.get('input#evidence_field').attachFile('test_document.docx');
-    cy.get('button').contains('Add to list').click();
+    cy.get('button').contains('Use as evidence').click();
     // verify it was added
     cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Evidence photo').should('be.visible');
     cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Evidence photo').contains('To upload');
@@ -212,7 +212,7 @@ describe('Observations', () => {
       cy.get('select#document_type').select('Company documents');
       cy.get('#evidence_title').clear().type('Some document');
       cy.get('input#evidence_field').attachFile('test_document.docx');
-      cy.get('button').contains('Add to list').click();
+      cy.get('button').contains('Use as evidence').click();
       // verify it was added
       cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Some document').should('be.visible');
       cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Some document').contains('To upload');

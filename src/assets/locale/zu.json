@@ -302,6 +302,8 @@
   "observation.evidence.removalNotification": "Are you sure you want to remove this evidence?",
   "observation.evidence.cannotRemoveNotification": "This document is linked with another observation. To remove it, first remove it from observations with these IDs: {{ids}}",
   "observation.evidence.removalError": "Error while removing the evidence.",
+  "observation.evidence.selectFromReport": "Select from evidence already uploaded from this report",
+  "observation.evidence.uploadNewEvidence": "Upload a new evidence",
   "observation.evidenceType.title": "Type",
   "observation.evidenceType.select": "Select an evidence type",
   "observation.evidenceType.invalid": "Please select an evidence type",
