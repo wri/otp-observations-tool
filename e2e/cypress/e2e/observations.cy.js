@@ -38,7 +38,7 @@ describe('Observations', () => {
     cy.get('select#document_type').select('Photos');
     cy.get('#evidence_title').clear().type('Evidence photo');
     cy.get('input#evidence_field').attachFile('test_document.docx');
-    cy.get('button').contains('Use as evidence').click();
+    cy.get('[data-test-id="documents-upload-new"]').find('button').contains('Use as evidence').click();
     // verify it was added
     cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Evidence photo').should('be.visible');
     cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Evidence photo').contains('To upload');
@@ -51,15 +51,14 @@ describe('Observations', () => {
     cy.get('#litigation_status').clear().type('Litigation status example');
 
     cy.selectOption('law_field', 'Exploitation par autorisation');
-    cy.get('button').contains('Create').click();
     const alert = cy.stub().as("alert");
     cy.then(() => { cy.on('window:alert', alert); });
-    // let's verify if everyting was correctly saved
-    cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
+    cy.get('button').contains('Create').click();
     cy.get("@alert").should("have.been.calledWithMatch", /The observation has been successfully created/);
     cy.then(() => alert.reset());
+    // let's verify if everyting was correctly saved
+    cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]', { timeout: 10000 }).click();
     cy.location('pathname').should('include', '/observations/edit');
-
     cy.get('select#observation_type').find('option').contains('Producer').should('be.selected');
     cy.get('select#report_field').find('option').contains('Rapport 13 OGF').should('be.selected');
     cy.get('select#country_id').find('option').contains('Cameroon').should('be.selected');
@@ -212,7 +211,7 @@ describe('Observations', () => {
       cy.get('select#document_type').select('Company documents');
       cy.get('#evidence_title').clear().type('Some document');
       cy.get('input#evidence_field').attachFile('test_document.docx');
-      cy.get('button').contains('Use as evidence').click();
+      cy.get('[data-test-id="documents-upload-new"]').find('button').contains('Use as evidence').click();
       // verify it was added
       cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Some document').should('be.visible');
       cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Some document').contains('To upload');
