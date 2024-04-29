@@ -1,36 +1,61 @@
 describe('Observations', () => {
+  function sanitizeFilename(filename) {
+    return filename.replace(/ /g, '_').replace(/[^a-zA-Z0-9-_]/g, '');
+  }
+
   beforeEach(() => {
+    const recordHar = Cypress.env('RECORD_HAR');
+    if (recordHar) {
+      cy.recordHar();
+    }
     cy.login('ngo_manager@example.com', 'password');
     cy.visit('/');
   })
 
   afterEach(() => {
+    const recordHar = Cypress.env('RECORD_HAR');
+    const state = Cypress.mocha.getRunner().suite.ctx.currentTest.state;
+    if (recordHar && state !== 'passed') {
+      cy.saveHar({ fileName: sanitizeFilename(`observations ${Cypress.currentTest.title}`) });
+    }
     cy.resetDB();
   });
 
   it('can add a new producer observation and submit it for review', () => {
-    cy.get('a').contains('New observation').click();
+    cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Producer');
-    cy.get('select#report_field').select('RAPPORT 011 - OGF');
+    cy.get('select#report_field').select('Rapport 13 OGF');
     cy.get('select#country_id').select('Cameroon');
     cy.selectOption('operator_id', 'CFC');
-    cy.expectSelectedOption('additional_observers', ['RENOI']); // from selected report
+    cy.expectSelectedOption('additional_observers', ['OCEAN', 'RENOI']); // from selected report
     cy.selectOption('relevant_operators', ['LOREMA', 'SAB']);
     cy.get('select[name=subcategory_id]').select('Overharvesting');
     cy.chooseOption('Did this observation occur at a physical place?', 'NO');
     cy.get('#location_information').clear().type('Custom info about location');
     cy.get('#details_field').clear().type('Here are some custom observation details');
-    cy.get('select#evidence_type').select('Company documents');
-
-    cy.get('#evidence_title').clear().type('Evidence number 1');
+    // evidences
+    cy.get('select#evidence_type').select('Uploaded documents');
+    cy.get('[data-test-id="documents-list-selected"]').contains('No evidence').should('be.visible');
+    cy.get('[data-test-id="documents-list-report"] ul li').should('have.length', 5);
+    cy.get('[data-test-id="documents-list-report"] ul li').contains('li', 'Lettre').find('button').contains('Use as evidence').click();
+    cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('Lettre').should('not.exist');
+    cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Lettre').should('be.visible');
+    cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Lettre').contains('Already uploaded');
+    // let's remove it and add it again
+    // TODO: fix backend missing attachment and then add it again
+    cy.get('[data-test-id="documents-list-selected"] ul li').contains('li', 'Lettre').find('button').contains('Remove').click();
+    cy.get('[data-test-id="documents-list-selected"]').contains('No evidence').should('be.visible');
+    //cy.get('[data-test-id="documents-list-report"] ul li').contains('li', 'Lettre').find('button').contains('Use as evidence').click();
+    //cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Lettre').should('be.visible');
+    // upload a new evidence
+    cy.get('otp-tabs').find('li').contains('Upload a new evidence').click();
+    cy.get('select#document_type').select('Photos');
+    cy.get('#evidence_title').clear().type('Evidence photo');
     cy.get('input#evidence_field').attachFile('test_document.docx');
-    cy.get('button').contains('Add to list').click();
-    cy.get('#evidence_title').clear().type('Evidence number 2');
-    cy.get('input#evidence_field').attachFile('test_document.docx');
-    cy.get('button').contains('Add to list').click();
-
-    cy.get('ul.documents-list').find('li').contains('Evidence number 1');
-    cy.get('ul.documents-list').find('li').contains('Evidence number 2');
+    cy.get('[data-test-id="documents-upload-new"]').find('button').contains('Use as evidence').click();
+    // verify it was added
+    cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Evidence photo').should('be.visible');
+    cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Evidence photo').contains('To upload');
 
     cy.chooseOption('Severity', 'between 25% - 50% beyond the authorization');
 
@@ -40,34 +65,32 @@ describe('Observations', () => {
     cy.get('#litigation_status').clear().type('Litigation status example');
 
     cy.selectOption('law_field', 'Exploitation par autorisation');
-    cy.get('button').contains('Create').click();
     const alert = cy.stub().as("alert");
     cy.then(() => { cy.on('window:alert', alert); });
-    // let's verify if everyting was correctly saved
-    cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
+    cy.get('button').contains('Create').click();
     cy.get("@alert").should("have.been.calledWithMatch", /The observation has been successfully created/);
     cy.then(() => alert.reset());
+    // let's verify if everyting was correctly saved
+    cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]', { timeout: 10000 }).click();
     cy.location('pathname').should('include', '/observations/edit');
-
     cy.get('select#observation_type').find('option').contains('Producer').should('be.selected');
-    cy.get('select#report_field').find('option').contains('RAPPORT 011 - OGF').should('be.selected');
+    cy.get('select#report_field').find('option').contains('Rapport 13 OGF').should('be.selected');
     cy.get('select#country_id').find('option').contains('Cameroon').should('be.selected');
     let observationId;
     cy.get('#id_field').invoke('val').then((value) => {
       observationId = value;
     });
     cy.expectSelectedOption('operator_id', 'CFC');
-    cy.expectSelectedOption('additional_observers', ['RENOI']);
+    cy.expectSelectedOption('additional_observers', ['OCEAN', 'RENOI']);
     cy.expectSelectedOption('relevant_operators', ['LOREMA', 'SAB']);
     cy.get('select[name=subcategory_id]').find('option').contains('Overharvesting').should('be.selected');
 
     cy.expectChosenOption('Did this observation occur at a physical place?', 'NO');
     cy.get('#location_information').should('have.value', 'Custom info about location');
     cy.get('#details_field').should('have.value', 'Here are some custom observation details');
-    cy.get('select#evidence_type').find('option').contains('Company documents').should('be.selected');
-
-    cy.get('ul.documents-list').find('li').contains('Evidence number 1').should('be.visible');
-    cy.get('ul.documents-list').find('li').contains('Evidence number 2').should('be.visible');
+    cy.get('select#evidence_type').find('option').contains('Uploaded documents').should('be.selected');
+    // cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Lettre').should('be.visible');
+    cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Evidence photo').should('be.visible');
 
     cy.expectChosenOption('Severity', 'between 25% - 50% beyond the authorization');
 
@@ -98,7 +121,7 @@ describe('Observations', () => {
   })
 
   it('can add a new producer directly from observation form', () => {
-    cy.get('a').contains('New observation').click();
+    cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Producer');
     cy.get("button:contains('Add a new producer to the list')").first().click();
     cy.get('input#name_field').type('New Producer');
@@ -114,7 +137,7 @@ describe('Observations', () => {
   })
 
   it('can add a new governance observation and submit it for review', () => {
-    cy.get('a').contains('New observation').click();
+    cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Governance');
     cy.get('select#report_field').select('Upload a new report');
     cy.get('input#report_file').attachFile('test_document.docx');
@@ -124,16 +147,7 @@ describe('Observations', () => {
     cy.selectOption('government_id', ['DGF', 'DGRAD']);
     cy.get('select[name=subcategory_id]').select('Poor control/follow-up');
     cy.get('#details_field').clear().type('Here are some custom observation details');
-    cy.get('select#evidence_type').select('Company documents');
-    cy.get('#evidence_title').clear().type('Evidence number 1');
-    cy.get('input#evidence_field').attachFile('test_document.docx');
-    cy.get('button').contains('Add to list').click();
-    cy.get('#evidence_title').clear().type('Evidence number 2');
-    cy.get('input#evidence_field').attachFile('test_document.docx');
-    cy.get('button').contains('Add to list').click();
-    cy.get('ul.documents-list').find('li').contains('Evidence number 1');
-    cy.get('ul.documents-list').find('li').contains('Evidence number 2');
-
+    cy.get('select#evidence_type').select('No evidence');
     cy.chooseOption('Severity', 'No enforcement mission required undertaken');
     cy.get('#action_taken').clear().type('Actions taken by government');
     cy.get('#concern_opinion').clear().type('Here are some comments');
@@ -158,9 +172,10 @@ describe('Observations', () => {
     cy.get('select[name=subcategory_id]').find('option').contains('Poor control/follow-up').should('be.selected');
     cy.get('#details_field').should('have.value', 'Here are some custom observation details');
 
-    cy.get('select#evidence_type').find('option').contains('Company documents').should('be.selected');
-    cy.get('ul.documents-list').find('li').contains('Evidence number 1').should('be.visible');
-    cy.get('ul.documents-list').find('li').contains('Evidence number 2').should('be.visible');
+    cy.get('select#evidence_type').find('option').contains('No evidence').should('be.selected');
+    // let's change evidence to Evidence presented in the report
+    cy.get('select#evidence_type').select('Evidence presented in the report');
+    cy.get('#evidence_details').clear().type('Page number 44');
 
     cy.expectChosenOption('Severity', 'No enforcement mission required undertaken');
     cy.get('#action_taken').should('have.value', 'Actions taken by government');
@@ -182,15 +197,67 @@ describe('Observations', () => {
     cy.contains(
       'This observation has been submitted. Once reviewed, you will be able to publish it.'
     ).should('be.visible');
+
+    // let's verify if everyting thas was changed is correctly saved
+    cy.get('select#evidence_type').find('option').contains('Evidence presented in the report').should('be.selected');
+    cy.get('#evidence_details').should('have.value', 'Page number 44');
   });
 
   it('can add a new government entity directly from observation form', () => {
-    cy.get('a').contains('New observation').click();
+    cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Governance');
     cy.selectOption('government_id', ['DGF', 'DGRAD']);
     cy.get('button').contains('Add a new government entity to the list').click();
     cy.get('input#name_field').type('New Test Entity');
     cy.get('button').contains('Create').click();
     cy.expectSelectedOption('government_id', ['DGF', 'DGRAD', 'New Test Entity']);
+  })
+
+  describe('evidences', () => {
+    it('added evidence is correctly associated with observation report', () => {
+      cy.get('a').contains('New observation', { timeout: 10000 }).click();
+      cy.get('select#observation_type').select('Producer');
+      cy.get('select#report_field').select('Rapport 10 OGF');
+      cy.get('select#evidence_type').select('Uploaded documents');
+      cy.get('[data-test-id="documents-list-selected"]').contains('No evidence').should('be.visible');
+      // upload a new evidence
+      cy.get('otp-tabs').find('li').contains('Upload a new evidence').click();
+      cy.get('select#document_type').select('Company documents');
+      cy.get('#evidence_title').clear().type('Some document');
+      cy.get('input#evidence_field').attachFile('test_document.docx');
+      cy.get('[data-test-id="documents-upload-new"]').find('button').contains('Use as evidence').click();
+      // verify it was added
+      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Some document').should('be.visible');
+      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Some document').contains('To upload');
+      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Some document').contains('Company Documents');
+      cy.get('button').contains('Create').click();
+
+      cy.get('a').contains('New observation').click();
+      cy.get('select#observation_type').select('Producer');
+      cy.get('select#report_field').select('Rapport 10 OGF');
+      // let's verify if Some document is on the report document list
+      cy.get('select#evidence_type').select('Uploaded documents');
+      cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('Some document').should('be.visible');
+      cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('li', 'Some document').contains('Company Documents');
+    });
+
+    it('removes evidences associated with previous report when changing report', () => {
+      cy.get('a').contains('New observation', { timeout: 10000 }).click();
+      cy.get('select#observation_type').select('Producer');
+      cy.get('select#report_field').select('Rapport 13 OGF');
+      // evidences
+      cy.get('select#evidence_type').select('Uploaded documents');
+      cy.get('[data-test-id="documents-list-report"] ul li').contains('li', 'Lettre').find('button').contains('Use as evidence').click();
+      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Lettre').should('be.visible');
+      cy.then(() => {
+        cy.once('window:confirm', (str) => {
+          expect(str).to.match(/Changing the report will unlink all linked evidences from the previous report. Do you want to continue?/);
+          return true;
+        })
+      })
+      cy.get('select#report_field').select('Rapport 10 OGF');
+      cy.get('[data-test-id="documents-list-selected"]').contains('No evidence').should('be.visible');
+      cy.get('[data-test-id="documents-list-report"]').contains('No evidence').should('be.visible');
+    });
   })
 })

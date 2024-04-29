@@ -59,6 +59,23 @@
     padding: 0;
     border-top: 1px solid $lighter-grey;
     border-bottom: 1px solid $lighter-grey;
+    max-height: 400px;
+    overflow: auto;
+
+    a {
+      color: $color-primary;
+      text-decoration: underline;
+    }
+
+    .actions {
+      display: flex;
+      gap: 5px;
+      max-width: 40%;
+
+      button {
+        white-space: nowrap;
+      }
+    }
 
     > li {
       display: flex;

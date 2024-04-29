@@ -1,6 +1,6 @@
 import { Observation } from 'app/models/observation.model';
-import { User } from 'app/models/user.model';
-import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
+import { ObservationReport } from 'app/models/observation_report';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from 'angular2-jsonapi';
 
 @JsonApiModelConfig({
   type: 'observation-documents'
@@ -8,7 +8,10 @@ import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2
 export class ObservationDocument extends JsonApiModel {
 
   @Attribute() name: string;
+  @Attribute() 'document-type': string;
+  @Attribute() 'observation-report-id'?: number;
   @Attribute() attachment: string|{ url: string };
 
-  @BelongsTo() observation: Observation;
+  @HasMany() observations: Observation[];
+  @BelongsTo() 'observation-report'?: ObservationReport;
 }

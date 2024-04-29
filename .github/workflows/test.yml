@@ -4,11 +4,14 @@ env:
   POSTGRES_HOST: localhost
   POSTGRES_PORT: 5432
   RAILS_ENV: e2e
+  RAILS_LOG_LEVEL: debug
   SECRET_KEY_BASE: f54c9d76c42e397e17cbc0d0a024da5a762a7a0d934839b417a77dac6fda65a49a37b32bcd229ac5fd5c1fedef8ed6acf7a57ed6465d6339862cdc0dfab8886f
   AUTH_SECRET: secret
   CONTACT_EMAIL: contact@example.com
   RESPONSIBLE_EMAIL: responsible@example.com
   CYPRESS_API_PATH: ../otp_api
+  CYPRESS_RECORD_HAR: true
+  ELECTRON_EXTRA_LAUNCH_ARGS: --remote-debugging-port=9222
 
 name: Run tests
 
@@ -72,7 +75,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: wri/fti_api
-          ref: master
+          ref: develop
           path: otp_api
 
       - name: Save OTP API Commit SHA
@@ -172,6 +175,7 @@ jobs:
         with:
           name: e2e-tests-artifacts
           path: |
+            e2e/cypress/hars
             e2e/cypress/screenshots
             e2e/cypress/videos
             e2e/cypress/e2e/__image_snapshots__

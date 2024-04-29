@@ -27,7 +27,7 @@
   </otp-operator-detail>
 </otp-modal>
 
-<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && f.valid && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && f.valid && isReportChosen && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 *ngIf="isDisabled() && !isCopied">{{'Observation details' | translate}}</h2>
     <h2 *ngIf="(!isDisabled() && !observation) || isCopied">{{'New observation' | translate}}</h2>
@@ -92,9 +92,9 @@
       <div class="fieldset-container">
         <div class="form-group">
           <label for="report_field">{{'Report' | translate}}</label>
-          <select id="report_field" name="report_field" [(ngModel)]="reportChoice" #report_field="ngModel" [disabled]="isDisabled()">
-            <option [ngValue]="null">{{'Upload a new report' | translate}}</option>
-            <option *ngFor="let report of reports" [ngValue]="report">{{ report.title }}</option>
+          <select id="report_field" name="report_field" [ngModel]="reportChoice?.id" (change)="onChangeReport($event)" #report_field="ngModel" [disabled]="isDisabled()">
+            <option [value]="null">{{'Upload a new report' | translate}}</option>
+            <option *ngFor="let report of reports" [value]="report.id">{{ report.title }}</option>
           </select>
           <p class="note">
             {{ 'You can upload a new report or select an existing one from the list.' | translate }}
@@ -157,6 +157,135 @@
             {{ 'observation.additionalMonitors.disabled.note' | translate }}
           </p>
         </div>
+      </div>
+    </fieldset>
+  </ng-template>
+
+  <ng-template #evidenceTemplate>
+    <fieldset #evidenceBlock>
+      <legend>{{'Evidence' | translate}}</legend>
+      <div class="fieldset-container">
+        <div class="form-group -required">
+          <label for="evidence">{{'Evidence' | translate}}</label>
+          <select #selectTypeElement id="evidence_type" name="evidence_type" (ngModelChange)="onChangeEvidenceType(evidence_type, $event, selectTypeElement)" [ngModel]="evidenceType" #evidence_type="ngModel" [disabled]="isDisabled()" required>
+            <option *ngFor="let type of objectKeys(evidenceTypeOptions)" [ngValue]="evidenceTypeOptions[type]">{{ type }}</option>
+          </select>
+          <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
+          <p class="note">{{'observation.evidenceType.note' | translate}}</p>
+        </div>
+
+        <ng-template [ngIf]="evidenceType === 'Evidence presented in the report'">
+          <div class="form-group -required">
+            <label for="evidence_details">{{'observation.evidenceDetails.title' | translate}}</label>
+            <textarea id="evidence_details" name="evidence_details" [(ngModel)]="evidenceOnReport" #evidence_details="ngModel" required [disabled]="isDisabled()"></textarea>
+            <div *ngIf="f.submitted && !evidence_details.valid" class="help-text">{{'observation.evidenceDetails.invalid' | translate}}</div>
+            <p class="note">{{ 'observation.evidenceDetails.note' | translate }}</p>
+          </div>
+        </ng-template>
+
+        <ng-template [ngIf]="evidenceType === 'Uploaded documents'">
+          <br />
+          <div class="row">
+            <div *ngIf="isDisabled()" data-test-id="documents-list-selected" class="small-12 columns">
+              <h3>{{'List of evidence' | translate}}</h3>
+              <ul class="documents-list" *ngIf="documents.length">
+                <li *ngFor="let document of documents">
+                  <div class="content">
+                    <div class="title">{{document.name}}</div>
+                    <div class="status" *ngIf="document.id">{{'Already uploaded' | translate}}</div>
+                    <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
+                  </div>
+                </li>
+              </ul>
+              <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
+            </div>
+            <div *ngIf="!isDisabled()" data-test-id="documents-list-selected" class="small-12 medium-6 columns">
+              <!-- List of evidence -->
+              <h3>{{'List of evidence' | translate}}</h3>
+              <ul class="documents-list" *ngIf="documents.length">
+                <li *ngFor="let document of documents">
+                  <div class="content">
+                    <div class="title" *ngIf="!document.id">{{document.name}}</div>
+                    <div class="title" *ngIf="document.id">
+                      <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
+                    </div>
+                    <div class="status">{{document['document-type']}} | {{ (document.id ? 'Already uploaded' : 'To upload') | translate}}</div>
+                  </div>
+                  <div class="actions">
+                    <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)">{{'Remove' | translate}}</button>
+                  </div>
+                </li>
+              </ul>
+              <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
+            </div>
+            <div *ngIf="!isDisabled()"  class="small-12 medium-6 columns">
+              <otp-tabs [tabs]="evidenceTabs" [currentTab]="currentEvidenceTabIndex" (change)="onChangeEvidenceTab($event)"></otp-tabs>
+
+              <ng-template [ngIf]="currentEvidenceTab.id === 'existing'">
+                <div data-test-id="documents-list-report">
+                  <!-- List of evidences from the report -->
+                  <ul class="documents-list" *ngIf="reportDocuments.length">
+                    <li *ngFor="let document of reportDocuments">
+                      <div class="content">
+                        <div class="title">
+                          <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
+                        </div>
+                        <div class="status">{{document['document-type']}}</div>
+                      </div>
+                      <div class="actions">
+                        <button type="button" class="c-button -secondary" (click)="onClickRemoveReportDocument(document)">{{'Remove' | translate}}</button>
+                        <button type="button" class="c-button -primary" (click)="onClickAddReportDocument(document)">{{'observation.useAsEvidence' | translate}}</button>
+                      </div>
+                    </li>
+                  </ul>
+                  <p *ngIf="!reportDocuments.length">{{'No evidence' | translate}}</p>
+                </div>
+              </ng-template>
+
+              <ng-template [ngIf]="currentEvidenceTab.id === 'new'">
+                <div data-test-id="documents-upload-new">
+                  <br />
+                  <!-- Type -->
+                  <div class="form-group -required">
+                    <label for="document_type">{{'Document Type' | translate}}</label>
+                    <select id="document_type" name="document_type" [(ngModel)]="evidence['document-type']" #document_type="ngModel" required [disabled]="isDisabled()">
+                      <option [ngValue]="null" disabled>{{'Select a document type' | translate}}</option>
+                      <option *ngFor="let type of objectKeys(documentTypeOptions)" [ngValue]="documentTypeOptions[type]">{{ type }}</option>
+                    </select>
+                    <div *ngIf="f.submitted && !document_type.valid" class="help-text">{{'Please select a document type' | translate}}</div>
+                  </div>
+
+                  <!-- Title -->
+                  <div [ngClass]="{ 'form-group': true, '-required': (!!evidence.attachment || !documents.length) }">
+                    <label for="evidence_title">{{'Title' | translate}}</label>
+                    <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="(!!evidence.attachment || !documents.length)" />
+                    <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
+                  </div>
+
+                  <!-- Evidence -->
+                  <p>{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
+                  <!-- This input is used to prevent the submitting until evidence are uploaded -->
+                  <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
+                  <div class="form-group" *ngIf="f.submitted && !documents.length">
+                    <div class="help-text">{{'You need to upload evidence' | translate}}</div>
+                  </div>
+                  <div class="form-group">
+                    <label for="evidence_field">{{'Evidence' | translate}}</label>
+                    <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="20971520" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
+                    <div *ngIf="georeferencedPhoto.isUsed" class="geo-note">{{'observation.geoPhotoUploaded.note' | translate}}</div>
+                    <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
+                    <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
+                  </div>
+
+                  <!-- Add to list -->
+                  <div class="form-group">
+                    <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'observation.useAsEvidence' | translate}}</button>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </fieldset>
   </ng-template>
@@ -391,7 +520,7 @@
                   <div class="form-group">
                     <label for="photo_field">{{'Georeferenced photo' | translate}}</label>
                     <input id="photo_field" type="file" class="form-control" name="photo_field" #photo_field="ngModel" (change)="onChangePhoto($event)" otpBase64FileInput maxSize="20971520" [(ngModel)]="georeferencedPhoto.attachment" accept=".jpg, .jpeg" />
-                    <button type="button" (click)="uploadAsEvidencePhoto()" class="use-as-evidence c-button -secondary" [disabled]="!georeferencedPhoto.attachment || photo_field.errors?.maxSize || isEvidenceTypeOnReport(evidenceType)">{{'observation.useAsEvidence' | translate}}</button>
+                    <button type="button" (click)="uploadAsEvidencePhoto()" class="use-as-evidence c-button -secondary" [disabled]="!georeferencedPhoto.attachment || photo_field.errors?.maxSize">{{'observation.useAsEvidence' | translate}}</button>
                     <div *ngIf="photo_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
                   </div>
                 </div>
@@ -418,92 +547,7 @@
     </div>
 
     <!-- 10. Evidence -->
-    <fieldset #evidenceBlock>
-      <legend>{{'Evidence' | translate}}</legend>
-      <div class="fieldset-container">
-        <div [ngStyle]="{ 'margin-bottom': isEvidenceTypeOnReport(evidenceType) ? '0' : '30px'}">
-          <!-- 10.1.1 Type -->
-          <div class="form-group -required">
-            <label for="evidence_type">{{'observation.evidenceType.title' | translate}}</label>
-            <select #selectTypeElement id="evidence_type" name="evidence_type" (ngModelChange)="onChangeEvidenceType(evidenceType, $event, selectTypeElement)" [ngModel]="evidenceType" #evidence_type="ngModel" required [disabled]="isDisabled()">
-              <option [ngValue]="null" disabled>{{'observation.evidenceType.select' | translate}}</option>
-              <option *ngFor="let type of objectKeys(evidenceTypeOptions)" [ngValue]="evidenceTypeOptions[type]">{{ type }}</option>
-            </select>
-            <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
-            <p class="note">{{'observation.evidenceType.note' | translate}}</p>
-          </div>
-
-          <!-- 10.1.2 Details -->
-          <div [hidden]="!isEvidenceTypeOnReport(evidenceType)" [ngClass]="{ 'form-group': true, '-required': isEvidenceTypeOnReport(evidenceType) }">
-            <label for="evidence_details">{{'observation.evidenceDetails.title' | translate}}</label>
-            <textarea id="evidence_details" name="evidence_details" [(ngModel)]="evidenceOnReport" #evidence_details="ngModel" [required]="isEvidenceTypeOnReport(evidenceType)" [disabled]="isDisabled()"></textarea>
-            <div *ngIf="f.submitted && !evidence_details.valid" class="help-text">{{'observation.evidenceDetails.invalid' | translate}}</div>
-            <p class="note">{{ 'observation.evidenceDetails.note' | translate }}</p>
-          </div>
-        </div>
-
-        <div class="row">
-          <div *ngIf="isDisabled() && !isEvidenceTypeOnReport(evidenceType)" class="small-12 columns">
-            <h3>{{'List of evidence' | translate}}</h3>
-            <ul class="documents-list" *ngIf="documents.length">
-              <li *ngFor="let document of documents">
-                <div class="content">
-                  <div class="title">{{document.name}}</div>
-                  <div class="status" *ngIf="document.id">{{'Already uploaded' | translate}}</div>
-                  <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
-                </div>
-              </li>
-            </ul>
-            <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
-          </div>
-          <div *ngIf="!isDisabled() && !isEvidenceTypeOnReport(evidenceType)" class="small-12 medium-6 columns">
-            <!-- 10.2 List of evidence -->
-            <h3>{{'List of evidence' | translate}}</h3>
-            <ul class="documents-list" *ngIf="documents.length">
-              <li *ngFor="let document of documents">
-                <div class="content">
-                  <div class="title">{{document.name}}</div>
-                  <div class="status" *ngIf="document.id">{{'Already uploaded' | translate}}</div>
-                  <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
-                </div>
-                <div class="actions">
-                  <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)">{{'Delete' | translate}}</button>
-                </div>
-              </li>
-            </ul>
-            <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
-          </div>
-          <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
-            <!-- 10.2.1 Title -->
-            <div [hidden]="isEvidenceTypeOnReport(evidenceType)" [ngClass]="{ 'form-group': true, '-required': (!!evidence.attachment || !documents.length) && !isEvidenceTypeOnReport(evidenceType) }">
-              <label for="evidence_title">{{'Title' | translate}}</label>
-              <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="(!!evidence.attachment || !documents.length) && !isEvidenceTypeOnReport(evidenceType)" />
-              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
-            </div>
-
-            <!-- 10.2.2 Evidence -->
-            <p [hidden]="isEvidenceTypeOnReport(evidenceType)">{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
-            <!-- This input is used to prevent the submitting until evidence are uploaded -->
-            <input *ngIf="!documents.length && !isEvidenceTypeOnReport(evidenceType)" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length && !isEvidenceTypeOnReport(evidenceType)" />
-            <div class="form-group" *ngIf="f.submitted && !documents.length && !isEvidenceTypeOnReport(evidenceType)">
-              <div class="help-text">{{'You need to upload evidence' | translate}}</div>
-            </div>
-            <div [hidden]="isEvidenceTypeOnReport(evidenceType)" class="form-group">
-              <label for="evidence_field">{{'Evidence' | translate}}</label>
-              <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="20971520" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-              <div *ngIf="georeferencedPhoto.isUsed" class="geo-note">{{'observation.geoPhotoUploaded.note' | translate}}</div>
-              <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
-              <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
-            </div>
-
-            <!-- 10.2.3 Add to list -->
-            <div [hidden]="isEvidenceTypeOnReport(evidenceType)" class="form-group">
-              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </fieldset>
+    <ng-container *ngTemplateOutlet="evidenceTemplate"></ng-container>
 
     <!-- 11. Severity -->
     <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity }">
@@ -511,7 +555,7 @@
 
       <div class="buttons">
         <label *ngFor="let s of severities">
-          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()">
+          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()" required>
           <span>{{ s.level }} - {{ s.details }}</span>
         </label>
       </div>
@@ -752,92 +796,7 @@
     </div>
 
     <!-- 8. Evidence -->
-    <fieldset>
-      <legend>{{'Evidence' | translate}}</legend>
-      <div class="fieldset-container">
-        <div [ngStyle]="{ 'margin-bottom': isEvidenceTypeOnReport(evidenceType) ? '0' : '30px'}">
-          <!-- 8.1.1 Type -->
-          <div class="form-group -required">
-            <label for="evidence_type">{{'observation.evidenceType.title' | translate}}</label>
-            <select #selectTypeElement id="evidence_type" name="evidence_type" (ngModelChange)="onChangeEvidenceType(evidenceType, $event, selectTypeElement)" [ngModel]="evidenceType" #evidence_type="ngModel" required [disabled]="isDisabled()">
-              <option [ngValue]="null" disabled>{{'observation.evidenceType.select' | translate}}</option>
-              <option *ngFor="let type of objectKeys(evidenceTypeOptions)" [ngValue]="evidenceTypeOptions[type]">{{ type }}</option>
-            </select>
-            <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
-            <p class="note">{{'observation.evidenceType.note' | translate}}</p>
-          </div>
-
-          <!-- 8.1.2 Details -->
-          <div [hidden]="!isEvidenceTypeOnReport(evidenceType)" [ngClass]="{ 'form-group': true, '-required': isEvidenceTypeOnReport(evidenceType) }">
-            <label for="evidence_details">{{'observation.evidenceDetails.title' | translate}}</label>
-            <textarea id="evidence_details" name="evidence_details" [(ngModel)]="evidenceOnReport" #evidence_details="ngModel" [required]="isEvidenceTypeOnReport(evidenceType)" [disabled]="isDisabled()"></textarea>
-            <div *ngIf="f.submitted && !evidence_details.valid" class="help-text">{{'observation.evidenceDetails.invalid' | translate}}</div>
-            <p class="note">{{ 'observation.evidenceDetails.note' | translate }}</p>
-          </div>
-        </div>
-
-        <div class="row">
-          <div *ngIf="isDisabled() && !isEvidenceTypeOnReport(evidenceType)" class="small-12 columns">
-            <h3>{{'List of evidence' | translate}}</h3>
-            <ul class="documents-list" *ngIf="documents.length">
-              <li *ngFor="let document of documents">
-                <div class="content">
-                  <div class="title">{{document.name}}</div>
-                  <div class="status" *ngIf="document.id">{{'Already uploaded' | translate}}</div>
-                  <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
-                </div>
-              </li>
-            </ul>
-            <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
-          </div>
-          <div *ngIf="!isDisabled() && !isEvidenceTypeOnReport(evidenceType)" class="small-12 medium-6 columns">
-            <!-- 8.2 List of evidence -->
-            <h3>{{'List of evidence' | translate}}</h3>
-            <ul class="documents-list" *ngIf="documents.length">
-              <li *ngFor="let document of documents">
-                <div class="content">
-                  <div class="title">{{document.name}}</div>
-                  <div class="status" *ngIf="document.id">{{'Already uploaded' | translate}}</div>
-                  <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
-                </div>
-                <div class="actions">
-                  <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)">{{'Delete' | translate}}</button>
-                </div>
-              </li>
-            </ul>
-            <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
-          </div>
-          <div *ngIf="!isDisabled()" class="small-12 medium-6 columns">
-            <!-- 8.2.1 Title -->
-            <div [hidden]="isEvidenceTypeOnReport(evidenceType)" [ngClass]="{ 'form-group': true, '-required': (!!evidence.attachment || !documents.length) && !isEvidenceTypeOnReport(evidenceType) }">
-              <label for="evidence_title">{{'Title' | translate}}</label>
-              <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="(!!evidence.attachment || !documents.length) && !isEvidenceTypeOnReport(evidenceType)" />
-              <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
-            </div>
-
-            <!-- 8.2.2 Evidence -->
-            <p [hidden]="isEvidenceTypeOnReport(evidenceType)">{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
-            <!-- This input is used to prevent the submitting until evidence are uploaded -->
-            <input *ngIf="!documents.length && !isEvidenceTypeOnReport(evidenceType)" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length && !isEvidenceTypeOnReport(evidenceType)" />
-            <div class="form-group" *ngIf="f.submitted && !documents.length && !isEvidenceTypeOnReport(evidenceType)">
-              <div class="help-text">{{'You need to upload evidence' | translate}}</div>
-            </div>
-            <div [hidden]="isEvidenceTypeOnReport(evidenceType)" class="form-group">
-              <label for="evidence_field">{{'Evidence' | translate}}</label>
-              <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="20971520" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-              <div *ngIf="georeferencedPhoto.isUsed" class="geo-note">{{'observation.geoPhotoUploaded.note' | translate}}</div>
-              <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
-              <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
-            </div>
-
-            <!-- 8.2.3 Add to list -->
-            <div [hidden]="isEvidenceTypeOnReport(evidenceType)" class="form-group">
-              <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'Add to list' | translate}}</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </fieldset>
+    <ng-container *ngTemplateOutlet="evidenceTemplate"></ng-container>
 
     <!-- 9. Severity -->
     <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity }">

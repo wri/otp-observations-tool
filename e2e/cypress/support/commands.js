@@ -1,4 +1,5 @@
 import 'cypress-file-upload';
+import '@neuralegion/cypress-har-generator/commands';
 
 Cypress.Commands.add('login', (username, password) => {
   cy.session(
