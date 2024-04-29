@@ -241,9 +241,23 @@ describe('Observations', () => {
       cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('li', 'Some document').contains('Company Documents');
     });
 
-    // TODO
-    // it('shows a warning when changing obervation report while having evidences from previous one', () => {
-
-    // })
+    it('removes evidences associated with previous report when changing report', () => {
+      cy.get('a').contains('New observation', { timeout: 10000 }).click();
+      cy.get('select#observation_type').select('Producer');
+      cy.get('select#report_field').select('Rapport 13 OGF');
+      // evidences
+      cy.get('select#evidence_type').select('Uploaded documents');
+      cy.get('[data-test-id="documents-list-report"] ul li').contains('li', 'Lettre').find('button').contains('Use as evidence').click();
+      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Lettre').should('be.visible');
+      cy.then(() => {
+        cy.once('window:confirm', (str) => {
+          expect(str).to.match(/Changing the report will unlink all linked evidences from the previous report. Do you want to continue?/);
+          return true;
+        })
+      })
+      cy.get('select#report_field').select('Rapport 10 OGF');
+      cy.get('[data-test-id="documents-list-selected"]').contains('No evidence').should('be.visible');
+      cy.get('[data-test-id="documents-list-report"]').contains('No evidence').should('be.visible');
+    });
   })
 })
