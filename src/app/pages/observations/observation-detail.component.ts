@@ -910,17 +910,24 @@ export class ObservationDetailComponent implements OnDestroy {
           this.actions = this.draft.actionsTaken;
           this.details = this.draft.details;
           this.opinion = this.draft.concernOpinion;
-          this.evidenceType = this.draft.evidenceType;
-          this.evidenceOnReport = this.draft.evidenceOnReport;
-          this.documents = this.draft.documents.map(document => this.datastoreService.createRecord(ObservationDocument, {
-            name: document.name,
-            'document-type': this.draft.evidenceType,
-            attachment: document.attachement
-          }));
-          // If we were going to add an evidence
-          this.evidence.name = this.draft.evidenceTitle;
-          this.evidence.attachment = this.draft.evidenceAttachment;
-          this.evidence['document-type'] = this.draft.evidenceDocumentType;
+          // meaning we have to migrate to new evidence type
+          if (this.draft.evidenceType === 'Evidence presented in the report') {
+            this.evidenceType = this.draft.evidenceType;
+            this.evidenceOnReport = this.draft.evidenceOnReport;
+          } else if (this.documentTypes.includes(this.draft.evidenceType)) {
+            // old way migrate the data
+            this.evidenceType = 'Uploaded documents';
+            // TODO: remove attachement after some time and this migration, drafts should expire at some point
+            this.documents = this.draft.documents.map(document => this.datastoreService.createRecord(ObservationDocument, {
+              name: document.name,
+              'document-type': this.draft.evidenceType,
+              attachment: document.attachment || document.attachement
+            }));
+          } else {
+            // new way
+            this.evidenceType = this.draft.evidenceType;
+            this.documents = this.draft.documents.map(document => this.datastoreService.createRecord(ObservationDocument, document));
+          }
           // if we were going to upload a new report
           this.report.title = this.draft.reportTitle;
           this.reportAttachment = this.draft.reportAttachment;
@@ -1001,12 +1008,12 @@ export class ObservationDetailComponent implements OnDestroy {
       concernOpinion: this.opinion,
       evidenceType: this.evidenceType,
       evidenceOnReport: this.evidenceOnReport,
-      evidenceTitle: this.evidence.name,
-      evidenceAttachment: this.evidence.attachment && String(this.evidence.attachment),
-      evidenceDocumentType: this.evidence['document-type'],
       documents: this.documents.map(document => ({
+        id: document.id,
         name: document.name,
-        attachement: document.attachment
+        attachment: document.attachment,
+        'document-type': document['document-type'],
+        'observation-report-id': document['observation-report-id']
       })),
     };
     if (this.reportChoice) {
