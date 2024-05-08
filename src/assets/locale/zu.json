@@ -302,6 +302,7 @@
   "observation.useAsEvidence": "Use as evidence",
   "observation.geoPhotoUploaded.note": "Georeferenced photo uploaded. Please give it a title and click 'Add to list' to register it.",
   "observation.evidence.filesDeleteNotification": "If you select the \"Evidence presented in the report\" option, all the previously uploaded evidence files will be deleted. Do you want to continue?",
+  "observation.evidence.filesFromDifferentReport": "Changing the report will unlink all linked evidences from the previous report. Do you want to continue?",
   "observation.evidence.removalNotification": "Are you sure you want to remove this evidence?",
   "observation.evidence.cannotRemoveNotification": "This document is linked with another observation. To remove it, first remove it from observations with these IDs: {{ids}}",
   "observation.evidence.removalError": "Error while removing the evidence.",
@@ -413,6 +414,5 @@
   "You can upload a new report or select an existing one from the list.": "You can upload a new report or select an existing one from the list.",
   "Document Type": "Document Type",
   "Select a document type": "Select a document type",
-  "Please select a document type": "Please select a document type",
-  "Changing the report will unlink all linked evidences from the previous report. Do you want to continue?" : "Changing the report will unlink all linked evidences from the previous report. Do you want to continue?"
+  "Please select a document type": "Please select a document type"
 }
