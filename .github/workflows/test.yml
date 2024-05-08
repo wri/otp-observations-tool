@@ -4,11 +4,12 @@ env:
   POSTGRES_HOST: localhost
   POSTGRES_PORT: 5432
   RAILS_ENV: e2e
-  RAILS_LOG_LEVEL: debug
   SECRET_KEY_BASE: f54c9d76c42e397e17cbc0d0a024da5a762a7a0d934839b417a77dac6fda65a49a37b32bcd229ac5fd5c1fedef8ed6acf7a57ed6465d6339862cdc0dfab8886f
   AUTH_SECRET: secret
   CONTACT_EMAIL: contact@example.com
   RESPONSIBLE_EMAIL: responsible@example.com
+  FRONTEND_URL: http://localhost:4000
+  OBSERVATIONS_TOOL_URL: http://localhost:4200
   CYPRESS_API_PATH: ../otp_api
   CYPRESS_RECORD_HAR: true
   ELECTRON_EXTRA_LAUNCH_ARGS: --remote-debugging-port=9222
