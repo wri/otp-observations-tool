@@ -209,7 +209,7 @@
                     <div class="title" *ngIf="document.id">
                       <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
                     </div>
-                    <div class="status">{{document['document-type']}} | {{ (document.id ? 'Already uploaded' : 'To upload') | translate}}</div>
+                    <div class="status">{{document['document-type'] | translate}} | {{ (document.id ? 'Already uploaded' : 'To upload') | translate}}</div>
                   </div>
                   <div class="actions">
                     <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)">{{'Remove' | translate}}</button>
@@ -230,7 +230,7 @@
                         <div class="title">
                           <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
                         </div>
-                        <div class="status">{{document['document-type']}}</div>
+                        <div class="status">{{document['document-type'] | translate}}</div>
                       </div>
                       <div class="actions">
                         <button type="button" class="c-button -secondary" (click)="onClickRemoveReportDocument(document)">{{'Remove' | translate}}</button>

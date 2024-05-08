@@ -229,7 +229,7 @@ describe('Observations', () => {
       // verify it was added
       cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Some document').should('be.visible');
       cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Some document').contains('To upload');
-      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Some document').contains('Company Documents');
+      cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('li', 'Some document').contains('Company documents');
       cy.get('button').contains('Create').click();
 
       cy.get('a').contains('New observation').click();
@@ -238,7 +238,7 @@ describe('Observations', () => {
       // let's verify if Some document is on the report document list
       cy.get('select#evidence_type').select('Uploaded documents');
       cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('Some document').should('be.visible');
-      cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('li', 'Some document').contains('Company Documents');
+      cy.get('[data-test-id="documents-list-report"] ul').find('li').contains('li', 'Some document').contains('Company documents');
     });
 
     it('removes evidences associated with previous report when changing report', () => {
