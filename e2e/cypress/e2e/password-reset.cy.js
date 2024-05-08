@@ -1,4 +1,12 @@
 describe('Password Reset', () => {
+  beforeEach(() => {
+    cy.recordNetworkActivity();
+  })
+
+  afterEach(() => {
+    cy.saveNetworkActivity('observations');
+  });
+
   describe('Full flow', () => {
     it('user can reset its password', function () {
       cy.visit('http://localhost:3000/admin/letter_opener');
