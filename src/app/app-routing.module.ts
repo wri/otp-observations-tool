@@ -25,7 +25,8 @@ import { MyOTPComponent } from 'app/pages/my-otp/my-otp.component';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { ReportLibraryComponent } from 'app/pages/my-otp/report-library/report-library.component';
 import { UserRoleGuard } from 'app/services/user-role.guard';
-// import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from 'app/pages/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from 'app/pages/reset-password/reset-password.component';
 
 
 const observationsChildren = [
@@ -59,10 +60,14 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent
   },
-  // {
-  //   path: 'reset-password',
-  //   component: ResetPasswordComponent
-  // },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent
+  },
   {
     path: 'private',
     canActivate: [AuthGuard],
