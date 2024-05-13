@@ -46,7 +46,7 @@ export class ObservationsService extends JsonApiService<Observation> {
   }
 
   uploadFile(file: FormData): Observable<any> {
-    return this.http.post(`${environment.apiUrl}imports`, file);
+    return this.http.post(`${environment.apiUrl}/imports`, file);
   }
 
   updateObservation(observation: Observation): Promise<any> {
