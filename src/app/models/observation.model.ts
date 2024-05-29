@@ -39,6 +39,7 @@ export class Observation extends JsonApiModel {
   @Attribute() 'hidden': boolean; // Whether an observation is archived
   @Attribute() 'admin-comment'?: string;
   @Attribute() 'monitor-comment'?: string;
+  @Attribute() 'locale': string;
 
   @BelongsTo() fmu?: Fmu;
   @BelongsTo() law?: Law;

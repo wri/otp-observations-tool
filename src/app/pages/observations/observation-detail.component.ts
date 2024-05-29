@@ -199,11 +199,16 @@ export class ObservationDetailComponent implements OnDestroy {
   lawsSelection: string[] = [];
 
   // Language
-  locale = localStorage.getItem('lang') || 'en';
   languages = {
     'en': 'English',
     'fr': 'Français'
   };
+  get locale() {
+    return this.observation && this.observation.locale ? this.observation.locale : this.uiLocale;
+  }
+  get uiLocale() {
+    return localStorage.getItem('lang') || 'en';
+  }
 
   // User selection
   _type: string = null;
@@ -861,46 +866,7 @@ export class ObservationDetailComponent implements OnDestroy {
     // If we edit an existing observation or we copy an existing observation, we have a bit of
     // code to execute
     if (this.existingObservation) {
-      this.loading = true;
-
-      this.observationsService.getById(this.existingObservation, {
-        // tslint:disable-next-line:max-line-length
-        include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators'
-      }).then((observation) => {
-        this.observation = observation;
-        if (this.route.snapshot.params.copiedId) {
-          this.observation.id = undefined;
-          this.observation['validation-status'] = undefined;
-        }
-
-        // FIXME: angular2-jsonapi should return a Date object but instead return
-        // a string for some reason
-        this.observation['publication-date'] = new Date(this.observation['publication-date']);
-        this.observation['created-at'] = new Date(this.observation['created-at']);
-        this.observation['updated-at'] = new Date(this.observation['updated-at']);
-
-        // We set the list of additional observer ids for the additional observers field
-        const additionalObserversIds = (this.observation.observers || [])
-          .filter(observer => observer.id !== this.authService.userObserverId)
-          .map(o => o.id);
-        this._additionalObserversSelection = additionalObserversIds;
-
-        // We force some of the attributes to execute the setters
-        this.type = this.observation['observation-type'];
-        this.latitude = this.observation.lat;
-        this.longitude = this.observation.lng;
-        this.operatorChoice = this.observation.operator;
-        this.reportChoice = this.observation['observation-report'];
-        this.documents = this.observation['observation-documents'];
-      })
-        .catch((err) => {
-          console.error(err);
-          // The only reason the request should fail is that the user
-          // don't have the permission to edit this observation
-          // In such a case, we redirect them to the 404 page
-          this.router.navigate(['/', '404']);
-        })
-        .then(() => this.loading = false);
+      this.loadObservation();
     } else {
       if (this.route.snapshot.params.useDraft) {
         this.draft = this.observationsService.getDraftObservation();
@@ -949,6 +915,51 @@ export class ObservationDetailComponent implements OnDestroy {
         this.saveAsDraftObservation();
       });
     }
+  }
+
+  async loadObservation() {
+    this.loading = true;
+
+    const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: "locale" } });
+    this.observationsService.getById(this.existingObservation, {
+      // tslint:disable-next-line:max-line-length
+      locale: preloaded.locale || this.uiLocale,
+      include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators'
+    }).then((observation) => {
+      this.observation = observation;
+      if (this.route.snapshot.params.copiedId) {
+        this.observation.id = undefined;
+        this.observation['validation-status'] = undefined;
+      }
+
+      // FIXME: angular2-jsonapi should return a Date object but instead return
+      // a string for some reason
+      this.observation['publication-date'] = new Date(this.observation['publication-date']);
+      this.observation['created-at'] = new Date(this.observation['created-at']);
+      this.observation['updated-at'] = new Date(this.observation['updated-at']);
+
+      // We set the list of additional observer ids for the additional observers field
+      const additionalObserversIds = (this.observation.observers || [])
+        .filter(observer => observer.id !== this.authService.userObserverId)
+        .map(o => o.id);
+      this._additionalObserversSelection = additionalObserversIds;
+
+      // We force some of the attributes to execute the setters
+      this.type = this.observation['observation-type'];
+      this.latitude = this.observation.lat;
+      this.longitude = this.observation.lng;
+      this.operatorChoice = this.observation.operator;
+      this.reportChoice = this.observation['observation-report'];
+      this.documents = this.observation['observation-documents'];
+    })
+      .catch((err) => {
+        console.error(err);
+        // The only reason the request should fail is that the user
+        // don't have the permission to edit this observation
+        // In such a case, we redirect them to the 404 page
+        this.router.navigate(['/', '404']);
+      })
+      .then(() => this.loading = false);
   }
 
   ngOnDestroy() {
@@ -1710,6 +1721,7 @@ export class ObservationDetailComponent implements OnDestroy {
         model.governments = this.governments.filter((government) => this._governmentsSelection.includes(government.id));
       }
       model['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(operator.id));
+      model.locale = this.locale;
 
       observation = this.datastoreService.createRecord(Observation, model);
     }
@@ -1727,7 +1739,7 @@ export class ObservationDetailComponent implements OnDestroy {
       .then(() => {
         observation['observation-documents'] = this.documents;
       })
-      .then(() => observation.save().toPromise())
+      .then(() => observation.save({ locale: observation.locale }).toPromise())
       .then(async () => {
         if (this.observation && !this.isCopied) {
           alert(await this.translateService.get('observationUpdate.success').toPromise());
