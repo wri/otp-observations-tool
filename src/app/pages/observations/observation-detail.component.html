@@ -315,11 +315,11 @@
   </div>
 
   <div class="form-container" *ngIf="type === 'operator'">
-    <div class="form-group" *ngIf="canSave() || canCreate()">
+    <div class="form-group">
       <label for="language_field">{{'Language' | translate}}</label>
       <input id="language_field" type="text" class="form-control" name="language_field" [value]="languages[locale]" disabled />
       <p class="note">
-        {{ 'observation.language.note' | translate }}
+        {{ ((canSave() || canCreate()) ? 'observation.language.note' : 'observation.language.viewNote' ) | translate }}
       </p>
     </div>
 
@@ -713,11 +713,11 @@
   </div>
 
   <div class="form-container" *ngIf="type === 'government'">
-    <div class="form-group" *ngIf="canSave() || canCreate()">
+    <div class="form-group">
       <label for="language_field">{{'Language' | translate}}</label>
       <input id="language_field" type="text" class="form-control" name="language_field" [value]="languages[locale]" disabled />
       <p class="note">
-        {{ 'observation.language.note' | translate }}
+        {{ ((canSave() || canCreate()) ? 'observation.language.note' : 'observation.language.viewNote' ) | translate }}
       </p>
     </div>
 
