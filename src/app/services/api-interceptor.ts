@@ -37,7 +37,7 @@ export class APIInterceptor implements HttpInterceptor {
       const params = {
         app: 'observations-tool',
       };
-      if (!req.params.has('locale')) {
+      if (!(req.url.includes("locale=") || req.params.has('locale'))) {
         params['locale'] = this.locale;
       }
       const authReq = req.clone({

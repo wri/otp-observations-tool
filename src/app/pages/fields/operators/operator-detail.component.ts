@@ -51,7 +51,7 @@ export class OperatorDetailComponent {
 
   get logoUrl() {
     if (this.operator.logo && this.operator.logo.url) {
-      return `${environment.apiUrl}${this.operator.logo.url}`;
+      return `${environment.apiUrl}/${this.operator.logo.url}`;
     }
 
     return this.operator.logo;
