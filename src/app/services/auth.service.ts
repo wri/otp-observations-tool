@@ -20,6 +20,8 @@ export class AuthService {
   public userRole: string;
   private _userObserverId: string;
   public managedObserverIds: string[] = [];
+  public qc1ObserverIds: string[] = [];
+  public qc2ObserverIds: string[] = [];
   public userCountryId: string;
   public observerCountriesIds: Number[];
   // Observable of the login status of the user
@@ -108,8 +110,10 @@ export class AuthService {
 
       this.userId = response.data.id;
       this.userRole = userPermissions && userPermissions.attributes['user-role'];
+      this.qc1ObserverIds = (response.data.attributes['qc1-observer-ids'] || []).map((d) => d.toString());
+      this.qc2ObserverIds = (response.data.attributes['qc2-observer-ids'] || []).map((d) => d.toString());
       const userObserverId = relationships.observer.data && relationships.observer.data.id;
-      const managedObserverIds = relationships['managed-observers'] && (relationships['managed-observers'].data || []).map((d) => d.id) || [];
+      const managedObserverIds = (response.data.attributes['managed-observer-ids'] || []).map((d) => d.toString());
       const allManagedOberverIds = uniq([userObserverId, ...managedObserverIds].filter(x => x));
       const savedUserObserverId = parseInt(localStorage.getItem('userObserverId'), 10);
       this.managedObserverIds = allManagedOberverIds;

@@ -117,8 +117,8 @@ export class ObservationListComponent extends TableFilterBehavior {
       // We sort the values by alphabetical order
       const values = {
         [created]: 'Created',
-        [submitted]: 'Ready for QC',
-        [qc]: 'QC in progress',
+        [submitted]: ['Ready for QC1', 'Ready for QC2'],
+        [qc]: ['QC1 in progress', 'QC2 in progress'],
         [revision]: 'Needs revision',
         [ready]: 'Ready for publication',
         [publishedNoComments]: 'Published (no comments)',

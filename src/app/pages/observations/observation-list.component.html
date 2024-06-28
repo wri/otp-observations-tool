@@ -96,8 +96,10 @@
     <otp-table-column [name]="'Status' | translate">
       <ng-template let-row="row" table-cell-template>
         <ng-template [ngIf]="row['validation-status'] === 'Created'">{{'Created' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Ready for QC'">{{'Ready for QC' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'QC in progress'">{{'QC in progress' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Ready for QC1'">{{'Ready for QC1' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Ready for QC2'">{{'Ready for QC2' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'QC1 in progress'">{{'QC1 in progress' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'QC2 in progress'">{{'QC2 in progress' | translate}}</ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Needs revision'"><span class="highlighted-status">{{'Needs revision' | translate}}</span></ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Ready for publication'"><span class="highlighted-status">{{'Ready for publication' | translate}}</span></ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Published (no comments)'">
@@ -128,10 +130,7 @@
           </button>
         </ng-template>
         <!-- Below are the old statuses that are temporarily maintained for consistency with the data (not entirely migrated) -->
-        <ng-template [ngIf]="row['validation-status'] === 'Under Revision'">{{'Under Revision' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Ready for Revision'">{{'Ready for Revision' | translate}}</ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Rejected'">{{'Rejected' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Approved'">{{'Approved' | translate}}</ng-template>
       </ng-template>
     </otp-table-column>
     <!-- We need the user info for canEdit -->
