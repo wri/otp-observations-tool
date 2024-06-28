@@ -37,8 +37,11 @@ export class Observation extends JsonApiModel {
   @Attribute() 'location-accuracy'?: string;
   @Attribute() 'is-physical-place': boolean;
   @Attribute() 'hidden': boolean; // Whether an observation is archived
+  @Attribute() 'user-type'?: string;
   @Attribute() 'admin-comment'?: string;
   @Attribute() 'monitor-comment'?: string;
+  @Attribute() 'qc1-comment'?: string;
+  @Attribute() 'qc2-comment'?: string;
   @Attribute() 'locale': string;
 
   @BelongsTo() fmu?: Fmu;
