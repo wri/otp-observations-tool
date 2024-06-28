@@ -241,6 +241,9 @@ export class ObservationDetailComponent implements OnDestroy {
   // Report choosed between options
   _reportChoice: ObservationReport = null;
   _monitorComment: string = null;
+  qcState = 'undecided'; // Options are: undecided, reject
+  _qc1Comment: string = null;
+  _qc2Comment: string = null;
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -792,6 +795,38 @@ export class ObservationDetailComponent implements OnDestroy {
       this.observation['monitor-comment'] = monitorComment;
     } else {
       this._monitorComment = monitorComment;
+    }
+  }
+
+  get qcComment() {
+    if (this.observation['validation-status'] === 'QC1 in progress') return this.qc1Comment;
+
+    return this.qc2Comment;
+  }
+  set qcComment(value) {
+    if (this.observation['validation-status'] === 'QC1 in progress') {
+      this.qc1Comment = value;
+      return;
+    }
+
+    this.qc2Comment = value;
+  }
+
+  get qc1Comment() { return this.observation ? this.observation['qc1-comment'] : this._qc1Comment; }
+  set qc1Comment(qc1Comment) {
+    if (this.observation) {
+      this.observation['qc1-comment'] = qc1Comment;
+    } else {
+      this._qc1Comment = qc1Comment;
+    }
+  }
+
+  get qc2Comment() { return this.observation ? this.observation['qc2-comment'] : this._qc2Comment; }
+  set qc2Comment(qc2Comment) {
+    if (this.observation) {
+      this.observation['qc2-comment'] = qc2Comment;
+    } else {
+      this._qc2Comment = qc2Comment;
     }
   }
 
@@ -1427,8 +1462,8 @@ export class ObservationDetailComponent implements OnDestroy {
     const isDuplicating = !!this.route.snapshot.params.copiedId;
     const isAmending = this.needsRevisionState === 'amend';
     const isCreated = this.observation['validation-status'] === 'Created';
-    const isReadyForQC = this.observation['validation-status'] === 'Ready for QC';
-    const isQCInProgress = this.observation['validation-status'] === 'QC in progress';
+    const isReadyForQC = ['Ready for QC1', 'Ready for QC2'].includes(this.observation['validation-status']);
+    const isQCInProgress = ['QC1 in progress', 'QC2 in progress'].includes(this.observation['validation-status']);
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
@@ -1457,6 +1492,47 @@ export class ObservationDetailComponent implements OnDestroy {
 
   public get existingObservation(): string {
     return this.route.snapshot.params.id || this.route.snapshot.params.copiedId;
+  }
+
+  canStartQC() {
+    if (!this.observation) return false;
+
+    const isReadyForQC1 = this.observation['validation-status'] === 'Ready for QC1';
+    const isReadyForQC2 = this.observation['validation-status'] === 'Ready for QC2';
+
+    const isUserEligibleForQC1 = !!this.observation.observers.find(o => this.authService.qc1ObserverIds.includes(o.id));
+    const isUserEligibleForQC2 = !!this.observation.observers.find(o => this.authService.qc2ObserverIds.includes(o.id));
+
+    if (isReadyForQC1 && isUserEligibleForQC1) return true;
+    if (isReadyForQC2 && isUserEligibleForQC2) return true;
+
+    return false;
+  }
+
+  canQC() {
+    return this.canQC1() || this.canQC2();
+  }
+
+  canQC1() {
+    if (!this.observation) return false;
+
+    const isInQC1 = this.observation['validation-status'] === 'QC1 in progress';
+    const isUserEligibleForQC1 = !!this.observation.observers.find(o => this.authService.qc1ObserverIds.includes(o.id));
+
+    if (isInQC1 && isUserEligibleForQC1) return true;
+
+    return false;
+  }
+
+  canQC2() {
+    if (!this.observation) return false;
+
+    const isInQC2 = this.observation['validation-status'] === 'QC2 in progress';
+    const isUserEligibleForQC2 = !!this.observation.observers.find(o => this.authService.qc2ObserverIds.includes(o.id));
+
+    if (isInQC2 && isUserEligibleForQC2) return true;
+
+    return false;
   }
 
   canGoBack() {
@@ -1645,19 +1721,86 @@ export class ObservationDetailComponent implements OnDestroy {
 
   async onSubmitForReview() {
     if (window.confirm(await this.translateService.get('observationSubmitForReview').toPromise())) {
-      this.validationStatus = 'Ready for QC';
-      this.onSubmit();
+      this.onSubmit('ready_for_review');
     }
   }
 
   async onPublish(validationStatus) {
     if (window.confirm(await this.translateService.get('observationPublish').toPromise())) {
+      const oldValidationStatus = this.validationStatus;
       this.validationStatus = validationStatus;
-      this.onSubmit();
+      this.updateObservation(
+        () => this.router.navigate(['/', 'private', 'observations']),
+        () => {
+          this.validationStatus = oldValidationStatus;
+        }
+      );
     }
   }
 
-  onSubmit(): void {
+  async onStartQC() {
+    if (!this.canStartQC()) return;
+
+    const oldValidationStatus = this.validationStatus;
+    this.validationStatus = this.validationStatus === 'Ready for QC1' ? 'QC1 in progress' : 'QC2 in progress';
+    this.observation['user-type'] = 'reviewer';
+    this.updateObservation(
+      null,
+      () => {
+        this.validationStatus = oldValidationStatus;
+      }
+    );
+  }
+
+  onCancelRejectQC() {
+    this.qcState = 'undecided';
+  }
+
+  async onRejectQC() {
+    if (this.qcState === 'undecided') {
+      this.qcState = 'reject';
+    } else {
+      const oldValidationStatus = this.validationStatus;
+      this.validationStatus = 'Needs revision';
+      this.observation['user-type'] = 'reviewer';
+      this.updateObservation(
+        () => this.router.navigate(['/', 'private', 'observations']),
+        () => {
+          this.validationStatus = oldValidationStatus;
+        }
+      );
+    }
+  }
+
+  async onApproveQC() {
+    if (!window.confirm("Do you really want to accept this observation?")) return;
+
+    const oldValidationStatus = this.validationStatus;
+    this.validationStatus = this.validationStatus === 'QC1 in progress' ? 'Ready for QC2' : 'Ready for publication';
+    this.observation['user-type'] = 'reviewer';
+    this.updateObservation(
+      () => this.router.navigate(['/', 'private', 'observations']),
+      () => {
+        this.validationStatus = oldValidationStatus;
+      }
+    );
+  }
+
+  updateObservation(onSuccess?: () => void, onError?: () => void) {
+    this.loading = true;
+    this.observation.save({ locale: this.observation.locale }).toPromise()
+      .then(() => {
+        onSuccess && onSuccess();
+      })
+      .catch(async (err) => {
+        alert(await this.translateService.get('observationUpdate.error').toPromise());
+        console.error(err);
+        onError && onError();
+      })
+      .then(() => this.loading = false);
+  }
+
+  onSubmit(customCommand): void {
     this.loading = true;
 
     let observation: Observation;
@@ -1739,7 +1882,7 @@ export class ObservationDetailComponent implements OnDestroy {
       .then(() => {
         observation['observation-documents'] = this.documents;
       })
-      .then(() => observation.save({ locale: observation.locale }).toPromise())
+      .then(() => observation.save({ locale: observation.locale, custom_command: customCommand }).toPromise())
       .then(async () => {
         if (this.observation && !this.isCopied) {
           alert(await this.translateService.get('observationUpdate.success').toPromise());

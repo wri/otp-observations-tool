@@ -23,5 +23,4 @@ export class User extends JsonApiModel {
 
   @BelongsTo() country: Country;
   @BelongsTo() observer: Observer;
-  @HasMany() 'managed-observers'?: Observer[];
 }
