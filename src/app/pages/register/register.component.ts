@@ -54,6 +54,9 @@ export class RegisterComponent implements OnInit {
       payload.user.permissions_request = 'ngo_manager';
     }
 
+    payload.user.organization_account = formValues.account_type === 'organization';
+    delete payload.user.account_type;
+
     // We don't forget to remove the boolean value from
     // the payload
     delete payload.user.manager_role;

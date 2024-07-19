@@ -39,6 +39,8 @@ Thumbs.db
 
 # i18n
 .env
+.env.staging
+.env.production
 
 # local env config
 src/environments/environment.local.ts
