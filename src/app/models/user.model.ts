@@ -19,6 +19,7 @@ export class User extends JsonApiModel {
   @Attribute() password?: string;
   @Attribute() 'password-confirmation'?: string;
   @Attribute() 'current-password'?: string;
+  @Attribute() 'organization-account': boolean
 
   @BelongsTo() country: Country;
   @BelongsTo() observer: Observer;

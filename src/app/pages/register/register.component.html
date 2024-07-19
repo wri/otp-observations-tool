@@ -4,17 +4,7 @@
     <h2>{{'Register' | translate}}</h2>
 
     <div class="form-container">
-      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !first_name.valid }">
-        <label for="first_name">{{'First name' | translate}}</label>
-        <input id="first_name" type="text" class="form-control" name="first_name" ngModel #first_name="ngModel" required />
-        <div *ngIf="f.submitted && !first_name.valid" class="help-text">{{'Please enter your first name' | translate}}</div>
-      </div>
 
-      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !last_name.valid }">
-        <label for="last_name">{{'Last name' | translate}}</label>
-        <input id="last_name" type="text" class="form-control" name="last_name" ngModel #last_name="ngModel" required />
-        <div *ngIf="f.submitted && !last_name.valid" class="help-text">{{'Please enter your last name' | translate}}</div>
-      </div>
 
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !observer_id.valid }">
         <label for="observer_id">{{'Organization' | translate}}</label>
@@ -45,19 +35,40 @@
         <div *ngIf="f.submitted && !locale_field.valid" class="help-text">{{'Please select a language' | translate}}</div>
       </div>
 
+      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+        <label for="email">{{'Email' | translate}}</label>
+        <input id="email" type="email" class="form-control" name="email" ngModel #email="ngModel" required email />
+        <p *ngIf="f.submitted && email.errors?.required" class="help-text">{{'Email is required' | translate}}</p>
+        <p *ngIf="f.submitted && email.errors?.email && !email.errors?.required" class="help-text">{{'Please enter your email address' | translate}}</p>
+      </div>
+
+      <div class="form-group -radio" [ngClass]="{ 'has-error': f.submitted && !account_type.valid }">
+        <p>{{'Please specify if your email address is' | translate}}</p>
+        <label><input type="radio" name="account_type" value="personal" ngModel="personal" #account_type="ngModel">{{'A personal e-mail address' | translate}}</label>
+        <label><input type="radio" name="account_type" value="organization" ngModel="personal" #account_type="ngModel">{{'A generic organization e-mail address (for e.g., info@wri.org)' | translate}}</label>
+      </div>
+
+      <ng-template [ngIf]="account_type.value == 'personal'">
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !first_name.valid }">
+          <label for="first_name">{{'First name' | translate}}</label>
+          <input id="first_name" type="text" class="form-control" name="first_name" ngModel #first_name="ngModel" required />
+          <div *ngIf="f.submitted && !first_name.valid" class="help-text">{{'Please enter your first name' | translate}}</div>
+        </div>
+
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !last_name.valid }">
+          <label for="last_name">{{'Last name' | translate}}</label>
+          <input id="last_name" type="text" class="form-control" name="last_name" ngModel #last_name="ngModel" required />
+          <div *ngIf="f.submitted && !last_name.valid" class="help-text">{{'Please enter your last name' | translate}}</div>
+        </div>
+
+      </ng-template>
+
       <div class="form-group">
         <input type="checkbox" name="manager_role" id="manager_role" ngModel #manager_role="ngModel" />
         <label for="manager_role">{{'Request a manager role' | translate}}</label>
         <p class="note">
           {{'A manager role gives you the permission to update legal references for your country.' | translate}}
         </p>
-      </div>
-
-      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
-        <label for="email">{{'Email' | translate}}</label>
-        <input id="email" type="email" class="form-control" name="email" ngModel #email="ngModel" required email />
-        <p *ngIf="f.submitted && email.errors?.required" class="help-text">{{'Email is required' | translate}}</p>
-        <p *ngIf="f.submitted && email.errors?.email && !email.errors?.required" class="help-text">{{'Please enter your email address' | translate}}</p>
       </div>
 
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
