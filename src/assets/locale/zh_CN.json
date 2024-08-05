@@ -28,6 +28,8 @@
   "Address": "Address",
   "Contact information (General information)": "Contact information (General information)",
   "Name": "Name",
+  "First name": "First name",
+  "Last name": "Last name",
   "Email": "Email",
   "Please enter an email address": "Please enter an email address",
   "Phone number": "Phone number",
@@ -199,6 +201,8 @@
   "governmentUpdate.error": "The update of the government entity has been unsuccessful.",
   "My profile": "My profile",
   "Please enter your name": "Please enter your name",
+  "Please enter your first name": "Please enter your first name",
+  "Please enter your last name": "Please enter your last name",
   "Username": "Username",
   "Please enter a username": "Please enter a username",
   "Organization": "Organization",
@@ -321,6 +325,7 @@
   "observation.statusNote.NeedsRevision.question": "What would you like to do?",
   "observation.scrollingNote": "In order to see all of the table's columns, you need to scroll horizontally. You can either use the scrollbar located at the bottom of the table or use your trackpad or mouse. If you use a trackpad, you can scroll horizontally when your cursor is above the table. If you use a mouse with 3 buttons, the middle one should let you do the same by holding the button down and moving the cursor to the sides or rotating the scrolling wheel sideways.",
   "observation.language.note": "You are creating/editing the observation in this language.",
+  "observation.language.viewNote": "You are viewing the observation in this language.",
   "observation.producer.uniqueNameError": "This producer already exists in the OTP. Please click \"Cancel\" below and select the producer in the drop-down list.",
   "observation.government.uniqueNameError": "This government entity already exists in the OTP. Please click \"Cancel\" below and select the government entity in the drop-down list.",
   "Comments": "Comments",
@@ -414,5 +419,8 @@
   "You can upload a new report or select an existing one from the list.": "You can upload a new report or select an existing one from the list.",
   "Document Type": "Document Type",
   "Select a document type": "Select a document type",
-  "Please select a document type": "Please select a document type"
+  "Please select a document type": "Please select a document type",
+  "Please specify if your email address is": "Please specify if your email address is",
+  "A personal e-mail address": "A personal e-mail address",
+  "A generic organization e-mail address (for e.g., info@wri.org)": "A generic organization e-mail address (for e.g., info@wri.org)"
 }

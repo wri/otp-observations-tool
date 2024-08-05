@@ -14,11 +14,12 @@ describe('User', () => {
     it('can create account', function () {
       cy.get('button').contains('Register').click();
 
-      cy.get('#name').should('exist');
+      cy.get('#first_name').should('exist');
       cy.get('button').contains('Register').click();
 
       // testing validations
-      cy.contains('Please enter your name');
+      cy.contains('Please enter your first name');
+      cy.contains('Please enter your last name');
       cy.contains('Please select an organization');
       cy.contains('Please select a country');
       cy.contains('Please select a language');
@@ -27,7 +28,8 @@ describe('User', () => {
       cy.contains('Please confirm your password');
       cy.contains('Please tick the box');
 
-      cy.get('#name').type('James Watson');
+      cy.get('#first_name').type('James');
+      cy.get('#last_name').type('Watson');
       cy.get('#observer_id').select('OGF');
       cy.get('#country_id').select('Congo');
       cy.get('#locale_field').select('English');
@@ -53,7 +55,8 @@ describe('User', () => {
     describe('updating user profile', function () {
       it('can update some profile info without current password', function () {
         /* cy.get('a').contains('Profile', { timeout: 10000 }).click(); */
-        cy.get('#name').clear().type('NGO Manager Test');
+        cy.get('#first_name').clear().type('NGO Manager');
+        cy.get('#last_name').clear().type('Test');
         cy.get('#email_field').clear().type('ngo_manager@example.com');
         cy.get('#locale_field').select('English');
 
