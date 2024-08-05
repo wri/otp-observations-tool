@@ -28,6 +28,8 @@
   "Address": "Adresse",
   "Contact information (General information)": "Contact (pour les demandes générales)",
   "Name": "Nom",
+  "First name": "Prénom",
+  "Last name": "Nom de famille",
   "Email": "Email",
   "Please enter an email address": "Veuillez renseigner l'adresse email SVP",
   "Phone number": "Téléphone",
@@ -199,6 +201,8 @@
   "governmentUpdate.error": "La mise à jour de l'entité gouvernementale a échoué",
   "My profile": "Mon profil",
   "Please enter your name": "Entrez votre nom SVP",
+  "Please enter your first name": "Veuillez entrer votre prénom",
+  "Please enter your last name": "Veuillez entrer votre nom de famille",
   "Username": "Nom d'utilisateur",
   "Please enter a username": "Entrez un nom d'utilisateur SVP",
   "Organization": "Organisation",
@@ -321,6 +325,7 @@
   "observation.statusNote.NeedsRevision.question": "Qu'aimeriez-vous faire ?",
   "observation.scrollingNote": "Afin de pouvoir voir toutes les colonnes du tableau, vous devez les faire défiler horizontalement. Vous pouvez soit utiliser la barre de défilement située en bas du tableau, soit votre trackpad ou votre souris. Si vous utilisez un trackpad, vous pouvez faire défiler les colonnes horizontalement lorsque votre curseur est au-dessus du tableau. Si vous utilisez une souris à 3 boutons, le bouton du milieu devrait vous permettre de faire défiler les colonnes, en maintenant le bouton enfoncé et en déplaçant le curseur ou en tournant la molette de défilement sur le côté.",
   "observation.language.note": "Vous êtes en train de créér/modifier l'observation dans cette langue. ",
+  "observation.language.viewNote": "Vous visualisez l’observation dans cette langue.",
   "observation.producer.uniqueNameError": "Cet exploitant existe déjà dans l'OTP. Veuillez cliquer \"Annuler\" ci-dessous et sélectionner cet exploitant dans la liste existante.",
   "observation.government.uniqueNameError": "Cette entité gouvernementale existe déjà dans l'OTP. Veuillez cliquer \"Annuler\" ci-dessous et sélectionner cette entité dans la liste existante.",
   "Comments": "Commentaires",
@@ -414,5 +419,8 @@
   "You can upload a new report or select an existing one from the list.": "Vous pouvez télécharger un nouveau rapport ou en sélectionner un existant dans la liste.",
   "Document Type": "Type de document",
   "Select a document type": "Sélectionnez un type de document",
-  "Please select a document type": "Veuillez sélectionner un type de document"
+  "Please select a document type": "Veuillez sélectionner un type de document",
+  "Please specify if your email address is": "Veuillez préciser si votre adresse email est",
+  "A personal e-mail address": "Une adresse mail personnelle",
+  "A generic organization e-mail address (for e.g., info@wri.org)": "Une adresse mail organisationnelle générique (par exemple, info@wri.org)"
 }
