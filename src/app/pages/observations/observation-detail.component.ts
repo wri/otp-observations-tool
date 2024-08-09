@@ -742,7 +742,7 @@ export class ObservationDetailComponent implements OnDestroy {
       if (shouldSaveAdditionalObservers) {
         this._additionalObserversSelectionSaved = this._additionalObserversSelection;
       }
-      this._additionalObserversSelection = reportChoice.observers.map(o => o.id).filter(id => id !== this.authService.userObserverId);
+      this._additionalObserversSelection = (reportChoice.observers || []).map(o => o.id).filter(id => id !== this.authService.userObserverId);
     }
   }
 
@@ -866,43 +866,14 @@ export class ObservationDetailComponent implements OnDestroy {
       }
     });
 
-    this.observersService.getAll({ sort: 'name' })
-      .then((observers) => {
-        this.observers = observers;
-
-        // We update the list of options for the additional observers field
-        this.additionalObserversOptions = observers
-          .filter(observer => observer.id !== this.authService.userObserverId)
-          .map((observer) => ({ id: observer.id, name: observer.name }));
-
-        this.currentContextObserver = observers.find(o => o.id === this.authService.userObserverId);
-      })
-      .catch((err) => console.error(err)); // TODO: visual feedback
-
-    // We load the list of reports we can use
-    this.observationReportsService.getAll({
-      sort: 'title',
-      filter: { observer_id: this.authService.userObserverId },
-      include: 'observers'
-    }).then(reports => this.reports = reports)
-      .then(() => {
-        // If we're editing an observation (or using draft), the object ObservationReport of the observation won't
-        // match any of the objects of this.reports, so we search for the "same" model
-        // and set it
-        if (this.draft) {
-          this.reportChoice = this.reports.find((report) => report.id === this.draft.observationReportId) || null;
-        }
-        if (this.observation) {
-          this.reportChoice = this.reports.find((report) => report.id === this.observation['observation-report'].id);
-        }
-      })
-      .catch(err => console.error(err)); // TODO: visual feedback
-
     // If we edit an existing observation or we copy an existing observation, we have a bit of
     // code to execute
     if (this.existingObservation) {
-      this.loadObservation();
+      this.loadObservation().then(() => {
+        this.loadExtraData(); // we are loading the extra data after the observation is loaded because observer context could change
+      });
     } else {
+      this.loadExtraData();
       if (this.route.snapshot.params.useDraft) {
         this.draft = this.observationsService.getDraftObservation();
         // Set values from the draft observation
@@ -955,12 +926,29 @@ export class ObservationDetailComponent implements OnDestroy {
   async loadObservation() {
     this.loading = true;
 
-    const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: "locale" } });
-    this.observationsService.getById(this.existingObservation, {
+    const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: "locale" }});
+
+    return this.observationsService.getById(this.existingObservation, {
       // tslint:disable-next-line:max-line-length
       locale: preloaded.locale || this.uiLocale,
       include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators'
     }).then((observation) => {
+      // change current observer context if needed to prevent 404 errors
+      console.log('current observer id', this.authService.userObserverId);
+      console.log('managed observer ids', this.authService.managedObserverIds);
+      console.log('observation observers', observation.observers.map(o => o.id));
+
+      if (!observation.observers.find(o => o.id === this.authService.userObserverId)) {
+        if (observation.observers.find(o => this.authService.managedObserverIds.includes(o.id))) {
+          console.log('changing context');
+          this.authService.userObserverId = observation.observers[0].id;
+        } else {
+          // observation is not accessible by the current user
+          this.router.navigate(['/', '404']);
+          return;
+        }
+      }
+
       this.observation = observation;
       if (this.route.snapshot.params.copiedId) {
         this.observation.id = undefined;
@@ -995,6 +983,40 @@ export class ObservationDetailComponent implements OnDestroy {
         this.router.navigate(['/', '404']);
       })
       .then(() => this.loading = false);
+  }
+
+  loadExtraData() {
+    this.observersService.getAll({ sort: 'name' })
+      .then((observers) => {
+        this.observers = observers;
+
+        // We update the list of options for the additional observers field
+        this.additionalObserversOptions = observers
+          .filter(observer => observer.id !== this.authService.userObserverId)
+          .map((observer) => ({ id: observer.id, name: observer.name }));
+
+        this.currentContextObserver = observers.find(o => o.id === this.authService.userObserverId);
+      })
+      .catch((err) => console.error(err)); // TODO: visual feedback
+
+    // We load the list of reports we can use
+    this.observationReportsService.getAll({
+      sort: 'title',
+      filter: { observer_id: this.authService.userObserverId },
+      include: 'observers'
+    }).then(reports => this.reports = reports)
+      .then(() => {
+        // If we're editing an observation (or using draft), the object ObservationReport of the observation won't
+        // match any of the objects of this.reports, so we search for the "same" model
+        // and set it
+        if (this.draft) {
+          this.reportChoice = this.reports.find((report) => report.id === this.draft.observationReportId) || null;
+        }
+        if (this.observation) {
+          this.reportChoice = this.reports.find((report) => report.id === this.observation['observation-report'].id);
+        }
+      })
+      .catch(err => console.error(err)); // TODO: visual feedback
   }
 
   ngOnDestroy() {
