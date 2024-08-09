@@ -54,7 +54,7 @@
     <p *ngIf="!canQC()">{{'observation.statusNote.QCInProgress' | translate}}</p>
 
     <div *ngIf="canQC()">
-      <p>Please review this observation and either accept it and reject it with making a comment for a monitor.</p>
+      <p>Please review this observation and either accept it or reject it with making a comment for a monitor.</p>
       <div class="c-button-container -j-start form-group" *ngIf="qcState === 'undecided'">
         <button *ngIf="canQC()" type="button" (click)="onRejectQC()" class="c-button -secondary">Reject</button>
         <button *ngIf="canQC()" type="button" (click)="onApproveQC()" class="c-button -primary">Accept</button>
@@ -72,11 +72,14 @@
     </div>
   </div>
 
-  <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Needs revision'">
-    <p>{{'observation.statusNote.NeedsRevision' | translate}}</p>
-    <p>{{'Comments' | translate}}:</p>
+  <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Rejected'">
+    <p>The observation has been reviewed and received some comments. Please make requested changes and submit it for review again.</p>
     <p>QC1 Comments</p>
     <blockquote>{{observation['qc1-comment'] || '−'}}</blockquote>
+  </div>
+
+  <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Needs revision'">
+    <p>{{'observation.statusNote.NeedsRevision' | translate}}</p>
     <p>QC2 Comments</p>
     <blockquote>{{observation['qc2-comment'] || '−'}}</blockquote>
     <p *ngIf="needsRevisionState === 'undecided'">{{'observation.statusNote.NeedsRevision.question' | translate}}</p>

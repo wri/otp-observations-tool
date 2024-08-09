@@ -1464,6 +1464,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const isCreated = this.observation['validation-status'] === 'Created';
     const isReadyForQC = ['Ready for QC1', 'Ready for QC2'].includes(this.observation['validation-status']);
     const isQCInProgress = ['QC1 in progress', 'QC2 in progress'].includes(this.observation['validation-status']);
+    const isRejected = this.observation['validation-status'] === 'Rejected';
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
@@ -1475,6 +1476,7 @@ export class ObservationDetailComponent implements OnDestroy {
     if (isCreating) return false;
     if (isDuplicating) return false;
     if (isCreated && isUserLinkedObserver) return false;
+    if (isRejected && isUserLinkedObserver) return false;
     if (isReadyForQC) return true;
     if (isQCInProgress) return true;
     if (isInNeedOfRevision && isUserLinkedObserver && isAmending) return false;
@@ -1600,12 +1602,14 @@ export class ObservationDetailComponent implements OnDestroy {
     const isAmending = this.needsRevisionState === 'amend';
     const isCreated = this.observation['validation-status'] === 'Created';
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
+    const isRejected = this.observation['validation-status'] === 'Rejected';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
     const isPublishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
 
     if (isCreated && isAdmin && isUserLinkedObserver) return true;
     if (isCreated && isOwner) return true;
+    if (isRejected && isUserLinkedObserver) return true;
     if (isInNeedOfRevision && isAmending) return true
     if (isPublishedWithCommentsAndModified && isAmending) return true;
     if (isPublishedWithCommentsAndNotModified && isAmending) return true;
@@ -1730,6 +1734,7 @@ export class ObservationDetailComponent implements OnDestroy {
       const oldValidationStatus = this.validationStatus;
       this.validationStatus = validationStatus;
       this.updateObservation(
+        null,
         () => this.router.navigate(['/', 'private', 'observations']),
         () => {
           this.validationStatus = oldValidationStatus;
@@ -1741,15 +1746,7 @@ export class ObservationDetailComponent implements OnDestroy {
   async onStartQC() {
     if (!this.canStartQC()) return;
 
-    const oldValidationStatus = this.validationStatus;
-    this.validationStatus = this.validationStatus === 'Ready for QC1' ? 'QC1 in progress' : 'QC2 in progress';
-    this.observation['user-type'] = 'reviewer';
-    this.updateObservation(
-      null,
-      () => {
-        this.validationStatus = oldValidationStatus;
-      }
-    );
+    this.updateObservation('start_qc');
   }
 
   onCancelRejectQC() {
@@ -1760,14 +1757,9 @@ export class ObservationDetailComponent implements OnDestroy {
     if (this.qcState === 'undecided') {
       this.qcState = 'reject';
     } else {
-      const oldValidationStatus = this.validationStatus;
-      this.validationStatus = 'Needs revision';
-      this.observation['user-type'] = 'reviewer';
       this.updateObservation(
+        'reject_qc',
         () => this.router.navigate(['/', 'private', 'observations']),
-        () => {
-          this.validationStatus = oldValidationStatus;
-        }
       );
     }
   }
@@ -1775,20 +1767,15 @@ export class ObservationDetailComponent implements OnDestroy {
   async onApproveQC() {
     if (!window.confirm("Do you really want to accept this observation?")) return;
 
-    const oldValidationStatus = this.validationStatus;
-    this.validationStatus = this.validationStatus === 'QC1 in progress' ? 'Ready for QC2' : 'Ready for publication';
-    this.observation['user-type'] = 'reviewer';
     this.updateObservation(
-      () => this.router.navigate(['/', 'private', 'observations']),
-      () => {
-        this.validationStatus = oldValidationStatus;
-      }
+      'approve_qc',
+      () => this.router.navigate(['/', 'private', 'observations'])
     );
   }
 
-  updateObservation(onSuccess?: () => void, onError?: () => void) {
+  updateObservation(customCommand: string = null,  onSuccess?: () => void, onError?: () => void) {
     this.loading = true;
-    this.observation.save({ locale: this.observation.locale }).toPromise()
+    this.observation.save({ locale: this.observation.locale, custom_command: customCommand }).toPromise()
       .then(() => {
         onSuccess && onSuccess();
       })
