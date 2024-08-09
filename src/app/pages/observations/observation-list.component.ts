@@ -22,8 +22,10 @@ export class ObservationListComponent extends TableFilterBehavior {
 
   tableOptions = {
     rows: {
-      highlight: (observation: Observation) => observation['validation-status'] === 'Needs revision'
-        || observation['validation-status'] === 'Ready for publication'
+      highlight: (observation: Observation) =>
+        ['Rejected', 'Needs revision', 'Ready for publication'].includes(observation['validation-status']) ||
+        (observation['validation-status'] === 'Ready for QC1' && !!observation.observers.find(o => this.authService.qc1ObserverIds.includes(o.id))) ||
+        (observation['validation-status'] === 'Ready for QC2' && !!observation.observers.find(o => this.authService.qc2ObserverIds.includes(o.id)))
     }
   };
 
@@ -213,7 +215,7 @@ export class ObservationListComponent extends TableFilterBehavior {
       return false;
     }
 
-    return observation['validation-status'] === 'Created' || observation['validation-status'] === 'Needs revision';
+    return ['Created', 'Rejected', 'Needs revision'].includes(observation['validation-status']);
   }
 
   shortenText(text: string): string {
