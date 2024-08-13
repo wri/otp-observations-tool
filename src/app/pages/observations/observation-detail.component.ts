@@ -34,6 +34,7 @@ import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
 import { forkJoin ,  Observable ,  interval ,  Subscription } from "rxjs";
+import { QualityControl } from 'app/models/quality_control.model';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -242,8 +243,6 @@ export class ObservationDetailComponent implements OnDestroy {
   _reportChoice: ObservationReport = null;
   _monitorComment: string = null;
   qcState = 'undecided'; // Options are: undecided, reject
-  _qc1Comment: string = null;
-  _qc2Comment: string = null;
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -798,36 +797,19 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
+  _qcComment: string = null;
   get qcComment() {
-    if (this.observation['validation-status'] === 'QC1 in progress') return this.qc1Comment;
-
-    return this.qc2Comment;
+    return this._qcComment;
   }
   set qcComment(value) {
-    if (this.observation['validation-status'] === 'QC1 in progress') {
-      this.qc1Comment = value;
-      return;
-    }
-
-    this.qc2Comment = value;
+    this._qcComment = value;
   }
 
-  get qc1Comment() { return this.observation ? this.observation['qc1-comment'] : this._qc1Comment; }
-  set qc1Comment(qc1Comment) {
-    if (this.observation) {
-      this.observation['qc1-comment'] = qc1Comment;
-    } else {
-      this._qc1Comment = qc1Comment;
-    }
-  }
+  get latestQCComment() {
+    if (!this.observation) return null;
+    if (!this.observation['quality-controls'] || !this.observation['quality-controls'].length) return null;
 
-  get qc2Comment() { return this.observation ? this.observation['qc2-comment'] : this._qc2Comment; }
-  set qc2Comment(qc2Comment) {
-    if (this.observation) {
-      this.observation['qc2-comment'] = qc2Comment;
-    } else {
-      this._qc2Comment = qc2Comment;
-    }
+    return this.observation['quality-controls'] && orderBy(this.observation['quality-controls'], ['created-at'], ['desc'])[0].comment;
   }
 
   constructor(
@@ -931,16 +913,12 @@ export class ObservationDetailComponent implements OnDestroy {
     return this.observationsService.getById(this.existingObservation, {
       // tslint:disable-next-line:max-line-length
       locale: preloaded.locale || this.uiLocale,
-      include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators'
+      include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators,quality-controls'
     }).then((observation) => {
       // change current observer context if needed to prevent 404 errors
-      console.log('current observer id', this.authService.userObserverId);
-      console.log('managed observer ids', this.authService.managedObserverIds);
-      console.log('observation observers', observation.observers.map(o => o.id));
 
       if (!observation.observers.find(o => o.id === this.authService.userObserverId)) {
         if (observation.observers.find(o => this.authService.managedObserverIds.includes(o.id))) {
-          console.log('changing context');
           this.authService.userObserverId = observation.observers[0].id;
         } else {
           // observation is not accessible by the current user
@@ -1572,14 +1550,10 @@ export class ObservationDetailComponent implements OnDestroy {
 
     const isDuplicating = this.isCopied;
     const isCreated = this.observation['validation-status'] === 'Created';
-    const isAmending = this.needsRevisionState === 'amend';
-    const isExplaining = this.needsRevisionState === 'explain';
 
     if (!this.observation) return true;
     if (isDuplicating) return true;
     if (isCreated) return true;
-    if (isAmending) return true;
-    if (isExplaining) return true;
 
     return false;
   }
@@ -1768,7 +1742,15 @@ export class ObservationDetailComponent implements OnDestroy {
   async onStartQC() {
     if (!this.canStartQC()) return;
 
-    this.updateObservation('start_qc');
+    const oldValidationStatus = this.validationStatus;
+    this.validationStatus = 'QC in progress';
+    this.updateObservation(
+      null,
+      null,
+      () => {
+        this.validationStatus = oldValidationStatus;
+      }
+    );
   }
 
   onCancelRejectQC() {
@@ -1779,20 +1761,27 @@ export class ObservationDetailComponent implements OnDestroy {
     if (this.qcState === 'undecided') {
       this.qcState = 'reject';
     } else {
-      this.updateObservation(
-        'reject_qc',
-        () => this.router.navigate(['/', 'private', 'observations']),
-      );
+      const qualityControl = this.datastoreService.createRecord(QualityControl, {
+        reviewable: this.observation,
+        comment: this.qcComment,
+        passed: false
+      });
+      qualityControl.save().toPromise().then(() => {
+        this.router.navigate(['/', 'private', 'observations']);
+      });
     }
   }
 
   async onApproveQC() {
     if (!window.confirm("Do you really want to accept this observation?")) return;
 
-    this.updateObservation(
-      'approve_qc',
-      () => this.router.navigate(['/', 'private', 'observations'])
-    );
+    const qualityControl = this.datastoreService.createRecord(QualityControl, {
+      reviewable: this.observation,
+      passed: true
+    });
+    qualityControl.save().toPromise().then(() => {
+      this.router.navigate(['/', 'private', 'observations']);
+    })
   }
 
   updateObservation(customCommand: string = null,  onSuccess?: () => void, onError?: () => void) {
@@ -1878,6 +1867,11 @@ export class ObservationDetailComponent implements OnDestroy {
       observation = this.datastoreService.createRecord(Observation, model);
     }
 
+    let oldValidationStatus = this.validationStatus;
+    if (customCommand === 'ready_for_review') {
+      observation['validation-status'] = 'Ready for QC'
+    }
+
     this.uploadReport()
       .then(() => {
         // If we created a report, we link it to the observation
@@ -1908,6 +1902,7 @@ export class ObservationDetailComponent implements OnDestroy {
         } else {
           alert(await this.translateService.get('observationCreation.error').toPromise());
         }
+        this.observation['validation-status'] = oldValidationStatus;
         console.error(err);
       })
       .then(() => this.loading = false);

@@ -65,7 +65,7 @@
         <div *ngIf="!explain_qc_rejection.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
 
         <div class="c-button-container -j-start">
-          <button type="button" (click)="onCancelRejectQC()" class="c-button -secondary">Cancel</button>
+          <button type="button" (click)="onCancelRejectQC()" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
           <button type="button" (click)="onRejectQC()" class="c-button -primary" [disabled]="!explain_qc_rejection.valid">Submit Rejection</button>
         </div>
       </div>
@@ -74,14 +74,14 @@
 
   <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Rejected'">
     <p>The observation has been reviewed and received some comments. Please make requested changes and submit it for review again.</p>
-    <p>QC1 Comments</p>
-    <blockquote>{{observation['qc1-comment'] || '−'}}</blockquote>
+    <p>{{ 'Comments' | translate }}</p>
+    <blockquote>{{latestQCComment || '−'}}</blockquote>
   </div>
 
   <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Needs revision'">
     <p>{{'observation.statusNote.NeedsRevision' | translate}}</p>
-    <p>QC2 Comments</p>
-    <blockquote>{{observation['qc2-comment'] || '−'}}</blockquote>
+    <p>{{ 'Comments' | translate }}</p>
+    <blockquote>{{latestQCComment || '−'}}</blockquote>
     <p *ngIf="needsRevisionState === 'undecided'">{{'observation.statusNote.NeedsRevision.question' | translate}}</p>
     <div class="c-button-container -j-start form-group" *ngIf="needsRevisionState === 'undecided'">
       <button type="button" (click)="onClickExplainAndPublish()" class="c-button -secondary">{{'Explain and publish' | translate}}</button>
@@ -91,7 +91,10 @@
       <label for="explain_no_revision">{{'Explanation' | translate}}</label>
       <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" required minlength="10"></textarea>
       <div *ngIf="!explain_no_revision.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
-      <button type="button" (click)="onPublish('Published (not modified)')" class="c-button -primary" [disabled]="!explain_no_revision.valid">{{'Publish' | translate}}</button>
+      <div class="c-button-container -j-start">
+        <button type="button" (click)="needsRevisionState = 'undecided'" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
+        <button type="button" (click)="onPublish('Published (not modified)')" class="c-button -primary" [disabled]="!explain_no_revision.valid">{{'Publish' | translate}}</button>
+      </div>
     </div>
     <div class="form-group" *ngIf="needsRevisionState === 'amend'">
       <label for="explain_no_revision">{{'Explanation' | translate}}</label>
@@ -443,8 +446,8 @@
           <!-- 8.0. Physical place -->
           <div class="form-group -radio">
             <p>{{'Did this observation occur at a physical place?' | translate}}</p>
-            <label><input type="radio" name="physical_place" [value]="true"  [(ngModel)]="physicalPlace" [disabled]="isDisabled()">{{'Yes' | translate}}</label>
-            <label><input type="radio" name="physical_place" [value]="false" [(ngModel)]="physicalPlace" [disabled]="isDisabled()">{{'No' | translate}}</label>
+            <label><input type="radio" name="physical_place" [value]="true"  [(ngModel)]="physicalPlace" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">{{'Yes' | translate}}</label>
+            <label><input type="radio" name="physical_place" [value]="false" [(ngModel)]="physicalPlace" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">{{'No' | translate}}</label>
           </div>
         </ng-template>
 
@@ -581,7 +584,7 @@
 
       <div class="buttons">
         <label *ngFor="let s of severities">
-          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()" required>
+          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()" required>
           <span>{{ s.level }} - {{ s.details }}</span>
         </label>
       </div>
@@ -830,7 +833,7 @@
 
       <div class="buttons">
         <label *ngFor="let s of severities">
-          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()">
+          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">
           <span>{{ s.level }} - {{ s.details }}</span>
         </label>
       </div>
