@@ -1721,7 +1721,8 @@ export class ObservationDetailComponent implements OnDestroy {
 
   async onSubmitForReview() {
     if (window.confirm(await this.translateService.get('observationSubmitForReview').toPromise())) {
-      this.onSubmit('ready_for_review');
+      this.validationStatus = 'Ready for QC'
+      this.onSubmit();
     }
   }
 
@@ -1730,7 +1731,6 @@ export class ObservationDetailComponent implements OnDestroy {
       const oldValidationStatus = this.validationStatus;
       this.validationStatus = validationStatus;
       this.updateObservation(
-        null,
         () => this.router.navigate(['/', 'private', 'observations']),
         () => {
           this.validationStatus = oldValidationStatus;
@@ -1745,7 +1745,6 @@ export class ObservationDetailComponent implements OnDestroy {
     const oldValidationStatus = this.validationStatus;
     this.validationStatus = 'QC in progress';
     this.updateObservation(
-      null,
       null,
       () => {
         this.validationStatus = oldValidationStatus;
@@ -1766,9 +1765,7 @@ export class ObservationDetailComponent implements OnDestroy {
         comment: this.qcComment,
         passed: false
       });
-      qualityControl.save().toPromise().then(() => {
-        this.router.navigate(['/', 'private', 'observations']);
-      });
+      this.saveQualityControl(qualityControl);
     }
   }
 
@@ -1779,14 +1776,27 @@ export class ObservationDetailComponent implements OnDestroy {
       reviewable: this.observation,
       passed: true
     });
-    qualityControl.save().toPromise().then(() => {
+    this.saveQualityControl(qualityControl);
+  }
+
+  saveQualityControl(qc: QualityControl) {
+    qc.save().toPromise().then(() => {
       this.router.navigate(['/', 'private', 'observations']);
+    })
+    .catch(async (err) => {
+      let message = await this.translateService.get('observationUpdate.error').toPromise();
+      if (err.errors && err.errors.length) {
+        console.log('join');
+        message += '\n' + err.errors.map(e => e.status + " : " + e.title).join('\n');
+      }
+      alert(message);
+      console.error(err);
     })
   }
 
-  updateObservation(customCommand: string = null,  onSuccess?: () => void, onError?: () => void) {
+  updateObservation(onSuccess?: () => void, onError?: () => void) {
     this.loading = true;
-    this.observation.save({ locale: this.observation.locale, custom_command: customCommand }).toPromise()
+    this.observation.save({ locale: this.observation.locale }).toPromise()
       .then(() => {
         onSuccess && onSuccess();
       })
@@ -1798,7 +1808,7 @@ export class ObservationDetailComponent implements OnDestroy {
       .then(() => this.loading = false);
   }
 
-  onSubmit(customCommand): void {
+  onSubmit(): void {
     this.loading = true;
 
     let observation: Observation;
@@ -1867,11 +1877,6 @@ export class ObservationDetailComponent implements OnDestroy {
       observation = this.datastoreService.createRecord(Observation, model);
     }
 
-    let oldValidationStatus = this.validationStatus;
-    if (customCommand === 'ready_for_review') {
-      observation['validation-status'] = 'Ready for QC'
-    }
-
     this.uploadReport()
       .then(() => {
         // If we created a report, we link it to the observation
@@ -1885,7 +1890,7 @@ export class ObservationDetailComponent implements OnDestroy {
       .then(() => {
         observation['observation-documents'] = this.documents;
       })
-      .then(() => observation.save({ locale: observation.locale, custom_command: customCommand }).toPromise())
+      .then(() => observation.save({ locale: observation.locale }).toPromise())
       .then(async () => {
         if (this.observation && !this.isCopied) {
           alert(await this.translateService.get('observationUpdate.success').toPromise());
@@ -1902,7 +1907,6 @@ export class ObservationDetailComponent implements OnDestroy {
         } else {
           alert(await this.translateService.get('observationCreation.error').toPromise());
         }
-        this.observation['validation-status'] = oldValidationStatus;
         console.error(err);
       })
       .then(() => this.loading = false);
