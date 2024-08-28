@@ -5,6 +5,7 @@ echo "set project directory"
 cd "$(dirname "$(readlink -f "$0")")"
 cd ".."
 
+export PATH="$HOME/.local/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 . $NVM_DIR/nvm.sh
 
@@ -28,9 +29,12 @@ echo "Moving files to dist folder"
 rm -rf dist
 mv build dist
 
-echo "Uploading source maps to sentry"
-
-yarn run sentry-cli sourcemaps inject ./dist
-env $(grep ^SENTRY .env | xargs) yarn run sentry-cli sourcemaps upload ./dist
+if grep ^SENTRY .env; then
+  echo "Uploading source maps to sentry"
+  yarn run sentry-cli sourcemaps inject ./dist
+  env $(grep ^SENTRY .env | xargs) yarn run sentry-cli sourcemaps upload ./dist
+else
+  echo "SENTRY ENV variables not found in .env file, skipping source maps upload"
+fi
 
 echo "--> All done :)"
