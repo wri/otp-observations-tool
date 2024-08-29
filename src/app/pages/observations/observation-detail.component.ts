@@ -918,7 +918,7 @@ export class ObservationDetailComponent implements OnDestroy {
       // change current observer context if needed to prevent 404 errors
 
       if (!observation.observers.find(o => o.id === this.authService.userObserverId)) {
-        if (observation.observers.find(o => this.authService.managedObserverIds.includes(o.id))) {
+        if (observation.observers.find(o => this.authService.availableObserverIds.includes(o.id))) {
           this.authService.userObserverId = observation.observers[0].id;
         } else {
           // observation is not accessible by the current user
@@ -1456,6 +1456,7 @@ export class ObservationDetailComponent implements OnDestroy {
    */
   isDisabled(): boolean {
     if (!this.observation) return false;
+    if (!this.authService.managedObserverIds.includes(this.authService.userObserverId)) return true;
 
     const isHidden = this.observation.hidden;
     const isCreating = !this.route.snapshot.params.id;
@@ -1545,6 +1546,10 @@ export class ObservationDetailComponent implements OnDestroy {
     return false;
   }
 
+  canManage() {
+    return this.authService.managedObserverIds.includes(this.authService.userObserverId);
+  }
+
   canCancel() {
     if (!this.observation) return true;
 
@@ -1562,6 +1567,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const isDisabled = this.isDisabled();
     const isDuplicating = this.isCopied;
 
+    if (!this.canManage()) return false;
     if (!isDisabled && !this.observation) return true;
     if (isDuplicating) return true;
 
@@ -1571,6 +1577,7 @@ export class ObservationDetailComponent implements OnDestroy {
   canAmend() {
     if (!this.observation) return false;
     if (this.observation.hidden) return false;
+    if (!this.canManage()) return false;
 
     const isAmending = this.needsRevisionState === 'amend';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
@@ -1591,6 +1598,7 @@ export class ObservationDetailComponent implements OnDestroy {
     if (isCreating) return true;
     if (isDuplicating) return true;
     if (this.observation.hidden) return false;
+    if (!this.canManage()) return false;
 
     const isAdmin = this.authService.isAdmin();
     const isOwner = this.observation.user && this.observation.user.id === this.authService.userId;
@@ -1616,6 +1624,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
   canSave() {
     if (!this.observation) return false;
+    if (!this.canManage()) return false;
 
     const isCreated = this.observation['validation-status'] === 'Created';
 
@@ -1629,6 +1638,7 @@ export class ObservationDetailComponent implements OnDestroy {
   canPublishWithoutComments() {
     if (!this.observation) return false;
     if (this.observation.hidden) return false;
+    if (!this.canManage()) return false;
 
     const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
 
@@ -1640,6 +1650,7 @@ export class ObservationDetailComponent implements OnDestroy {
   canPublishWithModification() {
     if (!this.observation) return false;
     if (this.observation.hidden) return false;
+    if (!this.canManage()) return false;
 
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isAmending = this.needsRevisionState === 'amend';

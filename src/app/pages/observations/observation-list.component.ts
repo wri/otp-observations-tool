@@ -196,13 +196,16 @@ export class ObservationListComponent extends TableFilterBehavior {
     if (needUpdate) this.loadData();
   }
 
+  canCreate(): boolean {
+    return this.authService.managedObserverIds.includes(this.authService.userObserverId);
+  }
+
   /**
    * Return whether the logged user can edit an observation
    */
   canEdit(observation: Observation): boolean {
-    if (observation.hidden || !observation.observers.find(o => o.id === this.authService.userObserverId)) {
-      return false;
-    }
+    if (observation.hidden) return false;
+    if (!observation.observers.find(o => this.authService.managedObserverIds.includes(o.id))) return false;
 
     return observation['validation-status'] === 'Created';
   }
@@ -211,9 +214,8 @@ export class ObservationListComponent extends TableFilterBehavior {
    * Return whether the logged user can delete an observation
    */
   canDelete(observation: Observation): boolean {
-    if (observation.hidden || !observation.observers.find(o => o.id === this.authService.userObserverId)) {
-      return false;
-    }
+    if (observation.hidden) return false;
+    if (!observation.observers.find(o => this.authService.managedObserverIds.includes(o.id))) return false;
 
     return ['Created', 'Rejected', 'Needs revision'].includes(observation['validation-status']);
   }

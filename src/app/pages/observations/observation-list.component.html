@@ -47,16 +47,18 @@
     <div class="table-actions">
       <button type="button" class="c-button -secondary go-to-button" (click)="goToModalOpen = true">{{'Go to...' | translate}}</button>
       <input #uploadFile type="file" (change)="uploadCSV($event.target.files)" accept=".csv" [style.display]="'none'" />
-      <a class="c-button -secondary upload-csv" (click)="uploadWarningModalOpen = true">{{'Upload CSV' | translate}}</a>
-      <a *ngIf="!draftObservation; else draftBlock" class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
-      <ng-template #draftBlock>
-        <div class="draft">
-          <button class="c-button -primary">{{'New observation' | translate}}</button>
-          <ul>
-            <li><button class="c-button -primary" (click)="onCreate()">{{'Create new' | translate}}</button></li>
-            <li><button class="c-button -secondary" (click)="onCreate(true)">{{'Continue draft' | translate}}</button></li>
-          </ul>
-        </div>
+      <ng-template [ngIf]="canCreate()">
+        <a class="c-button -secondary upload-csv" (click)="uploadWarningModalOpen = true">{{'Upload CSV' | translate}}</a>
+        <a *ngIf="!draftObservation; else draftBlock" class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
+        <ng-template #draftBlock>
+          <div class="draft">
+            <button class="c-button -primary">{{'New observation' | translate}}</button>
+            <ul>
+              <li><button class="c-button -primary" (click)="onCreate()">{{'Create new' | translate}}</button></li>
+              <li><button class="c-button -secondary" (click)="onCreate(true)">{{'Continue draft' | translate}}</button></li>
+            </ul>
+          </div>
+        </ng-template>
       </ng-template>
     </div>
   </div>
