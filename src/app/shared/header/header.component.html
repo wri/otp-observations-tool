@@ -17,7 +17,7 @@
       </ng-template>
       <ng-template [ngIf]="isLogged && displayObserverSelector">
         <li>
-          <select [(ngModel)]="selectedObserverId" style="max-width: 150px;">
+          <select data-test-id="observer-context-select" [(ngModel)]="selectedObserverId" style="max-width: 150px;">
             <option value="" disabled>{{'Select an organization' | translate}}</option>
             <option *ngFor="let observer of availableObservers " [value]="observer.id">{{ observer.name }}</option>
           </select>
