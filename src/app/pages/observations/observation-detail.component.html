@@ -84,10 +84,6 @@
     <blockquote>{{latestQCComment || '−'}}</blockquote>
 
     <ng-template [ngIf]="canManage()">
-      <div class="c-button-container -j-start form-group">
-        <button type="button" (click)="onClickExplainAndPublish()" class="c-button -secondary">{{'Explain and publish' | translate}}</button>
-        <button type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
-      </div>
       <p *ngIf="needsRevisionState === 'undecided'">{{'observation.statusNote.NeedsRevision.question' | translate}}</p>
       <div class="c-button-container -j-start form-group" *ngIf="needsRevisionState === 'undecided'">
         <button type="button" (click)="onClickExplainAndPublish()" class="c-button -secondary">{{'Explain and publish' | translate}}</button>
