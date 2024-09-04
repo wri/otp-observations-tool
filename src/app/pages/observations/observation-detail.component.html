@@ -39,7 +39,7 @@
       <button *ngIf="canAmend()" type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
       <button *ngIf="canSave()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
       <button *ngIf="canCreate()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="canStartQC()" type="button" (click)="onStartQC()" class="c-button -primary">Start QC</button>
+      <button *ngIf="canStartQC()" type="button" (click)="onStartQC()" class="c-button -primary">{{'Start QC' | translate}}</button>
       <button *ngIf="canPublishWithoutComments()" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
       <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
     </div>
@@ -47,17 +47,17 @@
 
   <div class="callout primary" *ngIf="observation && observation['validation-status'].includes('Ready for QC')">
     <p *ngIf="!canStartQC()">{{'observation.statusNote.ReadyForQC' | translate}}</p>
-    <p *ngIf="canStartQC()">This observation is ready for quality control. Please click on "Start QC" button whenever you want to start QC process.</p>
+    <p *ngIf="canStartQC()">{{'observation.statusNote.ReadyForQC.reviewer' | translate}}</p>
   </div>
 
   <div class="callout warning" *ngIf="observation && ['QC1 in progress', 'QC2 in progress'].includes(observation['validation-status'])">
     <p *ngIf="!canQC()">{{'observation.statusNote.QCInProgress' | translate}}</p>
 
     <div *ngIf="canQC()">
-      <p>Please review this observation and either accept it or reject it with making a comment for a monitor.</p>
+      <p>{{'observation.statusNote.QCInProgress.reviewer' | translate}}</p>
       <div class="c-button-container -j-start form-group" *ngIf="qcState === 'undecided'">
-        <button *ngIf="canQC()" type="button" (click)="onRejectQC()" class="c-button -secondary">Reject</button>
-        <button *ngIf="canQC()" type="button" (click)="onApproveQC()" class="c-button -primary">Accept</button>
+        <button *ngIf="canQC()" type="button" (click)="onRejectQC()" class="c-button -secondary">{{'Reject' | translate}}</button>
+        <button *ngIf="canQC()" type="button" (click)="onApproveQC()" class="c-button -primary">{{'Accept' | translate}}</button>
       </div>
       <div class="form-group" *ngIf="qcState === 'reject'">
         <label for="explain_qc_rejection">{{'Explanation' | translate}}</label>
@@ -66,14 +66,14 @@
 
         <div class="c-button-container -j-start">
           <button type="button" (click)="onCancelRejectQC()" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
-          <button type="button" (click)="onRejectQC()" class="c-button -primary" [disabled]="!explain_qc_rejection.valid">Submit Rejection</button>
+          <button type="button" (click)="onRejectQC()" class="c-button -primary" [disabled]="!explain_qc_rejection.valid">{{'Submit Rejection' | translate}}</button>
         </div>
       </div>
     </div>
   </div>
 
   <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Rejected'">
-    <p>The observation has been reviewed and received some comments. Please make requested changes and submit it for review again.</p>
+    <p>{{'observation.statusNote.Rejected' | translate}}</p>
     <p>{{ 'Comments' | translate }}</p>
     <blockquote>{{latestQCComment || '−'}}</blockquote>
   </div>
