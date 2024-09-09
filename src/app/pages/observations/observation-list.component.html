@@ -147,7 +147,7 @@
         <ng-template [ngIf]="canDelete(row)">
           <button class="action" (click)="onDelete(row)" [attr.aria-label]="'Delete' | translate"><otp-icon name="#icon-delete"></otp-icon></button>
         </ng-template>
-        <ng-template [ngIf]="observationType === 'operator'">
+        <ng-template [ngIf]="canCreate()">
           <button class="action" (click)="onClone(row)" [attr.aria-label]="'Clone' | translate"><otp-icon name="#icon-clone"></otp-icon></button>
         </ng-template>
       </ng-template>

@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <div class="callout primary" *ngIf="observation && observation['validation-status'].includes('Ready for QC')">
+  <div class="callout primary" *ngIf="observation && observation['validation-status'] && observation['validation-status'].includes('Ready for QC')">
     <p *ngIf="!canStartQC()">{{'observation.statusNote.ReadyForQC' | translate}}</p>
     <p *ngIf="canStartQC()">{{'observation.statusNote.ReadyForQC.reviewer' | translate}}</p>
   </div>
