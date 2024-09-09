@@ -6,7 +6,7 @@ export const TABLET_BREAKPOINT = 768;
 
 export class ResponsiveDirective implements OnInit, OnDestroy {
 
-  private subscribtion: Subscription;
+  private subscription: Subscription;
   protected isVisible = true;
   protected firstCall = true;
 
@@ -18,12 +18,14 @@ export class ResponsiveDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscribtion = this.responsiveService.onResize
+    this.subscription = this.responsiveService.onResize
       .subscribe(windowWidth => this.updateComponent(windowWidth));
   }
 
   ngOnDestroy() {
-    this.subscribtion.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   hide() {
