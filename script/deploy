@@ -29,7 +29,7 @@ echo "Moving files to dist folder"
 rm -rf dist
 mv build dist
 
-if grep ^SENTRY .env; then
+if grep -q ^SENTRY .env; then
   echo "Uploading source maps to sentry"
   yarn run sentry-cli sourcemaps inject ./dist
   env $(grep ^SENTRY .env | xargs) yarn run sentry-cli sourcemaps upload ./dist
