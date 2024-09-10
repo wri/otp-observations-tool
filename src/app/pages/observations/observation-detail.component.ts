@@ -34,6 +34,7 @@ import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
 import { forkJoin ,  Observable ,  interval ,  Subscription } from "rxjs";
+import { QualityControl } from 'app/models/quality_control.model';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -241,6 +242,7 @@ export class ObservationDetailComponent implements OnDestroy {
   // Report choosed between options
   _reportChoice: ObservationReport = null;
   _monitorComment: string = null;
+  qcState = 'undecided'; // Options are: undecided, reject
 
   get type() { return this.observation ? this.observation['observation-type'] : this._type; }
   set type(type) {
@@ -739,7 +741,7 @@ export class ObservationDetailComponent implements OnDestroy {
       if (shouldSaveAdditionalObservers) {
         this._additionalObserversSelectionSaved = this._additionalObserversSelection;
       }
-      this._additionalObserversSelection = reportChoice.observers.map(o => o.id).filter(id => id !== this.authService.userObserverId);
+      this._additionalObserversSelection = (reportChoice.observers || []).map(o => o.id).filter(id => id !== this.authService.userObserverId);
     }
   }
 
@@ -795,6 +797,21 @@ export class ObservationDetailComponent implements OnDestroy {
     }
   }
 
+  _qcComment: string = null;
+  get qcComment() {
+    return this._qcComment;
+  }
+  set qcComment(value) {
+    this._qcComment = value;
+  }
+
+  get latestQCComment() {
+    if (!this.observation) return null;
+    if (!this.observation['quality-controls'] || !this.observation['quality-controls'].length) return null;
+
+    return this.observation['quality-controls'] && orderBy(this.observation['quality-controls'], ['created-at'], ['desc'])[0].comment;
+  }
+
   constructor(
     private authService: AuthService,
     private observersService: ObserversService,
@@ -831,43 +848,14 @@ export class ObservationDetailComponent implements OnDestroy {
       }
     });
 
-    this.observersService.getAll({ sort: 'name' })
-      .then((observers) => {
-        this.observers = observers;
-
-        // We update the list of options for the additional observers field
-        this.additionalObserversOptions = observers
-          .filter(observer => observer.id !== this.authService.userObserverId)
-          .map((observer) => ({ id: observer.id, name: observer.name }));
-
-        this.currentContextObserver = observers.find(o => o.id === this.authService.userObserverId);
-      })
-      .catch((err) => console.error(err)); // TODO: visual feedback
-
-    // We load the list of reports we can use
-    this.observationReportsService.getAll({
-      sort: 'title',
-      filter: { observer_id: this.authService.userObserverId },
-      include: 'observers'
-    }).then(reports => this.reports = reports)
-      .then(() => {
-        // If we're editing an observation (or using draft), the object ObservationReport of the observation won't
-        // match any of the objects of this.reports, so we search for the "same" model
-        // and set it
-        if (this.draft) {
-          this.reportChoice = this.reports.find((report) => report.id === this.draft.observationReportId) || null;
-        }
-        if (this.observation) {
-          this.reportChoice = this.reports.find((report) => report.id === this.observation['observation-report'].id);
-        }
-      })
-      .catch(err => console.error(err)); // TODO: visual feedback
-
     // If we edit an existing observation or we copy an existing observation, we have a bit of
     // code to execute
     if (this.existingObservation) {
-      this.loadObservation();
+      this.loadObservation().then(() => {
+        this.loadExtraData(); // we are loading the extra data after the observation is loaded because observer context could change
+      });
     } else {
+      this.loadExtraData();
       if (this.route.snapshot.params.useDraft) {
         this.draft = this.observationsService.getDraftObservation();
         // Set values from the draft observation
@@ -920,12 +908,25 @@ export class ObservationDetailComponent implements OnDestroy {
   async loadObservation() {
     this.loading = true;
 
-    const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: "locale" } });
-    this.observationsService.getById(this.existingObservation, {
+    const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: "locale" }});
+
+    return this.observationsService.getById(this.existingObservation, {
       // tslint:disable-next-line:max-line-length
       locale: preloaded.locale || this.uiLocale,
-      include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators'
+      include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators,quality-controls'
     }).then((observation) => {
+      // change current observer context if needed to prevent 404 errors
+
+      if (!observation.observers.find(o => o.id === this.authService.userObserverId)) {
+        if (observation.observers.find(o => this.authService.availableObserverIds.includes(o.id))) {
+          this.authService.userObserverId = observation.observers[0].id;
+        } else {
+          // observation is not accessible by the current user
+          this.router.navigate(['/', '404']);
+          return;
+        }
+      }
+
       this.observation = observation;
       if (this.route.snapshot.params.copiedId) {
         this.observation.id = undefined;
@@ -960,6 +961,40 @@ export class ObservationDetailComponent implements OnDestroy {
         this.router.navigate(['/', '404']);
       })
       .then(() => this.loading = false);
+  }
+
+  loadExtraData() {
+    this.observersService.getAll({ sort: 'name' })
+      .then((observers) => {
+        this.observers = observers;
+
+        // We update the list of options for the additional observers field
+        this.additionalObserversOptions = observers
+          .filter(observer => observer.id !== this.authService.userObserverId)
+          .map((observer) => ({ id: observer.id, name: observer.name }));
+
+        this.currentContextObserver = observers.find(o => o.id === this.authService.userObserverId);
+      })
+      .catch((err) => console.error(err)); // TODO: visual feedback
+
+    // We load the list of reports we can use
+    this.observationReportsService.getAll({
+      sort: 'title',
+      filter: { observer_id: this.authService.userObserverId },
+      include: 'observers'
+    }).then(reports => this.reports = reports)
+      .then(() => {
+        // If we're editing an observation (or using draft), the object ObservationReport of the observation won't
+        // match any of the objects of this.reports, so we search for the "same" model
+        // and set it
+        if (this.draft) {
+          this.reportChoice = this.reports.find((report) => report.id === this.draft.observationReportId) || null;
+        }
+        if (this.observation) {
+          this.reportChoice = this.reports.find((report) => report.id === this.observation['observation-report'].id);
+        }
+      })
+      .catch(err => console.error(err)); // TODO: visual feedback
   }
 
   ngOnDestroy() {
@@ -1421,14 +1456,16 @@ export class ObservationDetailComponent implements OnDestroy {
    */
   isDisabled(): boolean {
     if (!this.observation) return false;
+    if (!this.authService.managedObserverIds.includes(this.authService.userObserverId)) return true;
 
     const isHidden = this.observation.hidden;
     const isCreating = !this.route.snapshot.params.id;
     const isDuplicating = !!this.route.snapshot.params.copiedId;
     const isAmending = this.needsRevisionState === 'amend';
     const isCreated = this.observation['validation-status'] === 'Created';
-    const isReadyForQC = this.observation['validation-status'] === 'Ready for QC';
-    const isQCInProgress = this.observation['validation-status'] === 'QC in progress';
+    const isReadyForQC = ['Ready for QC1', 'Ready for QC2'].includes(this.observation['validation-status']);
+    const isQCInProgress = ['QC1 in progress', 'QC2 in progress'].includes(this.observation['validation-status']);
+    const isRejected = this.observation['validation-status'] === 'Rejected';
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
@@ -1440,6 +1477,7 @@ export class ObservationDetailComponent implements OnDestroy {
     if (isCreating) return false;
     if (isDuplicating) return false;
     if (isCreated && isUserLinkedObserver) return false;
+    if (isRejected && isUserLinkedObserver) return false;
     if (isReadyForQC) return true;
     if (isQCInProgress) return true;
     if (isInNeedOfRevision && isUserLinkedObserver && isAmending) return false;
@@ -1459,6 +1497,47 @@ export class ObservationDetailComponent implements OnDestroy {
     return this.route.snapshot.params.id || this.route.snapshot.params.copiedId;
   }
 
+  canStartQC() {
+    if (!this.observation) return false;
+
+    const isReadyForQC1 = this.observation['validation-status'] === 'Ready for QC1';
+    const isReadyForQC2 = this.observation['validation-status'] === 'Ready for QC2';
+
+    const isUserEligibleForQC1 = !!this.observation.observers.find(o => this.authService.qc1ObserverIds.includes(o.id));
+    const isUserEligibleForQC2 = !!this.observation.observers.find(o => this.authService.qc2ObserverIds.includes(o.id));
+
+    if (isReadyForQC1 && isUserEligibleForQC1) return true;
+    if (isReadyForQC2 && isUserEligibleForQC2) return true;
+
+    return false;
+  }
+
+  canQC() {
+    return this.canQC1() || this.canQC2();
+  }
+
+  canQC1() {
+    if (!this.observation) return false;
+
+    const isInQC1 = this.observation['validation-status'] === 'QC1 in progress';
+    const isUserEligibleForQC1 = !!this.observation.observers.find(o => this.authService.qc1ObserverIds.includes(o.id));
+
+    if (isInQC1 && isUserEligibleForQC1) return true;
+
+    return false;
+  }
+
+  canQC2() {
+    if (!this.observation) return false;
+
+    const isInQC2 = this.observation['validation-status'] === 'QC2 in progress';
+    const isUserEligibleForQC2 = !!this.observation.observers.find(o => this.authService.qc2ObserverIds.includes(o.id));
+
+    if (isInQC2 && isUserEligibleForQC2) return true;
+
+    return false;
+  }
+
   canGoBack() {
     const isDisabled = this.isDisabled();
 
@@ -1467,19 +1546,19 @@ export class ObservationDetailComponent implements OnDestroy {
     return false;
   }
 
+  canManage() {
+    return this.authService.managedObserverIds.includes(this.authService.userObserverId);
+  }
+
   canCancel() {
     if (!this.observation) return true;
 
     const isDuplicating = this.isCopied;
     const isCreated = this.observation['validation-status'] === 'Created';
-    const isAmending = this.needsRevisionState === 'amend';
-    const isExplaining = this.needsRevisionState === 'explain';
 
     if (!this.observation) return true;
     if (isDuplicating) return true;
     if (isCreated) return true;
-    if (isAmending) return true;
-    if (isExplaining) return true;
 
     return false;
   }
@@ -1488,6 +1567,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const isDisabled = this.isDisabled();
     const isDuplicating = this.isCopied;
 
+    if (!this.canManage()) return false;
     if (!isDisabled && !this.observation) return true;
     if (isDuplicating) return true;
 
@@ -1497,6 +1577,7 @@ export class ObservationDetailComponent implements OnDestroy {
   canAmend() {
     if (!this.observation) return false;
     if (this.observation.hidden) return false;
+    if (!this.canManage()) return false;
 
     const isAmending = this.needsRevisionState === 'amend';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
@@ -1517,6 +1598,7 @@ export class ObservationDetailComponent implements OnDestroy {
     if (isCreating) return true;
     if (isDuplicating) return true;
     if (this.observation.hidden) return false;
+    if (!this.canManage()) return false;
 
     const isAdmin = this.authService.isAdmin();
     const isOwner = this.observation.user && this.observation.user.id === this.authService.userId;
@@ -1524,12 +1606,14 @@ export class ObservationDetailComponent implements OnDestroy {
     const isAmending = this.needsRevisionState === 'amend';
     const isCreated = this.observation['validation-status'] === 'Created';
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
+    const isRejected = this.observation['validation-status'] === 'Rejected';
     const isPublishedWithCommentsAndModified = this.observation['validation-status'] === 'Published (modified)';
     const isPublishedWithCommentsAndNotModified = this.observation['validation-status'] === 'Published (not modified)';
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
 
     if (isCreated && isAdmin && isUserLinkedObserver) return true;
     if (isCreated && isOwner) return true;
+    if (isRejected && isUserLinkedObserver) return true;
     if (isInNeedOfRevision && isAmending) return true
     if (isPublishedWithCommentsAndModified && isAmending) return true;
     if (isPublishedWithCommentsAndNotModified && isAmending) return true;
@@ -1540,6 +1624,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
   canSave() {
     if (!this.observation) return false;
+    if (!this.canManage()) return false;
 
     const isCreated = this.observation['validation-status'] === 'Created';
 
@@ -1553,6 +1638,7 @@ export class ObservationDetailComponent implements OnDestroy {
   canPublishWithoutComments() {
     if (!this.observation) return false;
     if (this.observation.hidden) return false;
+    if (!this.canManage()) return false;
 
     const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
 
@@ -1564,6 +1650,7 @@ export class ObservationDetailComponent implements OnDestroy {
   canPublishWithModification() {
     if (!this.observation) return false;
     if (this.observation.hidden) return false;
+    if (!this.canManage()) return false;
 
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
     const isAmending = this.needsRevisionState === 'amend';
@@ -1645,16 +1732,91 @@ export class ObservationDetailComponent implements OnDestroy {
 
   async onSubmitForReview() {
     if (window.confirm(await this.translateService.get('observationSubmitForReview').toPromise())) {
-      this.validationStatus = 'Ready for QC';
+      this.validationStatus = 'Ready for QC'
       this.onSubmit();
     }
   }
 
   async onPublish(validationStatus) {
     if (window.confirm(await this.translateService.get('observationPublish').toPromise())) {
+      const oldValidationStatus = this.validationStatus;
       this.validationStatus = validationStatus;
-      this.onSubmit();
+      this.updateObservation(
+        () => this.router.navigate(['/', 'private', 'observations']),
+        () => {
+          this.validationStatus = oldValidationStatus;
+        }
+      );
     }
+  }
+
+  async onStartQC() {
+    if (!this.canStartQC()) return;
+
+    const oldValidationStatus = this.validationStatus;
+    this.validationStatus = 'QC in progress';
+    this.updateObservation(
+      null,
+      () => {
+        this.validationStatus = oldValidationStatus;
+      }
+    );
+  }
+
+  onCancelRejectQC() {
+    this.qcState = 'undecided';
+  }
+
+  async onRejectQC() {
+    if (this.qcState === 'undecided') {
+      this.qcState = 'reject';
+    } else {
+      const qualityControl = this.datastoreService.createRecord(QualityControl, {
+        reviewable: this.observation,
+        comment: this.qcComment,
+        passed: false
+      });
+      this.saveQualityControl(qualityControl);
+    }
+  }
+
+  async onApproveQC() {
+    if (!window.confirm("Do you really want to accept this observation?")) return;
+
+    const qualityControl = this.datastoreService.createRecord(QualityControl, {
+      reviewable: this.observation,
+      passed: true
+    });
+    this.saveQualityControl(qualityControl);
+  }
+
+  saveQualityControl(qc: QualityControl) {
+    qc.save().toPromise().then(() => {
+      this.router.navigate(['/', 'private', 'observations']);
+    })
+    .catch(async (err) => {
+      let message = await this.translateService.get('observationUpdate.error').toPromise();
+      if (err.errors && err.errors.length) {
+        console.log('join');
+        message += '\n' + err.errors.map(e => e.status + " : " + e.title).join('\n');
+      }
+      alert(message);
+      console.error(err);
+    })
+  }
+
+  updateObservation(onSuccess?: () => void, onError?: () => void) {
+    this.loading = true;
+    this.observation.save({ locale: this.observation.locale }).toPromise()
+      .then(() => {
+        onSuccess && onSuccess();
+      })
+      .catch(async (err) => {
+        alert(await this.translateService.get('observationUpdate.error').toPromise());
+        console.error(err);
+        onError && onError();
+      })
+      .then(() => this.loading = false);
   }
 
   onSubmit(): void {

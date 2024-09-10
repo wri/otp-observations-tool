@@ -11,6 +11,7 @@ import { Operator } from 'app/models/operator.model';
 import { Government } from 'app/models/government.model';
 import { Subcategory } from 'app/models/subcategory.model';
 import { Severity } from 'app/models/severity.model';
+import { QualityControl } from 'app/models/quality_control.model';
 import { DateConverter } from './converters/date_converter';
 
 @JsonApiModelConfig({
@@ -37,7 +38,7 @@ export class Observation extends JsonApiModel {
   @Attribute() 'location-accuracy'?: string;
   @Attribute() 'is-physical-place': boolean;
   @Attribute() 'hidden': boolean; // Whether an observation is archived
-  @Attribute() 'admin-comment'?: string;
+  @Attribute() 'user-type'?: string;
   @Attribute() 'monitor-comment'?: string;
   @Attribute() 'locale': string;
 
@@ -51,6 +52,8 @@ export class Observation extends JsonApiModel {
   @HasMany() observers?: Observer[]; // Should be a BelongsTo but not working with array
   @BelongsTo() operator?: Operator;
   @HasMany() governments?: Government[];
+  @HasMany() 'quality-controls'?: QualityControl[];
+  @BelongsTo() 'latest-quality-control'?: QualityControl;
   @BelongsTo() 'observation-report'?: ObservationReport;
   @HasMany() 'relevant-operators'?: Operator[];
   @HasMany() 'observation-documents': ObservationDocument[];

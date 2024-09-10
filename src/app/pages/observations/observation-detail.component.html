@@ -39,44 +39,81 @@
       <button *ngIf="canAmend()" type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
       <button *ngIf="canSave()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
       <button *ngIf="canCreate()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
+      <button *ngIf="canStartQC()" type="button" (click)="onStartQC()" class="c-button -primary">{{'Start QC' | translate}}</button>
       <button *ngIf="canPublishWithoutComments()" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
       <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
     </div>
   </div>
 
-  <div class="callout primary" *ngIf="observation && observation['validation-status'] === 'Ready for QC'">
-    <p>{{'observation.statusNote.ReadyForQC' | translate}}</p>
+  <div class="callout primary" *ngIf="observation && observation['validation-status'] && observation['validation-status'].includes('Ready for QC')">
+    <p *ngIf="!canStartQC()">{{'observation.statusNote.ReadyForQC' | translate}}</p>
+    <p *ngIf="canStartQC()">{{'observation.statusNote.ReadyForQC.reviewer' | translate}}</p>
   </div>
 
-  <div class="callout primary" *ngIf="observation && observation['validation-status'] === 'QC in progress'">
-    <p>{{'observation.statusNote.QCInProgress' | translate}}</p>
+  <div class="callout warning" *ngIf="observation && ['QC1 in progress', 'QC2 in progress'].includes(observation['validation-status'])">
+    <p *ngIf="!canQC()">{{'observation.statusNote.QCInProgress' | translate}}</p>
+
+    <div *ngIf="canQC()">
+      <p>{{'observation.statusNote.QCInProgress.reviewer' | translate}}</p>
+      <div class="c-button-container -j-start form-group" *ngIf="qcState === 'undecided'">
+        <button *ngIf="canQC()" type="button" (click)="onRejectQC()" class="c-button -secondary">{{'Reject' | translate}}</button>
+        <button *ngIf="canQC()" type="button" (click)="onApproveQC()" class="c-button -primary">{{'Accept' | translate}}</button>
+      </div>
+      <div class="form-group" *ngIf="qcState === 'reject'">
+        <label for="explain_qc_rejection">{{'Explanation' | translate}}</label>
+        <textarea id="explain_qc_rejection" name="explain_qc_rejection" [(ngModel)]="qcComment" #explain_qc_rejection="ngModel" required minlength="10"></textarea>
+        <div *ngIf="!explain_qc_rejection.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
+
+        <div class="c-button-container -j-start">
+          <button type="button" (click)="onCancelRejectQC()" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
+          <button type="button" (click)="onRejectQC()" class="c-button -primary" [disabled]="!explain_qc_rejection.valid">{{'Submit Rejection' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Rejected'">
+    <p>{{'observation.statusNote.Rejected' | translate}}</p>
+    <p>{{ 'Comments' | translate }}</p>
+    <blockquote>{{latestQCComment || '−'}}</blockquote>
   </div>
 
   <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Needs revision'">
     <p>{{'observation.statusNote.NeedsRevision' | translate}}</p>
-    <p>{{'Comments' | translate}}:</p>
-    <blockquote>{{observation['admin-comment'] || '−'}}</blockquote>
-    <p *ngIf="needsRevisionState === 'undecided'">{{'observation.statusNote.NeedsRevision.question' | translate}}</p>
-    <div class="c-button-container -j-start form-group" *ngIf="needsRevisionState === 'undecided'">
-      <button type="button" (click)="onClickExplainAndPublish()" class="c-button -secondary">{{'Explain and publish' | translate}}</button>
-      <button type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
-    </div>
-    <div class="form-group" *ngIf="needsRevisionState === 'explain'">
-      <label for="explain_no_revision">{{'Explanation' | translate}}</label>
-      <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" required minlength="10"></textarea>
-      <div *ngIf="!explain_no_revision.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
-      <button type="button" (click)="onPublish('Published (not modified)')" class="c-button -primary" [disabled]="!explain_no_revision.valid">{{'Publish' | translate}}</button>
-    </div>
-    <div class="form-group" *ngIf="needsRevisionState === 'amend'">
-      <label for="explain_no_revision">{{'Explanation' | translate}}</label>
-      <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" minlength="10"></textarea>
-      <div *ngIf="!explain_no_revision.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
-    </div>
+    <p>{{ 'Comments' | translate }}</p>
+    <blockquote>{{latestQCComment || '−'}}</blockquote>
+
+    <ng-template [ngIf]="canManage()">
+      <p *ngIf="needsRevisionState === 'undecided'">{{'observation.statusNote.NeedsRevision.question' | translate}}</p>
+      <div class="c-button-container -j-start form-group" *ngIf="needsRevisionState === 'undecided'">
+        <button type="button" (click)="onClickExplainAndPublish()" class="c-button -secondary">{{'Explain and publish' | translate}}</button>
+        <button type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
+      </div>
+      <div class="form-group" *ngIf="needsRevisionState === 'explain'">
+        <label for="explain_no_revision">{{'Explanation' | translate}}</label>
+        <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" required minlength="10"></textarea>
+        <div *ngIf="!explain_no_revision.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
+        <div class="c-button-container -j-start">
+          <button type="button" (click)="needsRevisionState = 'undecided'" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
+          <button type="button" (click)="onPublish('Published (not modified)')" class="c-button -primary" [disabled]="!explain_no_revision.valid">{{'Publish' | translate}}</button>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="needsRevisionState === 'amend'">
+        <label for="explain_no_revision">{{'Explanation' | translate}}</label>
+        <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" minlength="10"></textarea>
+        <div *ngIf="!explain_no_revision.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
+        <div class="c-button-container -j-start">
+          <button type="button" (click)="needsRevisionState = 'undecided'" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
+          <button *ngIf="canSubmitForReview()" type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
+          <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
+        </div>
+      </div>
+    </ng-template>
   </div>
 
   <div class="callout success" *ngIf="observation && observation['validation-status'] === 'Ready for publication'">
     <p>{{'observation.statusNote.ReadyForPublication' | translate}}</p>
-    <div class="c-button-container -j-start form-group">
+    <div *ngIf="canPublishWithoutComments()" class="c-button-container -j-start form-group">
       <button type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
     </div>
   </div>
@@ -417,8 +454,8 @@
           <!-- 8.0. Physical place -->
           <div class="form-group -radio">
             <p>{{'Did this observation occur at a physical place?' | translate}}</p>
-            <label><input type="radio" name="physical_place" [value]="true"  [(ngModel)]="physicalPlace">{{'Yes' | translate}}</label>
-            <label><input type="radio" name="physical_place" [value]="false" [(ngModel)]="physicalPlace" >{{'No' | translate}}</label>
+            <label><input type="radio" name="physical_place" [value]="true"  [(ngModel)]="physicalPlace" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">{{'Yes' | translate}}</label>
+            <label><input type="radio" name="physical_place" [value]="false" [(ngModel)]="physicalPlace" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">{{'No' | translate}}</label>
           </div>
         </ng-template>
 
@@ -555,7 +592,7 @@
 
       <div class="buttons">
         <label *ngFor="let s of severities">
-          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()" required>
+          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()" required>
           <span>{{ s.level }} - {{ s.details }}</span>
         </label>
       </div>
@@ -804,7 +841,7 @@
 
       <div class="buttons">
         <label *ngFor="let s of severities">
-          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [disabled]="isDisabled()">
+          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">
           <span>{{ s.level }} - {{ s.details }}</span>
         </label>
       </div>

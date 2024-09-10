@@ -22,8 +22,10 @@ export class ObservationListComponent extends TableFilterBehavior {
 
   tableOptions = {
     rows: {
-      highlight: (observation: Observation) => observation['validation-status'] === 'Needs revision'
-        || observation['validation-status'] === 'Ready for publication'
+      highlight: (observation: Observation) =>
+        ['Rejected', 'Needs revision', 'Ready for publication'].includes(observation['validation-status']) ||
+        (observation['validation-status'] === 'Ready for QC1' && !!observation.observers.find(o => this.authService.qc1ObserverIds.includes(o.id))) ||
+        (observation['validation-status'] === 'Ready for QC2' && !!observation.observers.find(o => this.authService.qc2ObserverIds.includes(o.id)))
     }
   };
 
@@ -117,8 +119,8 @@ export class ObservationListComponent extends TableFilterBehavior {
       // We sort the values by alphabetical order
       const values = {
         [created]: 'Created',
-        [submitted]: 'Ready for QC',
-        [qc]: 'QC in progress',
+        [submitted]: ['Ready for QC1', 'Ready for QC2'],
+        [qc]: ['QC1 in progress', 'QC2 in progress'],
         [revision]: 'Needs revision',
         [ready]: 'Ready for publication',
         [publishedNoComments]: 'Published (no comments)',
@@ -194,13 +196,16 @@ export class ObservationListComponent extends TableFilterBehavior {
     if (needUpdate) this.loadData();
   }
 
+  canCreate(): boolean {
+    return this.authService.managedObserverIds.includes(this.authService.userObserverId);
+  }
+
   /**
    * Return whether the logged user can edit an observation
    */
   canEdit(observation: Observation): boolean {
-    if (observation.hidden || !observation.observers.find(o => o.id === this.authService.userObserverId)) {
-      return false;
-    }
+    if (observation.hidden) return false;
+    if (!observation.observers.find(o => this.authService.managedObserverIds.includes(o.id))) return false;
 
     return observation['validation-status'] === 'Created';
   }
@@ -209,11 +214,10 @@ export class ObservationListComponent extends TableFilterBehavior {
    * Return whether the logged user can delete an observation
    */
   canDelete(observation: Observation): boolean {
-    if (observation.hidden || !observation.observers.find(o => o.id === this.authService.userObserverId)) {
-      return false;
-    }
+    if (observation.hidden) return false;
+    if (!observation.observers.find(o => this.authService.managedObserverIds.includes(o.id))) return false;
 
-    return observation['validation-status'] === 'Created' || observation['validation-status'] === 'Needs revision';
+    return ['Created', 'Rejected', 'Needs revision'].includes(observation['validation-status']);
   }
 
   shortenText(text: string): string {

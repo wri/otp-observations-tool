@@ -23,7 +23,7 @@ export class HeaderComponent {
     : 'en';
   isStaging = false;
 
-  managedObservers: Observer[] = [];
+  availableObservers: Observer[] = [];
   _selectedObserverId: string = null;
 
   get lang() { return this._lang; }
@@ -44,7 +44,7 @@ export class HeaderComponent {
 
   get displayObserverSelector(): boolean {
     if (this.authService.isBackendAdmin()) return true;
-    if (this.authService.managedObserverIds.length > 1) return true;
+    if (this.authService.availableObserverIds.length > 1) return true;
 
     return false;
   }
@@ -69,14 +69,10 @@ export class HeaderComponent {
       this._selectedObserverId = this.authService.userObserverId;
       this.observersService.getAll({ sort: 'name' })
         .then(data => {
-          if (this.authService.isBackendAdmin() && this.authService.managedObserverIds.length === 0) {
-            this.managedObservers = data;
-          } else {
-            this.managedObservers = data.filter(o => this.authService.managedObserverIds.includes(o.id));
-          }
+          this.availableObservers = data.filter(o => this.authService.availableObserverIds.includes(o.id));
 
-          if (!this.authService.userObserverId && this.managedObservers.length > 0) {
-            this.selectedObserverId = this.managedObservers[0].id;
+          if (!this.authService.userObserverId && this.availableObservers.length > 0) {
+            this.selectedObserverId = this.availableObservers[0].id;
           }
         });
     });

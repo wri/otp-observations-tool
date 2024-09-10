@@ -47,16 +47,18 @@
     <div class="table-actions">
       <button type="button" class="c-button -secondary go-to-button" (click)="goToModalOpen = true">{{'Go to...' | translate}}</button>
       <input #uploadFile type="file" (change)="uploadCSV($event.target.files)" accept=".csv" [style.display]="'none'" />
-      <a class="c-button -secondary upload-csv" (click)="uploadWarningModalOpen = true">{{'Upload CSV' | translate}}</a>
-      <a *ngIf="!draftObservation; else draftBlock" class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
-      <ng-template #draftBlock>
-        <div class="draft">
-          <button class="c-button -primary">{{'New observation' | translate}}</button>
-          <ul>
-            <li><button class="c-button -primary" (click)="onCreate()">{{'Create new' | translate}}</button></li>
-            <li><button class="c-button -secondary" (click)="onCreate(true)">{{'Continue draft' | translate}}</button></li>
-          </ul>
-        </div>
+      <ng-template [ngIf]="canCreate()">
+        <a class="c-button -secondary upload-csv" (click)="uploadWarningModalOpen = true">{{'Upload CSV' | translate}}</a>
+        <a *ngIf="!draftObservation; else draftBlock" class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
+        <ng-template #draftBlock>
+          <div class="draft">
+            <button class="c-button -primary">{{'New observation' | translate}}</button>
+            <ul>
+              <li><button class="c-button -primary" (click)="onCreate()">{{'Create new' | translate}}</button></li>
+              <li><button class="c-button -secondary" (click)="onCreate(true)">{{'Continue draft' | translate}}</button></li>
+            </ul>
+          </div>
+        </ng-template>
       </ng-template>
     </div>
   </div>
@@ -96,8 +98,10 @@
     <otp-table-column [name]="'Status' | translate">
       <ng-template let-row="row" table-cell-template>
         <ng-template [ngIf]="row['validation-status'] === 'Created'">{{'Created' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Ready for QC'">{{'Ready for QC' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'QC in progress'">{{'QC in progress' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Ready for QC1'">{{'Ready for QC1' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'Ready for QC2'">{{'Ready for QC2' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'QC1 in progress'">{{'QC1 in progress' | translate}}</ng-template>
+        <ng-template [ngIf]="row['validation-status'] === 'QC2 in progress'">{{'QC2 in progress' | translate}}</ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Needs revision'"><span class="highlighted-status">{{'Needs revision' | translate}}</span></ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Ready for publication'"><span class="highlighted-status">{{'Ready for publication' | translate}}</span></ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Published (no comments)'">
@@ -128,10 +132,7 @@
           </button>
         </ng-template>
         <!-- Below are the old statuses that are temporarily maintained for consistency with the data (not entirely migrated) -->
-        <ng-template [ngIf]="row['validation-status'] === 'Under Revision'">{{'Under Revision' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Ready for Revision'">{{'Ready for Revision' | translate}}</ng-template>
         <ng-template [ngIf]="row['validation-status'] === 'Rejected'">{{'Rejected' | translate}}</ng-template>
-        <ng-template [ngIf]="row['validation-status'] === 'Approved'">{{'Approved' | translate}}</ng-template>
       </ng-template>
     </otp-table-column>
     <!-- We need the user info for canEdit -->
@@ -146,7 +147,7 @@
         <ng-template [ngIf]="canDelete(row)">
           <button class="action" (click)="onDelete(row)" [attr.aria-label]="'Delete' | translate"><otp-icon name="#icon-delete"></otp-icon></button>
         </ng-template>
-        <ng-template [ngIf]="observationType === 'operator'">
+        <ng-template [ngIf]="canCreate()">
           <button class="action" (click)="onClone(row)" [attr.aria-label]="'Clone' | translate"><otp-icon name="#icon-clone"></otp-icon></button>
         </ng-template>
       </ng-template>

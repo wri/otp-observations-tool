@@ -12,6 +12,7 @@ import { Category } from 'app/models/category.model';
 import { Subcategory } from 'app/models/subcategory.model';
 import { Severity } from 'app/models/severity.model';
 import { Country } from 'app/models/country.model';
+import { QualityControl } from 'app/models/quality_control.model';
 import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
 import { JsonApiDatastore, JsonApiDatastoreConfig, JsonApiModel, JsonApiQueryData, ModelType } from 'angular2-jsonapi';
@@ -36,6 +37,7 @@ import { Law } from 'app/models/law.model';
     documents: Document,
     user_permissions: UserPermission,
     fmus: Fmu,
+    'quality-controls': QualityControl,
     'observation-reports': ObservationReport,
     'observation-documents': ObservationDocument
   }

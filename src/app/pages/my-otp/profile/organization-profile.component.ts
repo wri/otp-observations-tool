@@ -34,7 +34,7 @@ export class OrganizationProfileComponent {
     private translateService: TranslateService,
     private countriesService: CountriesService,
   ) {
-    this.isAdmin = this.authService.isAdmin();
+    this.isAdmin = this.authService.isAdmin() && this.authService.managedObserverIds.includes(this.authService.userObserverId);
     this.updateMultiSelectTexts();
     Promise.all([
       this.loadObserver(),
