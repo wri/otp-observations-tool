@@ -108,15 +108,18 @@ export class AuthService {
       const response = await this.http.get(`${environment.apiUrl}/users/current-user`).toPromise() as any;
       const relationships = response.data.relationships;
       const userPermissions = (response.included || []).find(i => i.type === 'user-permissions');
-
       this.userId = response.data.id;
       this.userRole = userPermissions && userPermissions.attributes['user-role'];
       this.qc1ObserverIds = (response.data.attributes['qc1-observer-ids'] || []).map((d) => d.toString());
       this.qc2ObserverIds = (response.data.attributes['qc2-observer-ids'] || []).map((d) => d.toString());
       const userObserverId = relationships.observer.data && relationships.observer.data.id;
-      // TODO: remove this we don't need it anymore
-      // const managedObserverIds = (response.data.attributes['managed-observer-ids'] || []).map((d) => d.toString());
       const managedObserverIds = [];
+      if (this.isBackendAdmin()) {
+        await this.observersService.getAll({ sort: 'name' }).then(data => {
+          //set all observers as available
+          managedObserverIds.push(...data.map(o => o.id));
+        });
+      }
       const allManagedOberverIds = uniq([userObserverId, ...managedObserverIds].filter(x => x));
       const availableObserverIds = uniq([...allManagedOberverIds, ...this.qc1ObserverIds, ...this.qc2ObserverIds].filter(x => x));
       const savedUserObserverId = parseInt(localStorage.getItem('userObserverId'), 10);
@@ -126,17 +129,6 @@ export class AuthService {
         this.userObserverId = savedUserObserverId.toString();
       } else {
         this.userObserverId = availableObserverIds[0];
-      }
-
-      // if user is backend admin and has no observer context saved in localstorage
-      // take the first observer id
-      if (!this.userObserverId && this.isBackendAdmin()) {
-        await this.observersService.getAll({ sort: 'name' }).then(data => {
-          //set all observers as available
-          this.managedObserverIds = data.map(o => o.id);
-          this.availableObserverIds = data.map(o => o.id);
-          this.userObserverId = data[0].id;
-        });
       }
       this.userCountryId = relationships.country && relationships.country.data && relationships.country.data.id;
 
