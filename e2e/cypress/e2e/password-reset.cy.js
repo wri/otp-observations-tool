@@ -36,8 +36,14 @@ describe('Password Reset', () => {
         });
       });
       cy.then(() => cy.visit(`/reset-password?reset_password_token=${token}`));
-      cy.get('#new_password').clear().type('secret12345');
-      cy.get('#password_confirmation').clear().type('secret12345');
+      // validation errors
+      cy.get('#new_password').clear().type('s');
+      cy.get('button').contains('Change password').click();
+      cy.contains('The field should have at least 10 characters');
+      cy.contains('Password should contain at least one uppercase letter, one lowercase letter and one digit');
+
+      cy.get('#new_password').clear().type('Secret12345');
+      cy.get('#password_confirmation').clear().type('Secret12345');
       cy.get('button').contains('Change password').click();
       cy.get("@alert").should("have.been.calledWithMatch", /Your password has been successfully updated/);
       cy.then(() => alert.reset());
@@ -45,7 +51,7 @@ describe('Password Reset', () => {
       cy.get('button').contains('Log out').click();
       cy.contains('Login');
       cy.get('#username').type("ngo@example.com");
-      cy.get('#password').type("secret12345");
+      cy.get('#password').type("Secret12345");
       cy.get('button').contains('Login').click();
       cy.get('button').contains('Log out').should('exist');
       cy.resetDB();
@@ -60,8 +66,8 @@ describe('Password Reset', () => {
     describe('errors', () => {
       it('shows error with invalid token', function () {
         cy.visit('/reset-password?reset_password_token=invalid');
-        cy.get('#new_password').clear().type('secret12345');
-        cy.get('#password_confirmation').clear().type('secret12345');
+        cy.get('#new_password').clear().type('Secret12345');
+        cy.get('#password_confirmation').clear().type('Secret12345');
         const alert = cy.stub().as("alert");
         cy.on('window:alert', alert);
         cy.get('button').contains('Change password').click();
