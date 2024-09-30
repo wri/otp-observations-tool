@@ -5,7 +5,7 @@ describe('User', () => {
 
   context('Public user', () => {
     it('can log in and out', function () {
-      cy.login('ngo_manager@example.com', 'password');
+      cy.login('ngo_manager@example.com', 'Supersecret1');
       cy.visit('/');
       cy.get('button').contains('Log out').click();
       cy.get('button').contains('Login').should('exist')
@@ -28,14 +28,18 @@ describe('User', () => {
       cy.contains('Please confirm your password');
       cy.contains('Please tick the box');
 
+      cy.get('#password').type('one');
+      cy.contains('The field should have at least 10 characters');
+      cy.contains('Password should contain at least one uppercase letter, one lowercase letter and one digit');
+
       cy.get('#first_name').type('James');
       cy.get('#last_name').type('Watson');
       cy.get('#observer_id').select('OGF');
       cy.get('#country_id').select('Congo');
       cy.get('#locale_field').select('English');
       cy.get('#email').type(`testngomanager@example.com`);
-      cy.get('#password').type('supersecret');
-      cy.get('#password_confirmation').type('supersecret');
+      cy.get('#password').clear().type('GreatPassword6');
+      cy.get('#password_confirmation').type('GreatPassword6');
       cy.get('#has_rights').check();
 
       const alert = cy.stub().as("alert");
@@ -48,7 +52,7 @@ describe('User', () => {
 
   context('Logged in User', () => {
     beforeEach(() => {
-      cy.login('ngo_manager@example.com', 'password');
+      cy.login('ngo_manager@example.com', 'Supersecret1');
       cy.visit('/private/profile');
     });
 
@@ -72,7 +76,7 @@ describe('User', () => {
         cy.get('#locale_field').select('English');
         cy.get('#email_field').clear().type('ngo_managertest@example.com');
         cy.get('#current_password').should('exist');
-        cy.get('#current_password').clear().type('password');
+        cy.get('#current_password').clear().type('Supersecret1');
         const alert = cy.stub().as("alert");
         cy.on('window:alert', alert);
         cy.get('button').contains('Save').click();
@@ -82,9 +86,9 @@ describe('User', () => {
 
         cy.get('#email_field').should('have.value', 'ngo_managertest@example.com');
         cy.get('#current_password').should('not.exist');
-        cy.get('#new_password').clear().type('secret12345');
-        cy.get('#password_confirmation').clear().type('secret12345');
-        cy.get('#current_password').clear().type('password');
+        cy.get('#new_password').clear().type('Secret12345');
+        cy.get('#password_confirmation').clear().type('Secret12345');
+        cy.get('#current_password').clear().type('Supersecret1');
         cy.get('button').contains('Save').click();
         cy.get("@alert").should("have.been.calledWithMatch", /Your profile has been sucessfully updated/);
         cy.resetDB();

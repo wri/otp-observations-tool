@@ -76,7 +76,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: wri/fti_api
-          ref: master
+          ref: develop
           path: otp_api
 
       - name: Save OTP API Commit SHA
