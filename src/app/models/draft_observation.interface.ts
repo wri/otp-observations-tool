@@ -25,6 +25,7 @@ export interface DraftObservation {
   evidenceAttachment?: string; // Base64
   evidenceDocumentType?: string;
 
+  nonConcessionActivity?: boolean;
   isPhysicalPlace?: boolean;
   litigationStatus?: string;
   locationAccuracy?: string;
