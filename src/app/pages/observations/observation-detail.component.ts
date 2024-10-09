@@ -422,11 +422,20 @@ export class ObservationDetailComponent implements OnDestroy {
     return this.operatorChoice && this.unknownOperator && +this.operatorChoice.id === +this.unknownOperator.id;
   }
 
+  get nonConcessionActivityEnabled() {
+    return this.country && this.country.iso === 'COD';
+  }
+
   get nonConcessionActivity() { return this.observation ? this.observation['non-concession-activity'] : this._nonConcessionActivity; }
   set nonConcessionActivity(nonConcessionActivity) {
-    this._nonConcessionActivity = nonConcessionActivity;
+    if (this.nonConcessionActivityEnabled) {
+      this._nonConcessionActivity = nonConcessionActivity;
+    } else {
+      this._nonConcessionActivity = false;
+    }
+
     if (this.observation) {
-      this.observation['non-concession-activity'] = nonConcessionActivity;
+      this.observation['non-concession-activity'] = this._nonConcessionActivity;
     }
 
     this.resetFmus();
@@ -452,12 +461,6 @@ export class ObservationDetailComponent implements OnDestroy {
         }
     }
   }
-
-  // get operatorFmus() { return this._operatorFmus; }
-  // set operatorFmus(collection) { this._operatorFmus = collection; }
-
-  // get countryFmus() { return this._countryFmus; }
-  // set countryFmus(collection) { this._countryFmus = collection; }
 
   get fmus() { return this._fmus; }
   set fmus(collection) {
@@ -1920,7 +1923,7 @@ export class ObservationDetailComponent implements OnDestroy {
         const decimalCoordinates = this.getDecimalCoordinates();
 
         model.operator = this.operatorChoice;
-        model['non-concession-activity'] = this.nonConcessionActivity;
+        model['non-concession-activity'] = this.nonConcessionActivityEnabled ? this.nonConcessionActivity : false;
         model['is-physical-place'] = this.physicalPlace;
         model.lat = this.physicalPlace && decimalCoordinates ? decimalCoordinates[0] : null;
         model.lng = this.physicalPlace && decimalCoordinates ? decimalCoordinates[1] : null;
@@ -1938,6 +1941,8 @@ export class ObservationDetailComponent implements OnDestroy {
 
       observation = this.datastoreService.createRecord(Observation, model);
     }
+
+    observation['non-concession-activity'] = this.nonConcessionActivityEnabled ? this.nonConcessionActivity : false;
 
     this.uploadReport()
       .then(() => {
