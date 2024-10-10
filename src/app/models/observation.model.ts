@@ -40,6 +40,7 @@ export class Observation extends JsonApiModel {
   @Attribute() 'hidden': boolean; // Whether an observation is archived
   @Attribute() 'user-type'?: string;
   @Attribute() 'monitor-comment'?: string;
+  @Attribute() 'non-concession-activity': boolean; // if operator operates in another operator fmu
   @Attribute() 'locale': string;
 
   @BelongsTo() fmu?: Fmu;
