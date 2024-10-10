@@ -109,6 +109,29 @@ describe('Observations', () => {
     ).should('be.visible');
   })
 
+  it('allow to select all country FMUs if checking non concession activity checkbox - only for DRC', () => {
+    cy.get('a').contains('New observation', { timeout: 10000 }).click();
+    cy.get('select#observation_type').select('Producer');
+    cy.get('select#country_id').select('Cameroon');
+    cy.get('input#non_concession_activity').should('not.exist');
+    cy.get('select#country_id').select('Democratic Republic of the Congo');
+    cy.get('input#non_concession_activity').should('be.visible');
+    cy.selectOption('operator_id', 'CFT');
+
+    // we are going to select FMU that belongs to country but not this operator
+    cy.get('select#fmu_field').find('option').should('not.contain.text', '046/11');
+    cy.get('input#non_concession_activity').check();
+    cy.get('select#fmu_field').find('option').should('contain.text', '046/11');
+    cy.get('select#fmu_field').select('046/11');
+    cy.get('button').contains('Create').click();
+
+    // let's verify if everyting was correctly saved
+    cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
+    cy.location('pathname').should('include', '/observations/edit');
+    cy.get('input#non_concession_activity').should('be.checked');
+    cy.get('select[name=fmu_field]').find('option').contains('046/11').should('be.selected');
+  })
+
   it('can add a new producer directly from observation form', () => {
     cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Producer');
