@@ -76,7 +76,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: wri/fti_api
-          ref: master
+          ref: develop
           path: otp_api
 
       - name: Save OTP API Commit SHA
@@ -87,7 +87,7 @@ jobs:
       - name: Install API dependencies
         run: |
           sudo apt update --fix-missing
-          sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev gdal-bin
+          sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev libgdal-dev
           npm install -g mjml
 
       - name: Setup API Ruby

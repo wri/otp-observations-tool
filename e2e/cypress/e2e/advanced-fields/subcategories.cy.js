@@ -1,7 +1,7 @@
 describe('Subcategories', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.login('ngo_manager@example.com', 'password');
+    cy.login('ngo_manager@example.com', 'Supersecret1');
     cy.visit('/private/fields/subcategories');
   });
 

@@ -9,7 +9,7 @@ describe('Observations - Quality Control', () => {
   });
 
   it('full review cycle', () => {
-    cy.login('ngo_manager@example.com', 'password');
+    cy.login('ngo_manager@example.com', 'Supersecret1');
     cy.visit('/');
     // create an observation
     cy.get('a').contains('New observation', { timeout: 10000 }).click();
@@ -37,7 +37,7 @@ describe('Observations - Quality Control', () => {
 
     // log out and log in as reviewer
     cy.get('button').contains('Log out').click();
-    cy.login('ngo_reviewer@example.com', 'password');
+    cy.login('ngo_reviewer@example.com', 'Supersecret1');
     cy.visit('/');
     cy.get('select[data-test-id="observer-context-select"]').select('OGF');
 
@@ -55,7 +55,7 @@ describe('Observations - Quality Control', () => {
 
     // make "edits" and resubmit
     cy.get('button').contains('Log out').click();
-    cy.login('ngo_manager@example.com', 'password');
+    cy.login('ngo_manager@example.com', 'Supersecret1');
     cy.visit('/');
 
     cy.get('otp-table tbody tr:first').contains('Rejected');
@@ -67,7 +67,7 @@ describe('Observations - Quality Control', () => {
     cy.get('otp-table tbody tr:first').contains('Ready for QC1');  // back in qc1 state
 
     cy.get('button').contains('Log out').click();
-    cy.login('ngo_reviewer@example.com', 'password');
+    cy.login('ngo_reviewer@example.com', 'Supersecret1');
     cy.visit('/');
 
     // review the observation again
@@ -86,7 +86,7 @@ describe('Observations - Quality Control', () => {
 
     // now the admin will do a QC2, it is also possible to do it in the obs tool
     cy.get('button').contains('Log out').click();
-    cy.login('admin@example.com', 'password');
+    cy.login('admin@example.com', 'Supersecret1');
     cy.visit('/');
 
     cy.get('select[data-test-id="observer-context-select"]').select('OGF');
@@ -102,7 +102,7 @@ describe('Observations - Quality Control', () => {
 
     // back to manager and resubmit
     cy.get('button').contains('Log out').click();
-    cy.login('ngo_manager@example.com', 'password');
+    cy.login('ngo_manager@example.com', 'Supersecret1');
     cy.visit('/');
 
     cy.get('otp-table tbody tr:first').contains('Needs revision');
@@ -117,7 +117,7 @@ describe('Observations - Quality Control', () => {
 
     // let's review it again
     cy.get('button').contains('Log out').click();
-    cy.login('admin@example.com', 'password');
+    cy.login('admin@example.com', 'Supersecret1');
     cy.visit('/');
 
     cy.get('select[data-test-id="observer-context-select"]').select('OGF');
@@ -135,7 +135,7 @@ describe('Observations - Quality Control', () => {
 
     // log in as ngo manager and publish the observation
     cy.get('button').contains('Log out').click();
-    cy.login('ngo_manager@example.com', 'password');
+    cy.login('ngo_manager@example.com', 'Supersecret1');
     cy.visit('/');
 
     cy.get('otp-table tbody tr:first').contains('Ready for publication'); // now ready for qc2
