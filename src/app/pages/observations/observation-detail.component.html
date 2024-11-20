@@ -461,7 +461,7 @@
 
         <ng-template [ngIf]="physicalPlace">
           <div class="form-group" *ngIf="nonConcessionActivityEnabled">
-            <input type="checkbox" name="non_concession_activity" id="non_concession_activity" [(ngModel)]="nonConcessionActivity" #non_concession_activity="ngModel" />
+            <input type="checkbox" name="non_concession_activity" id="non_concession_activity" [(ngModel)]="nonConcessionActivity" #non_concession_activity="ngModel" [disabled]="isDisabled()" />
             <label for="non_concession_activity">{{'Producer conducts activities in a concession that is attributed to another producer' | translate}}</label>
             <p class="note">
               {{'When checking this checkbox you will be able to select any FMU within selected country' | translate}}
