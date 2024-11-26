@@ -7,6 +7,7 @@ cd ".."
 
 export PATH="$HOME/.local/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
+export NODE_OPTIONS=--max_old_space_size=2048
 . $NVM_DIR/nvm.sh
 
 echo "--> Setting node version"
