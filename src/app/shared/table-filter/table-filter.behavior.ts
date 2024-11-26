@@ -3,6 +3,7 @@ import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
 import { TableComponent, TableState } from 'app/shared/table/table.component';
 import { FiltersComponent, Filter } from 'app/shared/filters/filters.component';
 import { debounce } from 'lodash';
+import * as Sentry from '@sentry/browser'
 
 export class TableFilterBehavior implements AfterViewInit {
 
@@ -39,19 +40,25 @@ export class TableFilterBehavior implements AfterViewInit {
     const params = Object.assign({}, this.filters.getApiParams(), this.table.getApiParams());
     const requestID = ++this.latestRequestID;
 
-    // We save the current state of the table and
-    // filters so the user can come back to them
-    // later
-    this.saveState();
-
     this.service.get(params)
       .then(res => {
         if (this.latestRequestID === requestID) {
           this.table.rows = res.data;
           this.table.rowCount = res.meta['record-count'];
+          // We save the current state of the table and
+          // filters so the user can come back to them
+          // later
+          this.saveState();
         }
       })
-      .catch((error) => console.error('Error loading the table data', error))
+      .catch((error) => {
+        console.error('Error loading the table data', error)
+        Sentry.captureException(error);
+        // bad request so probably a filter or sorting error so bust the saved state
+        if (error.status === 400) {
+          sessionStorage.removeItem('tableFilter');
+        }
+      })
       .then(() => {
         if (this.latestRequestID === requestID) {
           this.table.loading = false;

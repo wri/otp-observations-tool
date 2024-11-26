@@ -23,7 +23,7 @@
       <tr role="row" aria-rowindex="1">
         <th
           *ngFor="let column of visibleColumns"
-          [attr.class]="(sortColumn === column ? ('-order-' + sortOrder) : '') + (!column.prop ? ' -no-sortable' : '')"
+          [attr.class]="(sortColumn === column ? ('-order-' + sortOrder) : '') + ((!column.prop || !column.sortable) ? ' -no-sortable' : '')"
           [attr.aria-sort]="sortColumn === column ? sortOrder : 'none'"
           [tabindex]="sortColumn === column ? 0 : -1"
           role="columnheader"

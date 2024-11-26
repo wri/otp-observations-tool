@@ -120,7 +120,7 @@ export class TableComponent implements AfterContentInit {
 
           // We only set the sort if it hasn't set before or if
           // the columns has been reset and it stays the same
-          if (!this.sortColumn || this.sortColumn.prop === sortColumn.prop) {
+          if ((!this.sortColumn || this.sortColumn.prop === sortColumn.prop) && sortColumn.sortable !== false) {
             this.sortColumn = sortColumn;
             this.sortOrder = isDesc ? 'desc' : 'asc';
           }
@@ -129,7 +129,8 @@ export class TableComponent implements AfterContentInit {
         // If the columns are dynamically added or removed
         // the current sorting might not be available anymore
         // so we remove it
-        if (this.sortColumn && !this.columns.find(c => c.prop === this.sortColumn.prop)) {
+        // console.log(sortColumn);
+        if (this.sortColumn && this.sortColumn.sortable === false) {
           this.sortColumn = null;
           this.change.emit();
         }
@@ -293,7 +294,7 @@ export class TableComponent implements AfterContentInit {
       const sortColumn = this.columns.find(c => c.prop.replace(/[\[\]]/g, '') === sortColumnProp);
       const isDesc = !!this.previousState.sort.match(/(-?).*/)[1].length;
 
-      if (sortColumn) {
+      if (sortColumn && sortColumn.sortable !== false) {
         this.sortColumn = sortColumn;
         this.sortOrder = isDesc ? 'desc' : 'asc';
       }
