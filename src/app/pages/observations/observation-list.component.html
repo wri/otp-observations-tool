@@ -66,7 +66,7 @@
   <p *ngIf="table.isHorizontalScrollVisible" class="scrolling-note">{{'observation.scrollingNote' | translate}}</p>
 
   <otp-table #table [name]="'observations'" adjustToScreenHeight="true" [hideVisibleColumnsBox]="true" [caption]="'Observations' | translate" defaultSort="-updated-at" [include]="['observers']" [hidden]="isUploading" [options]="tableOptions">
-    <otp-table-column [name]="'ID' | translate" prop="id" [sortable]="false"></otp-table-column>
+    <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
     <!-- Updated at as a default sort must be as a column, it will be hidden -->
     <otp-table-column name="updated-at" prop="updated-at" [hidden]="true"></otp-table-column>
     <otp-table-column [name]="'Organization' | translate" prop="observers" [sortable]="false">

@@ -1511,7 +1511,6 @@ export class ObservationDetailComponent implements OnDestroy {
     if (!this.observation) return false;
     if (!this.authService.managedObserverIds.includes(this.authService.userObserverId)) return true;
 
-    const isHidden = this.observation.hidden;
     const isCreating = !this.route.snapshot.params.id;
     const isDuplicating = !!this.route.snapshot.params.copiedId;
     const isAmending = this.needsRevisionState === 'amend';
@@ -1526,7 +1525,6 @@ export class ObservationDetailComponent implements OnDestroy {
     const isPublishedWithoutComments = this.observation['validation-status'] === 'Published (no comments)';
     const isUserLinkedObserver = !!this.observation.observers.find(o => o.id === this.authService.userObserverId);
 
-    if (isHidden) return true;
     if (isCreating) return false;
     if (isDuplicating) return false;
     if (isCreated && isUserLinkedObserver) return false;
@@ -1629,7 +1627,6 @@ export class ObservationDetailComponent implements OnDestroy {
 
   canAmend() {
     if (!this.observation) return false;
-    if (this.observation.hidden) return false;
     if (!this.canManage()) return false;
 
     const isAmending = this.needsRevisionState === 'amend';
@@ -1650,7 +1647,6 @@ export class ObservationDetailComponent implements OnDestroy {
 
     if (isCreating) return true;
     if (isDuplicating) return true;
-    if (this.observation.hidden) return false;
     if (!this.canManage()) return false;
 
     const isAdmin = this.authService.isAdmin();
@@ -1682,7 +1678,6 @@ export class ObservationDetailComponent implements OnDestroy {
     const isCreated = this.observation['validation-status'] === 'Created';
 
     if (!this.observation) return false;
-    if (this.observation.hidden) return false;
     if (isCreated) return true;
 
     return false;
@@ -1690,7 +1685,6 @@ export class ObservationDetailComponent implements OnDestroy {
 
   canPublishWithoutComments() {
     if (!this.observation) return false;
-    if (this.observation.hidden) return false;
     if (!this.canManage()) return false;
 
     const isReadyForPublication = this.observation['validation-status'] === 'Ready for publication';
@@ -1702,7 +1696,6 @@ export class ObservationDetailComponent implements OnDestroy {
 
   canPublishWithModification() {
     if (!this.observation) return false;
-    if (this.observation.hidden) return false;
     if (!this.canManage()) return false;
 
     const isInNeedOfRevision = this.observation['validation-status'] === 'Needs revision';
