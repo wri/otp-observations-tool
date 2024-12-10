@@ -21,7 +21,7 @@ on: push
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -55,7 +55,7 @@ jobs:
 
   test:
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     services:
       redis:
@@ -87,7 +87,7 @@ jobs:
       - name: Install API dependencies
         run: |
           sudo apt update --fix-missing
-          sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev libgdal-dev
+          sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev libgdal-dev imagemagick
           npm install -g mjml
 
       - name: Setup API Ruby
