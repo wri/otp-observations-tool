@@ -20,6 +20,7 @@ import { ObservationsService } from 'app/services/observations.service';
 import { Severity } from 'app/models/severity.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Operator } from 'app/models/operator.model';
+import { FmusService } from 'app/services/fmus.service';
 import { OperatorsService } from 'app/services/operators.service';
 import { ObserversService } from 'app/services/observers.service';
 import { Observer } from 'app/models/observer.model';
@@ -73,7 +74,9 @@ export class ObservationDetailComponent implements OnDestroy {
   unknownOperator: Operator = null; // Special unknown operator
   governments: Government[] = [];
   observers: Observer[] = []; // Ordered by name
-  fmus: Fmu[] = [];
+  _fmus: Fmu[] = [];
+  operatorFmus: Fmu[] = [];
+  countryFmus: Fmu[] = [];
   reports: ObservationReport[] = []; // Ordered by title
   documents: ObservationDocument[] = []; // Sorted by name initially
   reportDocuments: ObservationDocument[] = []; // Documents of the selected report
@@ -230,6 +233,7 @@ export class ObservationDetailComponent implements OnDestroy {
   _latitude: number; // Only for type operator
   _longitude: number; // Only for type operator
   _fmu: Fmu = null; // Only for type operator
+  _nonConcessionActivity: boolean = false; // Only for type operator
   _government: Government = null; // Only for type government
   _law: Law = null; // Only for type operator
   _actions: string;
@@ -348,6 +352,11 @@ export class ObservationDetailComponent implements OnDestroy {
     }
 
     if (country) {
+      this.fmusService.getAll({ sort: 'name', filter: { country: country.id } })
+        .then((fmus) => {
+          this.countryFmus = fmus;
+        });
+
       this.operatorsService.getAll({ sort: 'name', filter: { country: country.id } })
         .then((operators) => {
           this.operators = operators;
@@ -397,30 +406,66 @@ export class ObservationDetailComponent implements OnDestroy {
     if (operatorChoice) {
       this.operatorsService.getById(operatorChoice.id, { include: 'fmus' })
         .then((op) => {
-          this.fmus = op.fmus ? op.fmus : [];
-
-          // If we can restore the FMU of the observation, we do it,
-          // otherwise we just reset the fmu each time the user
-          // update the operator
-          if (this.draft && this.draft.operatorId === operatorChoice.id) {
-            this.fmu = this.fmus.find(fmu => fmu.id === this.draft.fmuId);
-          } else if (this.observation && this.observation.operator.id === operatorChoice.id && this.observation.fmu) {
-            this.fmu = this.fmus.find(fmu => fmu.id === this.observation.fmu.id);
-          } else {
-            this.fmu = null;
-          }
+          this.operatorFmus = op.fmus ? op.fmus : [];
+          this.resetFmus();
         })
         .catch(err => console.error(err)); // TODO: visual feedback
 
       this.operatorsSelection = [operatorChoice.id];
     } else {
-      this.fmus = [];
-      this.fmu = null;
+      this.operatorFmus = [];
+      this.resetFmus();
       this.operatorsSelection = [];
     }
   }
   get unknownOperatorSelected() {
     return this.operatorChoice && this.unknownOperator && +this.operatorChoice.id === +this.unknownOperator.id;
+  }
+
+  get nonConcessionActivityEnabled() {
+    return this.country && this.country.iso === 'COD';
+  }
+
+  get nonConcessionActivity() { return this.observation ? this.observation['non-concession-activity'] : this._nonConcessionActivity; }
+  set nonConcessionActivity(nonConcessionActivity) {
+    if (this.nonConcessionActivityEnabled) {
+      this._nonConcessionActivity = nonConcessionActivity;
+    } else {
+      this._nonConcessionActivity = false;
+    }
+
+    if (this.observation) {
+      this.observation['non-concession-activity'] = this._nonConcessionActivity;
+    }
+
+    this.resetFmus();
+    this.fmu = null;
+  }
+
+  resetFmus() {
+    this.fmus = this.nonConcessionActivity ? this.countryFmus : this.operatorFmus;
+  }
+
+  resetFmu() {
+    let fmuId = null;
+    if (this.draft) {
+      fmuId = this.draft.fmuId;
+    } else if (this.observation && this.observation.fmu) {
+      fmuId = this.observation.fmu.id;
+    }
+
+    if (fmuId) {
+      if (this.nonConcessionActivity && this.countryFmus.length
+        || (!this.nonConcessionActivity && this.operatorFmus.length)) {
+          this.fmu = this._fmus.find(fmu => fmu.id === fmuId);
+        }
+    }
+  }
+
+  get fmus() { return this._fmus; }
+  set fmus(collection) {
+    this._fmus = collection;
+    this.resetFmu();
   }
 
   get fmu() { return this.observation ? this.observation.fmu : this._fmu; }
@@ -447,6 +492,11 @@ export class ObservationDetailComponent implements OnDestroy {
     }
 
     if (this.observation) {
+      if (this.observation.fmu && this.observation.fmu.id !== fmu.id) {
+        // reset latitude and longitude
+        this.latitude = null;
+        this.longitude = null;
+      }
       this.observation.fmu = fmu;
     } else {
       this._fmu = fmu;
@@ -822,6 +872,7 @@ export class ObservationDetailComponent implements OnDestroy {
     private governmentsService: GovernmentsService,
     private subcategoriesService: SubcategoriesService,
     private operatorsService: OperatorsService,
+    private fmusService: FmusService,
     private lawsService: LawsService,
     private datastoreService: DatastoreService,
     private router: Router,
@@ -888,6 +939,7 @@ export class ObservationDetailComponent implements OnDestroy {
           this.reportDate = new Date(this.draft.reportDate);
 
           if (this.type === 'operator') {
+            this.nonConcessionActivity = this.draft.nonConcessionActivity;
             this.physicalPlace = this.draft.isPhysicalPlace;
             this.latitude = this.draft.lat;
             this.longitude = this.draft.lng;
@@ -1077,6 +1129,7 @@ export class ObservationDetailComponent implements OnDestroy {
         draftModel.operatorId = this.operatorChoice && this.operatorChoice.id;
       }
 
+      draftModel.nonConcessionActivity = this.nonConcessionActivity;
       draftModel.isPhysicalPlace = this.physicalPlace;
       draftModel.lat = this.physicalPlace && decimalCoordinates ? decimalCoordinates[0] : null;
       draftModel.lng = this.physicalPlace && decimalCoordinates ? decimalCoordinates[1] : null;
@@ -1870,6 +1923,7 @@ export class ObservationDetailComponent implements OnDestroy {
         const decimalCoordinates = this.getDecimalCoordinates();
 
         model.operator = this.operatorChoice;
+        model['non-concession-activity'] = this.nonConcessionActivityEnabled ? this.nonConcessionActivity : false;
         model['is-physical-place'] = this.physicalPlace;
         model.lat = this.physicalPlace && decimalCoordinates ? decimalCoordinates[0] : null;
         model.lng = this.physicalPlace && decimalCoordinates ? decimalCoordinates[1] : null;
@@ -1887,6 +1941,8 @@ export class ObservationDetailComponent implements OnDestroy {
 
       observation = this.datastoreService.createRecord(Observation, model);
     }
+
+    observation['non-concession-activity'] = this.nonConcessionActivityEnabled ? this.nonConcessionActivity : false;
 
     this.uploadReport()
       .then(() => {

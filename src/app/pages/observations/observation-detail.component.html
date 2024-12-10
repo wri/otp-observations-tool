@@ -460,6 +460,14 @@
         </ng-template>
 
         <ng-template [ngIf]="physicalPlace">
+          <div class="form-group" *ngIf="nonConcessionActivityEnabled">
+            <input type="checkbox" name="non_concession_activity" id="non_concession_activity" [(ngModel)]="nonConcessionActivity" #non_concession_activity="ngModel" [disabled]="isDisabled()" />
+            <label for="non_concession_activity">{{'Producer conducts activities in a concession that is attributed to another producer' | translate}}</label>
+            <p class="note">
+              {{'When checking this checkbox you will be able to select any FMU within selected country' | translate}}
+            </p>
+          </div>
+
           <!-- 8.1. Forest management unit -->
           <div [ngClass]="{ 'form-group': true, '-required': !!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
             <label for="fmu_field">{{'Forest management unit' | translate}}</label>
