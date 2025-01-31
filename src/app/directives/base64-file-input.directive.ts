@@ -1,5 +1,6 @@
 import { Directive, ElementRef, Input, HostListener, OnChanges, SimpleChanges, forwardRef, Output, EventEmitter } from '@angular/core';
 import { Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import uniq from 'lodash/uniq';
 
 const MAX_SIZE_VALIDATOR: any = {
   provide: NG_VALIDATORS,
@@ -113,6 +114,10 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
     if (this.conversionError) {
       errors['conversion'] = true;
     }
+    if (!this.isExtensionValid(this.file)) {
+      errors['accept'] = true;
+    }
+
     if (Object.keys(errors).length === 0) return null;
 
     return errors;
@@ -125,6 +130,45 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
    */
   isSizeValid(file: File): boolean {
     return file.size <= this.maxSize;
+  }
+
+  isExtensionValid(file: File): boolean {
+    const input = this.el.nativeElement as HTMLInputElement;
+    const acceptValue = input.getAttribute('accept');
+
+    const allowedExtensions = this.parseAcceptAttribute(acceptValue);
+    if (allowedExtensions.length === 0) {
+      return true;
+    }
+    const fileExtension = this.getFileExtension(file.name);
+    return allowedExtensions.includes(fileExtension);
+  }
+
+  private getFileExtension(filename: string): string {
+    return (filename.split('.').pop() || '').toLowerCase();
+  }
+
+  private parseAcceptAttribute(acceptValue: string): string[] {
+    const extensions: string[] = [];
+    const items = acceptValue.split(',').map(item => item.trim());
+
+    items.forEach(item => {
+      if (item.startsWith('.')) {
+        // Handle explicit extensions (.jpg)
+        extensions.push(item.slice(1).toLowerCase());
+      } else if (item.includes('/')) {
+        // Handle MIME types (image/jpeg)
+        const parts = item.split('/');
+        if (parts[1] !== '*' && !parts[1].includes('*')) {
+          extensions.push(parts[1].toLowerCase());
+        }
+      } else {
+        // Handle extension-only values (jpg)
+        extensions.push(item.toLowerCase());
+      }
+    });
+
+    return uniq(extensions);
   }
 
   /**

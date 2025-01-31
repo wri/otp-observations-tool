@@ -78,6 +78,7 @@
   "File": "File",
   "The file should weight less than 20MB": "The file should weight less than 20MB",
   "The file should weight less than 40MB": "The file should weight less than 40MB",
+  "Allowed file types": "Allowed file types",
   "The file is not valid": "The file is not valid",
   "Please enter the name": "Please enter the name",
   "Please enter the publication date": "Please enter the publication date",
