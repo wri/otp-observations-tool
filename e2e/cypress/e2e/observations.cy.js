@@ -152,7 +152,7 @@ describe('Observations', () => {
     cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Governance');
     cy.get('select#report_field').select('Upload a new report');
-    cy.get('input#report_file').attachFile('test_document.docx');
+    cy.get('input#report_file').attachFile('test_document.pdf');
     cy.get('#report_title').clear().type('New uploaded report');
     cy.selectDate('report_date', '2023-12-30');
     cy.selectOption('additional_observers', ['CADDE', 'CAGDF']);

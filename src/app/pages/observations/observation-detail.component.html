@@ -149,8 +149,9 @@
           <!-- File -->
           <div class="form-group">
             <label for="report_file">{{'File' | translate}}</label>
-            <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="41943040" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-            <div *ngIf="f.submitted && report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 40MB' | translate}}</div>
+            <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="41943040" accept=".pdf" />
+            <div *ngIf="report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 40MB' | translate}}</div>
+            <div *ngIf="report_file.errors?.accept" class="help-text">{{'Allowed file types' | translate}}: pdf</div>
             <div *ngIf="f.submitted && !report_file.valid" class="help-text">{{'The file is not valid' | translate}}</div>
           </div>
 
@@ -311,6 +312,7 @@
                     <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="20971520" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
                     <div *ngIf="georeferencedPhoto.isUsed" class="geo-note">{{'observation.geoPhotoUploaded.note' | translate}}</div>
                     <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
+                    <div *ngIf="evidence_field.errors?.accept" class="help-text">{{'Allowed file types' | translate}}: pdf, doc, docx, txt, csv, xml, jpg, jpeg, png, exif, tiff, bmp</div>
                     <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
                   </div>
 
