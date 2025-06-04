@@ -17,7 +17,7 @@ export class HeaderComponent {
   private isAdmin = false;
   isBackendAdmin = false;
   isLogged = false;
-  acceptedLang = ['en', 'fr'];
+  acceptedLang = ['en', 'fr', 'es'];
   _lang = this.acceptedLang.includes(localStorage.getItem('lang'))
     ? localStorage.getItem('lang')
     : 'en';

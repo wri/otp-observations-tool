@@ -205,6 +205,7 @@ export class ObservationDetailComponent implements OnDestroy {
   // Language
   languages = {
     'en': 'English',
+    'es': 'Español',
     'fr': 'Français'
   };
   get locale() {

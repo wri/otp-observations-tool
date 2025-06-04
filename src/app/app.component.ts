@@ -8,7 +8,7 @@ import { environment } from 'environments/environment';
 // declare gives Angular app access to ga function
 declare let ga: Function;
 
-const ACCEPTED_LOCALES = ['en', 'fr'];
+const ACCEPTED_LOCALES = ['en', 'fr', 'es'];
 
 @Component({
   selector: 'otp-root',
