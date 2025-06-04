@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
     "@asymmetrik/ngx-leaflet": "^6",
+    "@hotjar/browser": "1.0.5",
     "@ngx-translate/core": "^8.0.0",
     "@ngx-translate/http-loader": "^2.0.0",
     "@sentry/browser": "^7",

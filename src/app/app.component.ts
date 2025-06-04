@@ -1,5 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import Hotjar from '@hotjar/browser';
 import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 import { environment } from 'environments/environment';
@@ -28,6 +29,10 @@ export class AppComponent {
 
     if (ga) {
       ga('create', `${environment.GOOGLE_ANALYTICS_ID}`, 'auto');
+    }
+
+    if (environment.HOTJAR_ID && environment.HOTJAR_VERSION) {
+      Hotjar.init(Number(environment.HOTJAR_ID), Number(environment.HOTJAR_VERSION));
     }
 
     // We set the default language
