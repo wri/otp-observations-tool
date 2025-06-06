@@ -30,6 +30,7 @@
         <select id="locale_field" name="locale" ngModel #locale_field="ngModel" required>
           <option value="" disabled>{{'Select a language' | translate}}</option>
           <option value="en">English</option>
+          <option value="es">Español</option>
           <option value="fr">Français</option>
         </select>
         <div *ngIf="f.submitted && !locale_field.valid" class="help-text">{{'Please select a language' | translate}}</div>
