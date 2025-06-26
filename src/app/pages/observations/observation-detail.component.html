@@ -464,9 +464,9 @@
         <ng-template [ngIf]="physicalPlace">
           <div class="form-group" *ngIf="nonConcessionActivityEnabled">
             <input type="checkbox" name="non_concession_activity" id="non_concession_activity" [(ngModel)]="nonConcessionActivity" #non_concession_activity="ngModel" [disabled]="isDisabled()" />
-            <label for="non_concession_activity">{{'Producer conducts activities in a concession that is attributed to another producer' | translate}}</label>
+            <label for="non_concession_activity">{{'observation.nonConcessionActivity' | translate}}</label>
             <p class="note">
-              {{'When checking this checkbox you will be able to select any FMU within selected country' | translate}}
+              {{'observation.nonConcessionActivity.note' | translate}}
             </p>
           </div>
 
@@ -796,7 +796,7 @@
       <ss-multiselect-dropdown [texts]="multiSelectTexts" [options]="governmentsOptions" [(ngModel)]="_governmentsSelection" (ngModelChange)="onChangeGovernmentsOptions($event)" #government_id="ngModel" name="government_id" [disabled]="isDisabled()" required></ss-multiselect-dropdown>
       <div *ngIf="f.submitted && !government_id.valid" class="help-text">{{'Please select government entities' | translate}}</div>
       <p class="note">
-        {{ 'Choose the government entity your observation is related to.' | translate }}
+        {{ 'observation.governmentEntity.note' | translate }}
       </p>
       <div class="note" *ngIf="!isDisabled()">
         <button type="button" class="c-button -primary" (click)="onClickAddGovernanceEntity()">{{'Add a new government entity to the list' | translate}}</button>
