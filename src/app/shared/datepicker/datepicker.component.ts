@@ -1,7 +1,8 @@
 import { Component, forwardRef, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import flatpickr from 'flatpickr';
-import fr from 'flatpickr/dist/l10n/fr.js';
+import { French } from 'flatpickr/dist/l10n/fr.js';
+import { Spanish } from 'flatpickr/dist/l10n/es.js';
 import en from 'flatpickr/dist/l10n/default.js';
 import { dateFormat } from '../formatted-date/formatted-date.component';
 import { CustomLocale } from 'flatpickr/dist/types/locale';
@@ -17,6 +18,12 @@ const VALUE_ACCESSOR: any = {
   useExisting: forwardRef(() => DatepickerComponent),
   multi: true
 };
+
+const LOCALE = {
+  en: en,
+  fr: French,
+  es: Spanish
+}
 
 @Component({
   selector: 'otp-datepicker',
@@ -53,7 +60,7 @@ export class DatepickerComponent implements Validator, ControlValueAccessor, Aft
 
   ngAfterViewInit(): void {
     this.flatpickr = flatpickr(`#${this.id}`, {
-      locale: <CustomLocale>((localStorage.getItem('lang') || 'en') === 'fr' ? fr : en),
+      locale: <CustomLocale>(LOCALE[localStorage.getItem('lang') || 'en']),
       dateFormat: dateFormat,
       defaultDate: this.date,
       onChange: ([date]) => {
