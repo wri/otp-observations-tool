@@ -1,13 +1,10 @@
-
 import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { TokenService } from 'app/services/token.service';
 import { Router } from '@angular/router';
 
-
 import { ReplaySubject } from 'rxjs';
-import { Observer } from 'app/models/observer.model';
 import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
 import { uniq } from 'lodash';
@@ -133,16 +130,8 @@ export class AuthService {
       this.userCountryId = relationships.country && relationships.country.data && relationships.country.data.id;
 
       await this.setObserverCountriesIds();
-
-      const lang: string = response.data.attributes.locale;
-      if (lang) {
-        this.translateService.use(lang);
-      } else {
-        this.translateService.use('en');
-        alert(await this.translateService.get('noLanguageSet').toPromise());
-      }
-
       this.triggerLoginStatus(!!response);
+
       return !!response;
     } catch (e) {
       console.error(e);
