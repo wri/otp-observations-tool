@@ -121,6 +121,7 @@ describe('Observations', () => {
     // we are going to select FMU that belongs to country but not this operator
     cy.get('select#fmu_field').find('option').should('not.contain.text', '046/11');
     cy.get('input#non_concession_activity').check();
+    cy.wait(500); // not sure getting flaky specs here
     cy.get('select#fmu_field').find('option').should('contain.text', '046/11');
     cy.get('select#fmu_field').select('046/11');
     cy.get('button').contains('Create').click();

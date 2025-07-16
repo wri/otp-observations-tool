@@ -423,7 +423,6 @@
   "Language": "Idioma",
   "Select a language": "Seleccionar un idioma",
   "Please select a language": "Por favor seleccione un idioma",
-  "noLanguageSet": "[ES] Ahora hay una configuración en tu perfil para establecer el idioma de la interfaz. Por favor actualízala a tu idioma preferido. \n\n[FR] Un nouveau paramètre est désormais disponible dans votre profil pour séleccioner la langue de l'application.\nSi vous souhaitez continuer de l'utiliser en français, merci de bien vouloir cliquer sur \"Profile\" en haut à droite, de choisir ensuite Français dans le menu \"Language\" et enfin de cliquer sur \"Save\".",
   "Organization operates in": "La organización opera en",
   "At least one country is required": "Se requiere al menos un país",
   "Please pick governance problem first.": "Por favor seleccione primero el problema de gobernanza.",
