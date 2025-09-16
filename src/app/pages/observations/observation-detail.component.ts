@@ -8,7 +8,7 @@ import proj4 from 'proj4';
 import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
 import { ObservationDocument } from 'app/models/observation_document';
-import { ObservationReport } from 'app/models/observation_report';
+import { MISSION_TYPES, ObservationReport } from 'app/models/observation_report';
 import { Fmu } from 'app/models/fmu.model';
 import { AuthService } from 'app/services/auth.service';
 import { Observation } from './../../models/observation.model';
@@ -90,6 +90,7 @@ export class ObservationDetailComponent implements OnDestroy {
     'Testimony from local communities', 'Other'
   ];
   documentTypeOptions: any = {}; // Object of options for document type selection
+  missionTypes = MISSION_TYPES;
 
   evidenceTabs = [{
     id: 'existing',

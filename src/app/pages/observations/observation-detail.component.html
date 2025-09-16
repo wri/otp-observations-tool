@@ -168,6 +168,16 @@
             <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="reportDate" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
             <div *ngIf="f.submitted && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
           </div>
+
+          <!-- Mission type -->
+          <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
+            <label for="report_mission_type">{{'Mission Type' | translate}}</label>
+            <select id="report_mission_type" name="report_mission_type" [(ngModel)]="report['mission-type']" #report_mission_type="ngModel" [required]="!!report_file.value">
+              <option disabled [value]="">{{'Select a mission type' | translate}}</option>
+              <option *ngFor="let mission_type of missionTypes" [value]="mission_type">{{ mission_type | translate }}</option>
+            </select>
+            <div *ngIf="f.submitted && !report_mission_type.valid" class="help-text">{{'Please select a mission type' | translate}}</div>
+          </div>
         </ng-template>
 
         <!-- Current monitor -->

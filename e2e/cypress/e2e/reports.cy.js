@@ -20,11 +20,13 @@ describe('Report Library', () => {
       cy.get('button').contains('Create').click();
       cy.contains('Please enter the name');
       cy.contains('The file is not valid');
+      cy.contains('Please select a mission type');
       cy.contains('Please enter the publication date');
 
       cy.get('#report_title').clear().type('!! New uploaded report');
       cy.get('input#report_file').attachFile('test_document.pdf');
       cy.selectDate('report_date', '2023-12-30');
+      cy.get('select#mission_type').select('External');
       cy.selectOption('additional_observers', ['AGRECO', 'FODER']);
       cy.get('button').contains('Create').click();
 
@@ -32,6 +34,7 @@ describe('Report Library', () => {
       cy.get('#report_title').should('have.value', '!! New uploaded report');
       cy.get('a').contains('Download file').should('be.visible');
       cy.get('input#report_date').should('have.value', '30/12/2023');
+      cy.get('select#mission_type').should('have.value', 'external');
       cy.expectSelectedOption('additional_observers', ['AGRECO', 'FODER']);
     });
 
@@ -40,12 +43,14 @@ describe('Report Library', () => {
       cy.get('#report_title').clear().type('!! Edited report');
       cy.selectDate('report_date', '2023-12-30');
       cy.selectOption('additional_observers', ['ECODEV', 'OCEAN']);
+      cy.get('select#mission_type').select('Government');
       cy.get('button').contains('Save').click();
 
       cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
       cy.get('#report_title').should('have.value', '!! Edited report');
       cy.get('a').contains('Download file').should('be.visible');
       cy.get('input#report_date').should('have.value', '30/12/2023');
+      cy.get('select#mission_type').should('have.value', 'government');
       cy.expectSelectedOption('additional_observers', ['ECODEV', 'OCEAN']);
     });
   })

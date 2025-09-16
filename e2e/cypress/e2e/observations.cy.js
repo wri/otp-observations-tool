@@ -156,6 +156,7 @@ describe('Observations', () => {
     cy.get('input#report_file').attachFile('test_document.pdf');
     cy.get('#report_title').clear().type('New uploaded report');
     cy.selectDate('report_date', '2023-12-30');
+    cy.get('select#report_mission_type').select('Semi-mandated');
     cy.selectOption('additional_observers', ['CADDE', 'CAGDF']);
     cy.selectOption('government_id', ['DGF', 'DGRAD']);
     cy.get('select[name=subcategory_id]').select('Poor control/follow-up');
