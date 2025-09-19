@@ -130,6 +130,8 @@ export class AuthService {
       this.userCountryId = relationships.country && relationships.country.data && relationships.country.data.id;
 
       await this.setObserverCountriesIds();
+      const lang: string = response.data.attributes.locale;
+      this.translateService.use(lang || 'en');
       this.triggerLoginStatus(!!response);
 
       return !!response;
