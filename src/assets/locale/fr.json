@@ -290,7 +290,7 @@
   "observation.additionalMonitors.note": "Si un autre organisme d’OI s’est joint à la mission et/ou a contribué au rapport et apparaît en tant que co-auteur dans le rapport, veuillez sélectionner son nom.",
   "observation.additionalMonitors.disabled.note": "Vous ne pouvez pas changer d'observateur si vous avez présélectionné un rapport existant. Pour changer d'observateur pour les rapports, veuillez accéder à la bibliothèque de rapports.",
   "observation.fmu.note": " ",
-  "observation.nonConcessionActivity": "Le producteur exerce des activités dans une concession attribuée à un autre producteur",
+  "observation.nonConcessionActivity": "L'exploitant mène des activités dans une concession attribuée à un autre exploitant",
   "observation.nonConcessionActivity.note": "En cochant cette case, vous pourrez sélectionner n'importe quelle FMU dans le pays sélectionné",
   "observation.observationCategory.note": "Veuillez sélectionnez la sous-catégorie d’infraction correspondant à votre observation. ",
   "observation.diligenceCategory.note": "En fonction de la sous-catégorie que vous avez choisie, la « catégorie diligence raisonnée » sera automatiquement renseignée.",
@@ -438,5 +438,12 @@
   "Please select a document type": "Veuillez sélectionner un type de document",
   "Please specify if your email address is": "Veuillez préciser si votre adresse email est",
   "A personal e-mail address": "Une adresse mail personnelle",
-  "A generic organization e-mail address (for e.g., info@wri.org)": "Une adresse mail organisationnelle générique (par exemple, info@wri.org)"
+  "A generic organization e-mail address (for e.g., info@wri.org)": "Une adresse mail organisationnelle générique (par exemple, info@wri.org)",
+  "Mission Type": "Type de mission",
+  "Select a mission type": "Sélectionnez un type de mission",
+  "Please select a mission type": "Veuillez sélectionner un type de mission",
+  "mandated": "Mandatée",
+  "semi_mandated": "Semi mandatée",
+  "external": "Externe",
+  "government": "Administration"
 }
