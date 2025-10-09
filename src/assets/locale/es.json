@@ -438,5 +438,12 @@
   "Please select a document type": "Por favor seleccione un tipo de documento",
   "Please specify if your email address is": "Por favor especifique si su dirección de correo electrónico es",
   "A personal e-mail address": "Una dirección de correo electrónico personal",
-  "A generic organization e-mail address (for e.g., info@wri.org)": "Una dirección de correo electrónico genérica de organización (por ejemplo, info@wri.org)"
+  "A generic organization e-mail address (for e.g., info@wri.org)": "Una dirección de correo electrónico genérica de organización (por ejemplo, info@wri.org)",
+  "Mission Type": "Tipo de Misión",
+  "Select a mission type": "Seleccionar un tipo de misión",
+  "Please select a mission type": "Por favor seleccione un tipo de misión",
+  "mandated": "Mandatado",
+  "semi_mandated": "Semimandatado",
+  "external": "Externo",
+  "government": "Gobierno"
 }
