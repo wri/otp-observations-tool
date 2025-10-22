@@ -445,5 +445,7 @@
   "mandated": "Mandatée",
   "semi_mandated": "Semi mandatée",
   "external": "Externe",
-  "government": "Administration"
+  "government": "Administration",
+  "There was a problem with the form submission.": "There was a problem with the form submission.",
+  "Please fill or select all required fields before submitting the form.": "Please fill or select all required fields before submitting the form."
 }

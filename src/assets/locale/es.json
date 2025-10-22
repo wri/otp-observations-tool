@@ -445,5 +445,7 @@
   "mandated": "Mandatado",
   "semi_mandated": "Semimandatado",
   "external": "Externo",
-  "government": "Gobierno"
+  "government": "Gobierno",
+  "There was a problem with the form submission.": "Hubo un problema con el envío del formulario.",
+  "Please fill or select all required fields before submitting the form.": "Por favor, complete o seleccione todos los campos requeridos antes de enviar el formulario."
 }
