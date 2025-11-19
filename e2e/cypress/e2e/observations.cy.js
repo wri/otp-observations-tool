@@ -130,6 +130,8 @@ describe('Observations', () => {
     cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
     cy.location('pathname').should('include', '/observations/edit');
     cy.get('input#non_concession_activity').should('be.checked');
+    cy.get('select[name=fmu_field]').should('be.visible').and('not.be.disabled');
+    cy.get('select[name=fmu_field]').find('option').should('have.length.at.least', 2);
     cy.get('select[name=fmu_field]').find('option').contains('046/11').should('be.selected');
   })
 

@@ -245,6 +245,7 @@ export class ObservationDetailComponent implements OnDestroy {
   _physicalPlace = true;
   // Report to upload
   report: ObservationReport = this.datastoreService.createRecord(ObservationReport, {});
+  reportFormSubmitted = false;
   // Report choosed between options
   _reportChoice: ObservationReport = null;
   _monitorComment: string = null;
@@ -746,6 +747,7 @@ export class ObservationDetailComponent implements OnDestroy {
   get reportAttachment() { return this.report.attachment; }
   set reportAttachment(attachment) {
     this.report.attachment = attachment;
+    this.reportFormSubmitted = false;
 
     // If the user uploads a file, the selected
     // report is discarded
@@ -799,6 +801,12 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get isReportChosen() {
     return this.reportChoice || (this.report.attachment && this.report.title && this.report['publication-date']);
+  }
+
+  get newlyUploadedReportValid() {
+    if (!this.reportAttachment) return true;
+
+    return this.report.title && this.report['publication-date'] && this.report['mission-type'];
   }
 
   get reportDate() { return this.report['publication-date']; }
@@ -1869,7 +1877,13 @@ export class ObservationDetailComponent implements OnDestroy {
       .then(() => this.loading = false);
   }
 
-  onSubmit(): void {
+  async onSubmit() {
+    if (!this.newlyUploadedReportValid) {
+      this.reportFormSubmitted = true;
+      alert(await this.translateService.get('observationReportNotValid').toPromise());
+      return;
+    }
+
     this.loading = true;
 
     let observation: Observation;
