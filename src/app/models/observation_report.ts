@@ -3,7 +3,7 @@ import { Observer } from 'app/models/observer.model';
 import { Observation } from 'app/models/observation.model';
 import { DateConverter } from './converters/date_converter';
 
-export const MISSION_TYPES = ['mandated', 'semi_mandated', 'external', 'government'];
+export const MISSION_TYPES = ['mandated', 'semi_mandated', 'external'];
 export type MissionType = typeof MISSION_TYPES[number];
 
 @JsonApiModelConfig({

@@ -43,14 +43,14 @@ describe('Report Library', () => {
       cy.get('#report_title').clear().type('!! Edited report');
       cy.selectDate('report_date', '2023-12-30');
       cy.selectOption('additional_observers', ['ECODEV', 'OCEAN']);
-      cy.get('select#mission_type').select('Government');
+      cy.get('select#mission_type').select('Mandated');
       cy.get('button').contains('Save').click();
 
       cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
       cy.get('#report_title').should('have.value', '!! Edited report');
       cy.get('a').contains('Download file').should('be.visible');
       cy.get('input#report_date').should('have.value', '30/12/2023');
-      cy.get('select#mission_type').should('have.value', 'government');
+      cy.get('select#mission_type').should('have.value', 'mandated');
       cy.expectSelectedOption('additional_observers', ['ECODEV', 'OCEAN']);
     });
   })
