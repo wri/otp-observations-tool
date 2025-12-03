@@ -171,6 +171,7 @@
   "observationUpdate.error": "La actualización de la observación no fue exitosa.",
   "observationCreation.success": "La observación ha sido creada exitosamente.",
   "observationCreation.error": "La creación de la observación no fue exitosa.",
+  "observationReportNotValid": "The uploaded report is not valid or complete. Please check the errors and try again.",
   "Categories": "Categorías",
   "Subcategories": "Subcategorías",
   "Government entities": "Entidades gubernamentales",

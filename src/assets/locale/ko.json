@@ -171,6 +171,7 @@
   "observationUpdate.error": "관찰내용을 성공적으로 업데이트 하지 못했습니다.",
   "observationCreation.success": "관찰내용을 성공적으로 만들었습니다.",
   "observationCreation.error": "관찰내용을 성공적으로 만들지 못했습니다.",
+  "observationReportNotValid": "The uploaded report is not valid or complete. Please check the errors and try again.",
   "Categories": "분류",
   "Subcategories": "하위 분류",
   "Government entities": "정부기관",
