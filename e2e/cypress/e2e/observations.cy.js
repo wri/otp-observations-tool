@@ -229,6 +229,28 @@ describe('Observations', () => {
     cy.expectSelectedOption('government_id', ['DGF', 'DGRAD', 'New Test Entity']);
   })
 
+  describe('validations', () => {
+    it('displays validation errors when submitting incomplete observation form', () => {
+      cy.get('a').contains('New observation', { timeout: 10000 }).click();
+      cy.get('select#observation_type').select('Producer');
+      cy.get('button').contains('Submit for review').click();
+      cy.contains('Please fill or select all required fields before submitting the form.');
+      cy.contains('Please select an existing report or upload a new one');
+      cy.contains('Please select a producer');
+      cy.contains('Please select a sub-category');
+      cy.contains('Please select a FMU or enter coordinates below');
+      cy.contains('Please select a coordinates format');
+      cy.contains('Please enter a latitude');
+      cy.contains('Please enter a longitude');
+      cy.contains('Please select an evidence type');
+      cy.contains('Please select a severity');
+
+      cy.get('select#observation_type').select('Governance');
+      cy.contains('Please select government entities');
+      cy.contains('Please select a governance problem');
+    });
+  });
+
   describe('evidences', () => {
     it('added evidence is correctly associated with observation report', () => {
       cy.get('a').contains('New observation', { timeout: 10000 }).click();
