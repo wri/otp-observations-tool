@@ -91,6 +91,7 @@ export class ObservationDetailComponent implements OnDestroy {
   ];
   documentTypeOptions: any = {}; // Object of options for document type selection
   missionTypes = MISSION_TYPES;
+  serverValidationError = null;
 
   evidenceTabs = [{
     id: 'existing',
@@ -1790,8 +1791,11 @@ export class ObservationDetailComponent implements OnDestroy {
 
   async onSubmitForReview() {
     if (window.confirm(await this.translateService.get('observationSubmitForReview').toPromise())) {
+      const oldValidationStatus = this.validationStatus;
       this.validationStatus = 'Ready for QC'
-      this.onSubmit();
+      this.onSubmit(null, () => {
+        this.validationStatus = oldValidationStatus;
+      });
     }
   }
 
@@ -1865,6 +1869,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
   updateObservation(onSuccess?: () => void, onError?: () => void) {
     this.loading = true;
+    this.serverValidationError = null;
     this.observation.save({ locale: this.observation.locale }).toPromise()
       .then(() => {
         onSuccess && onSuccess();
@@ -1872,12 +1877,15 @@ export class ObservationDetailComponent implements OnDestroy {
       .catch(async (err) => {
         alert(await this.translateService.get('observationUpdate.error').toPromise());
         console.error(err);
+        if (err.errors && err.errors.length) {
+          this.serverValidationError = err.errors.map(e => e.detail).join('\n');
+        }
         onError && onError();
       })
       .then(() => this.loading = false);
   }
 
-  async onSubmit() {
+  async onSubmit(onSuccess?: () => void, onError?: () => void) {
     if (!this.newlyUploadedReportValid) {
       this.reportFormSubmitted = true;
       alert(await this.translateService.get('observationReportNotValid').toPromise());
@@ -1885,6 +1893,7 @@ export class ObservationDetailComponent implements OnDestroy {
     }
 
     this.loading = true;
+    this.serverValidationError = null;
 
     let observation: Observation;
 
@@ -1976,6 +1985,7 @@ export class ObservationDetailComponent implements OnDestroy {
           this.observationsService.removeDraftObservation();
           alert(await this.translateService.get('observationCreation.success').toPromise());
         }
+        onSuccess && onSuccess();
 
         this.router.navigate(['/', 'private', 'observations']);
       })
@@ -1985,9 +1995,18 @@ export class ObservationDetailComponent implements OnDestroy {
         } else {
           alert(await this.translateService.get('observationCreation.error').toPromise());
         }
+        if (err.errors && err.errors.length) {
+          this.serverValidationError = err.errors.map(e => e.detail).join('\n');
+        }
+        onError && onError();
         console.error(err);
       })
       .then(() => this.loading = false);
+  }
+
+  clearServerError() {
+    this.serverValidationError = null;
+    return true;
   }
 
   onClickBack() {

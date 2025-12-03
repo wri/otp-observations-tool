@@ -27,7 +27,7 @@
   </otp-operator-detail>
 </otp-modal>
 
-<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && f.valid && isReportChosen && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
+<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && clearServerError() && f.valid && isReportChosen && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
   <div class="c-container -j-between -t-d-column -t-a-start">
     <h2 *ngIf="isDisabled() && !isCopied">{{'Observation details' | translate}}</h2>
     <h2 *ngIf="(!isDisabled() && !observation) || isCopied">{{'New observation' | translate}}</h2>
@@ -44,6 +44,25 @@
       <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
     </div>
   </div>
+
+  <ng-template #errorsTemplate let-containerClass="containerClass">
+    <div [ngClass]="containerClass">
+      <div class="callout warning" *ngIf="f.submitted && (!isReportChosen || !this.checkCoordinatesValidity || !f.valid)">
+        <p>
+          {{ 'Please fill or select all required fields before submitting the form.' | translate }}
+        </p>
+      </div>
+
+      <div class="callout warning" *ngIf="serverValidationError">
+        <p>{{ 'There was a problem with the form submission.' | translate }}</p>
+        <p>
+          {{ serverValidationError }}
+        </p>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-container *ngTemplateOutlet="errorsTemplate"></ng-container>
 
   <div class="callout primary" *ngIf="observation && observation['validation-status'] && observation['validation-status'].includes('Ready for QC')">
     <p *ngIf="!canStartQC()">{{'observation.statusNote.ReadyForQC' | translate}}</p>
@@ -912,17 +931,20 @@
     </fieldset>
   </div>
 
+  <ng-container [ngTemplateOutlet]="errorsTemplate" [ngTemplateOutletContext]="{ containerClass: 'with-top-margin' }">
+  </ng-container>
+
   <div class="form-footer">
     <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
       <div class="c-button-container -j-end form-group">
         <button *ngIf="canGoBack()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-      <button *ngIf="canCancel()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="canSubmitForReview()" type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
-      <button *ngIf="canAmend()" type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
-      <button *ngIf="canSave()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
-      <button *ngIf="canCreate()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="canPublishWithoutComments()" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
-      <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
+        <button *ngIf="canCancel()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        <button *ngIf="canSubmitForReview()" type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
+        <button *ngIf="canAmend()" type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
+        <button *ngIf="canSave()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
+        <button *ngIf="canCreate()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
+        <button *ngIf="canPublishWithoutComments()" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
+        <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
       </div>
     </div>
 

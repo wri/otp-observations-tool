@@ -171,6 +171,7 @@
   "observationUpdate.error": "The update of the observation has been unsuccessful.",
   "observationCreation.success": "The observation has been successfully created.",
   "observationCreation.error": "The creation of the observation has been unsuccessful.",
+  "observationReportNotValid": "The uploaded report is not valid or complete. Please check the errors and try again.",
   "Categories": "Categories",
   "Subcategories": "Subcategories",
   "Government entities": "Government entities",
@@ -445,5 +446,7 @@
   "mandated": "Mandated",
   "semi_mandated": "Semi-mandated",
   "external": "External",
-  "government": "Government"
+  "government": "Government",
+  "There was a problem with the form submission.": "There was a problem with the form submission.",
+  "Please fill or select all required fields before submitting the form.": "Please fill or select all required fields before submitting the form."
 }

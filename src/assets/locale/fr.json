@@ -171,6 +171,7 @@
   "observationUpdate.error": "La mise à jour de l'observation a échoué",
   "observationCreation.success": "L'observation a été créée avec succès.",
   "observationCreation.error": "La création de l'observation a échoué ",
+  "observationReportNotValid": "Le rapport téléchargé n'est pas valide ou incomplet. Veuillez vérifier les erreurs et réessayer.",
   "Categories": "Catégories",
   "Subcategories": "Sous-catégories",
   "Government entities": "Entités gouvernementales",
@@ -445,5 +446,7 @@
   "mandated": "Mandatée",
   "semi_mandated": "Semi mandatée",
   "external": "Externe",
-  "government": "Administration"
+  "government": "Administration",
+  "There was a problem with the form submission.": "Il y a eu un problème lors de la saisie.",
+  "Please fill or select all required fields before submitting the form.": "Veuillez remplir ou sélectionner tous les champs obligatoires avant de soumettre le formulaire."
 }
