@@ -47,7 +47,8 @@ describe('Observations - Quality Control', () => {
 
     cy.contains('This observation is ready for quality control.');
     cy.get('button').contains('Start QC').click();
-    cy.contains('Please review this observation and either accept it or reject it with making a comment for a monitor.');
+    cy.contains('Please review this observation and select either (1) accept, if it is ready for publication or (2) reject, if there are mandatory edits that need to be made.');
+    cy.get('button').contains('Needs revision').should('not.exist');
     cy.get('button').contains('Reject').click();
     cy.get('#explain_qc_rejection').clear().type('This is the reason of putting this observation to Rejected state');
     cy.get('button').contains('Submit Rejection').click();
@@ -77,7 +78,7 @@ describe('Observations - Quality Control', () => {
 
     cy.contains('This observation is ready for quality control.');
     cy.get('button').contains('Start QC').click();
-    cy.contains('Please review this observation and either accept it or reject it with making a comment for a monitor.');
+    cy.contains('Please review this observation and select either (1) accept, if it is ready for publication or (2) reject, if there are mandatory edits that need to be made.');
     cy.get('button').contains('Accept').click();
 
     cy.get('otp-table tbody tr:first').contains('Ready for QC2'); // now ready for qc2
@@ -93,11 +94,13 @@ describe('Observations - Quality Control', () => {
     cy.get('otp-table tbody tr:first').contains('Ready for QC2'); // now ready for qc2
     cy.get('otp-table tbody tr:first').find('button[aria-label=Info]').click();
 
+    // QC2 review
     cy.get('button').contains('Start QC').click();
-    cy.contains('Please review this observation and either accept it or reject it with making a comment for a monitor.');
-    cy.get('button').contains('Reject').click();
+    cy.contains('Please review this observation and select either (1) accept, if it is ready for publication, (2) reject, if there are mandatory edits that need to be made or (3) needs revisions if your edits are only suggestions for improvement.');
+    cy.get('button').contains('Reject').should('exist');
+    cy.get('button').contains('Needs revision').click();
     cy.get('#explain_qc_rejection').clear().type('This is the reason of putting this observation to Needs revision state');
-    cy.get('button').contains('Submit Rejection').click();
+    cy.get('button').contains('Submit to Needs Revision').click();
     cy.get('otp-table tbody tr:first').contains('Needs revision');
 
     // back to manager and resubmit
@@ -125,7 +128,7 @@ describe('Observations - Quality Control', () => {
     cy.get('otp-table tbody tr:first').find('button[aria-label=Info]').click();
 
     cy.get('button').contains('Start QC').click();
-    cy.contains('Please review this observation and either accept it or reject it with making a comment for a monitor.');
+    cy.contains('Please review this observation and select either (1) accept, if it is ready for publication, (2) reject, if there are mandatory edits that need to be made or (3) needs revisions if your edits are only suggestions for improvement.');
     cy.get('button').contains('Accept').click();
 
     cy.location('pathname').should('eq', '/private/observations')
