@@ -1829,25 +1829,39 @@ export class ObservationDetailComponent implements OnDestroy {
     this.qcState = 'undecided';
   }
 
-  async onRejectQC() {
-    if (this.qcState === 'undecided') {
-      this.qcState = 'reject';
-    } else {
-      const qualityControl = this.datastoreService.createRecord(QualityControl, {
-        reviewable: this.observation,
-        comment: this.qcComment,
-        passed: false
-      });
-      this.saveQualityControl(qualityControl);
-    }
+  onRejectQC() {
+    this.qcState = 'reject';
+  }
+
+  onNeedsRevisionQC() {
+    this.qcState = 'needsRevision';
+  }
+
+  async onSubmitQCRejection() {
+    let decision;
+    if (this.qcState === 'reject') decision = 'Rejected';
+    if (this.qcState === 'needsRevision') decision = 'Needs revision';
+
+    if (!decision) return;
+
+    const qualityControl = this.datastoreService.createRecord(QualityControl, {
+      reviewable: this.observation,
+      comment: this.qcComment,
+      decision
+    });
+    this.saveQualityControl(qualityControl);
   }
 
   async onApproveQC() {
     if (!window.confirm(await this.translateService.get('observationAccept').toPromise())) return;
 
+    let decision;
+    if (this.validationStatus.includes('QC1')) decision = 'Ready for QC2';
+    if (this.validationStatus.includes('QC2')) decision = 'Ready for publication';
+
     const qualityControl = this.datastoreService.createRecord(QualityControl, {
       reviewable: this.observation,
-      passed: true
+      decision
     });
     this.saveQualityControl(qualityControl);
   }
@@ -1859,8 +1873,7 @@ export class ObservationDetailComponent implements OnDestroy {
     .catch(async (err) => {
       let message = await this.translateService.get('observationUpdate.error').toPromise();
       if (err.errors && err.errors.length) {
-        console.log('join');
-        message += '\n' + err.errors.map(e => e.status + " : " + e.title).join('\n');
+        message += '\n' + err.errors.map(e => e.detail).join('\n');
       }
       alert(message);
       console.error(err);

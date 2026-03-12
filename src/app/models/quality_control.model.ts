@@ -9,5 +9,6 @@ export class QualityControl extends JsonApiModel {
 
   @Attribute() comment?: string;
   @Attribute() passed?: boolean;
+  @Attribute() decision?: string;
   @Attribute() 'created-at'?: Date;
 }

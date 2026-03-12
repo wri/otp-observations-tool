@@ -35,6 +35,28 @@
     }
   }
 
+  &.-danger {
+    border-color: $color-danger;
+    color: $white;
+    background: $color-danger;
+
+    &:hover,
+    &:focus {
+      background: darken($color-danger, 10%);
+    }
+  }
+
+  &.-warning {
+    border-color: $color-warning;
+    color: $white;
+    background: $color-warning;
+
+    &:hover,
+    &:focus {
+      background: darken($color-warning, 10%);
+    }
+  }
+
 
   &.-disabled,
   &[disabled] {
