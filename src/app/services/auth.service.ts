@@ -66,10 +66,11 @@ export class AuthService {
    * is not permitted to log in, resolve true if everything's fine
    * @param {string} email user email
    * @param {string} password user password
+   * @param {boolean} rememberMe keep the session for 30 days
    * @returns {Promise<boolean>}
    */
-  login(email: string, password: string): Promise<boolean> {
-    const payload = { auth: { email, password, set_cookie: true } };
+  login(email: string, password: string, rememberMe: boolean = false): Promise<boolean> {
+    const payload = { auth: { email, password, set_cookie: true, remember_me: rememberMe } };
 
     return this.http.post(`${environment.apiUrl}/login`, payload).pipe(
       map((body: any) => {
