@@ -69,7 +69,7 @@ export class AuthService {
    * @returns {Promise<boolean>}
    */
   login(email: string, password: string): Promise<boolean> {
-    const payload = { auth: { email, password } };
+    const payload = { auth: { email, password, set_cookie: true } };
 
     return this.http.post(`${environment.apiUrl}/login`, payload).pipe(
       map((body: any) => {
