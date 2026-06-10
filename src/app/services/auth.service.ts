@@ -79,7 +79,6 @@ export class AuthService {
           return false;
         }
 
-        this.tokenService.token = body.token;
         this.userId = body.user_id;
         this.userRole = body.role;
 
@@ -97,11 +96,6 @@ export class AuthService {
    * @returns {Promise<boolean>}
    */
   async isUserLogged(): Promise<boolean> {
-    if (!this.tokenService.token) {
-      this.triggerLoginStatus(false);
-      return false;
-    }
-
     try {
       const response = await this.http.get(`${environment.apiUrl}/users/current-user`).toPromise() as any;
       const relationships = response.data.relationships;
@@ -158,7 +152,14 @@ export class AuthService {
     return this.userRole === 'admin';
   }
 
-  logout() {
+  async logout() {
+    try {
+      await this.http.delete(`${environment.apiUrl}/logout`).toPromise();
+    } catch (e) {
+      // Clear the session client-side even if the request fails so the user
+      // isn't trapped in a logged-in state.
+      console.error(e);
+    }
     this.tokenService.token = null;
     this.userId = null;
     this.userRole = null;
