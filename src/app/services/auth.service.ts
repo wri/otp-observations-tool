@@ -160,12 +160,42 @@ export class AuthService {
       // isn't trapped in a logged-in state.
       console.error(e);
     }
+    this.clearSession();
+    this.router.navigate(['/']);
+  }
+
+  /**
+   * Reset the local auth state. Does not call the backend, so it is safe to
+   * use when the session is already gone (e.g. the cookie expired).
+   */
+  clearSession() {
     this.tokenService.token = null;
     this.userId = null;
     this.userRole = null;
     this.userObserverId = null;
     this.triggerLoginStatus(false);
-    this.router.navigate(['/']);
+  }
+
+  /**
+   * Handle an expired/invalid session detected from a 401 API response:
+   * clear local state and send the user back to the login page.
+   */
+  sessionExpired() {
+    this.clearSession();
+    // Already on the login page: never navigate again. This is the structural
+    // guard against redirect loops -- even if some request keeps returning 401
+    // while we sit on login, we simply stop redirecting instead of bouncing.
+    if (this.isOnLoginPage()) {
+      return;
+    }
+    // Redirect to the login page (route ''), keeping the current location so
+    // the user returns to where they were after signing back in.
+    this.router.navigate(['/'], { queryParams: { returnUrl: this.router.url } });
+  }
+
+  private isOnLoginPage(): boolean {
+    // Login is the root route (''), so its URL is '/' or '/?returnUrl=...'.
+    return this.router.url === '/' || this.router.url.startsWith('/?');
   }
 
   recoverPass(email: string): Promise<boolean> {

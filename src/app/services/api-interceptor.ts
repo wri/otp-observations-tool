@@ -4,13 +4,16 @@ import {
   HttpInterceptor,
   HttpHandler,
   HttpRequest,
+  HttpErrorResponse,
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 
 import { environment } from 'environments/environment';
 import { TokenService } from './token.service';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class APIInterceptor implements HttpInterceptor {
@@ -19,7 +22,8 @@ export class APIInterceptor implements HttpInterceptor {
   }
 
   constructor (
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private injector: Injector
   ) {
   }
 
@@ -54,10 +58,28 @@ export class APIInterceptor implements HttpInterceptor {
         setParams: params,
         withCredentials: true
       });
-      return next.handle(authReq);
+      return next.handle(authReq).pipe(
+        catchError((error) => {
+          // A 401 means the session cookie is missing/expired. Drop the local
+          // auth state and send the user back to login. Skip the auth-flow
+          // endpoints (login/logout and the current-user probe) whose 401s are
+          // expected and handled by AuthService, otherwise the login route's
+          // guard would re-probe and loop redirects.
+          if (error instanceof HttpErrorResponse && error.status === 401 && !this.isAuthRequest(req.url)) {
+            this.injector.get(AuthService).sessionExpired();
+          }
+          return throwError(error);
+        })
+      );
     }
 
     return next.handle(req);
+  }
+
+  private isAuthRequest(url: string): boolean {
+    return url.endsWith('/login')
+      || url.endsWith('/logout')
+      || url.includes('/current-user');
   }
 }
 
