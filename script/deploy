@@ -38,4 +38,8 @@ else
   echo "SENTRY ENV variables not found in .env file, skipping source maps upload"
 fi
 
+# Sentry has the maps now; don't serve them publicly (main.js.map alone is ~9MB)
+echo "Removing source maps from the deployed bundle"
+find ./dist -name '*.map' -delete
+
 echo "--> All done :)"

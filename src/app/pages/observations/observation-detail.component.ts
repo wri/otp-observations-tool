@@ -4,7 +4,7 @@ import orderBy from 'lodash/orderBy';
 import uniqBy from 'lodash/uniqBy';
 import flatten from 'lodash/flatten';
 import * as EXIF from 'exif-js';
-import proj4 from 'proj4';
+import proj4 from 'app/shared/proj4-subset';
 import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
 import { ObservationDocument } from 'app/models/observation_document';

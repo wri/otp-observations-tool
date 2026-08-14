@@ -1,10 +1,8 @@
 import { Component, forwardRef, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import flatpickr from 'flatpickr';
-import { French } from 'flatpickr/dist/l10n/fr.js';
-import { Spanish } from 'flatpickr/dist/l10n/es.js';
-import en from 'flatpickr/dist/l10n/default.js';
 import { dateFormat } from '../formatted-date/formatted-date.component';
+import { LOCALE } from './flatpickr-locales';
 import { CustomLocale } from 'flatpickr/dist/types/locale';
 
 const REQUIRED_VALIDATOR: any = {
@@ -18,12 +16,6 @@ const VALUE_ACCESSOR: any = {
   useExisting: forwardRef(() => DatepickerComponent),
   multi: true
 };
-
-const LOCALE = {
-  en: en,
-  fr: French,
-  es: Spanish
-}
 
 @Component({
   selector: 'otp-datepicker',

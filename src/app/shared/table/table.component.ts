@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TABLET_BREAKPOINT } from 'app/directives/responsive.directive';
 import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
-import { uniq } from 'lodash';
+import uniq from 'lodash/uniq';
 
 export interface TableState {
   page: number;
