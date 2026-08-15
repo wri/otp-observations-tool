@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { SharedUiModule } from 'app/shared/shared-ui.module';
 import { ObservationsComponent } from 'app/pages/observations/observations.component';
 import { ObservationListComponent } from 'app/pages/observations/observation-list.component';
-import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
 
-// Kept identical to the child routes previously declared in AppRoutingModule.
+// Paths are unchanged from the original eager routing table. The detail form is loaded on demand
+// (see ObservationDetailModule) so opening the list does not pull in leaflet/proj4/exif-js.
 const routes: Routes = [
   {
     path: '',
@@ -24,11 +23,13 @@ const routes: Routes = [
       },
       {
         path: 'new',
-        component: ObservationDetailComponent
+        loadChildren: () =>
+          import('app/pages/observations/observation-detail.module').then(m => m.ObservationDetailModule)
       },
       {
         path: 'edit/:id',
-        component: ObservationDetailComponent
+        loadChildren: () =>
+          import('app/pages/observations/observation-detail.module').then(m => m.ObservationDetailModule)
       }
     ]
   }
@@ -37,13 +38,11 @@ const routes: Routes = [
 @NgModule({
   imports: [
     SharedUiModule,
-    LeafletModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
     ObservationsComponent,
-    ObservationListComponent,
-    ObservationDetailComponent
+    ObservationListComponent
   ]
 })
 export class ObservationsModule { }
