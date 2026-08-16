@@ -9,9 +9,10 @@
     "dev": "ng serve --configuration=local",
     "build": "ng build",
     "lint": "ng lint",
-    "prod-build": "ng build --output-path=build/ --base-href=/observations-tool/ --aot --prod",
-    "staging-build": "ng build --output-path=build/ --base-href=/observations-tool/ --aot --configuration=staging",
-    "bundle-report": "webpack-bundle-analyzer dist/stats.json",
+    "prod-build": "ng build --output-path=build/ --base-href=/observations-tool/ --prod",
+    "staging-build": "ng build --output-path=build/ --base-href=/observations-tool/ --configuration=staging",
+    "bundle-stats": "ng build --prod --stats-json --output-path=dist/",
+    "bundle-report": "yarn bundle-stats && webpack-bundle-analyzer dist/stats.json",
     "transifex:push": "env $(grep ^TX_TOKEN -m 1 .env | xargs) tx push -s",
     "transifex:pull": "env $(grep ^TX_TOKEN -m 1 .env | xargs) tx pull -a -f && node transifex/format-locales.js"
   },

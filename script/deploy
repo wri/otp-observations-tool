@@ -20,7 +20,7 @@ echo "Fetching translations..."
 yarn transifex:pull
 
 echo "Building project..."
-if [ $1 = "staging" ]; then
+if [ "${1:-}" = "staging" ]; then
   yarn run staging-build
 else
   yarn run prod-build
