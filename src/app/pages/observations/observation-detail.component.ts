@@ -1500,8 +1500,11 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   onCancel(): void {
-    // Without relativeTo, the navigation doesn't work properly
-    this.router.navigate([(this.observation && !this.isCopied) ? '../..' : '..'], { relativeTo: this.route });
+    // Absolute on purpose. This component is routed at path '' inside ObservationDetailModule,
+    // so its ActivatedRoute consumes no URL segments (_lastPathIndex === -1). In that case
+    // Angular's findStartingPosition drops the '..' segments entirely, and relative navigation
+    // silently goes nowhere. Both 'new' and 'edit/:id' cancel back to the list.
+    this.router.navigate(['/private/observations']);
   }
 
   onClickAmend(): void {
@@ -2023,7 +2026,8 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   onClickBack() {
-    this.router.navigate(['../..'], { relativeTo: this.route });
+    // Absolute for the same reason as onCancel() above.
+    this.router.navigate(['/private/observations']);
   }
 
 }
