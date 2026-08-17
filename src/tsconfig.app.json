@@ -12,9 +12,14 @@
       "lodash": ["../node_modules/lodash-es"]
     }
   },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts",
-    "**/*.worker.ts"
+  // Angular 9 warns about files that are in the compilation but not reachable from an entry
+  // point (the environment.*.ts variants are only pulled in via fileReplacements). Listing the
+  // real entry points instead of excluding by pattern silences that and narrows the compilation.
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "**/*.d.ts"
   ]
 }

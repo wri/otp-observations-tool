@@ -22,7 +22,8 @@ export class TableColumnDirective {
   @Input() hideable: boolean = true;
   @Input() hidden: boolean;
 
-  @Input()
+  // The @Input() that used to sit here was vestigial - nothing ever bound [cellTemplate],
+  // it is only ever populated by this content query. Ivy rejects the combination (NG1006).
   @ContentChild(TableColumnCellDirective, { read: TemplateRef, static: true })
   cellTemplate: TemplateRef<any>;
 
