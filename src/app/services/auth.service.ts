@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { ReplaySubject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
-import { uniq } from 'lodash';
+import uniq from 'lodash/uniq';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()

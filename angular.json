@@ -84,6 +84,12 @@
               ]
             },
             "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1.2mb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": true,

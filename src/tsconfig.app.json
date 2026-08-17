@@ -3,7 +3,14 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "",
-    "types": []
+    "types": [],
+    "paths": {
+      // angular2-jsonapi does `import { isEqual, cloneDeep, extend } from 'lodash'`, which drags
+      // the whole 70kB monolithic build in. lodash-es (already a dep of angular2-jsonapi) exposes
+      // the same functions as ES modules, so webpack can tree-shake down to the three we use.
+      // Only the bare specifier is remapped; deep `lodash/foo` imports resolve as before.
+      "lodash": ["../node_modules/lodash-es"]
+    }
   },
   "exclude": [
     "test.ts",

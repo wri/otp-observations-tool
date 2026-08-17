@@ -20,7 +20,7 @@ echo "Fetching translations..."
 yarn transifex:pull
 
 echo "Building project..."
-if [ $1 = "staging" ]; then
+if [ "${1:-}" = "staging" ]; then
   yarn run staging-build
 else
   yarn run prod-build
@@ -37,5 +37,14 @@ if grep -q ^SENTRY .env; then
 else
   echo "SENTRY ENV variables not found in .env file, skipping source maps upload"
 fi
+
+# Sentry has the maps now; don't serve them publicly (main.js.map alone is ~9MB)
+echo "Removing source maps from the deployed bundle"
+find ./dist -name '*.map' -delete
+
+# Write .br/.gz siblings for nginx's brotli_static/gzip_static. Must run after the
+# source maps are removed so we don't spend time compressing files we just deleted.
+echo "Pre-compressing assets..."
+node script/precompress.js dist
 
 echo "--> All done :)"

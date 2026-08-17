@@ -2,7 +2,7 @@ import { ViewChild, AfterViewInit } from '@angular/core';
 import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
 import { TableComponent, TableState } from 'app/shared/table/table.component';
 import { FiltersComponent, Filter } from 'app/shared/filters/filters.component';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import * as Sentry from '@sentry/browser'
 
 export class TableFilterBehavior implements AfterViewInit {

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import flatpickr from 'flatpickr';
-import Locale from 'flatpickr/dist/l10n';
+import { LOCALE } from '../datepicker/flatpickr-locales';
 
 export const dateFormat = 'd/m/Y';
 
@@ -20,8 +20,10 @@ export class FormattedDateComponent {
 
   get formattedDate(): string {
     if (!this.isLocaleSet) {
-      const localeMethod = Locale[<any>this.locale];
-      flatpickr.localize(localeMethod);
+      const localeMethod = LOCALE[this.locale];
+      if (localeMethod) {
+        flatpickr.localize(localeMethod);
+      }
       this.isLocaleSet = true;
     }
 

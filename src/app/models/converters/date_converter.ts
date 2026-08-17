@@ -1,4 +1,6 @@
-import { parse, format } from 'date-fns';
+// Deep imports: the 'date-fns' barrel pulls all 164 modules into the eager bundle.
+import parse from 'date-fns/parse';
+import format from 'date-fns/format';
 import { PropertyConverter } from 'angular2-jsonapi';
 
 export class DateConverter implements PropertyConverter {
