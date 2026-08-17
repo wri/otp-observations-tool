@@ -163,7 +163,7 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
 
   onEdit(row): void {
     // Without relativeTo, the navigation doesn't work properly
-    this.router.navigate([`../edit/${row.id}`], { relativeTo: this.route });
+    this.router.navigate([`/private/observations/edit/${row.id}`]);
   }
 
   async onDelete(row) {
@@ -230,14 +230,14 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
   }
 
   public onClone(observation: Observation): void {
-    this.router.navigate([`../new`, { copiedId: observation.id }], { relativeTo: this.route });
+    this.router.navigate(['/private/observations/new', { copiedId: observation.id }]);
   }
 
   public onCreate(useDraft = false): void {
     if (useDraft) {
-      this.router.navigate([`../new`, { useDraft }], { relativeTo: this.route });
+      this.router.navigate(['/private/observations/new', { useDraft }]);
     } else {
-      this.router.navigate([`../new`], { relativeTo: this.route });
+      this.router.navigate(['/private/observations/new']);
     }
   }
 

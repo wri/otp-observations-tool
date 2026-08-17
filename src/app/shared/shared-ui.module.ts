@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SpinnerModule } from 'angular2-spinner/dist';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 import { SharedModule } from 'app/shared/shared.module';
@@ -35,7 +34,6 @@ import { OperatorDetailComponent } from 'app/pages/fields/operators/operator-det
   imports: [
     SharedModule,
     RouterModule,
-    SpinnerModule,
     MultiselectDropdownModule
   ],
   declarations: [

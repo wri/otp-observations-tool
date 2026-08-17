@@ -15,11 +15,16 @@
   // Angular 9 warns about files that are in the compilation but not reachable from an entry
   // point (the environment.*.ts variants are only pulled in via fileReplacements). Listing the
   // real entry points instead of excluding by pattern silences that and narrows the compilation.
+  // The web worker deliberately stays out of this compilation - it has its own
+  // tsconfig.worker.json with the webworker lib, which conflicts with lib.dom here.
   "files": [
     "main.ts",
     "polyfills.ts"
   ],
   "include": [
     "**/*.d.ts"
+  ],
+  "exclude": [
+    "**/*.worker.ts"
   ]
 }

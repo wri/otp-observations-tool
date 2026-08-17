@@ -8,6 +8,11 @@
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "node",
+    // angular2-spinner predates the Angular Package Format, so ngcc does not recognise it as an
+    // entry point and never rewrites its typings. Its shipped index.d.ts still declares
+    // `ModuleWithProviders` without the type argument Angular 10+ requires (TS2314). Skipping
+    // declaration-file checks is the standard escape hatch; our own sources are still checked.
+    "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
