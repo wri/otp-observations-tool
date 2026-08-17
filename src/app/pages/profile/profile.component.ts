@@ -60,7 +60,7 @@ export class ProfileComponent {
     }
     // Temp Workaround to not send email to API if it was not changed
     // # TODO: change API to check if email changed instead
-    if (this.user.email == this.initialEmail) {
+    if (this.user.email === this.initialEmail) {
       // @ts-ignore
       this.user[Object.getOwnPropertySymbols(this.user)[0]]['email'].hasDirtyAttributes = false;
     }
@@ -79,8 +79,8 @@ export class ProfileComponent {
           await this.translateService.get('profileUpdate.error').toPromise()
         ];
         if (error && error.errors && error.errors.length) {
-          for (let er of error.errors) {
-            if (er.title === "is invalid" && er.source && er.source.pointer === '/data/attributes/current-password') {
+          for (const er of error.errors) {
+            if (er.title === 'is invalid' && er.source && er.source.pointer === '/data/attributes/current-password') {
               messageArray.push(await this.translateService.get('Current password is invalid').toPromise());
             } else {
               messageArray.push(`${er.title} - ${er.detail}`);

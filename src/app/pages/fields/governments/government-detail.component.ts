@@ -7,14 +7,14 @@ import { GovernmentsService } from 'app/services/governments.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'otp-government-detail',
   templateUrl: './government-detail.component.html',
   styleUrls: ['./government-detail.component.scss']
 })
-export class GovernmentDetailComponent {
+export class GovernmentDetailComponent implements OnInit {
 
   countries: Country[] = [];
   government: Government = null;
@@ -117,7 +117,7 @@ export class GovernmentDetailComponent {
           err.errors.forEach((error) => {
             if (error.status === '422') {
               if (error.source && error.source.pointer === '/data/attributes/government-entity') {
-                if (["n'est pas disponible", 'has already been taken'].includes(error.title) && this.uniqueNameErrorMessage) {
+                if (['n\'est pas disponible', 'has already been taken'].includes(error.title) && this.uniqueNameErrorMessage) {
                   this.nameServerError = this.uniqueNameErrorMessage;
                 } else {
                   this.nameServerError = error.title;
@@ -148,10 +148,10 @@ export class GovernmentDetailComponent {
     if (!(this.useRouter && this.route.snapshot.params.id)) {
       return true;
     }
-    let countries = this.authService.observerCountriesIds;
+    const countries = this.authService.observerCountriesIds;
 
     if (countries.length) {
-      return countries.includes(parseInt(this.government.country.id));
+      return countries.includes(parseInt(this.government.country.id, 10));
     } else {
       return this.government.country.id === this.authService.userCountryId;
     }

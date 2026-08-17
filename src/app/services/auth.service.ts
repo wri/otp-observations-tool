@@ -113,7 +113,7 @@ export class AuthService {
       const managedObserverIds = [];
       if (this.isBackendAdmin()) {
         await this.observersService.getAll({ sort: 'name' }).then(data => {
-          //set all observers as available
+          // set all observers as available
           managedObserverIds.push(...data.map(o => o.id));
         });
       }
@@ -182,9 +182,9 @@ export class AuthService {
       include: 'countries',
       fields: { countries: 'id' } // Just save bandwidth and load fastter
     }).then((observer) => {
-      let countries_ids = [];
+      const countries_ids = [];
       (observer.countries || []).forEach((country) => {
-        countries_ids.push(parseInt(country['id']));
+        countries_ids.push(parseInt(country['id'], 10));
       });
       this.observerCountriesIds = countries_ids;
     }).catch(err => console.error(err));

@@ -9,7 +9,10 @@
       true,
       "check-space"
     ],
-    "curly": true,
+    "curly": [
+      true,
+      "ignore-same-line"
+    ],
     "eofline": true,
     "forin": true,
     "import-blacklist": [true],
@@ -20,16 +23,10 @@
     ],
     "interface-over-type-literal": true,
     "label-position": true,
-    "max-line-length": [
-      true,
-      140
-    ],
+    // Disabled by preference: several files already opted out line by line.
+    "max-line-length": false,
     "member-access": false,
-    "member-ordering": [
-      true,
-      "static-before-instance",
-      "variables-before-functions"
-    ],
+    "member-ordering": false,
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [
@@ -46,14 +43,17 @@
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
-    "no-inferrable-types": [true, "ignore-params"],
+    "no-inferrable-types": false,
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-string-throw": true,
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
-    "no-unused-expression": true,
-    "no-use-before-declare": true,
+    // allow-fast-null-checks permits the optional-callback idiom `onSuccess && onSuccess();`
+    "no-unused-expression": [
+      true,
+      "allow-fast-null-checks"
+    ],
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [
@@ -86,7 +86,6 @@
         "variable-declaration": "nospace"
       }
     ],
-    "typeof-compare": true,
     "unified-signatures": true,
     "variable-name": false,
     "whitespace": [
@@ -108,9 +107,6 @@
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true,
-    "no-access-missing-member": true,
-    "templates-use-public": true,
-    "invoke-injectable": true
+    "directive-class-suffix": true
   }
 }

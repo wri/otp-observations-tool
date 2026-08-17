@@ -41,7 +41,7 @@ export class TabsComponent {
    * is on the component
    * @param {KeyboardEvent} e event
    */
-  @HostListener('keydown',['$event'])
+  @HostListener('keydown', ['$event'])
   onKeydown (e: KeyboardEvent) {
     switch (e.keyCode) {
       case 37: // left arrow

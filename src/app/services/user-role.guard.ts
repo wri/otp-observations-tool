@@ -11,7 +11,7 @@ export class UserRoleGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const userRole = this.authService.userRole;
     const includeRoles = route.data['authIncludeRoles'];
     const excludeRoles = route.data['authExcludeRoles'];

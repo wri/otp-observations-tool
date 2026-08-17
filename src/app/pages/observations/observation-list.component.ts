@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import * as truncate from 'lodash/truncate';
 import { AuthService } from 'app/services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ElementRef } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
@@ -14,7 +14,7 @@ import { DraftObservation } from 'app/models/draft_observation.interface';
   templateUrl: './observation-list.component.html',
   styleUrls: ['./observation-list.component.scss']
 })
-export class ObservationListComponent extends TableFilterBehavior {
+export class ObservationListComponent extends TableFilterBehavior implements AfterViewInit {
   apiUrl: string = environment.apiUrl;
   draftObservation: DraftObservation = null;
   @ViewChild('uploadFile', { static: true }) uploadFile: ElementRef;
@@ -35,7 +35,7 @@ export class ObservationListComponent extends TableFilterBehavior {
   response: any = {};
   statusFilterValues: any = {};
   typeFilterValues: any = [];
-  hiddenFilterValues: any = ["false", "all"];
+  hiddenFilterValues: any = ['false', 'all'];
   countryFilterParams: any = {};
   operatorFilterParams: any = {};
   govFilterParams: any = {};

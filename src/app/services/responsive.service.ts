@@ -22,7 +22,7 @@ export class ResponsiveService {
       debounceTime(300),
       map(() => window.innerWidth),
       defaultIfEmpty(),
-      startWith(window.innerWidth),)
+      startWith(window.innerWidth), )
       .subscribe(width => this.resize$.next(width));
   }
 

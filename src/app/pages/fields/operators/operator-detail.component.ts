@@ -7,8 +7,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from 'environments/environment';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { forkJoin ,  Observable } from "rxjs";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { forkJoin ,  Observable } from 'rxjs';
 import { Fmu } from 'app/models/fmu.model';
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import { FmusService } from 'app/services/fmus.service';
@@ -19,7 +19,7 @@ import sortBy from 'lodash/sortBy';
   templateUrl: './operator-detail.component.html',
   styleUrls: ['./operator-detail.component.scss']
 })
-export class OperatorDetailComponent {
+export class OperatorDetailComponent implements OnInit {
   objectKeys = Object.keys;
 
   countries: Country[] = [];
@@ -65,7 +65,7 @@ export class OperatorDetailComponent {
     this.fmusOptions = sortBy(data.map(c => ({ id: c.id, name: c.name })), 'name');
   }
 
-  get country() : Country {
+  get country(): Country {
     return this.operator.country;
   }
   set country(country: Country) {
@@ -182,7 +182,7 @@ export class OperatorDetailComponent {
           err.errors.forEach((error) => {
             if (error.status === '422') {
               if (error.source && error.source.pointer === '/data/attributes/name') {
-                if (["n'est pas disponible", 'has already been taken'].includes(error.title) && this.uniqueNameErrorMessage) {
+                if (['n\'est pas disponible', 'has already been taken'].includes(error.title) && this.uniqueNameErrorMessage) {
                   this.nameServerError = this.uniqueNameErrorMessage;
                 } else {
                   this.nameServerError = error.title;
@@ -213,10 +213,10 @@ export class OperatorDetailComponent {
     if (!(this.useRouter && this.route.snapshot.params.id)) {
       return true;
     }
-    let countries = this.authService.observerCountriesIds;
+    const countries = this.authService.observerCountriesIds;
 
     if (countries.length) {
-      return countries.includes(parseInt(this.operator.country.id));
+      return countries.includes(parseInt(this.operator.country.id, 10));
     } else {
       return this.operator.country.id === this.authService.userCountryId;
     }

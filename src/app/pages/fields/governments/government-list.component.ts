@@ -4,14 +4,14 @@ import { Government } from './../../../models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
 import { ObserversService } from 'app/services/observers.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 
 @Component({
   selector: 'otp-government-list',
   templateUrl: './government-list.component.html',
   styleUrls: ['./government-list.component.scss']
 })
-export class GovernmentListComponent extends TableFilterBehavior {
+export class GovernmentListComponent extends TableFilterBehavior implements AfterViewInit {
   countryFilterParams: any = {};
 
   constructor(
@@ -60,10 +60,10 @@ export class GovernmentListComponent extends TableFilterBehavior {
    * @returns {boolean}
    */
   canEdit(government: Government): boolean {
-    let countries = this.authService.observerCountriesIds;
+    const countries = this.authService.observerCountriesIds;
 
     if (countries.length) {
-      return countries.includes(parseInt(government.country.id));
+      return countries.includes(parseInt(government.country.id, 10));
     } else {
       return government.country.id === this.authService.userCountryId;
     }

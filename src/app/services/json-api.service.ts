@@ -6,7 +6,7 @@ import { JsonApiModel, JsonApiDatastore } from 'angular2-jsonapi';
 import { DatastoreService } from 'app/services/datastore.service';
 
 // tslint:disable-next-line:interface-over-type-literal
-export type ModelType<T extends JsonApiModel> = { new(datastore: JsonApiDatastore, data: any): T; };
+export type ModelType<T extends JsonApiModel> = new(datastore: JsonApiDatastore, data: any) => T;
 
 export interface JsonApiParams {
   page?: {

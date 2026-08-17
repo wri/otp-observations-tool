@@ -37,7 +37,7 @@ export class UploadFileComponent {
 
     if (response && Object.keys(response).length) {
       this.recordsNumber = Object.keys(response).length;
-      for (let index in response) {
+      for (const index in response) {
         if (Object.keys(response[index].errors).length) {
           this.generateErrorLines(response, +index);
         }
@@ -54,16 +54,20 @@ export class UploadFileComponent {
   ) { }
 
   private generateErrorLines(response: any, index: number): void {
-    for (let recordType in response[index].errors) {
-      for (let field in response[index].errors[recordType]) {
-        const description = `${field}: ${response[index].errors[recordType][field]}`;
+    const errors = response[index].errors;
+
+    // Object.keys rather than for...in: it only walks own enumerable keys, so inherited
+    // properties can never leak into the error list.
+    Object.keys(errors).forEach((recordType) => {
+      Object.keys(errors[recordType]).forEach((field) => {
+        const description = `${field}: ${errors[recordType][field]}`;
         this.errors.push({
           line: index,
           type: recordType,
           description: description
         });
-      }
-    }
+      });
+    });
   }
 
   public get hasResponse(): boolean {
