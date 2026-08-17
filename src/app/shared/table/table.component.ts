@@ -1,7 +1,7 @@
 import { JsonApiParams } from 'app/services/json-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TABLET_BREAKPOINT } from 'app/directives/responsive.directive';
-import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
+import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, ElementRef, AfterContentInit, AfterViewChecked } from '@angular/core';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
 import uniq from 'lodash/uniq';
 
@@ -18,7 +18,7 @@ export interface TableState {
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements AfterContentInit {
+export class TableComponent implements AfterContentInit, AfterViewChecked {
 
   public rows: any[] = [];
   public rowCount: number; // Number of total rows (total results)
@@ -46,9 +46,17 @@ export class TableComponent implements AfterContentInit {
   private _columnTemplates: QueryList<TableColumnDirective>;
   private _paginationIndex = 0; // Zero-based number of the page
 
-  get isHorizontalScrollVisible() {
-    return this.tableContainer.nativeElement.scrollWidth > this.tableContainer.nativeElement.clientWidth;
-  }
+  /**
+   * Whether the table overflows horizontally.
+   *
+   * Deliberately a cached field rather than a getter. Consumers read this from a parent
+   * template (observation-list) that is checked *before* this component has rendered its
+   * rows, so a live DOM measurement answered false on the first pass and true on the
+   * second — which is ExpressionChangedAfterItHasBeenCheckedError. Reading scrollWidth
+   * from a template binding also forced a synchronous layout on every change detection
+   * cycle; now it happens once per cycle, in ngAfterViewChecked.
+   */
+  isHorizontalScrollVisible = false;
 
   get hiddenColumns(): string[] {
     const alwaysVisibleColumns = this.columns.filter(c => !c.hideable).map(c => c.name);
@@ -251,6 +259,18 @@ export class TableComponent implements AfterContentInit {
   constructor(
     private translateService: TranslateService
   ) { }
+
+  ngAfterViewChecked(): void {
+    const el = this.tableContainer.nativeElement;
+    const visible = el.scrollWidth > el.clientWidth;
+
+    if (visible !== this.isHorizontalScrollVisible) {
+      // Assign in a fresh change detection pass rather than mutating state the current
+      // one has already checked. The guard above stops this from looping: once the value
+      // has settled, the next pass finds them equal and schedules nothing.
+      Promise.resolve().then(() => this.isHorizontalScrollVisible = visible);
+    }
+  }
 
   ngAfterContentInit(): void {
     // Angular doesn't detect the changes of the attributes of
