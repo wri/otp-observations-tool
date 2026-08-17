@@ -410,7 +410,7 @@ export class FiltersComponent implements AfterContentInit {
       const models = Reflect.getMetadata('JsonApiDatastoreConfig', this.datastoreService.constructor).models;
       const model = models[<string>asyncFiltersNode.values];
 
-      const extraParams = (asyncFiltersNode['extra-params'] as any) || {};
+      const extraParams = (asyncFiltersNode.extraParams as any) || {};
       let params = {
         sort: asyncFiltersNode['name-attr'],
         page: { size: 3000 },

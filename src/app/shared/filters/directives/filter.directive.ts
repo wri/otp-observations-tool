@@ -12,8 +12,11 @@ export class FilterDirective {
   // Attribute to use to list the options
   // in the UI, if fetched from the API
   @Input() 'name-attr': string;
-  // Attribute to use to append extra params to API query for async filters
-  @Input() 'extra-params': string;
+  // Attribute to use to append extra params to API query for async filters.
+  // Aliased rather than declared as a quoted property: Ivy does not recognise
+  // `@Input() 'extra-params'` as an input, so [extra-params] bindings fail with NG8002.
+  // tslint:disable-next-line:no-input-rename
+  @Input('extra-params') extraParams: string;
   // Filter values:
   //  - if object, the keys are the name of the options,
   //    the values the filter values
