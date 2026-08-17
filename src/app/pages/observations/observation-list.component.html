@@ -49,7 +49,7 @@
       <input #uploadFile type="file" (change)="uploadCSV($event.target.files)" accept=".csv" [style.display]="'none'" />
       <ng-template [ngIf]="canCreate()">
         <a class="c-button -secondary upload-csv" (click)="uploadWarningModalOpen = true">{{'Upload CSV' | translate}}</a>
-        <a *ngIf="!draftObservation; else draftBlock" class="c-button -primary" routerLink="../new">{{'New observation' | translate}}</a>
+        <a *ngIf="!draftObservation; else draftBlock" class="c-button -primary" routerLink="/private/observations/new">{{'New observation' | translate}}</a>
         <ng-template #draftBlock>
           <div class="draft">
             <button class="c-button -primary">{{'New observation' | translate}}</button>

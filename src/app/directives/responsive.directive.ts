@@ -4,6 +4,10 @@ import { Subscription } from 'rxjs';
 
 export const TABLET_BREAKPOINT = 768;
 
+// Angular 10+ requires a base class that uses Angular features (DI, lifecycle hooks) to carry
+// a decorator - NG2007. A selector-less @Directive() marks it as an abstract directive, which
+// needs no NgModule declaration; the concrete subclasses below keep their own selectors.
+@Directive()
 export class ResponsiveDirective implements OnInit, OnDestroy {
 
   private subscription: Subscription;

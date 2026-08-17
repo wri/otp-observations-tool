@@ -1804,7 +1804,8 @@ export class ObservationDetailComponent implements OnDestroy {
       // If the user doesn't want to upload a report,
       // we just resolve
       if (!this.report.attachment) {
-        resolve();
+        // Explicit undefined: TS 4 rejects a bare resolve() when the Promise type is not void
+        resolve(undefined);
       } else {
         // Otherwise, we upload the report first
         this.report.observers = this.observers
