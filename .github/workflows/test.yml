@@ -19,6 +19,40 @@ name: Run tests
 on: push
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read .nvmrc
+        id: nvm
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "${{ steps.nvm.outputs.NVMRC }}"
+
+      - name: Restore Observation Tool Node Modules Cache
+        id: cache-portal-modules
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Observation Tool Dependencies
+        run: yarn install --immutable
+
+      - name: Save Observation Tool Node Modules Cache
+        uses: actions/cache/save@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Run Lint
+        run: yarn lint
+
   build:
     name: Build
     runs-on: ubuntu-22.04
