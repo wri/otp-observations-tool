@@ -5,7 +5,7 @@
   flex-direction: column;
   justify-content: center;
   position: relative;
-  top: ($bottom-bar-height / 2); // We compensate the wrapper bottom padding
+  top: ($bottom-bar-height * .5); // We compensate the wrapper bottom padding
   height: calc(100vh - #{84px + $bottom-bar-height}); // 84px = header's height
 
   @media screen and (min-width: $break-tablet) {
