@@ -5,7 +5,7 @@ import { OperatorsService } from 'app/services/operators.service';
 import { Operator, OperatorTypes } from 'app/models/operator.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, AfterViewInit } from '@angular/core';
-import { forkJoin ,  Observable } from "rxjs";
+import { forkJoin ,  Observable } from 'rxjs';
 
 @Component({
   selector: 'otp-operator-list',
@@ -62,10 +62,10 @@ export class OperatorListComponent extends TableFilterBehavior implements AfterV
    * @returns {boolean}
    */
   canEdit(operator: Operator): boolean {
-    let countries = this.authService.observerCountriesIds;
+    const countries = this.authService.observerCountriesIds;
 
     if (countries.length) {
-      return countries.includes(parseInt(operator.country.id));
+      return countries.includes(parseInt(operator.country.id, 10));
     } else {
       return operator.country.id === this.authService.userCountryId;
     }

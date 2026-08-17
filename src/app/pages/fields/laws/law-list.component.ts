@@ -3,7 +3,7 @@ import { Law } from 'app/models/law.model';
 import { AuthService } from 'app/services/auth.service';
 import { LawsService } from 'app/services/laws.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 
 @Component({
@@ -11,7 +11,7 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
   templateUrl: './law-list.component.html',
   styleUrls: ['./law-list.component.scss']
 })
-export class LawListComponent extends TableFilterBehavior {
+export class LawListComponent extends TableFilterBehavior implements AfterViewInit {
 
   tableOptions = {
     rows: {
@@ -103,11 +103,11 @@ export class LawListComponent extends TableFilterBehavior {
     if (!this.isAdmin) {
       return false;
     }
-    let countries = this.authService.observerCountriesIds;
+    const countries = this.authService.observerCountriesIds;
 
     if (countries.length) {
       // check if government.country is included into countries
-      return countries.includes(parseInt(law.country.id));
+      return countries.includes(parseInt(law.country.id, 10));
     } else {
       return law.country.id === this.authService.userCountryId;
     }

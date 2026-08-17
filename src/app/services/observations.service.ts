@@ -79,7 +79,7 @@ export class ObservationsService extends JsonApiService<Observation> {
     return this.http.patch(`${environment.apiUrl}/observations/${observation.id}`, payload).toPromise();
   }
 
-  getDraftObservation() : DraftObservation {
+  getDraftObservation(): DraftObservation {
     return JSON.parse(localStorage.getItem(this.draftObservationId));
   }
 

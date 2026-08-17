@@ -1,17 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 
 
 @Component({
   selector: 'otp-bottom-bar',
-  // tslint:disable-next-line:use-host-property-decorator
-  host: {
-    'role': 'menubar'
-  },
   templateUrl: './bottom-bar.component.html',
   styleUrls: ['./bottom-bar.component.scss']
 })
 export class BottombarComponent {
+
+  @HostBinding('attr.role') readonly role = 'menubar';
 
   isAdmin = false;
 

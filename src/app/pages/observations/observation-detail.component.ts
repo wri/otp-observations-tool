@@ -34,7 +34,7 @@ import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ang
 import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
-import { forkJoin ,  Observable ,  interval ,  Subscription } from "rxjs";
+import { forkJoin ,  Observable ,  interval ,  Subscription } from 'rxjs';
 import { QualityControl } from 'app/models/quality_control.model';
 
 // Fix issues witht the icons of the Leaflet's markers
@@ -676,7 +676,7 @@ export class ObservationDetailComponent implements OnDestroy {
   get laws() { return this._laws; }
   set laws(collection) {
     this._laws = collection;
-    this.lawsOptions = collection.map((law) => ({ id: law.id, name: law["written-infraction"] }));
+    this.lawsOptions = collection.map((law) => ({ id: law.id, name: law['written-infraction'] }));
   }
 
   get law() { return this.observation ? this.observation.law : this._law; }
@@ -971,7 +971,7 @@ export class ObservationDetailComponent implements OnDestroy {
   async loadObservation() {
     this.loading = true;
 
-    const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: "locale" }});
+    const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: 'locale' }});
 
     return this.observationsService.getById(this.existingObservation, {
       // tslint:disable-next-line:max-line-length
@@ -1184,14 +1184,14 @@ export class ObservationDetailComponent implements OnDestroy {
           const convert = (degrees: string, decimalMinutes: string, direction: string) => {
             let res = (+degrees) + (+decimalMinutes / 60);
 
-            if (direction == 'S' || direction == 'W') {
+            if (direction === 'S' || direction === 'W') {
               res *= -1;
             }
 
             return res;
           };
 
-          var parts = coordinate.split(/[^\d\w\.]+/);
+          const parts = coordinate.split(/[^\d\w\.]+/);
           return convert(parts[0], parts[1], parts[2]);
         };
 
@@ -1209,14 +1209,14 @@ export class ObservationDetailComponent implements OnDestroy {
           const convert = (degrees: string, minutes: string, seconds: string, direction: string) => {
             let res = (+degrees) + (+minutes / 60) + (+seconds / (60 * 60));
 
-            if (direction == 'S' || direction == 'W') {
+            if (direction === 'S' || direction === 'W') {
               res *= -1;
             }
 
             return res;
           };
 
-          var parts = coordinate.split(/[^\d\w\.]+/);
+          const parts = coordinate.split(/[^\d\w\.]+/);
           return convert(parts[0], parts[1], parts[2], parts[3]);
         };
 
@@ -1385,11 +1385,11 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   onChangeLawsOptions(options: string[]) {
-    this.law = this.laws.find(x => x.id == options[0]);
+    this.law = this.laws.find(x => x.id === options[0]);
   }
 
   onChangeOperatorsOptions(options: string[]) {
-    this.operatorChoice = this.operators.find(x => x.id == options[0]);
+    this.operatorChoice = this.operators.find(x => x.id === options[0]);
   }
 
   onClickAddOperator(selectName) {
@@ -1456,7 +1456,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   onClickAddReportDocument(document: ObservationDocument) {
-    let documentIndex = this.reportDocuments.findIndex(d => d === document);
+    const documentIndex = this.reportDocuments.findIndex(d => d === document);
     this.reportDocuments.splice(documentIndex, 1);
     document.fromReportLibrary = true;
     this.documents.push(document);
@@ -1473,7 +1473,7 @@ export class ObservationDetailComponent implements OnDestroy {
           alert(await this.translateService.get('observation.evidence.cannotRemoveNotification', { ids: otherObservationsLinkedIds }).toPromise());
         } else {
           await this.datastoreService.deleteRecord(ObservationDocument, document.id).toPromise();
-          let documentIndex = this.reportDocuments.findIndex(d => d === document);
+          const documentIndex = this.reportDocuments.findIndex(d => d === document);
           this.reportDocuments.splice(documentIndex, 1);
         }
       } catch {
@@ -1487,7 +1487,7 @@ export class ObservationDetailComponent implements OnDestroy {
    * @param {ObservationDocument} document Document from this.document
    */
   onClickDeleteDocument(document: ObservationDocument) {
-    let documentIndex = this.documents.findIndex(d => d === document);
+    const documentIndex = this.documents.findIndex(d => d === document);
 
     // We remove the document from the list displayed
     // in the UI

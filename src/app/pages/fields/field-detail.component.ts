@@ -12,7 +12,7 @@ export class FieldDetailComponent {
 
   }
 
-  public triggerLogout(): void{
+  public triggerLogout(): void {
     this.auth.logout();
   }
 

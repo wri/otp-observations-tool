@@ -121,10 +121,10 @@ export class LawDetailComponent {
     if (!this.route.snapshot.params.id) {
       return true;
     }
-    let countries = this.authService.observerCountriesIds;
+    const countries = this.authService.observerCountriesIds;
 
     if (countries.length) {
-      return countries.includes(parseInt(this.law.country.id));
+      return countries.includes(parseInt(this.law.country.id, 10));
     } else {
       return this.law.country.id === this.authService.userCountryId;
     }

@@ -21,7 +21,7 @@ import { Law } from 'app/models/law.model';
 
 @Injectable()
 @JsonApiDatastoreConfig({
-  baseUrl: environment.apiUrl.endsWith("/") ? environment.apiUrl : environment.apiUrl + "/",
+  baseUrl: environment.apiUrl.endsWith('/') ? environment.apiUrl : environment.apiUrl + '/',
   models: {
     observations: Observation,
     countries: Country,

@@ -70,6 +70,8 @@ export class AppComponent {
         ga('send', 'pageview');
       }
     } else {
+      // Deliberate: this branch only runs when not in production, so it never reaches users.
+      // tslint:disable-next-line:no-console
       console.info(`[GA] Page view: ${fullURL}`);
     }
   }
