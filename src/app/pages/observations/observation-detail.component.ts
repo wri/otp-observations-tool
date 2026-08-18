@@ -1452,7 +1452,7 @@ export class ObservationDetailComponent implements OnDestroy {
           if (this.newOperatorModalSelect === 'operator') {
             if ((this.operatorsSelection || []).length === 0) this.operatorChoice = operator;
           } else if (this.newOperatorModalSelect === 'relevantOperators') {
-            this._relevantOperatorsSelection.push(operator.id);
+            this._relevantOperatorsSelection = [...this._relevantOperatorsSelection, operator.id];
           }
         });
     }
