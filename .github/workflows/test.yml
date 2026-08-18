@@ -112,11 +112,46 @@ jobs:
         working-directory: otp_api
         run: echo "VALUE=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Install API dependencies
+      - name: Install mjml
+        run: npm install -g mjml@4
+
+      - name: Read .nvmrc
+        id: nvm
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "${{ steps.nvm.outputs.NVMRC }}"
+
+      - name: Cache Observation Tool Node Modules
+        id: cache-portal-modules
+        uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Observation Tool Dependencies
+        run: yarn install --immutable
+
+      # Backgrounded so the Angular production build overlaps the API setup below
+      # instead of running after it. Blocked on further down.
+      - name: Start Observation Tool
         run: |
-          sudo apt update --fix-missing
-          sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev libgdal-dev imagemagick
-          npm install -g mjml@4
+          nohup yarn start:e2e > /tmp/observation-tool.log 2>&1 &
+          echo "observation tool building in background, pid $!"
+
+      # Placed after the frontend build is backgrounded so its cost overlaps, but
+      # before Setup API Ruby, whose bundler-cache compiles native gems needing these.
+      # DPkg::Lock::Timeout stops apt waiting forever on the runner's own apt-daily.
+      - name: Install API dependencies
+        timeout-minutes: 5
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo -E apt-get update -o Acquire::Retries=3 -o DPkg::Lock::Timeout=180
+          sudo -E apt-get -yqq install --no-install-recommends \
+            -o Acquire::Retries=3 -o DPkg::Lock::Timeout=180 \
+            libpq-dev build-essential libcurl4-openssl-dev libgdal-dev imagemagick
 
       - name: Setup API Ruby
         uses: ruby/setup-ruby@v1
@@ -145,28 +180,11 @@ jobs:
         run: |
           bin/rails s &
 
-      - name: Read .nvmrc
-        id: nvm
-        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "${{ steps.nvm.outputs.NVMRC }}"
-
-      - name: Cache Observation Tool Node Modules
-        id: cache-portal-modules
-        uses: actions/cache@v6
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('yarn.lock') }}
-
-      - name: Install Observation Tool Dependencies
-        run: yarn install --immutable
-
-      - name: Run Observation Tool
+      - name: Wait for Observation Tool
+        timeout-minutes: 3
         run: |
-          yarn start:e2e &
-          npx --yes wait-on -t 80000 http://localhost:4200
+          npx --yes wait-on -t 80000 http://localhost:4200 \
+            || { echo '--- observation tool build log ---'; cat /tmp/observation-tool.log; exit 1; }
 
       - uses: actions/setup-node@v7
         with:
