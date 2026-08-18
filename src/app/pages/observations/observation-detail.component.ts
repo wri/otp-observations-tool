@@ -359,6 +359,7 @@ export class ObservationDetailComponent implements OnDestroy {
       this.fmusService.getAll({ sort: 'name', filter: { country: country.id } })
         .then((fmus) => {
           this.countryFmus = fmus;
+          this.resetFmus();
         });
 
       this.operatorsService.getAll({ sort: 'name', filter: { country: country.id } })
