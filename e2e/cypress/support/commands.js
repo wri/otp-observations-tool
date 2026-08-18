@@ -35,7 +35,7 @@ Cypress.Commands.add('selectOption', (selector, option) => {
   const options = [].concat(option);
   const toggleOption = (optionText) => {
     cy.get(`ss-multiselect-dropdown[name=${selector}]`)
-      .find("li.dropdown-item")
+      .find(".dropdown-item")
       .contains(optionText, { matchCase: false })
       .click();
   };
@@ -44,7 +44,7 @@ Cypress.Commands.add('selectOption', (selector, option) => {
     .find("button.dropdown-toggle")
     .click()
     .then(($btn) => {
-      const selectedOptions = $btn.text();
+      const selectedOptions = $btn.text().trim();
       if (selectedOptions !== 'Select') {
         selectedOptions.split(',').map((o) => o.trim()).forEach(toggleOption); // to unselect all
       }

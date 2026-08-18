@@ -35,7 +35,10 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
 
   constructor(private el: ElementRef) {
     if (typeof Worker !== 'undefined') {
-      this.worker = new Worker('app/base64-file-input.worker', { type: 'module' });
+      // webpack 5 (Angular 12+) only bundles a worker when the URL is built with
+      // `new URL(..., import.meta.url)`. With the previous plain-string path the worker was
+      // never emitted and the request 404'd, so files were never base64-encoded.
+      this.worker = new Worker(new URL('../base64-file-input.worker', import.meta.url), { type: 'module' });
     }
   }
 
