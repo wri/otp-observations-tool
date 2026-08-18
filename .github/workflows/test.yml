@@ -24,31 +24,25 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Read .nvmrc
         id: nvm
         run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v7
         with:
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
 
-      - name: Restore Observation Tool Node Modules Cache
+      - name: Cache Observation Tool Node Modules
         id: cache-portal-modules
-        uses: actions/cache/restore@v3
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('yarn.lock') }}
 
       - name: Install Observation Tool Dependencies
         run: yarn install --immutable
-
-      - name: Save Observation Tool Node Modules Cache
-        uses: actions/cache/save@v3
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('yarn.lock') }}
 
       - name: Run Lint
         run: yarn lint
@@ -58,31 +52,25 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Read .nvmrc
         id: nvm
         run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v7
         with:
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
 
-      - name: Restore Observation Tool Node Modules Cache
+      - name: Cache Observation Tool Node Modules
         id: cache-portal-modules
-        uses: actions/cache/restore@v3
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('yarn.lock') }}
 
       - name: Install Observation Tool Dependencies
         run: yarn install --immutable
-
-      - name: Save Observation Tool Node Modules Cache
-        uses: actions/cache/save@v3
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('yarn.lock') }}
 
       - name: Run Build
         run: yarn prod-build
@@ -110,10 +98,10 @@ jobs:
 
     steps:
       - name: Checkout Observation Tool
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout OTP API
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: wri/fti_api
           ref: chore/e2e-speed-up
@@ -136,9 +124,9 @@ jobs:
           bundler-cache: true
           working-directory: otp_api
 
-      - name: Restore API Precompiled Assets Cache
+      - name: Cache API Precompiled Assets
         id: cache-api-precompiled-assets
-        uses: actions/cache/restore@v3
+        uses: actions/cache@v6
         with:
           path: otp_api/public/assets
           key: api-precompiled-assets-${{ steps.otp_api_commit_sha.outputs.VALUE }}
@@ -149,12 +137,6 @@ jobs:
           APP_URL: http://localhost:3000
         run: |
           bin/rails e2e:setup ${{ steps.cache-api-precompiled-assets.outputs.cache-hit == 'true' && 'SKIP_ASSETS_RESET=true' || '' }}
-
-      - name: Save API Precompiled Assets Cache
-        uses: actions/cache/save@v3
-        with:
-          path: otp_api/public/assets
-          key: api-precompiled-assets-${{ steps.otp_api_commit_sha.outputs.VALUE }}
 
       - name: Run API Server
         working-directory: otp_api
@@ -167,13 +149,13 @@ jobs:
         id: nvm
         run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v7
         with:
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
 
-      - name: Restore Observation Tool Node Modules Cache
+      - name: Cache Observation Tool Node Modules
         id: cache-portal-modules
-        uses: actions/cache/restore@v3
+        uses: actions/cache@v6
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('yarn.lock') }}
@@ -181,18 +163,12 @@ jobs:
       - name: Install Observation Tool Dependencies
         run: yarn install --immutable
 
-      - name: Save Observation Tool Node Modules Cache
-        uses: actions/cache/save@v3
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('yarn.lock') }}
-
       - name: Run Observation Tool
         run: |
           yarn start:e2e &
           npx --yes wait-on -t 80000 http://localhost:4200
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
 
