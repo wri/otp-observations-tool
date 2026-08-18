@@ -91,6 +91,12 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-22.04
 
+    strategy:
+      # Without this, one failing shard cancels the others and their results are lost.
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2]
+
     services:
       redis:
         image: redis
@@ -181,24 +187,34 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('yarn.lock') }}
 
-      - name: Install E2E Dependencies
-        working-directory: e2e
-        run: yarn install --immutable
-
       - name: Run Observation Tool
         run: |
           yarn start:e2e &
           npx --yes wait-on -t 80000 http://localhost:4200
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install E2E Dependencies
+        working-directory: e2e
+        run: yarn install --immutable
+
       - name: Run E2E Tests
         working-directory: e2e
+        env:
+          SPLIT: 3
+          SPLIT_INDEX: ${{ matrix.shard }}
+          # Balances shards by recorded spec duration; without it specs split by name
+          # and quality-control.cy.js could land beside observations.cy.js.
+          SPLIT_FILE: timings.json
         run: yarn cypress run
 
       - name: Uploading Test Artifacts
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-artifacts
+          name: e2e-tests-artifacts-${{ matrix.shard }}
           path: |
             e2e/cypress/hars
             e2e/cypress/screenshots

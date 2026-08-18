@@ -5,7 +5,8 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "cypress": "^13.8.0"
+    "cypress": "^13.8.0",
+    "cypress-split": "^1.25.0"
   },
   "dependencies": {
     "@neuralegion/cypress-har-generator": "^5.16.4",
