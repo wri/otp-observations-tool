@@ -10,7 +10,7 @@ echo 'Starting API...'
 
 cd ../../otp-api
 RAILS_ENV=e2e bundle exec rails e2e:setup
-RAILS_ENV=e2e bundle exec rails s &
+RAILS_ENV=e2e bundle exec rails s -b localhost &
 
 echo 'Starting Observations Tool...'
 cd ../otp-observations-tool/
