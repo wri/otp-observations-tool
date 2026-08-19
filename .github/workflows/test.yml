@@ -112,6 +112,34 @@ jobs:
         working-directory: otp_api
         run: echo "VALUE=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
+      - name: Install mjml
+        run: npm install -g mjml@4
+
+      - name: Read .nvmrc
+        id: nvm
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "${{ steps.nvm.outputs.NVMRC }}"
+
+      - name: Cache Observation Tool Node Modules
+        id: cache-portal-modules
+        uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Observation Tool Dependencies
+        run: yarn install --immutable
+
+      # Backgrounded so the Angular production build overlaps the API setup below
+      # rather than running after it. Blocked on further down.
+      - name: Start Observation Tool
+        run: |
+          nohup yarn start:e2e > /tmp/observation-tool.log 2>&1 &
+          echo "observation tool building in background, pid $!"
+
       - name: Install API dependencies
         timeout-minutes: 8
         env:
@@ -126,7 +154,6 @@ jobs:
           sudo -E apt-get update
           sudo -E apt-get -yqq install --no-install-recommends \
             build-essential libgdal-dev imagemagick
-          npm install -g mjml@4
 
       - name: Setup API Ruby
         uses: ruby/setup-ruby@v1
@@ -155,28 +182,11 @@ jobs:
         run: |
           bin/rails s > log/e2e.log 2>&1 &
 
-      - name: Read .nvmrc
-        id: nvm
-        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "${{ steps.nvm.outputs.NVMRC }}"
-
-      - name: Cache Observation Tool Node Modules
-        id: cache-portal-modules
-        uses: actions/cache@v6
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('yarn.lock') }}
-
-      - name: Install Observation Tool Dependencies
-        run: yarn install --immutable
-
-      - name: Run Observation Tool
+      - name: Wait for Observation Tool
+        timeout-minutes: 5
         run: |
-          yarn start:e2e &
-          npx --yes wait-on -t 80000 http://localhost:4200
+          npx --yes wait-on -t 80000 http://localhost:4200 \
+            || { echo '--- observation tool build log ---'; cat /tmp/observation-tool.log; exit 1; }
 
       - uses: actions/setup-node@v7
         with:
