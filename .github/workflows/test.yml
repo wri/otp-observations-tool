@@ -127,36 +127,13 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           # The runner image points apt at azure.archive.ubuntu.com via a mirrorlist.
-          # With three shards hitting it at once it intermittently stops answering
-          # (typically one shard survives), and apt then burns minutes retrying
-          # before falling back. Drop it and use the canonical archive directly,
-          # which the same runs reach without trouble.
+          # With three shards hitting it at once it intermittently stops answering and
+          # apt burns minutes retrying before it falls back. Use the canonical archive.
           if [ -f /etc/apt/apt-mirrors.txt ]; then
             sudo sed -i '/azure\.archive\.ubuntu\.com/Id' /etc/apt/apt-mirrors.txt
           fi
-          echo "apt sources in use:"
-          cat /etc/apt/apt-mirrors.txt 2>/dev/null || echo "  (no mirrorlist)"
-          grep -rn "azure" /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null \
-            && echo "::warning::azure still referenced in sources.list" || true
-
-          # Retries deliberately low: apt retries *per index file*, so a high count
-          # against an unreachable mirror stalls for minutes and starves the retry()
-          # wrapper below of the chance to start a fresh attempt.
-          APT_OPTS="-o Acquire::Retries=2 -o Acquire::http::Timeout=20"
-          APT_OPTS="$APT_OPTS -o DPkg::Lock::Timeout=120"
-
-          retry() {
-            for attempt in 1 2 3; do
-              "$@" && return 0
-              echo "::warning::attempt $attempt failed, retrying: $*"
-              sleep $((attempt * 15))
-            done
-            echo "::error::giving up after 3 attempts: $*"
-            return 1
-          }
-
-          retry sudo -E apt-get update $APT_OPTS
-          retry sudo -E apt-get -yqq install --no-install-recommends $APT_OPTS \
+          sudo -E apt-get update
+          sudo -E apt-get -yqq install --no-install-recommends \
             libpq-dev build-essential libcurl4-openssl-dev libgdal-dev imagemagick
           npm install -g mjml@4
 
