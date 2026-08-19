@@ -140,20 +140,30 @@ jobs:
           nohup yarn start:e2e > /tmp/observation-tool.log 2>&1 &
           echo "observation tool building in background, pid $!"
 
-      - name: Install API dependencies
-        timeout-minutes: 8
-        env:
-          DEBIAN_FRONTEND: noninteractive
+      # The runner image points apt at azure.archive.ubuntu.com via a mirrorlist.
+      # With three shards hitting it at once it intermittently stops answering and
+      # apt burns minutes retrying before it falls back. Use the canonical archive.
+      # Still needed alongside the cache below: that action refreshes stale apt lists,
+      # and a cache miss downloads the packages the usual way.
+      - name: Use a reachable apt mirror
         run: |
-          # The runner image points apt at azure.archive.ubuntu.com via a mirrorlist.
-          # With three shards hitting it at once it intermittently stops answering and
-          # apt burns minutes retrying before it falls back. Use the canonical archive.
           if [ -f /etc/apt/apt-mirrors.txt ]; then
             sudo sed -i '/azure\.archive\.ubuntu\.com/Id' /etc/apt/apt-mirrors.txt
           fi
-          sudo -E apt-get update
-          sudo -E apt-get -yqq install --no-install-recommends \
-            build-essential libgdal-dev imagemagick
+
+      # Bump `version` to rebuild the cache; the key is derived from the package list
+      # and that value only, so it does not invalidate on new upstream package versions.
+      # Nothing may apt-get install after this: the restore does not register the
+      # packages with dpkg, so apt would consider all 156 of them missing.
+      - name: Install API dependencies
+        timeout-minutes: 8
+        uses: awalsh128/cache-apt-pkgs-action@v1.6.3
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        with:
+          packages: build-essential libgdal-dev imagemagick
+          version: "1"
+          execute_install_scripts: true
 
       - name: Setup API Ruby
         uses: ruby/setup-ruby@v1
