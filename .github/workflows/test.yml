@@ -126,8 +126,24 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          APT_OPTS="-o Acquire::ForceIPv4=true -o Acquire::Retries=5"
-          APT_OPTS="$APT_OPTS -o Acquire::http::Timeout=30 -o DPkg::Lock::Timeout=120"
+          # The runner image points apt at azure.archive.ubuntu.com via a mirrorlist.
+          # With three shards hitting it at once it intermittently stops answering
+          # (typically one shard survives), and apt then burns minutes retrying
+          # before falling back. Drop it and use the canonical archive directly,
+          # which the same runs reach without trouble.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i '/azure\.archive\.ubuntu\.com/Id' /etc/apt/apt-mirrors.txt
+          fi
+          echo "apt sources in use:"
+          cat /etc/apt/apt-mirrors.txt 2>/dev/null || echo "  (no mirrorlist)"
+          grep -rn "azure" /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null \
+            && echo "::warning::azure still referenced in sources.list" || true
+
+          # Retries deliberately low: apt retries *per index file*, so a high count
+          # against an unreachable mirror stalls for minutes and starves the retry()
+          # wrapper below of the chance to start a fresh attempt.
+          APT_OPTS="-o Acquire::Retries=2 -o Acquire::http::Timeout=20"
+          APT_OPTS="$APT_OPTS -o DPkg::Lock::Timeout=120"
 
           retry() {
             for attempt in 1 2 3; do
