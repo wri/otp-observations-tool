@@ -198,10 +198,6 @@ jobs:
           npx --yes wait-on -t 80000 http://localhost:4200 \
             || { echo '--- observation tool build log ---'; cat /tmp/observation-tool.log; exit 1; }
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
-
       - name: Install E2E Dependencies
         working-directory: e2e
         run: yarn install --immutable
