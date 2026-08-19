@@ -1,0 +1,48 @@
+{
+  "durations": [
+    {
+      "spec": "cypress/e2e/quality-control.cy.js",
+      "duration": 111000
+    },
+    {
+      "spec": "cypress/e2e/observations.cy.js",
+      "duration": 81000
+    },
+    {
+      "spec": "cypress/e2e/user.cy.js",
+      "duration": 17000
+    },
+    {
+      "spec": "cypress/e2e/password-reset.cy.js",
+      "duration": 15000
+    },
+    {
+      "spec": "cypress/e2e/reports.cy.js",
+      "duration": 12000
+    },
+    {
+      "spec": "cypress/e2e/advanced-fields/operators.cy.js",
+      "duration": 12000
+    },
+    {
+      "spec": "cypress/e2e/advanced-fields/laws.cy.js",
+      "duration": 11000
+    },
+    {
+      "spec": "cypress/e2e/advanced-fields/government-entities.cy.js",
+      "duration": 7000
+    },
+    {
+      "spec": "cypress/e2e/advanced-fields/categories.cy.js",
+      "duration": 3000
+    },
+    {
+      "spec": "cypress/e2e/advanced-fields/severities.cy.js",
+      "duration": 2000
+    },
+    {
+      "spec": "cypress/e2e/advanced-fields/subcategories.cy.js",
+      "duration": 2000
+    }
+  ]
+}
