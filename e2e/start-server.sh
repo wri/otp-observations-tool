@@ -1,6 +1,11 @@
 #!/bin/sh
 set -e
 
+if ! mjml --version 2>/dev/null | grep -qE 'mjml-(cli|core): 4\.'; then
+  echo 'Installing mjml@4...'
+  npm install -g mjml@4
+fi
+
 echo 'Starting API...'
 
 cd ../../otp-api
