@@ -1,6 +1,6 @@
 import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from 'angular2-jsonapi';
-import { Fmu } from 'app/models/fmu.model';
-import { Country } from 'app/models/country.model';
+import type { Fmu } from 'app/models/fmu.model';
+import type { Country } from 'app/models/country.model';
 
 export enum OperatorTypes {
   'Artisanal' = 'Artisanal',

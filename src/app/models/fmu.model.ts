@@ -1,5 +1,5 @@
-import { Operator } from 'app/models/operator.model';
-import { Country } from './country.model';
+import type { Operator } from 'app/models/operator.model';
+import type { Country } from './country.model';
 import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
 
 @JsonApiModelConfig({

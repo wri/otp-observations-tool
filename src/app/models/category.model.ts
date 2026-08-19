@@ -1,5 +1,5 @@
 import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany } from 'angular2-jsonapi';
-import { Subcategory } from 'app/models/subcategory.model';
+import type { Subcategory } from 'app/models/subcategory.model';
 
 @JsonApiModelConfig({
   type: 'categories'

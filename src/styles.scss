@@ -2,7 +2,7 @@
 @import 'src/settings';
 
 // FOUNDATION 6
-@import '~foundation-sites/scss/foundation';
+@import 'foundation-sites/scss/foundation';
 
 @include foundation-global-styles;
 @include foundation-grid;
@@ -44,7 +44,7 @@
 // @include foundation-visibility-classes;
 // @include foundation-float-classes;
 
-@import '~flatpickr/dist/flatpickr.min';
+@import 'flatpickr/dist/flatpickr.min';
 
 
 @import 'src/styles/fonts';
