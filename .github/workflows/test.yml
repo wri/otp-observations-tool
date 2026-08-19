@@ -202,9 +202,6 @@ jobs:
           npx --yes wait-on -t 80000 http://localhost:4200 \
             || { echo '--- observation tool build log ---'; cat /tmp/observation-tool.log; exit 1; }
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
 
       # Cypress's ~800 MB binary lives in ~/.cache/Cypress and nothing cached it.
       - name: Cache E2E Dependencies
