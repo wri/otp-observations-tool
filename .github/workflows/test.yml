@@ -178,7 +178,7 @@ jobs:
         env:
           APP_URL: http://localhost:3000
         run: |
-          bin/rails s &
+          bin/rails s > log/e2e.log 2>&1 &
 
       - name: Wait for Observation Tool
         timeout-minutes: 3
