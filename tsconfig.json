@@ -16,7 +16,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es5",
+    "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -24,6 +24,7 @@
       "es2016",
       "dom"
     ],
-    "module": "esnext"
+    "module": "esnext",
+    "useDefineForClassFields": false
   }
 }

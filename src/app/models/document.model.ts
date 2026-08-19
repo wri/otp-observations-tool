@@ -1,5 +1,5 @@
 import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
-import { User } from 'app/models/user.model';
+import type { User } from 'app/models/user.model';
 
 @JsonApiModelConfig({
   type: 'documents'

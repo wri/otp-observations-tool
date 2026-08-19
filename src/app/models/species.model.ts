@@ -1,5 +1,5 @@
 import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany } from 'angular2-jsonapi';
-import { Country } from 'app/models/country.model';
+import type { Country } from 'app/models/country.model';
 
 @JsonApiModelConfig({
   type: 'species'

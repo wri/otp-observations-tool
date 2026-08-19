@@ -85,6 +85,12 @@
               ]
             },
             "local": {
+              "optimization": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "vendorChunk": true,
+              "buildOptimizer": false,
+              "extractLicenses": false,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -161,7 +167,6 @@
       }
     }
   },
-  "defaultProject": "otp-observations-tool",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "otp",
@@ -172,6 +177,7 @@
     }
   },
   "cli": {
-    "packageManager": "yarn"
+    "packageManager": "yarn",
+    "analytics": false
   }
 }
