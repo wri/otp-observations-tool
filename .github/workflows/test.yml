@@ -112,15 +112,6 @@ jobs:
         working-directory: otp_api
         run: echo "VALUE=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-      # apt stalls on hosted runners for two common reasons: IPv6 routes that never
-      # connect (long TCP timeouts), and the image's own apt-daily holding the dpkg
-      # lock, which apt waits on forever by default. Force IPv4 and bound every wait,
-      # so a bad run fails in minutes with a message instead of hanging the job.
-      # apt on hosted runners is intermittently slow or stalls outright: IPv6 routes
-      # that never connect, a throttled mirror, or the image's own apt-daily holding
-      # the dpkg lock (which apt waits on forever by default). Force IPv4, bound every
-      # wait so a bad attempt fails fast, then retry -- with 3 shards a 10% per-job
-      # stall rate reds ~27% of runs, so this needs to self-heal rather than just fail.
       - name: Install API dependencies
         timeout-minutes: 8
         env:
@@ -134,7 +125,7 @@ jobs:
           fi
           sudo -E apt-get update
           sudo -E apt-get -yqq install --no-install-recommends \
-            libpq-dev build-essential libcurl4-openssl-dev libgdal-dev imagemagick
+            build-essential libgdal-dev imagemagick
           npm install -g mjml@4
 
       - name: Setup API Ruby
