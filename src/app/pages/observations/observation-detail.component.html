@@ -478,7 +478,7 @@
     <!-- 7. Due diligence category -->
     <div class="form-group">
       <label for="diligence_category">{{'Due diligence category' | translate}}</label>
-      <input id="diligence_category" type="text" class="form-control" name="diligence_category" [(ngModel)]="subcategory && subcategory.category && subcategory.category.name" #diligence_category="ngModel" disabled />
+      <input id="diligence_category" type="text" class="form-control" name="diligence_category" [ngModel]="subcategory && subcategory.category && subcategory.category.name" (ngModelChange)="subcategory && subcategory.category && (subcategory.category.name = $event)" #diligence_category="ngModel" disabled />
       <p class="note">
         {{ 'observation.diligenceCategory.note' | translate }}
       </p>
@@ -713,7 +713,7 @@
         <!-- 16.1. Legal reference (infraction) -->
         <div class="form-group">
           <label for="infraction">{{'Legal reference (infraction)' | translate}}</label>
-          <input id="infraction" type="text" class="form-control" name="infraction" [(ngModel)]="law && law.infraction" #infraction="ngModel" disabled />
+          <input id="infraction" type="text" class="form-control" name="infraction" [ngModel]="law && law.infraction" (ngModelChange)="law && (law.infraction = $event)" #infraction="ngModel" disabled />
           <p class="note">
             {{ 'observation.legalReferenceInfraction.note' | translate }}
           </p>
@@ -722,7 +722,7 @@
         <!-- 16.2. Legal reference (sanction) -->
         <div class="form-group">
           <label for="sanction">{{'Legal reference (sanction)' | translate}}</label>
-          <input id="sanction" type="text" class="form-control" name="sanction" [(ngModel)]="law && law.sanctions" #sanction="ngModel" disabled />
+          <input id="sanction" type="text" class="form-control" name="sanction" [ngModel]="law && law.sanctions" (ngModelChange)="law && (law.sanctions = $event)" #sanction="ngModel" disabled />
           <p class="note">
             {{ 'observation.legalReferenceSanction.note' | translate }}
           </p>
@@ -731,7 +731,7 @@
         <!-- 16.3. Minimum fine -->
         <div class="form-group">
           <label for="min_fine">{{'Minimum fine' | translate}}</label>
-          <input id="min_fine" type="text" class="form-control" name="min_fine" [(ngModel)]="law && law['min-fine']" #min_fine="ngModel" disabled />
+          <input id="min_fine" type="text" class="form-control" name="min_fine" [ngModel]="law && law['min-fine']" (ngModelChange)="law && (law['min-fine'] = $event)" #min_fine="ngModel" disabled />
           <p class="note">
             {{ 'observation.minimumFine.note' | translate }}
           </p>
@@ -740,7 +740,7 @@
         <!-- 16.4. Maximum fine -->
         <div class="form-group">
           <label for="max_fine">{{'Maximum fine' | translate}}</label>
-          <input id="max_fine" type="text" class="form-control" name="max_fine" [(ngModel)]="law && law['max-fine']" #max_fine="ngModel" disabled />
+          <input id="max_fine" type="text" class="form-control" name="max_fine" [ngModel]="law && law['max-fine']" (ngModelChange)="law && (law['max-fine'] = $event)" #max_fine="ngModel" disabled />
           <p class="note">
             {{ 'observation.maximumFine.note' | translate }}
           </p>
@@ -749,7 +749,7 @@
         <!-- 16.5. Penal servitude -->
         <div class="form-group">
           <label for="penal_servitude">{{'Penal servitude' | translate}}</label>
-          <input id="penal_servitude" type="text" class="form-control" name="penal_servitude" [(ngModel)]="law && law['penal-servitude']" #penal_servitude="ngModel" disabled />
+          <input id="penal_servitude" type="text" class="form-control" name="penal_servitude" [ngModel]="law && law['penal-servitude']" (ngModelChange)="law && (law['penal-servitude'] = $event)" #penal_servitude="ngModel" disabled />
           <p class="note">
             {{ 'observation.penalServitude.note' | translate }}
           </p>
@@ -758,7 +758,7 @@
         <!-- 16.6. Other penalties -->
         <div class="form-group">
           <label for="other_penalties">{{'Other penalties' | translate}}</label>
-          <input id="other_penalties" type="text" class="form-control" name="other_penalties" [(ngModel)]="law && law['other-penalties']" #other_penalties="ngModel" disabled />
+          <input id="other_penalties" type="text" class="form-control" name="other_penalties" [ngModel]="law && law['other-penalties']" (ngModelChange)="law && (law['other-penalties'] = $event)" #other_penalties="ngModel" disabled />
           <p class="note">
             {{ 'observation.otherPenalties.note' | translate }}
           </p>
@@ -767,7 +767,7 @@
         <!-- 16.7. APV -->
         <div class="form-group">
           <label for="apv">{{'APV' | translate}}</label>
-          <input id="apv" type="text" class="form-control" name="apv" [(ngModel)]="law && law.apv" #flegt="ngModel" disabled />
+          <input id="apv" type="text" class="form-control" name="apv" [ngModel]="law && law.apv" (ngModelChange)="law && (law.apv = $event)" #flegt="ngModel" disabled />
           <p class="note">
             {{ 'observation.apv.note' | translate }}
           </p>
@@ -782,7 +782,7 @@
         <!-- 18.1. Last modification by -->
         <div class="form-group">
           <label for="last_modification_by">{{'Last modification by' | translate}}</label>
-          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'] && observation['modified-user'].name" #last_modification_by="ngModel" disabled />
+          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [ngModel]="observation['modified-user'] && observation['modified-user'].name" (ngModelChange)="observation['modified-user'] && (observation['modified-user'].name = $event)" #last_modification_by="ngModel" disabled />
         </div>
 
         <!-- 18.1. Last modified on -->
@@ -926,7 +926,7 @@
         <!-- 13.1. Last modification by -->
         <div class="form-group">
           <label for="last_modification_by">{{'Last modification by' | translate}}</label>
-          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [(ngModel)]="observation['modified-user'] && observation['modified-user'].name" #last_modification_by="ngModel" disabled />
+          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [ngModel]="observation['modified-user'] && observation['modified-user'].name" (ngModelChange)="observation['modified-user'] && (observation['modified-user'].name = $event)" #last_modification_by="ngModel" disabled />
         </div>
 
         <!-- 13.1. Last modified on -->
