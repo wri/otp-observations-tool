@@ -1,5 +1,5 @@
 import { AuthService } from 'app/services/auth.service';
-import { CanActivate, CanLoad, NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
+import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { filter } from 'rxjs/operators';
 
@@ -7,7 +7,7 @@ import { filter } from 'rxjs/operators';
 // visitor is logged in (the router resolves loadChildren while matching the URL, ahead of
 // canActivate). The check takes no route arguments, so the same method serves both.
 @Injectable()
-export class AuthGuard implements CanActivate, CanLoad {
+export class AuthGuard  {
 
   /**
    * The session check in flight for the current navigation, if any.
