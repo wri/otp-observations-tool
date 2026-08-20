@@ -47,7 +47,7 @@
 
     <div class="form-group">
       <label>{{'fmus' | translate}}</label>
-      <ss-multiselect-dropdown name="fmus" id="fmus" #fmus="ngModel" [texts]="multiSelectTexts" [settings]="multiSelectSettings" [options]="fmusOptions" [(ngModel)]="fmusSelection" (ngModelChange)="onChangeFmus($event)" [disabled]="!canEditFmus()"></ss-multiselect-dropdown>
+      <ngx-bootstrap-multiselect name="fmus" id="fmus" #fmus="ngModel" [texts]="multiSelectTexts" [settings]="multiSelectSettings" [options]="fmusOptions" [(ngModel)]="fmusSelection" (ngModelChange)="onChangeFmus($event)" [disabled]="!canEditFmus()"></ngx-bootstrap-multiselect>
     </div>
 
     <!-- Details -->

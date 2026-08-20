@@ -30,7 +30,7 @@ import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
-import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
 import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';

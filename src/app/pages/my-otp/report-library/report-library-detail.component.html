@@ -61,7 +61,7 @@
     <!-- Additional monitors -->
     <div class="form-group">
       <label>{{'Additional monitors' | translate}}</label>
-      <ss-multiselect-dropdown
+      <ngx-bootstrap-multiselect
         [texts]="multiSelectTexts"
         [options]="additionalObserversOptions"
         [settings]="additionalObserversSelectSettings"
@@ -69,7 +69,7 @@
         (ngModelChange)="onChangeAdditionalObserversOptions($event)"
         name="additional_observers"
       >
-      </ss-multiselect-dropdown>
+      </ngx-bootstrap-multiselect>
       <p class="note">
         {{ 'observation.additionalMonitors.note' | translate }}
       </p>

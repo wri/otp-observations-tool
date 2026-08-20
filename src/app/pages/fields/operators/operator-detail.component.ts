@@ -10,7 +10,7 @@ import { CountriesService } from 'app/services/countries.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { forkJoin ,  Observable } from 'rxjs';
 import { Fmu } from 'app/models/fmu.model';
-import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
 import { FmusService } from 'app/services/fmus.service';
 import sortBy from 'lodash/sortBy';
 
