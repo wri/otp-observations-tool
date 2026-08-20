@@ -1,4 +1,4 @@
-import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from 'angular2-jsonapi';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from '@michalkotas/angular2-jsonapi';
 import type { Fmu } from 'app/models/fmu.model';
 import type { Country } from 'app/models/country.model';
 

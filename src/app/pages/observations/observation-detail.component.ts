@@ -1034,7 +1034,7 @@ export class ObservationDetailComponent implements OnDestroy {
         this.observation['validation-status'] = undefined;
       }
 
-      // FIXME: angular2-jsonapi should return a Date object but instead return
+      // FIXME: the jsonapi library should return a Date object but instead returns
       // a string for some reason
       this.observation['publication-date'] = new Date(this.observation['publication-date']);
       this.observation['created-at'] = new Date(this.observation['created-at']);
