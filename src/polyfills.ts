@@ -20,7 +20,7 @@
 
 
 /** Evergreen browsers require these. **/
-import 'reflect-metadata';
+import '@abraham/reflection';
 
 
 
