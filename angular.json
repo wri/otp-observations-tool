@@ -49,22 +49,12 @@
               "lodash/uniq",
               "lodash/uniqBy",
               "exif-js",
+              "leaflet",
               "proj4",
-              "angular2-spinner/dist",
               "a11y-dialog",
               "date-fns/format",
               "date-fns/parse",
-              "qs",
-              "rxjs/Subject",
-              "rxjs/add/operator/takeUntil",
-              "rxjs/add/observable/of",
-              "rxjs/add/operator/concat",
-              "rxjs/add/operator/map",
-              "rxjs/add/operator/merge",
-              "rxjs/add/operator/share",
-              "rxjs/add/operator/switchMap",
-              "rxjs/add/operator/take",
-              "rxjs/add/operator/toArray"
+              "qs"
             ]
           },
           "configurations": {
