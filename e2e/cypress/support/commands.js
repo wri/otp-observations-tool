@@ -34,13 +34,13 @@ Cypress.Commands.add('selectDate', (selector, date) => {
 Cypress.Commands.add('selectOption', (selector, option) => {
   const options = [].concat(option);
   const toggleOption = (optionText) => {
-    cy.get(`ss-multiselect-dropdown[name=${selector}]`)
+    cy.get(`ngx-bootstrap-multiselect[name=${selector}]`)
       .find(".dropdown-item")
       .contains(optionText, { matchCase: false })
       .click();
   };
 
-  cy.get(`ss-multiselect-dropdown[name=${selector}]`)
+  cy.get(`ngx-bootstrap-multiselect[name=${selector}]`)
     .find("button.dropdown-toggle")
     .click()
     .then(($btn) => {
@@ -51,14 +51,14 @@ Cypress.Commands.add('selectOption', (selector, option) => {
     })
 
   options.forEach(toggleOption);
-  cy.get(`ss-multiselect-dropdown[name=${selector}]`).click();
+  cy.get(`ngx-bootstrap-multiselect[name=${selector}]`).click();
 });
 
 Cypress.Commands.add('expectSelectedOption', (selector, option) => {
   const options = [].concat(option);
 
   options.forEach((option) => {
-    cy.get(`ss-multiselect-dropdown[name=${selector}]`)
+    cy.get(`ngx-bootstrap-multiselect[name=${selector}]`)
     .find("button.dropdown-toggle")
     .contains(option)
     .should('exist');

@@ -1,0 +1,36 @@
+diff --git a/node_modules/ngx-bootstrap-multiselect/esm2020/lib/ngx-bootstrap-multiselect.component.mjs b/node_modules/ngx-bootstrap-multiselect/esm2020/lib/ngx-bootstrap-multiselect.component.mjs
+index 3f29b15..90d9ec3 100644
+--- a/node_modules/ngx-bootstrap-multiselect/esm2020/lib/ngx-bootstrap-multiselect.component.mjs
++++ b/node_modules/ngx-bootstrap-multiselect/esm2020/lib/ngx-bootstrap-multiselect.component.mjs
+@@ -209,6 +209,7 @@ export class NgxDropdownMultiselectComponent {
+         else {
+             this.model = [];
+         }
++        this.prevModel = this.model;
+     }
+     registerOnChange(fn) {
+         this.onModelChange = fn;
+diff --git a/node_modules/ngx-bootstrap-multiselect/fesm2015/ngx-bootstrap-multiselect.mjs b/node_modules/ngx-bootstrap-multiselect/fesm2015/ngx-bootstrap-multiselect.mjs
+index 332d43c..19abc64 100644
+--- a/node_modules/ngx-bootstrap-multiselect/fesm2015/ngx-bootstrap-multiselect.mjs
++++ b/node_modules/ngx-bootstrap-multiselect/fesm2015/ngx-bootstrap-multiselect.mjs
+@@ -385,6 +385,7 @@ class NgxDropdownMultiselectComponent {
+         else {
+             this.model = [];
+         }
++        this.prevModel = this.model;
+     }
+     registerOnChange(fn) {
+         this.onModelChange = fn;
+diff --git a/node_modules/ngx-bootstrap-multiselect/fesm2020/ngx-bootstrap-multiselect.mjs b/node_modules/ngx-bootstrap-multiselect/fesm2020/ngx-bootstrap-multiselect.mjs
+index 250dd26..b527215 100644
+--- a/node_modules/ngx-bootstrap-multiselect/fesm2020/ngx-bootstrap-multiselect.mjs
++++ b/node_modules/ngx-bootstrap-multiselect/fesm2020/ngx-bootstrap-multiselect.mjs
+@@ -383,6 +383,7 @@ class NgxDropdownMultiselectComponent {
+         else {
+             this.model = [];
+         }
++        this.prevModel = this.model;
+     }
+     registerOnChange(fn) {
+         this.onModelChange = fn;

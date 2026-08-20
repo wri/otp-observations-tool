@@ -215,7 +215,7 @@
         <!-- 4. Additional monitors -->
         <div class="form-group">
           <label>{{'Additional monitors' | translate}}</label>
-          <ss-multiselect-dropdown
+          <ngx-bootstrap-multiselect
             [texts]="multiSelectTexts"
             [options]="additionalObserversOptions"
             [settings]="additionalObserversSelectSettings"
@@ -223,7 +223,7 @@
             (ngModelChange)="onChangeAdditionalObserversOptions($event)"
             name="additional_observers"
             [disabled]="isDisabled() || !canChangeMonitors()">
-          </ss-multiselect-dropdown>
+          </ngx-bootstrap-multiselect>
           <p class="note">
             {{ 'observation.additionalMonitors.note' | translate }}
           </p>
@@ -423,7 +423,7 @@
     <!-- 3. Operator -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && (!operator_id.valid || unknownOperatorSelected) }">
       <label for="operator_id">{{'Operator' | translate}}</label>
-      <ss-multiselect-dropdown
+      <ngx-bootstrap-multiselect
         [texts]="multiSelectTexts"
         [options]="operatorsOptions"
         [settings]="operatorsSelectSettings"
@@ -433,7 +433,7 @@
         #operator_id="ngModel"
         [disabled]="isDisabled()"
         required
-      ></ss-multiselect-dropdown>
+      ></ngx-bootstrap-multiselect>
       <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
       <div *ngIf="unknownOperatorSelected" class="help-text">{{'You will not be able to submit this observation to review with unknown operator selected' | translate}}</div>
       <div class="note" *ngIf="!isDisabled()">
@@ -444,7 +444,7 @@
     <!-- 5. Relevant operators -->
     <div class="form-group">
       <label>{{'Relevant operators' | translate}}</label>
-      <ss-multiselect-dropdown
+      <ngx-bootstrap-multiselect
         [texts]="multiSelectTexts"
         [options]="relevantOperatorsOptions"
         [settings]="relevantOperatorsSelectSettings"
@@ -452,7 +452,7 @@
         (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
         name="relevant_operators"
         [disabled]="isDisabled()">
-      </ss-multiselect-dropdown>
+      </ngx-bootstrap-multiselect>
       <p class="note">
         {{ 'observation.relevantOperators.note' | translate }}
       </p>
@@ -695,7 +695,7 @@
         <!-- 16.1. Observation according to legal text -->
         <div class="form-group">
           <label>{{'Observation according to legal text' | translate}}</label>
-          <ss-multiselect-dropdown
+          <ngx-bootstrap-multiselect
             [texts]="multiSelectTexts"
             [options]="lawsOptions"
             [settings]="lawsSelectSettings"
@@ -704,7 +704,7 @@
             name="law_field"
             #law_field="ngModel"
             [disabled]="isDisabled()"
-          ></ss-multiselect-dropdown>
+          ></ngx-bootstrap-multiselect>
           <p class="note">
             {{ 'observation.illegalityAsWritten.note' | translate }}
           </p>
@@ -829,7 +829,7 @@
     <!-- 3. Government entities -->
     <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
       <label for="government_id">{{'Government entities' | translate}}</label>
-      <ss-multiselect-dropdown [texts]="multiSelectTexts" [options]="governmentsOptions" [(ngModel)]="_governmentsSelection" (ngModelChange)="onChangeGovernmentsOptions($event)" #government_id="ngModel" name="government_id" [disabled]="isDisabled()" required></ss-multiselect-dropdown>
+      <ngx-bootstrap-multiselect [texts]="multiSelectTexts" [options]="governmentsOptions" [(ngModel)]="_governmentsSelection" (ngModelChange)="onChangeGovernmentsOptions($event)" #government_id="ngModel" name="government_id" [disabled]="isDisabled()" required></ngx-bootstrap-multiselect>
       <div *ngIf="f.submitted && !government_id.valid" class="help-text">{{'Please select government entities' | translate}}</div>
       <p class="note">
         {{ 'observation.governmentEntity.note' | translate }}
@@ -855,7 +855,7 @@
     <!-- 6. Relevant operators -->
     <div class="form-group">
       <label>{{'Relevant operators' | translate}}</label>
-      <ss-multiselect-dropdown
+      <ngx-bootstrap-multiselect
         [texts]="multiSelectTexts"
         [options]="relevantOperatorsOptions"
         [settings]="relevantOperatorsSelectSettings"
@@ -863,7 +863,7 @@
         (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
         name="relevant_operators"
         [disabled]="isDisabled()">
-      </ss-multiselect-dropdown>
+      </ngx-bootstrap-multiselect>
       <p class="note">
         {{ 'observation.relevantOperators.note' | translate }}
       </p>

@@ -8,7 +8,7 @@ import { DatastoreService } from 'app/services/datastore.service';
 import { AuthService } from 'app/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'environments/environment';
-import { IMultiSelectOption, IMultiSelectSettings, IMultiSelectTexts } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectSettings, IMultiSelectTexts } from 'ngx-bootstrap-multiselect';
 import { MISSION_TYPES } from 'app/models/observation_report';
 
 @Component({
