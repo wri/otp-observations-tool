@@ -55,7 +55,12 @@
               "date-fns/format",
               "date-fns/parse",
               "qs"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "."
+              ]
+            }
           },
           "configurations": {
             "e2e": {
@@ -131,27 +136,27 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "otp-observations-tool:build"
+            "buildTarget": "otp-observations-tool:build"
           },
           "configurations": {
             "e2e": {
-              "browserTarget": "otp-observations-tool:build:e2e"
+              "buildTarget": "otp-observations-tool:build:e2e"
             },
             "local": {
-              "browserTarget": "otp-observations-tool:build:local"
+              "buildTarget": "otp-observations-tool:build:local"
             },
             "staging": {
-              "browserTarget": "otp-observations-tool:build:staging"
+              "buildTarget": "otp-observations-tool:build:staging"
             },
             "production": {
-              "browserTarget": "otp-observations-tool:build:production"
+              "buildTarget": "otp-observations-tool:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "otp-observations-tool:build"
+            "buildTarget": "otp-observations-tool:build"
           }
         }
       }

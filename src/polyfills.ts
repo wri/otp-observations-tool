@@ -20,14 +20,14 @@
 
 
 /** Evergreen browsers require these. **/
-import '@abraham/reflection';
+import 'reflect-metadata';
 
 
 
 /***************************************************************************************************
  * Zone JS is required by Angular itself.
  */
-import 'zone.js/dist/zone';  // Included with Angular CLI.
+import 'zone.js';  // Included with Angular CLI.
 
 
 
