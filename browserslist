@@ -10,3 +10,6 @@ last 2 versions
 Firefox ESR
 not dead
 not IE 9-11 # For IE 9-11 support, remove 'not'.
+# The Angular CLI cannot emit ES5, so these two would only produce a build warning.
+not op_mini all
+not kaios 2.5

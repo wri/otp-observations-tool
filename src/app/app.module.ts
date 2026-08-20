@@ -34,7 +34,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { apiInterceptorProvider } from 'app/services/api-interceptor';
 
 import * as Sentry from '@sentry/browser'
-import { RewriteFrames } from '@sentry/integrations'
+// Deep import: the '@sentry/integrations' barrel also pulls in the offline integration,
+// which requires localforage - a CommonJS dependency we neither use nor want bundled.
+import { RewriteFrames } from '@sentry/integrations/esm/rewriteframes'
 
 import { environment } from 'environments/environment';
 
