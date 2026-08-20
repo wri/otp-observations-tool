@@ -2,7 +2,7 @@ import type { ObservationDocument } from 'app/models/observation_document';
 import type { Law } from 'app/models/law.model';
 import type { ObservationReport } from 'app/models/observation_report';
 import type { Fmu } from 'app/models/fmu.model';
-import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from 'angular2-jsonapi';
+import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from '@michalkotas/angular2-jsonapi';
 import type { Country } from 'app/models/country.model';
 import type { Species } from 'app/models/species.model';
 import type { User } from 'app/models/user.model';

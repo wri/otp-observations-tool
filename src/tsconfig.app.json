@@ -5,9 +5,10 @@
     "baseUrl": "",
     "types": [],
     "paths": {
-      // angular2-jsonapi does `import { isEqual, cloneDeep, extend } from 'lodash'`, which drags
-      // the whole 70kB monolithic build in. lodash-es (already a dep of angular2-jsonapi) exposes
-      // the same functions as ES modules, so webpack can tree-shake down to the three we use.
+      // @michalkotas/angular2-jsonapi declares only lodash-es as a dependency, but one of its
+      // modules still does `import { ... } from 'lodash'`, which drags the whole 70kB monolithic
+      // CommonJS build in (worth ~55kB of main.js). lodash-es exposes the same functions as ES
+      // modules, so webpack can tree-shake down to the handful actually used.
       // Only the bare specifier is remapped; deep `lodash/foo` imports resolve as before.
       "lodash": ["../node_modules/lodash-es"]
     }

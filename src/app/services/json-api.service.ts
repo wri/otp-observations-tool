@@ -2,7 +2,7 @@
 import {map} from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JsonApiModel, JsonApiDatastore } from 'angular2-jsonapi';
+import { JsonApiModel, JsonApiDatastore } from '@michalkotas/angular2-jsonapi';
 import { DatastoreService } from 'app/services/datastore.service';
 
 // tslint:disable-next-line:interface-over-type-literal

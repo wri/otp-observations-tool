@@ -26,7 +26,7 @@ import { AppRoutingModule } from 'app/app-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
-import { JsonApiModule } from 'angular2-jsonapi';
+import { JsonApiModule } from '@michalkotas/angular2-jsonapi';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ObservationsService } from 'app/services/observations.service';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
