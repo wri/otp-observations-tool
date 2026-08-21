@@ -69,7 +69,9 @@ export class OrganizationProfileComponent {
   }
 
   loadCountries() {
-    return this.countriesService.getAll({ sort: 'name' })
+    // The multiselect shows the name and submits the id; the country models are only ever
+    // handed back to the API as relationship linkage, which carries no attributes
+    return this.countriesService.getAll({ sort: 'name', fields: { countries: 'name' } })
       .then(countries => {
         this.countries = countries;
         this.countriesOptions = countries.map(c => ({ id: c.id, name: c.name }));
