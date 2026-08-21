@@ -34,7 +34,8 @@ export class RegisterComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.countriesService.getAll({ sort: 'name' })
+    // The form only lists the names and submits the ids
+    this.countriesService.getAll({ sort: 'name', fields: { countries: 'name' } })
       .then(data => this.countries = data);
 
     this.observersService.getAll({ sort: 'name' })

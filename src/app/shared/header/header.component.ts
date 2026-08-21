@@ -67,18 +67,39 @@ export class HeaderComponent {
       this.isAdmin = this.authService.isAdmin();
       this.isBackendAdmin = this.authService.isBackendAdmin();
       this._selectedObserverId = this.authService.userObserverId;
-      this.observersService.getAll({ sort: 'name' })
-        .then(data => {
-          this.availableObservers = data.filter(o => this.authService.availableObserverIds.includes(o.id));
-
-          if (!this.authService.userObserverId && this.availableObservers.length > 0) {
-            this.selectedObserverId = this.availableObservers[0].id;
-          }
-        });
+      this.loadAvailableObservers();
     });
     if (!environment.production) {
       this.isStaging = true;
     }
+  }
+
+  private loadAvailableObservers(): void {
+    if (!this.isLogged || !this.displayObserverSelector) {
+      this.availableObservers = [];
+      return;
+    }
+
+    const params: any = {
+      sort: 'name',
+      // The selector only ever shows the name
+      fields: { observers: 'name' }
+    };
+
+    // A backend admin can switch to any observer; everyone else is limited to their own,
+    // which the API can filter far more cheaply than we can after the fact
+    if (!this.isBackendAdmin) {
+      params['filter[id]'] = this.authService.availableObserverIds.join(',');
+    }
+
+    this.observersService.getAll(params)
+      .then(data => {
+        this.availableObservers = data;
+
+        if (!this.authService.userObserverId && data.length > 0) {
+          this.selectedObserverId = data[0].id;
+        }
+      });
   }
 
   logout(): void {

@@ -272,7 +272,12 @@ export class ObservationDetailComponent implements OnDestroy {
     }
 
     // When the type change we load the necessary additional information
-    this.countriesService.getAll(type === 'government' ? { include: 'governments', sort: 'name' } : { sort: 'name' })
+    // The form lists the country names and checks the ISO code (see isDRC). `governments`
+    // has to be in the fieldset too: restricting a resource's fields also drops the
+    // linkage of its relationships, which would make the include unreachable.
+    this.countriesService.getAll(type === 'government'
+      ? { include: 'governments', sort: 'name', fields: { countries: 'name,iso,governments' } }
+      : { sort: 'name', fields: { countries: 'name,iso' } })
       .then(countries => this.countries = countries)
       .then(() => {
         // If we're editing an observation (or using draft), the object Country of the observation won't
@@ -356,13 +361,13 @@ export class ObservationDetailComponent implements OnDestroy {
     }
 
     if (country) {
-      this.fmusService.getAll({ sort: 'name', filter: { country: country.id } })
+      this.fmusService.getAll({ sort: 'name', filter: { country: country.id }, fields: { fmus: 'name' } })
         .then((fmus) => {
           this.countryFmus = fmus;
           this.resetFmus();
         });
 
-      this.operatorsService.getAll({ sort: 'name', filter: { country: country.id } })
+      this.operatorsService.getAll({ sort: 'name', filter: { country: country.id }, fields: { operators: 'name' } })
         .then((operators) => {
           this.operators = operators;
 
@@ -409,7 +414,7 @@ export class ObservationDetailComponent implements OnDestroy {
     }
 
     if (operatorChoice) {
-      this.operatorsService.getById(operatorChoice.id, { include: 'fmus' })
+      this.operatorsService.getById(operatorChoice.id, { include: 'fmus', fields: { fmus: 'name' } })
         .then((op) => {
           this.operatorFmus = op.fmus ? op.fmus : [];
           this.resetFmus();
@@ -475,29 +480,13 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get fmu() { return this.observation ? this.observation.fmu : this._fmu; }
   set fmu(fmu) {
-    // We create the map layer for the FMU and store it
-    // NOTE: we can't generate it in the mapLayers getter
-    // because:
-    //  1. It's not performant
-    //  2. The references get lost with the event handlers
-    //     and we're enable to attach a click event
-    if (fmu && fmu.geojson) {
-      const layer = L.geoJSON(<GeoJsonObject>fmu.geojson);
-      this._mapFmu = layer;
+    const previousFmu = this.fmu;
+    const previousLayer = this._mapFmu;
 
-      // We zoom onto the FMU in two cases:
-      //  1. There wasn't any FMU displayed before (and now
-      //     there is one)
-      //  2. The user changed the FMU
-      if (((!this._fmu || !this._fmu.geojson) || this.fmu.id !== fmu.id) && this.map) {
-        this.map.fitBounds(layer.getBounds());
-      }
-    } else {
-      this._mapFmu = null;
-    }
-
+    // The selection is applied first so the model is right away correct even while the
+    // geometry needed to draw it is still on its way
     if (this.observation) {
-      if (this.observation.fmu && this.observation.fmu.id !== fmu.id) {
+      if (this.observation.fmu && (!fmu || this.observation.fmu.id !== fmu.id)) {
         // reset latitude and longitude
         this.latitude = null;
         this.longitude = null;
@@ -505,6 +494,54 @@ export class ObservationDetailComponent implements OnDestroy {
       this.observation.fmu = fmu;
     } else {
       this._fmu = fmu;
+    }
+
+    this.drawFmu(fmu, previousFmu, previousLayer);
+  }
+
+  /**
+   * Draw the selected FMU on the map, zooming onto it when it's a different one.
+   *
+   * The FMU lists are fetched without their geometry — the polygons of one country's FMUs
+   * run to megabytes and the map only ever draws the FMU that is selected — so the geojson
+   * is loaded here, on demand. It is kept on the model, so going back to an FMU that has
+   * already been displayed costs nothing.
+   *
+   * NOTE: we can't generate the layer in the mapLayers getter because:
+   *  1. It's not performant
+   *  2. The references get lost with the event handlers
+   *     and we're enable to attach a click event
+   */
+  private async drawFmu(fmu: Fmu, previousFmu: Fmu, previousLayer: any) {
+    if (!fmu) {
+      this._mapFmu = null;
+      return;
+    }
+
+    if (!fmu.geojson) {
+      try {
+        // The name comes along so the model the datastore caches for this id stays complete
+        const geometry = await this.fmusService.getById(fmu.id, { fields: { fmus: 'name,geojson' } });
+        fmu.geojson = geometry && geometry.geojson;
+      } catch (err) {
+        console.error(err); // The FMU stays selected, we just can't draw it
+      }
+    }
+
+    // The user may have picked another FMU while the geometry was in flight
+    if (!fmu.geojson || this.fmu !== fmu) {
+      return;
+    }
+
+    const layer = L.geoJSON(<GeoJsonObject>fmu.geojson);
+    this._mapFmu = layer;
+
+    // We zoom onto the FMU in two cases:
+    //  1. There wasn't any FMU displayed before (and now
+    //     there is one)
+    //  2. The user changed the FMU
+    if ((!previousLayer || !previousFmu || previousFmu.id !== fmu.id) && this.map) {
+      this.map.fitBounds(layer.getBounds());
     }
   }
 
@@ -1028,7 +1065,8 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   loadExtraData() {
-    this.observersService.getAll({ sort: 'name' })
+    // Only the names are shown; the models are otherwise handed back as relationship linkage
+    this.observersService.getAll({ sort: 'name', fields: { observers: 'name' } })
       .then((observers) => {
         this.observers = observers;
 
@@ -1045,7 +1083,13 @@ export class ObservationDetailComponent implements OnDestroy {
     this.observationReportsService.getAll({
       sort: 'title',
       filter: { observer_id: this.authService.userObserverId },
-      include: 'observers'
+      include: 'observers',
+      // title for the options, attachment for the download link, publication-date to spot a
+      // report already filed for the same date, and observers because we include them
+      fields: {
+        'observation-reports': 'title,attachment,publication-date,observers',
+        observers: 'name'
+      }
     }).then(reports => this.reports = reports)
       .then(() => {
         // If we're editing an observation (or using draft), the object ObservationReport of the observation won't
@@ -1401,7 +1445,7 @@ export class ObservationDetailComponent implements OnDestroy {
   onNewOperatorAdded(operator: Operator) {
     this.newOperatorModalOpen = false;
     if (this.country) {
-      this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id } })
+      this.operatorsService.getAll({ sort: 'name', filter: { country: this.country.id }, fields: { operators: 'name' } })
         .then((operators) => {
           this.operators = operators;
           // auto select newly added operator if none selected

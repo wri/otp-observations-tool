@@ -28,4 +28,19 @@ export class FmusService extends JsonApiService<Fmu> {
       params
     )).toPromise().then((data) => data.getModels());
   }
+
+  /**
+   * Return the FMU designated by its id
+   *
+   * The API exposes no /fmus/:id route, so this goes through the collection with an id
+   * filter rather than findRecord, which would 404.
+   *
+   * @param {string} id ID of the FMU
+   * @param {any} [params={}] Additional params for the query
+   * @returns {Promise<Fmu>}
+   */
+  getById(id: string, params: any = {}): Promise<Fmu> {
+    return this.getAll(Object.assign({}, params, { filter: { id } }))
+      .then((fmus) => fmus[0] || null);
+  }
 }
