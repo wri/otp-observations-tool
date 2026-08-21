@@ -33,6 +33,16 @@ export class ModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.dialog = new A11yDialog(this.elementRef.nativeElement);
+
+    // a11y-dialog closes the dialog on ESC by itself, without going through `opened`.
+    // Left alone, the consumer's flag stays true, so the next `opened = true` isn't a
+    // change and the modal never reopens. The guard keeps the closures we initiate
+    // ourselves — where `opened` is already false — from emitting a second time.
+    this.dialog.on('hide', () => {
+      if (this._opened) {
+        this.close();
+      }
+    });
   }
 
   close() {

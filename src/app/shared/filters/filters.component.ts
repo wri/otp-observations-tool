@@ -15,6 +15,8 @@ export interface Filter {
   selected?: any;
   required: boolean;
   extraParams?: any;
+  // Whether the options of the filter have to be fetched from the API
+  async?: boolean;
 }
 
 @Component({
@@ -24,11 +26,20 @@ export interface Filter {
 })
 export class FiltersComponent implements AfterContentInit {
 
+  // Props of the filters whose value narrows the options of another filter
+  private static readonly CONTROLLING_PROPS = ['category-id', 'country-id', 'operator'];
+
   private skipNextFilterChange = false;
   private _filtersNodes: QueryList<FilterDirective>;
+  private optionsLoaded = false;
+  private optionsRequest: Promise<void> = null;
+  // Selections in effect when the modal was opened, to be able to discard the edits made
+  // in it (see onDismissModal)
+  private selectionsOnOpen: { [prop: string]: any } = {};
   previousState: JsonApiParams;
   filters: Filter[] = [];
   modalOpen = false;
+  loadingOptions = false;
   objectKeys = Object.keys;
   defaultApiParams = {};
 
@@ -70,11 +81,16 @@ export class FiltersComponent implements AfterContentInit {
       return;
     }
 
-    this.updateSubcategoryFilterOptions();
-    this.updateGovernmentEntityFilterOptions();
-    this.updateOperatorFilterOptions();
-    // Must be after updateOperatorFilterOptions because the FMU options depends on the operators
-    this.updateFmuFilterOptions();
+    // There's nothing to narrow before the options have been fetched, and fetching them
+    // here would defeat the point of loading them lazily. ensureOptionsLoaded runs this
+    // once the lists are in.
+    if (this.optionsLoaded) {
+      this.updateSubcategoryFilterOptions();
+      this.updateGovernmentEntityFilterOptions();
+      this.updateOperatorFilterOptions();
+      // Must be after updateOperatorFilterOptions because the FMU options depends on the operators
+      this.updateFmuFilterOptions();
+    }
 
     if (!silent) {
       // Hack so we don't trigger an infinite loop
@@ -279,6 +295,13 @@ export class FiltersComponent implements AfterContentInit {
       }
     }
 
+    // A restored value is displayed as a select outside the modal, which needs the option
+    // labels to show anything but a blank. Not awaited: the table query doesn't depend on
+    // the options.
+    if (this.filters.some(filter => filter.async && this.hasValue(filter))) {
+      this.ensureOptionsLoaded();
+    }
+
     this.change.emit();
   }
 
@@ -291,9 +314,6 @@ export class FiltersComponent implements AfterContentInit {
     const syncFiltersNodes = filterNodes.filter(f => typeof f.values !== 'string');
     const asyncFiltersNodes = filterNodes.filter(f => typeof f.values === 'string');
 
-    // In a first step, we set these sync filters so the
-    // table automatically load the table with these
-    // We assume no async filter will have a default value
     const syncFilters = syncFiltersNodes.map((syncFiltersNode) => ({
       name: syncFiltersNode.name,
       prop: syncFiltersNode.prop,
@@ -305,14 +325,85 @@ export class FiltersComponent implements AfterContentInit {
       selected: syncFiltersNode.default !== null && syncFiltersNode.default !== undefined
         ? syncFiltersNode.default
         : null,
-      required: syncFiltersNode.required || false
+      required: syncFiltersNode.required || false,
+      async: false
     }));
 
-    this.filters = syncFilters;
+    // The async filters are listed with no options at all: their values are fetched only
+    // once something displays them (see ensureOptionsLoaded). Listing them right away
+    // still matters, because getApiParams and restoreState both work off this array.
+    // We assume no async filter will have a default value.
+    const asyncFilters = asyncFiltersNodes.map((asyncFiltersNode) => ({
+      name: asyncFiltersNode.name,
+      prop: asyncFiltersNode.prop,
+      values: {},
+      selected: null,
+      required: asyncFiltersNode.required || false,
+      extraParams: asyncFiltersNode['extra-params'],
+      async: true
+    }));
 
-    // Then we fetch the values of the async filters and
-    // reset the filters with the combination of the sync
-    // and async ones
+    this.filters = [...syncFilters, ...asyncFilters];
+
+    // Resetting after the options have been fetched has to fetch them again: the lists of
+    // the dependent filters were narrowed by the values we just cleared
+    if (this.optionsLoaded) {
+      await this.loadAsyncFilterOptions();
+    }
+
+    if (!silent) {
+      this.change.emit();
+    }
+  }
+
+  /**
+   * Fetch the options of the async filters, once.
+   *
+   * On a cold load nobody has opened the filters yet, so requesting a collection per async
+   * filter — up to 3000 rows each — just to fill selects that stay closed delays the table
+   * for nothing. The options are fetched when they first become visible instead: when the
+   * user opens the filters modal, or when a restored state gives an async filter a value.
+   *
+   * Concurrent callers share the in-flight request.
+   */
+  ensureOptionsLoaded(): Promise<void> {
+    if (this.optionsLoaded) {
+      return Promise.resolve();
+    }
+
+    if (!this.optionsRequest) {
+      this.loadingOptions = true;
+
+      this.optionsRequest = this.loadAsyncFilterOptions()
+        .then(() => {
+          this.optionsLoaded = true;
+
+          // The dependent filters (subcategory, government entity, operator and FMU) only
+          // need narrowing if the filter they depend on already holds a value — otherwise
+          // the lists we've just fetched are the full ones already
+          const isNarrowed = this.filters.some(filter =>
+            FiltersComponent.CONTROLLING_PROPS.includes(filter.prop) && this.hasValue(filter));
+
+          if (isNarrowed) {
+            return this.onChangeFilter(true);
+          }
+        })
+        .catch(err => console.error(err)) // Otherwise the modal would spin forever
+        .then(() => {
+          this.loadingOptions = false;
+          this.optionsRequest = null;
+        });
+    }
+
+    return this.optionsRequest;
+  }
+
+  /**
+   * Fetch the options of the async filters and assign them to the matching filters
+   */
+  private async loadAsyncFilterOptions(): Promise<void> {
+    const asyncFiltersNodes = this._filtersNodes.toArray().filter(f => typeof f.values === 'string');
+
     const promises = asyncFiltersNodes.map((asyncFiltersNode) => {
       // The values of the filter needs to be fetched from
       // the API
@@ -340,23 +431,42 @@ export class FiltersComponent implements AfterContentInit {
     });
 
     await Promise.all(promises)
-      .then(p => {
-        this.filters = [
-          ...syncFilters,
-          ...p.map((promise, index) => ({
-            name: asyncFiltersNodes[index].name,
-            prop: asyncFiltersNodes[index].prop,
-            values: promise || {},
-            selected: asyncFiltersNodes[index].default || null,
-            required: asyncFiltersNodes[index].required || false,
-            extraParams: asyncFiltersNodes[index]['extra-params']
-          }))
-        ];
-      })
-      .catch(err => console.error(err)); // TODO: visual feedback
+      .then(options => options.forEach((values, index) => {
+        const filter = this.filters.find(f => f.prop === asyncFiltersNodes[index].prop);
 
-    if (!silent) {
-      this.change.emit();
+        if (filter) {
+          filter.values = values || {};
+        }
+      }))
+      .catch(err => console.error(err)); // TODO: visual feedback
+  }
+
+  onOpenModal() {
+    this.modalOpen = true;
+
+    this.selectionsOnOpen = this.filters.reduce(
+      (res, filter) => Object.assign(res, { [filter.prop]: filter.selected }), {});
+
+    this.ensureOptionsLoaded();
+  }
+
+  /**
+   * Dismiss the modal without applying anything (background click, close button or ESC).
+   *
+   * The selects write to the filters as the user picks, but nothing reaches the table
+   * until "Done" — so leaving any other way has to put the selections back where they
+   * were, otherwise the filters listed next to the button would claim the table is
+   * filtered when it isn't.
+   */
+  onDismissModal() {
+    this.modalOpen = false;
+
+    const discarded = this.filters.filter(filter => filter.selected !== this.selectionsOnOpen[filter.prop]);
+
+    if (discarded.length) {
+      discarded.forEach(filter => filter.selected = this.selectionsOnOpen[filter.prop]);
+      // The options of the dependent filters were narrowed by the values we just discarded
+      this.onChangeFilter(true);
     }
   }
 

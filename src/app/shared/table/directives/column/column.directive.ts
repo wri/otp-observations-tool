@@ -10,6 +10,14 @@ export class TableColumnDirective {
   @Input() name: string;
   @Input() prop: string;
   @Input() include: boolean;
+
+  /**
+   * Sparse fieldset the column needs, keyed by JSON:API resource *type* (not by the
+   * relationship name): `[fields]="{ operators: ['name'] }"` for `prop="operator.name"`.
+   * The type can't be derived from the prop, angular2-jsonapi's relationship metadata
+   * doesn't record the target model.
+   */
+  @Input() fields: { [type: string]: string | string[] };
   @Input() sortable: boolean;
   @Input() hideable: boolean = true;
   @Input() hidden: boolean;

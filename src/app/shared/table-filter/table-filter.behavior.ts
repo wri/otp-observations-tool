@@ -17,6 +17,9 @@ export class TableFilterBehavior implements AfterViewInit {
   protected filters: FiltersComponent;
 
   ngAfterViewInit(): void {
+    // The table needs the primary type to keep a sparse fieldset consistent with its includes
+    this.table.type = Reflect.getMetadata('JsonApiModelConfig', this.service.model).type;
+
     this.table.change.subscribe(() => this.loadData());
     this.filters.change.subscribe(() => {
       // We don't forget to move the user to the first
