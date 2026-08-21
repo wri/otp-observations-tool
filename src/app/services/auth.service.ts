@@ -66,10 +66,11 @@ export class AuthService {
    * is not permitted to log in, resolve true if everything's fine
    * @param {string} email user email
    * @param {string} password user password
+   * @param {boolean} rememberMe keep the session for 30 days
    * @returns {Promise<boolean>}
    */
-  login(email: string, password: string): Promise<boolean> {
-    const payload = { auth: { email, password } };
+  login(email: string, password: string, rememberMe: boolean = false): Promise<boolean> {
+    const payload = { auth: { email, password, set_cookie: true, remember_me: rememberMe } };
 
     return this.http.post(`${environment.apiUrl}/login`, payload).pipe(
       map((body: any) => {
@@ -78,7 +79,6 @@ export class AuthService {
           return false;
         }
 
-        this.tokenService.token = body.token;
         this.userId = body.user_id;
         this.userRole = body.role;
 
@@ -96,11 +96,6 @@ export class AuthService {
    * @returns {Promise<boolean>}
    */
   async isUserLogged(): Promise<boolean> {
-    if (!this.tokenService.token) {
-      this.triggerLoginStatus(false);
-      return false;
-    }
-
     try {
       const response = await this.http.get(`${environment.apiUrl}/users/current-user`).toPromise() as any;
       const relationships = response.data.relationships;
@@ -157,13 +152,50 @@ export class AuthService {
     return this.userRole === 'admin';
   }
 
-  logout() {
+  async logout() {
+    try {
+      await this.http.delete(`${environment.apiUrl}/logout`).toPromise();
+    } catch (e) {
+      // Clear the session client-side even if the request fails so the user
+      // isn't trapped in a logged-in state.
+      console.error(e);
+    }
+    this.clearSession();
+    this.router.navigate(['/']);
+  }
+
+  /**
+   * Reset the local auth state. Does not call the backend, so it is safe to
+   * use when the session is already gone (e.g. the cookie expired).
+   */
+  clearSession() {
     this.tokenService.token = null;
     this.userId = null;
     this.userRole = null;
     this.userObserverId = null;
     this.triggerLoginStatus(false);
-    this.router.navigate(['/']);
+  }
+
+  /**
+   * Handle an expired/invalid session detected from a 401 API response:
+   * clear local state and send the user back to the login page.
+   */
+  sessionExpired() {
+    this.clearSession();
+    // Already on the login page: never navigate again. This is the structural
+    // guard against redirect loops -- even if some request keeps returning 401
+    // while we sit on login, we simply stop redirecting instead of bouncing.
+    if (this.isOnLoginPage()) {
+      return;
+    }
+    // Redirect to the login page (route ''), keeping the current location so
+    // the user returns to where they were after signing back in.
+    this.router.navigate(['/'], { queryParams: { returnUrl: this.router.url } });
+  }
+
+  private isOnLoginPage(): boolean {
+    // Login is the root route (''), so its URL is '/' or '/?returnUrl=...'.
+    return this.router.url === '/' || this.router.url.startsWith('/?');
   }
 
   recoverPass(email: string): Promise<boolean> {

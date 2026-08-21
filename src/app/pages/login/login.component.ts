@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.loading = true;
-    this.authService.login(this.model.username, this.model.password)
+    this.authService.login(this.model.username, this.model.password, !!this.model.rememberMe)
       .then(async isLogged => {
         if (!isLogged) {
           alert(await this.translateService.get('login.permissionError').toPromise());

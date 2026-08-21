@@ -451,5 +451,6 @@
   "external": "Externe",
   "government": "Administration",
   "There was a problem with the form submission.": "Il y a eu un problème lors de la saisie.",
-  "Please fill or select all required fields before submitting the form.": "Veuillez remplir ou sélectionner tous les champs obligatoires avant de soumettre le formulaire."
+  "Please fill or select all required fields before submitting the form.": "Veuillez remplir ou sélectionner tous les champs obligatoires avant de soumettre le formulaire.",
+  "Remember me for 30 days": "Se souvenir de moi pendant 30 jours"
 }

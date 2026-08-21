@@ -104,7 +104,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: wri/fti_api
-          ref: chore/e2e-speed-up
+          ref: master
           path: otp_api
 
       - name: Save OTP API Commit SHA
