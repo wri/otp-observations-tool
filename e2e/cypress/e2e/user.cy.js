@@ -4,11 +4,43 @@ describe('User', () => {
   })
 
   context('Public user', () => {
-    it('can log in and out', function () {
-      cy.login('ngo_manager@example.com', 'Supersecret1');
-      cy.visit('/');
-      cy.get('button').contains('Log out').click();
-      cy.get('button').contains('Login').should('exist')
+    describe('can log in', function () {
+      // the API namespaces its cookies per app, see api-interceptor.ts
+      const AUTH_COOKIE = 'observations-tool_otp_auth_token';
+      const CSRF_COOKIE = 'observations-tool_XSRF-TOKEN';
+      const THIRTY_DAYS_IN_SECONDS = 30 * 24 * 60 * 60;
+
+      const submitLogin = () => {
+        cy.get('#username').type('ngo_manager@example.com');
+        cy.get('#password').type('Supersecret1');
+        cy.get('button').contains('Login').click();
+        cy.get('button').contains('Log out').should('exist');
+      };
+
+      it('keeps the session for 30 days when remember me ticked', function () {
+        cy.get('#rememberMe').check();
+        submitLogin();
+
+        [AUTH_COOKIE, CSRF_COOKIE].forEach(name => {
+          cy.getCookie(name).should(cookie => {
+            const expectedExpiry = Math.floor(Date.now() / 1000) + THIRTY_DAYS_IN_SECONDS;
+            // an hour of slack so the assertion does not depend on how long the login took
+            expect(cookie.expiry, `${name} expiry`).to.be.closeTo(expectedExpiry, 60 * 60);
+          });
+        });
+      });
+
+      it('keeps the session until the browser closes when remember me not ticked', function () {
+        cy.get('#rememberMe').should('not.be.checked');
+        submitLogin();
+
+        [AUTH_COOKIE, CSRF_COOKIE].forEach(name => {
+          // no expiry at all means the browser drops the cookie on close
+          cy.getCookie(name).should(cookie => {
+            expect(cookie.expiry, `${name} expiry`).to.be.undefined;
+          });
+        });
+      });
     });
 
     it('can create account', function () {
