@@ -1,3 +1,5 @@
+const LETTER_OPENER_ORIGIN = 'http://localhost:3000';
+
 describe('Password Reset', () => {
   beforeEach(() => {
     cy.recordNetworkActivity();
@@ -9,8 +11,12 @@ describe('Password Reset', () => {
 
   describe('Full flow', () => {
     it('user can reset its password', function () {
-      cy.visit('http://localhost:3000/admin/letter_opener');
-      cy.get('a').contains('Clear').click();
+      // letter_opener runs on a different port, which is a separate origin since
+      // Cypress stopped injecting document.domain, so it needs cy.origin()
+      cy.origin(LETTER_OPENER_ORIGIN, () => {
+        cy.visit('http://localhost:3000/admin/letter_opener');
+        cy.get('a').contains('Clear').click();
+      });
       cy.visit('/');
       cy.get('a').contains('Reset password').click();
       cy.get('#email').type('ngo@example.com');
@@ -19,23 +25,28 @@ describe('Password Reset', () => {
       cy.get('button').contains('Reset').click();
       cy.get("@alert").should("have.been.calledWithMatch", /If account exists for ngo@example.com, you will get/);
       cy.then(() => alert.reset());
-      cy.visit('http://localhost:3000/admin/letter_opener');
-      cy.get('a[target="mail"]').contains('ngo@example.com').click();
-      let token;
-      cy.wait(1000); // wait to load frames
-      cy.get('iframe#mail').then($mailIframe => {
-        cy.wrap($mailIframe.contents()).find('iframe').then($messageIframe => {
-          cy.wrap($messageIframe.contents()).find('a').contains('reset_password_token=').then(tokenElement => {
-            const textWithToken = tokenElement.text();
-            const tokenRegex = /reset_password_token=(.*)/;
-            const tokenMatch = textWithToken.match(tokenRegex);
-            token = tokenMatch && tokenMatch[1];
-            // Assert that the token is extracted successfully
-            expect(token).to.exist;
-          });
-        });
+      // the callback runs in the other origin, so it cannot close over anything
+      // from this scope; it yields the token back instead
+      cy.origin(LETTER_OPENER_ORIGIN, () => {
+        cy.visit('http://localhost:3000/admin/letter_opener');
+        cy.get('a[target="mail"]').contains('ngo@example.com').click();
+        cy.wait(1000); // wait to load frames
+        cy.get('iframe#mail').then($mailIframe =>
+          cy.wrap($mailIframe.contents()).find('iframe').then($messageIframe =>
+            cy.wrap($messageIframe.contents()).find('a').contains('reset_password_token=').then(tokenElement => {
+              const textWithToken = tokenElement.text();
+              const tokenRegex = /reset_password_token=(.*)/;
+              const tokenMatch = textWithToken.match(tokenRegex);
+              const token = tokenMatch && tokenMatch[1];
+              // Assert that the token is extracted successfully
+              expect(token).to.exist;
+              return token;
+            })
+          )
+        );
+      }).then(token => {
+        cy.visit(`/reset-password?reset_password_token=${token}`);
       });
-      cy.then(() => cy.visit(`/reset-password?reset_password_token=${token}`));
       // validation errors
       cy.get('#new_password').clear().type('s');
       cy.get('button').contains('Change password').click();
