@@ -10,7 +10,7 @@
   </div>
 </ng-container>
 
-<otp-modal [title]="'Table filters' | translate" [opened]="modalOpen" [closeable]="false" (onClose)="modalOpen = false">
+<otp-modal [title]="'Table filters' | translate" [opened]="modalOpen" [closeable]="true" (onClose)="onDismissModal()">
   <h2>{{'Filter by' | translate}}</h2>
 
   <div class="filters-loader" *ngIf="loadingOptions">

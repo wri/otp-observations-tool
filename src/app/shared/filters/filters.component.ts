@@ -33,6 +33,9 @@ export class FiltersComponent implements AfterContentInit {
   private _filtersNodes: QueryList<FilterDirective>;
   private optionsLoaded = false;
   private optionsRequest: Promise<void> = null;
+  // Selections in effect when the modal was opened, to be able to discard the edits made
+  // in it (see onDismissModal)
+  private selectionsOnOpen: { [prop: string]: any } = {};
   previousState: JsonApiParams;
   filters: Filter[] = [];
   modalOpen = false;
@@ -440,7 +443,31 @@ export class FiltersComponent implements AfterContentInit {
 
   onOpenModal() {
     this.modalOpen = true;
+
+    this.selectionsOnOpen = this.filters.reduce(
+      (res, filter) => Object.assign(res, { [filter.prop]: filter.selected }), {});
+
     this.ensureOptionsLoaded();
+  }
+
+  /**
+   * Dismiss the modal without applying anything (background click, close button or ESC).
+   *
+   * The selects write to the filters as the user picks, but nothing reaches the table
+   * until "Done" — so leaving any other way has to put the selections back where they
+   * were, otherwise the filters listed next to the button would claim the table is
+   * filtered when it isn't.
+   */
+  onDismissModal() {
+    this.modalOpen = false;
+
+    const discarded = this.filters.filter(filter => filter.selected !== this.selectionsOnOpen[filter.prop]);
+
+    if (discarded.length) {
+      discarded.forEach(filter => filter.selected = this.selectionsOnOpen[filter.prop]);
+      // The options of the dependent filters were narrowed by the values we just discarded
+      this.onChangeFilter(true);
+    }
   }
 
   onCancel() {
