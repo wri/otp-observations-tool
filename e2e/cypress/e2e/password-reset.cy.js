@@ -47,6 +47,8 @@ describe('Password Reset', () => {
       cy.get('button').contains('Change password').click();
       cy.get("@alert").should("have.been.calledWithMatch", /Your password has been successfully updated/);
       cy.then(() => alert.reset());
+      // wait for the auto log-in to land on the observations page
+      cy.location('pathname').should('eq', '/private/observations');
       // test log in again with new password, even after auto log-in
       cy.get('button').contains('Log out').click();
       cy.contains('Login');
