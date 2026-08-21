@@ -71,6 +71,12 @@
       font-weight: $font-weight-thin;
     }
 
+    .filters-loader {
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+
     .filters {
       @media screen and (min-width: $break-tablet) {
         display: flex;

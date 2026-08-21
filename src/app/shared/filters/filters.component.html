@@ -1,4 +1,4 @@
-<button type="button" *ngIf="filters.length" class="c-button -secondary add-filter" (click)="modalOpen = true">{{'Add filter' | translate}}</button>
+<button type="button" *ngIf="filters.length" class="c-button -secondary add-filter" (click)="onOpenModal()">{{'Add filter' | translate}}</button>
 
 <ng-container *ngFor="let filter of filters">
   <div class="filter" *ngIf="hasValue(filter)">
@@ -13,7 +13,11 @@
 <otp-modal [title]="'Table filters' | translate" [opened]="modalOpen" [closeable]="false" (onClose)="modalOpen = false">
   <h2>{{'Filter by' | translate}}</h2>
 
-  <div class="filters">
+  <div class="filters-loader" *ngIf="loadingOptions">
+    <otp-loader></otp-loader>
+  </div>
+
+  <div class="filters" *ngIf="!loadingOptions">
     <div *ngFor="let filter of filters">
       <label [for]="'filter-modal-' + filter.prop">{{filter.name}}</label>
       <select [id]="'filter-modal-' + filter.prop" [(ngModel)]="filter.selected" (change)="onChangeFilter(true)">
