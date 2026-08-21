@@ -65,11 +65,11 @@
 
   <p *ngIf="table.isHorizontalScrollVisible" class="scrolling-note">{{'observation.scrollingNote' | translate}}</p>
 
-  <otp-table #table [name]="'observations'" adjustToScreenHeight="true" [hideVisibleColumnsBox]="true" [caption]="'Observations' | translate" defaultSort="-updated-at" [include]="['observers']" [hidden]="isUploading" [options]="tableOptions">
+  <otp-table #table [name]="'observations'" adjustToScreenHeight="true" [hideVisibleColumnsBox]="true" [caption]="'Observations' | translate" defaultSort="-updated-at" [include]="['observers']" [fields]="tableFields" [hidden]="isUploading" [options]="tableOptions">
     <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
     <!-- Updated at as a default sort must be as a column, it will be hidden -->
     <otp-table-column name="updated-at" prop="updated-at" [hidden]="true"></otp-table-column>
-    <otp-table-column [name]="'Organization' | translate" prop="observers" [sortable]="false">
+    <otp-table-column [name]="'Organization' | translate" prop="observers" [fields]="{ observers: ['name'] }" [sortable]="false">
       <ng-template let-row="row" table-cell-template>
         <div *ngFor="let observer of row.observers">{{observer.name}}</div>
       </ng-template>
@@ -79,16 +79,16 @@
         {{ value | titlecase | translate }}
       </ng-template>
     </otp-table-column>
-    <otp-table-column [name]="'Operator' | translate" prop="operator.name" [include]="true" [sortable]="false"></otp-table-column>
-    <otp-table-column [name]="'Subcategory' | translate" prop="subcategory.name" [include]="true" [sortable]="false"></otp-table-column>
-    <otp-table-column [name]="'Government entities' | translate" prop="governments" [include]="true" [sortable]="false">
+    <otp-table-column [name]="'Operator' | translate" prop="operator.name" [include]="true" [fields]="{ operators: ['name'] }" [sortable]="false"></otp-table-column>
+    <otp-table-column [name]="'Subcategory' | translate" prop="subcategory.name" [include]="true" [fields]="{ subcategories: ['name'] }" [sortable]="false"></otp-table-column>
+    <otp-table-column [name]="'Government entities' | translate" prop="governments" [include]="true" [fields]="{ governments: ['government-entity'] }" [sortable]="false">
       <ng-template let-row="row" table-cell-template>
         <div *ngFor="let government of row.governments">{{government['government-entity']}}</div>
       </ng-template>
     </otp-table-column>
-    <otp-table-column [name]="'Severity' | translate" prop="severity.level" [include]="true" [sortable]="false"></otp-table-column>
-    <otp-table-column [name]="'FMU' | translate" prop="fmu.name" [include]="true" [sortable]="false"></otp-table-column>
-    <otp-table-column [name]="'Report' | translate" prop="observation-report.title" [include]="true" [sortable]="false">
+    <otp-table-column [name]="'Severity' | translate" prop="severity.level" [include]="true" [fields]="{ severities: ['level'] }" [sortable]="false"></otp-table-column>
+    <otp-table-column [name]="'FMU' | translate" prop="fmu.name" [include]="true" [fields]="{ fmus: ['name'] }" [sortable]="false"></otp-table-column>
+    <otp-table-column [name]="'Report' | translate" prop="observation-report.title" [include]="true" [fields]="{ 'observation-reports': ['title', 'attachment'] }" [sortable]="false">
       <ng-template let-row="row" table-cell-template>
         <ng-template [ngIf]="row['observation-report']">
           <a href="{{row['observation-report'].attachment.url}}" target="_blank" download>{{row['observation-report'].title}}</a>

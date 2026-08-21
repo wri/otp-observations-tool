@@ -11,6 +11,7 @@ export interface TableState {
   sortColumn: string;
   sortOrder: number;
   include: string[];
+  fields: { [type: string]: string[] };
 }
 
 @Component({
@@ -25,6 +26,10 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
   @Input() name: string; // Unique name of the table
   @Input() caption: string;
   @Input() include: string[] = []; // Include param for the query
+  @Input() type: string; // JSON:API type of the primary resource, set by TableFilterBehavior
+  // Sparse fieldsets for the query, keyed by JSON:API resource type. Merged with the
+  // fieldsets the columns declare. Types left out of the map keep all of their fields.
+  @Input() fields: { [type: string]: string | string[] } = {};
   @Input() defaultSort: string; // Default sort param (ex: "name" or "-name")
   @Input() options: any; // Additional options for the table
   @Input() defaultHiddenColumns: string[] = [];
@@ -231,12 +236,26 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
       sortOrder = this.sortOrder === 'asc' ? 1 : -1;
     }
 
+    const fields = this.columns.reduce(
+      (res, col) => this.mergeFields(res, col.fields),
+      this.mergeFields({}, this.fields)
+    );
+
+    // In JSON:API relationships are fields too, so restricting the fields of the primary
+    // resource also drops the linkage of the relationships we include, leaving the
+    // included resources unreachable. We add them back here rather than asking every
+    // caller to keep its fieldset in sync with its includes.
+    if (this.type && fields[this.type]) {
+      fields[this.type] = uniq([...fields[this.type], ...include.map(rel => rel.split('.')[0])]);
+    }
+
     return {
       page: this.currentPage,
       perPage: this.perPage,
       sortColumn,
       sortOrder,
-      include
+      include,
+      fields
     };
   }
 
@@ -302,7 +321,36 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
       params.sort = `${this.state.sortOrder < 0 ? '-' : ''}${this.state.sortColumn}`;
     }
 
+    const fields = this.state.fields;
+    const fieldTypes = Object.keys(fields);
+    if (fieldTypes.length) {
+      params.fields = fieldTypes.reduce((res, type) => {
+        res[type] = fields[type].join(',');
+        return res;
+      }, {});
+    }
+
     return params;
+  }
+
+  /**
+   * Merge a fieldset map into another one, taking the union of the fields of each type.
+   * Accepts both the array and the comma-separated string form.
+   */
+  private mergeFields(
+    target: { [type: string]: string[] },
+    source: { [type: string]: string | string[] }
+  ): { [type: string]: string[] } {
+    return Object.keys(source || {}).reduce((res, type) => {
+      const value = source[type];
+      const list = (Array.isArray(value) ? value : `${value}`.split(','))
+        .map(field => field.trim())
+        .filter(field => !!field);
+
+      res[type] = uniq([...(res[type] || []), ...list]);
+
+      return res;
+    }, { ...target });
   }
 
   /**

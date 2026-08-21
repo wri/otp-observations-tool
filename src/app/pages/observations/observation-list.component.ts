@@ -20,6 +20,13 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
   @ViewChild('uploadFile', { static: true }) uploadFile: ElementRef;
   @ViewChild('table', { static: true }) tableComponent: ElementRef;
 
+  // Attributes of the observations themselves that the list needs. The relationships we
+  // include are added to this fieldset by the table; everything else the API knows about
+  // an observation (details, evidence, coordinates, comments...) stays on the server.
+  tableFields = {
+    observations: ['observation-type', 'validation-status', 'updated-at']
+  };
+
   tableOptions = {
     rows: {
       highlight: (observation: Observation) =>
