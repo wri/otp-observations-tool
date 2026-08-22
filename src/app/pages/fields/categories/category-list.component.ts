@@ -8,7 +8,8 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 @Component({
   selector: 'otp-category-list',
   templateUrl: './category-list.component.html',
-  styleUrls: ['./category-list.component.scss']
+  styleUrls: ['./category-list.component.scss'],
+  standalone: false
 })
 export class CategoryListComponent extends TableFilterBehavior {
 

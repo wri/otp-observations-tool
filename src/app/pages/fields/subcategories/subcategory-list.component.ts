@@ -8,7 +8,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'otp-subcategory-list',
   templateUrl: './subcategory-list.component.html',
-  styleUrls: ['./subcategory-list.component.scss']
+  styleUrls: ['./subcategory-list.component.scss'],
+  standalone: false
 })
 export class SubcategoryListComponent extends TableFilterBehavior {
 

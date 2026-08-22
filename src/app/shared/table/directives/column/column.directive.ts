@@ -3,7 +3,8 @@ import { TableColumnCellDirective } from 'app/shared/table/directives/column/col
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: 'otp-table-column'
+  selector: 'otp-table-column',
+  standalone: false
 })
 export class TableColumnDirective {
 

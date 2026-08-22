@@ -21,7 +21,8 @@ const VALUE_ACCESSOR: any = {
   selector: 'otp-datepicker',
   templateUrl: './datepicker.component.html',
   styleUrls: ['./datepicker.component.scss'],
-  providers: [REQUIRED_VALIDATOR, VALUE_ACCESSOR]
+  providers: [REQUIRED_VALIDATOR, VALUE_ACCESSOR],
+  standalone: false
 })
 export class DatepickerComponent implements Validator, ControlValueAccessor, AfterViewInit {
 

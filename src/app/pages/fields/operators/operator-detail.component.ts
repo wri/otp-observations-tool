@@ -17,7 +17,8 @@ import sortBy from 'lodash/sortBy';
 @Component({
   selector: 'otp-operator-detail',
   templateUrl: './operator-detail.component.html',
-  styleUrls: ['./operator-detail.component.scss']
+  styleUrls: ['./operator-detail.component.scss'],
+  standalone: false
 })
 export class OperatorDetailComponent implements OnInit {
   objectKeys = Object.keys;

@@ -12,7 +12,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 @Component({
   selector: 'otp-government-detail',
   templateUrl: './government-detail.component.html',
-  styleUrls: ['./government-detail.component.scss']
+  styleUrls: ['./government-detail.component.scss'],
+  standalone: false
 })
 export class GovernmentDetailComponent implements OnInit {
 

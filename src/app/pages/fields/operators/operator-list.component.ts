@@ -10,7 +10,8 @@ import { forkJoin ,  Observable } from 'rxjs';
 @Component({
   selector: 'otp-operator-list',
   templateUrl: './operator-list.component.html',
-  styleUrls: ['./operator-list.component.scss']
+  styleUrls: ['./operator-list.component.scss'],
+  standalone: false
 })
 export class OperatorListComponent extends TableFilterBehavior implements AfterViewInit {
 

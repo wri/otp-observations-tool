@@ -4,6 +4,7 @@ import { NavigationItem } from 'app/shared/navigation/navigation.component';
 @Component({
   selector: 'otp-field-list',
   templateUrl: './field-list.component.html',
-  styleUrls: ['./field-list.component.scss']
+  styleUrls: ['./field-list.component.scss'],
+  standalone: false
 })
 export class FieldListComponent {}

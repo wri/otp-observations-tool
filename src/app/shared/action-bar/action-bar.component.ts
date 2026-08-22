@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'otp-action-bar',
   templateUrl: './action-bar.component.html',
-  styleUrls: ['./action-bar.component.scss']
+  styleUrls: ['./action-bar.component.scss'],
+  standalone: false
 })
 export class ActionBarComponent {}

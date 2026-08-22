@@ -16,7 +16,8 @@ const VALUE_ACCESSOR: any = {
 
 @Directive({
   selector: '[otpBase64FileInput][ngModel]',
-  providers: [MAX_SIZE_VALIDATOR, VALUE_ACCESSOR]
+  providers: [MAX_SIZE_VALIDATOR, VALUE_ACCESSOR],
+  standalone: false
 })
 export class Base64FileInputDirective implements Validator, OnChanges, ControlValueAccessor {
 

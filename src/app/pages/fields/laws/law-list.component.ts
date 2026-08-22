@@ -9,7 +9,8 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 @Component({
   selector: 'otp-law-list',
   templateUrl: './law-list.component.html',
-  styleUrls: ['./law-list.component.scss']
+  styleUrls: ['./law-list.component.scss'],
+  standalone: false
 })
 export class LawListComponent extends TableFilterBehavior implements AfterViewInit {
 

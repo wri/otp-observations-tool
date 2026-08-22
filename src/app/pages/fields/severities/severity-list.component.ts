@@ -6,7 +6,8 @@ import { SeveritiesService } from 'app/services/severities.service';
 @Component({
   selector: 'otp-severity-list',
   templateUrl: './severity-list.component.html',
-  styleUrls: ['./severity-list.component.scss']
+  styleUrls: ['./severity-list.component.scss'],
+  standalone: false
 })
 export class SeverityListComponent extends TableFilterBehavior {
 

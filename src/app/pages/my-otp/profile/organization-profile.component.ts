@@ -10,7 +10,8 @@ import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx
 @Component({
   selector: 'otp-organization-profile',
   templateUrl: './organization-profile.component.html',
-  styleUrls: ['./organization-profile.component.scss']
+  styleUrls: ['./organization-profile.component.scss'],
+  standalone: false
 })
 export class OrganizationProfileComponent {
   isAdmin = false;

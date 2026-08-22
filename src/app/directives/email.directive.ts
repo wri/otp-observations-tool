@@ -6,7 +6,8 @@ import { Validator, NG_VALIDATORS, AbstractControl, ValidationErrors } from '@an
   selector: '[email][formControlName],[email][formControl],[email][ngModel]',
   providers: [
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => EmailValidatorDirective), multi: true }
-  ]
+  ],
+  standalone: false
 })
 export class EmailValidatorDirective implements Validator {
 

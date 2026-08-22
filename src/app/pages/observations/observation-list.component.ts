@@ -12,7 +12,8 @@ import { DraftObservation } from 'app/models/draft_observation.interface';
 @Component({
   selector: 'otp-observation-list',
   templateUrl: './observation-list.component.html',
-  styleUrls: ['./observation-list.component.scss']
+  styleUrls: ['./observation-list.component.scss'],
+  standalone: false
 })
 export class ObservationListComponent extends TableFilterBehavior implements AfterViewInit {
   apiUrl: string = environment.apiUrl;

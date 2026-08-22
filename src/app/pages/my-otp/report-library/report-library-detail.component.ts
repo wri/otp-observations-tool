@@ -14,7 +14,8 @@ import { MISSION_TYPES } from 'app/models/observation_report';
 @Component({
   selector: 'otp-report-library-detail',
   templateUrl: './report-library-detail.component.html',
-  styleUrls: ['./report-library-detail.component.scss']
+  styleUrls: ['./report-library-detail.component.scss'],
+  standalone: false
 })
 export class ReportLibraryDetailComponent {
   loading = false;

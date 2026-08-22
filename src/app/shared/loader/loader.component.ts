@@ -17,7 +17,8 @@ import { Component, Input } from '@angular/core';
     <div *ngIf="overlay !== false" [ngClass]="{ overlay: true, '-fixed': fixed !== false }">
       <span class="spinner"></span>
     </div>
-  `
+  `,
+  standalone: false
 })
 export class LoaderComponent {
 

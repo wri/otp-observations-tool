@@ -13,7 +13,8 @@ export interface NavigationItem {
 @Component({
   selector: 'otp-navigation',
   templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.scss']
+  styleUrls: ['./navigation.component.scss'],
+  standalone: false
 })
 export class NavigationComponent implements AfterContentInit {
 

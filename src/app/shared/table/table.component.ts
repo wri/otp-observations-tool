@@ -17,7 +17,8 @@ export interface TableState {
 @Component({
   selector: 'otp-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+  styleUrls: ['./table.component.scss'],
+  standalone: false
 })
 export class TableComponent implements AfterContentInit, AfterViewChecked {
 

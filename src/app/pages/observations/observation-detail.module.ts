@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
 
 import { SharedUiModule } from 'app/shared/shared-ui.module';
 import { ObservationDetailComponent } from 'app/pages/observations/observation-detail.component';
