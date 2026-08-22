@@ -10,7 +10,8 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 @Component({
   selector: 'otp-report-library',
   templateUrl: './report-library.component.html',
-  styleUrls: ['./report-library.component.scss']
+  styleUrls: ['./report-library.component.scss'],
+  standalone: false
 })
 export class ReportLibraryComponent extends TableFilterBehavior implements AfterViewInit {
 

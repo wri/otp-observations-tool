@@ -12,7 +12,8 @@ export interface ErrorLine {
 @Component({
   selector: 'otp-upload-file',
   templateUrl: './upload-file.component.html',
-  styleUrls: ['./upload-file.component.scss']
+  styleUrls: ['./upload-file.component.scss'],
+  standalone: false
 })
 export class UploadFileComponent {
   public errors: ErrorLine[] = [];

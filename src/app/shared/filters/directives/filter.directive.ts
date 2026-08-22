@@ -2,7 +2,8 @@ import { Directive, Input } from '@angular/core';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: 'otp-filter'
+  selector: 'otp-filter',
+  standalone: false
 })
 export class FilterDirective {
   // Name of the filter displayed in the UI

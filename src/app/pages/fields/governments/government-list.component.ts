@@ -9,7 +9,8 @@ import { AfterViewInit, Component } from '@angular/core';
 @Component({
   selector: 'otp-government-list',
   templateUrl: './government-list.component.html',
-  styleUrls: ['./government-list.component.scss']
+  styleUrls: ['./government-list.component.scss'],
+  standalone: false
 })
 export class GovernmentListComponent extends TableFilterBehavior implements AfterViewInit {
   countryFilterParams: any = {};

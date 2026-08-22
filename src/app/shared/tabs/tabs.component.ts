@@ -8,7 +8,8 @@ export interface Tab {
 @Component({
   selector: 'otp-tabs',
   templateUrl: './tabs.component.html',
-  styleUrls: ['./tabs.component.scss']
+  styleUrls: ['./tabs.component.scss'],
+  standalone: false
 })
 export class TabsComponent {
 

@@ -6,7 +6,8 @@ import { Validator, NG_VALIDATORS, AbstractControl, ValidationErrors, NgModel } 
   selector: '[equalTo][formControlName],[equalTo][formControl],[equalTo][ngModel]',
   providers: [
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => EqualToValidatorDirective), multi: true }
-  ]
+  ],
+  standalone: false
 })
 export class EqualToValidatorDirective implements Validator {
 

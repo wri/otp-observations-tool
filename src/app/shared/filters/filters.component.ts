@@ -22,7 +22,8 @@ export interface Filter {
 @Component({
   selector: 'otp-filters',
   templateUrl: 'filters.component.html',
-  styleUrls: ['filters.component.scss']
+  styleUrls: ['filters.component.scss'],
+  standalone: false
 })
 export class FiltersComponent implements AfterContentInit {
 

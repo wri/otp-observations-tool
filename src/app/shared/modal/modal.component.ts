@@ -4,7 +4,8 @@ import * as A11yDialog from 'a11y-dialog';
 @Component({
   selector: 'otp-modal',
   templateUrl: 'modal.component.html',
-  styleUrls: ['modal.component.scss']
+  styleUrls: ['modal.component.scss'],
+  standalone: false
 })
 
 export class ModalComponent implements OnInit {

@@ -52,7 +52,8 @@ export class ResponsiveDirective implements OnInit, OnDestroy {
 }
 
 @Directive({
-  selector: '[otpMaxTablet]'
+  selector: '[otpMaxTablet]',
+  standalone: false
 })
 export class MaxTabletDirective extends ResponsiveDirective {
 
@@ -76,7 +77,8 @@ export class MaxTabletDirective extends ResponsiveDirective {
 }
 
 @Directive({
-  selector: '[otpMinTablet]'
+  selector: '[otpMinTablet]',
+  standalone: false
 })
 export class MinTabletDirective extends ResponsiveDirective {
 

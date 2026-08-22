@@ -6,7 +6,8 @@ import { Validator, NG_VALIDATORS, AbstractControl, ValidationErrors } from '@an
   selector: '[number][formControlName],[number][formControl],[number][ngModel]',
   providers: [
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => NumberValidatorDirective), multi: true }
-  ]
+  ],
+  standalone: false
 })
 export class NumberValidatorDirective implements Validator {
 

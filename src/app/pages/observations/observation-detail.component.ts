@@ -56,7 +56,8 @@ interface GeoreferencedPhoto { // Usage georefered photo as evidence
 @Component({
   selector: 'otp-observation-detail',
   templateUrl: './observation-detail.component.html',
-  styleUrls: ['./observation-detail.component.scss']
+  styleUrls: ['./observation-detail.component.scss'],
+  standalone: false
 })
 export class ObservationDetailComponent implements OnDestroy {
   @ViewChild('evidenceBlock', { static: false }) evidenceBlock: ElementRef;

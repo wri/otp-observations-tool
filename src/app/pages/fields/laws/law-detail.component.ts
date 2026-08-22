@@ -13,7 +13,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'otp-law-detail',
   templateUrl: './law-detail.component.html',
-  styleUrls: ['./law-detail.component.scss']
+  styleUrls: ['./law-detail.component.scss'],
+  standalone: false
 })
 export class LawDetailComponent {
   isAdmin = false;

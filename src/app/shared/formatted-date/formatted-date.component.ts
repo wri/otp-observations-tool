@@ -7,6 +7,7 @@ export const dateFormat = 'd/m/Y';
 @Component({
   selector: 'otp-formatted-date',
   templateUrl: './formatted-date.component.html',
+  standalone: false
 })
 export class FormattedDateComponent {
 
