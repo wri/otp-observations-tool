@@ -1,6 +1,6 @@
 <otp-loader *ngIf="loading" overlay fixed></otp-loader>
 
-<otp-modal [title]="'New Gov' | translate" [opened]="newGovEntityModalOpen" (onClose)="newGovEntityModalOpen = false">
+<otp-modal [title]="'New Gov' | translate" [opened]="newGovEntityModalOpen" (closed)="newGovEntityModalOpen = false">
   <otp-government-detail
     *ngIf="newGovEntityModalOpen"
     [fixedCountry]="country"
@@ -13,7 +13,7 @@
   </otp-government-detail>
 </otp-modal>
 
-<otp-modal [title]="'New Producer' | translate" [opened]="newOperatorModalOpen" (onClose)="onNewOperatorModalClosed()">
+<otp-modal [title]="'New Producer' | translate" [opened]="newOperatorModalOpen" (closed)="onNewOperatorModalClosed()">
   <otp-operator-detail
     *ngIf="newOperatorModalOpen"
     [fixedCountry]="country"
@@ -166,7 +166,7 @@
 
         <ng-template [ngIf]="reportChoice">
           <div class="form-group">
-            <label>{{'Current file' | translate}}</label>
+            <span class="form-label">{{'Current file' | translate}}</span>
             <a href="{{reportChoice.attachment.url}}" target="_blank" download>{{'Download file' | translate}}</a>
           </div>
         </ng-template>
@@ -208,20 +208,20 @@
 
         <!-- Current monitor -->
         <div class="form-group">
-          <label>{{'Monitor' | translate}}</label>
-          <input type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
+          <label for="monitor">{{'Monitor' | translate}}</label>
+          <input id="monitor" type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
         </div>
 
         <!-- 4. Additional monitors -->
         <div class="form-group">
-          <label>{{'Additional monitors' | translate}}</label>
+          <label for="additional_observers">{{'Additional monitors' | translate}}</label>
           <ngx-bootstrap-multiselect
             [texts]="multiSelectTexts"
             [options]="additionalObserversOptions"
             [settings]="additionalObserversSelectSettings"
             [(ngModel)]="_additionalObserversSelection"
             (ngModelChange)="onChangeAdditionalObserversOptions($event)"
-            name="additional_observers"
+            name="additional_observers" id="additional_observers"
             [disabled]="isDisabled() || !canChangeMonitors()">
           </ngx-bootstrap-multiselect>
           <p class="note">
@@ -293,7 +293,7 @@
               <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
             </div>
             <div *ngIf="!isDisabled()"  class="small-12 medium-6 columns">
-              <otp-tabs [tabs]="evidenceTabs" [currentTab]="currentEvidenceTabIndex" (change)="onChangeEvidenceTab($event)"></otp-tabs>
+              <otp-tabs [tabs]="evidenceTabs" [currentTab]="currentEvidenceTabIndex" (changed)="onChangeEvidenceTab($event)"></otp-tabs>
 
               <ng-template [ngIf]="currentEvidenceTab.id === 'existing'">
                 <div data-test-id="documents-list-report">
@@ -443,14 +443,14 @@
 
     <!-- 5. Relevant operators -->
     <div class="form-group">
-      <label>{{'Relevant operators' | translate}}</label>
+      <label for="relevant_operators">{{'Relevant operators' | translate}}</label>
       <ngx-bootstrap-multiselect
         [texts]="multiSelectTexts"
         [options]="relevantOperatorsOptions"
         [settings]="relevantOperatorsSelectSettings"
         [(ngModel)]="_relevantOperatorsSelection"
         (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
-        name="relevant_operators"
+        name="relevant_operators" id="relevant_operators"
         [disabled]="isDisabled()">
       </ngx-bootstrap-multiselect>
       <p class="note">
@@ -694,7 +694,7 @@
       <div class="fieldset-container">
         <!-- 16.1. Observation according to legal text -->
         <div class="form-group">
-          <label>{{'Observation according to legal text' | translate}}</label>
+          <label for="law">{{'Observation according to legal text' | translate}}</label>
           <ngx-bootstrap-multiselect
             [texts]="multiSelectTexts"
             [options]="lawsOptions"
@@ -854,14 +854,14 @@
 
     <!-- 6. Relevant operators -->
     <div class="form-group">
-      <label>{{'Relevant operators' | translate}}</label>
+      <label for="relevant_operators">{{'Relevant operators' | translate}}</label>
       <ngx-bootstrap-multiselect
         [texts]="multiSelectTexts"
         [options]="relevantOperatorsOptions"
         [settings]="relevantOperatorsSelectSettings"
         [(ngModel)]="_relevantOperatorsSelection"
         (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
-        name="relevant_operators"
+        name="relevant_operators" id="relevant_operators"
         [disabled]="isDisabled()">
       </ngx-bootstrap-multiselect>
       <p class="note">

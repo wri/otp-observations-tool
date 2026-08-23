@@ -15,7 +15,7 @@ export class TabsComponent {
 
   @Input() tabs: Tab[] = [];
   @Input() currentTab = 0; // Index of the current Tab
-  @Output() change = new EventEmitter<Tab>();
+  @Output() changed = new EventEmitter<Tab>();
 
   get tab () {
     return this.tabs[this.currentTab];
@@ -26,7 +26,7 @@ export class TabsComponent {
       return t === tab;
     });
 
-    this.change.emit(this.tab);
+    this.changed.emit(this.tab);
   }
 
   /**

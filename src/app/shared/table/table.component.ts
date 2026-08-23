@@ -37,7 +37,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
   @Input() adjustToScreenHeight = false;
   @Input() hideVisibleColumnsBox = false;
 
-  @Output() change = new EventEmitter<void>();
+  @Output() changed = new EventEmitter<void>();
 
   @ViewChild('tableContainer', { static: true }) tableContainer: ElementRef;
 
@@ -147,7 +147,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
         // console.log(sortColumn);
         if (this.sortColumn && this.sortColumn.sortable === false) {
           this.sortColumn = null;
-          this.change.emit();
+          this.changed.emit();
         }
       }
     }
@@ -183,7 +183,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
 
   set currentPage(page: number) {
     this._paginationIndex = page - 1;
-    this.change.emit();
+    this.changed.emit();
 
     if (window.innerWidth < TABLET_BREAKPOINT) {
       this.scrollToTop();
@@ -205,7 +205,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
   set perPage(page: number) {
     this._perPage = page;
     this.currentPage = 1;
-    this.change.emit();
+    this.changed.emit();
   }
 
   get state(): TableState {
@@ -377,7 +377,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
 
     this.perPage = this.previousState.page.size || this.perPage;
 
-    this.change.emit();
+    this.changed.emit();
   }
 
   /**
@@ -417,7 +417,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
     this.sortColumn = column;
 
     // We emit a state change
-    this.change.emit();
+    this.changed.emit();
   }
 
   scrollToTop() {

@@ -20,7 +20,7 @@ export class NavigationComponent implements AfterContentInit {
 
   @Input() private activeItem: NavigationItem;
   @Input() layout: 'mini'|'horizontal'|'vertical' = 'horizontal';
-  @Output() private change = new EventEmitter();
+  @Output() private changed = new EventEmitter();
 
   @ContentChildren(NavigationItemDirective)
   items: QueryList<NavigationItemDirective>;
@@ -56,7 +56,7 @@ export class NavigationComponent implements AfterContentInit {
     }
 
     if (!item.url) {
-      this.change.emit(item);
+      this.changed.emit(item);
     }
   }
 

@@ -28,7 +28,7 @@ export class ModalComponent implements OnInit {
     return this._opened;
   }
 
-  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closed: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private elementRef: ElementRef) {}
 
@@ -47,7 +47,7 @@ export class ModalComponent implements OnInit {
   }
 
   close() {
-    this.onClose.emit();
+    this.closed.emit();
   }
 
 }

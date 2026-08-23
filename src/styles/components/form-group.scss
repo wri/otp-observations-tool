@@ -2,7 +2,10 @@
 
 // TODO: to be deleted, check c-form instead
 .form-group {
-  label {
+  // .form-label is for captions that are not tied to a form control (a download link,
+  // for instance) - a <label> there would be a false association for screen readers.
+  label,
+  .form-label {
     font-size: settings.$font-size-default;
     font-weight: settings.$font-weight-default;
     text-transform: uppercase;

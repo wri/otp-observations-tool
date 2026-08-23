@@ -627,7 +627,8 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get latitude() { return this.observation ? this.observation.lat : this._latitude; }
   set latitude(latitude) {
-     // @ts-ignore
+    // @ts-expect-error -- the setter accepts the empty string the template binds while
+    // the field itself is typed as a number
     const value = latitude === '' ? null : latitude;
     if (this.observation) {
       this.observation.lat = value;
@@ -647,7 +648,8 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get longitude() { return this.observation ? this.observation.lng : this._longitude; }
   set longitude(longitude) {
-    // @ts-ignore
+    // @ts-expect-error -- the setter accepts the empty string the template binds while
+    // the field itself is typed as a number
     const value = longitude === '' ? null : longitude;
     if (this.observation) {
       this.observation.lng = value;
