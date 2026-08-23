@@ -49,7 +49,7 @@
         <label><input type="radio" name="account_type" value="organization" ngModel="personal" #account_type="ngModel">{{'A generic organization e-mail address (for e.g., info@wri.org)' | translate}}</label>
       </div>
 
-      <ng-template [ngIf]="account_type.value == 'personal'">
+      <ng-template [ngIf]="account_type.value === 'personal'">
         <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !first_name.valid }">
           <label for="first_name">{{'First name' | translate}}</label>
           <input id="first_name" type="text" class="form-control" name="first_name" ngModel #first_name="ngModel" required />

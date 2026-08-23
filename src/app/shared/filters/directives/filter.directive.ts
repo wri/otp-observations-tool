@@ -1,7 +1,7 @@
 import { Directive, Input } from '@angular/core';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
+  // eslint-disable-next-line @angular-eslint/directive-selector -- the selector deliberately mirrors Angular's own validator attributes
   selector: 'otp-filter',
   standalone: false
 })
@@ -16,7 +16,6 @@ export class FilterDirective {
   // Attribute to use to append extra params to API query for async filters.
   // Aliased rather than declared as a quoted property: Ivy does not recognise
   // `@Input() 'extra-params'` as an input, so [extra-params] bindings fail with NG8002.
-  // tslint:disable-next-line:no-input-rename
   @Input('extra-params') extraParams: string;
   // Filter values:
   //  - if object, the keys are the name of the options,

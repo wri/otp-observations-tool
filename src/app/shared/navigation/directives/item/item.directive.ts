@@ -1,7 +1,7 @@
-import { Directive, Input, ContentChild, TemplateRef } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
+  // eslint-disable-next-line @angular-eslint/directive-selector -- the selector deliberately mirrors Angular's own validator attributes
   selector: 'otp-navigation-item',
   standalone: false
 })

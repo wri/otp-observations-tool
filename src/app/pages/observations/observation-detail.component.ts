@@ -1,8 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
-import cloneDeep from 'lodash/cloneDeep';
 import orderBy from 'lodash/orderBy';
 import uniqBy from 'lodash/uniqBy';
-import flatten from 'lodash/flatten';
 import * as EXIF from 'exif-js';
 import proj4 from 'app/shared/proj4-subset';
 import { Law } from 'app/models/law.model';
@@ -237,7 +235,7 @@ export class ObservationDetailComponent implements OnDestroy {
   _latitude: number; // Only for type operator
   _longitude: number; // Only for type operator
   _fmu: Fmu = null; // Only for type operator
-  _nonConcessionActivity: boolean = false; // Only for type operator
+  _nonConcessionActivity = false; // Only for type operator
   _government: Government = null; // Only for type government
   _law: Law = null; // Only for type operator
   _actions: string;
@@ -295,7 +293,7 @@ export class ObservationDetailComponent implements OnDestroy {
         }
       });
 
-    this.subcategoriesService.getByType(<'operator' | 'government'>type, { include: 'severities,category' })
+    this.subcategoriesService.getByType((type as 'operator' | 'government'), { include: 'severities,category' })
       .then(subcategories => this.subcategories = subcategories)
       .then(() => {
         // If we're editing an observation (or using draft), the object Subcategory of the observation won't
@@ -534,7 +532,7 @@ export class ObservationDetailComponent implements OnDestroy {
       return;
     }
 
-    const layer = L.geoJSON(<GeoJsonObject>fmu.geojson);
+    const layer = L.geoJSON((fmu.geojson as GeoJsonObject));
     this._mapFmu = layer;
 
     // We zoom onto the FMU in two cases:
@@ -641,7 +639,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
     // We create a layer with the marker
     if (decimalCoordinates) {
-      this._mapMarker = L.marker(<L.LatLngExpression>decimalCoordinates);
+      this._mapMarker = L.marker((decimalCoordinates as L.LatLngExpression));
     } else {
       this._mapMarker = null;
     }
@@ -661,7 +659,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
     // We create a layer with the marker
     if (decimalCoordinates) {
-      this._mapMarker = L.marker(<L.LatLngExpression>decimalCoordinates);
+      this._mapMarker = L.marker((decimalCoordinates as L.LatLngExpression));
     } else {
       this._mapMarker = null;
     }
@@ -1013,7 +1011,6 @@ export class ObservationDetailComponent implements OnDestroy {
     const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: 'locale' }});
 
     return this.observationsService.getById(this.existingObservation, {
-      // tslint:disable-next-line:max-line-length
       locale: preloaded.locale || this.uiLocale,
       include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators,quality-controls'
     }).then((observation) => {
@@ -1149,7 +1146,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   private canChangeMonitors(): boolean {
-    return !Boolean(this.reportChoice);
+    return !this.reportChoice;
   }
 
   private saveAsDraftObservation(): void {
@@ -1237,6 +1234,7 @@ export class ObservationDetailComponent implements OnDestroy {
             return res;
           };
 
+          // eslint-disable-next-line no-useless-escape -- escapes kept for readability of this regex
           const parts = coordinate.split(/[^\d\w\.]+/);
           return convert(parts[0], parts[1], parts[2]);
         };
@@ -1262,6 +1260,7 @@ export class ObservationDetailComponent implements OnDestroy {
             return res;
           };
 
+          // eslint-disable-next-line no-useless-escape -- escapes kept for readability of this regex
           const parts = coordinate.split(/[^\d\w\.]+/);
           return convert(parts[0], parts[1], parts[2], parts[3]);
         };
@@ -1307,13 +1306,14 @@ export class ObservationDetailComponent implements OnDestroy {
       case 'Decimal':
       case 'Degrees and decimal minutes':
       case 'Sexagesimal':
-      case 'UTM':
+      case 'UTM': {
         const decimalCoordinates = this.checkCoordinatesValidity();
         if (!decimalCoordinates) {
           return null;
         }
 
-        return <number[]>decimalCoordinates;
+        return decimalCoordinates as number[];
+      }
       default:
         return null;
     }
@@ -1321,6 +1321,9 @@ export class ObservationDetailComponent implements OnDestroy {
 
   onChangePhoto(e: any) {
     const photo = e.target.files[0];
+    // EXIF.getData binds `this` to the image inside the callback below, so the component
+    // is reached through this alias.
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
     if (photo) {
@@ -1798,9 +1801,9 @@ export class ObservationDetailComponent implements OnDestroy {
 
   /**
    * Upload the report, if any
-   * @returns {Promise<{}>}
+   * @returns {Promise<unknown>}
    */
-  uploadReport(): Promise<{}> {
+  uploadReport(): Promise<unknown> {
     return new Promise((resolve, reject) => {
       // If the user doesn't want to upload a report,
       // we just resolve
@@ -1811,7 +1814,7 @@ export class ObservationDetailComponent implements OnDestroy {
         // Otherwise, we upload the report first
         this.report.observers = this.observers
           .filter((observer) => this._additionalObserversSelection.includes(observer.id))
-          .concat([this.observers.find(o => o.id === this.authService.userObserverId)]),
+          .concat([this.observers.find(o => o.id === this.authService.userObserverId)]);
         this.report.save()
           .toPromise()
           .then(resolve)

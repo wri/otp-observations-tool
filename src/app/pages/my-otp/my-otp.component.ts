@@ -1,4 +1,3 @@
-import { NavigationItem } from 'app/shared/navigation/navigation.component';
 import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 

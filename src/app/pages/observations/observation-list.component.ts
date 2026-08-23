@@ -53,6 +53,7 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
   goToModalOpen = false;
 
   get isMyOTP(): boolean {
+    // eslint-disable-next-line no-useless-escape -- escapes kept for readability of this regex
     return /my\-otp/.test(this.router.url);
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ContentChild, ElementRef, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
 import * as A11yDialog from 'a11y-dialog';
 
 @Component({

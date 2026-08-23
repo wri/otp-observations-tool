@@ -4,7 +4,7 @@ import en from 'flatpickr/dist/esm/l10n/default.js';
 
 // Only the languages exposed by the header's language switcher are bundled here.
 // Importing 'flatpickr/dist/esm/l10n' instead would pull in all 58 locales (~37kB).
-export const LOCALE: { [lang: string]: any } = {
+export const LOCALE: Record<string, any> = {
   en: en,
   fr: French,
   es: Spanish

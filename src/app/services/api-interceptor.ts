@@ -37,7 +37,7 @@ export class APIInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     if (req.url.startsWith(environment.apiUrl)) {
-      const headers: { [name: string]: string } = {
+      const headers: Record<string, string> = {
         'OTP-API-KEY': environment.OTP_API_KEY
       };
       const xsrfToken = this.getCookie('observations-tool_XSRF-TOKEN');

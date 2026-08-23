@@ -1,5 +1,4 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Category } from './../../../models/category.model';
 import { CategoriesService } from 'app/services/categories.service';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';

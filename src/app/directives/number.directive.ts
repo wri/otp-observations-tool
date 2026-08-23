@@ -2,7 +2,7 @@ import { Directive, forwardRef } from '@angular/core';
 import { Validator, NG_VALIDATORS, AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
+  // eslint-disable-next-line @angular-eslint/directive-selector -- the selector deliberately mirrors Angular's own validator attributes
   selector: '[number][formControlName],[number][formControl],[number][ngModel]',
   providers: [
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => NumberValidatorDirective), multi: true }
