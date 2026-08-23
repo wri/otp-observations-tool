@@ -32,17 +32,16 @@
     "@ngx-translate/core": "^15",
     "@ngx-translate/http-loader": "^8",
     "@sentry/browser": "^7",
-    "@sentry/integrations": "^7",
     "@types/leaflet": "~1.9.0",
     "a11y-dialog": "^4.0.1",
     "date-fns": "1",
     "exif-js": "^2.3.0",
-    "express": "^4.15.2",
+    "express": "^4.22.2",
     "flatpickr": "~4.6.13",
     "foundation-sites": "6.8.1",
     "leaflet": "~1.9.0",
-    "lodash": "^4.17.21",
-    "lodash-es": "^4.17.15",
+    "lodash": "^4.18.1",
+    "lodash-es": "^4.18.1",
     "ngx-bootstrap-multiselect": "4.0.0",
     "proj4": "^2.6.1",
     "reflect-metadata": "^0.2.2",
@@ -62,16 +61,18 @@
     "angular-eslint": "19.8.1",
     "dotenv": "^4.0.0",
     "eslint": "^9.28.0",
-    "node-fetch": "^1.7.3",
     "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
-    "ts-node": "~2.0.0",
     "typescript": "5.8.3",
     "typescript-eslint": "8.33.1",
-    "webpack-bundle-analyzer": "^2.8.1"
+    "webpack-bundle-analyzer": "^5.3.1"
   },
   "resolutions": {
     "browserslist": "4.24.0",
-    "node-releases": "2.0.44"
+    "node-releases": "2.0.44",
+    "webpack-dev-server": "^5.2.6",
+    "http-proxy-middleware": "^3.0.7",
+    "piscina": "^4.9.3",
+    "vite": "^6.4.3"
   }
 }

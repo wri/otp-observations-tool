@@ -33,9 +33,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { apiInterceptorProvider } from 'app/services/api-interceptor';
 
 import * as Sentry from '@sentry/browser'
-// Deep import: the '@sentry/integrations' barrel also pulls in the offline integration,
-// which requires localforage - a CommonJS dependency we neither use nor want bundled.
-import { RewriteFrames } from '@sentry/integrations/esm/rewriteframes'
 
 import { environment } from 'environments/environment';
 
@@ -47,7 +44,9 @@ Sentry.init({
     return environment.production ? 'production' : 'development';
   })(),
   integrations: [
-    new RewriteFrames(),
+    // Re-exported by @sentry/browser since 7.120, so the separate @sentry/integrations
+    // dependency is no longer needed.
+    Sentry.rewriteFramesIntegration(),
   ],
 })
 
