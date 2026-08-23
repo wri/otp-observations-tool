@@ -1,9 +1,9 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
 
   input[readonly]:not([disabled]) {
-    background-color: $white;
+    background-color: settings.$white;
     cursor: inherit;
   }
 

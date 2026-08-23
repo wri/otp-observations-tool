@@ -1,4 +1,4 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   .container {
@@ -9,14 +9,14 @@
       overflow: auto;
 
       .status {
-        font-size: $font-size-default;
-        font-weight: $font-weight-bold;
+        font-size: settings.$font-size-default;
+        font-weight: settings.$font-weight-bold;
       }
 
-      .error .status { color: $color-error; }
+      .error .status { color: settings.$color-error; }
       .success {
         .status {
-          color: $color-primary;
+          color: settings.$color-primary;
         }
 
         img {
@@ -37,19 +37,19 @@
         margin: 35px 20px;
 
         ul {
-          font-size: $font-size-default;
+          font-size: settings.$font-size-default;
           list-style-type: none;
           padding: 0;
         }
       }
 
-      background-color: $white;
-      border: 1px solid $lighter-grey;
+      background-color: settings.$white;
+      border: 1px solid settings.$lighter-grey;
       height: 350px;
       width: 100%;
 
       ~ .c-button-container {
-        @media screen and (max-width: $break-tablet) {
+        @media screen and (max-width: settings.$break-tablet) {
           justify-content: flex-start;
         }
       }
