@@ -15,7 +15,7 @@ import { Country } from 'app/models/country.model';
 import { QualityControl } from 'app/models/quality_control.model';
 import { environment } from 'environments/environment';
 import { Injectable } from '@angular/core';
-import { JsonApiDatastore, JsonApiDatastoreConfig, JsonApiModel, JsonApiQueryData, ModelType } from '@michalkotas/angular2-jsonapi';
+import { JsonApiDatastore, JsonApiDatastoreConfig } from '@michalkotas/angular2-jsonapi';
 import { Observation } from 'app/models/observation.model';
 import { Law } from 'app/models/law.model';
 

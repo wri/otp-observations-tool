@@ -1,4 +1,4 @@
-import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from '@michalkotas/angular2-jsonapi';
+import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany } from '@michalkotas/angular2-jsonapi';
 import type { Observer } from 'app/models/observer.model';
 import type { Observation } from 'app/models/observation.model';
 import { DateConverter } from './converters/date_converter';

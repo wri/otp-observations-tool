@@ -1,5 +1,5 @@
 import type { Subcategory } from 'app/models/subcategory.model';
-import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from '@michalkotas/angular2-jsonapi';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from '@michalkotas/angular2-jsonapi';
 
 @JsonApiModelConfig({
   type: 'severities'

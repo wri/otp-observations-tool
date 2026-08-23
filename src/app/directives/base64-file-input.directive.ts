@@ -242,11 +242,11 @@ export class Base64FileInputDirective implements Validator, OnChanges, ControlVa
   /**
    * Convert the file to base64
    */
-  readFileNoWorker(file: File, onSuccess: Function) {
+  readFileNoWorker(file: File, onSuccess: (result: { data: string }) => void) {
     const fileReader = new FileReader();
 
     fileReader.addEventListener('load', ({ target}: Event) => {
-      onSuccess({ data: (<string>(<FileReader>target).result) });
+      onSuccess({ data: ((target as FileReader).result as string) });
     });
 
     fileReader.readAsDataURL(file);

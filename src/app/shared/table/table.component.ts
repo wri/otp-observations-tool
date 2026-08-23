@@ -11,7 +11,7 @@ export interface TableState {
   sortColumn: string;
   sortOrder: number;
   include: string[];
-  fields: { [type: string]: string[] };
+  fields: Record<string, string[]>;
 }
 
 @Component({
@@ -30,12 +30,12 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
   @Input() type: string; // JSON:API type of the primary resource, set by TableFilterBehavior
   // Sparse fieldsets for the query, keyed by JSON:API resource type. Merged with the
   // fieldsets the columns declare. Types left out of the map keep all of their fields.
-  @Input() fields: { [type: string]: string | string[] } = {};
+  @Input() fields: Record<string, string | string[]> = {};
   @Input() defaultSort: string; // Default sort param (ex: "name" or "-name")
   @Input() options: any; // Additional options for the table
   @Input() defaultHiddenColumns: string[] = [];
-  @Input() adjustToScreenHeight: boolean = false;
-  @Input() hideVisibleColumnsBox: boolean = false;
+  @Input() adjustToScreenHeight = false;
+  @Input() hideVisibleColumnsBox = false;
 
   @Output() change = new EventEmitter<void>();
 
@@ -92,7 +92,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
       if (templates.length) {
         this.columns = [];
         for (const template of templates) {
-          const column = <any>{};
+          const column = {} as any;
 
           const props = Object.getOwnPropertyNames(template);
           for (const prop of props) {
@@ -109,6 +109,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
               return null;
             }
 
+            // eslint-disable-next-line no-useless-escape -- escapes kept for readability of this regex
             const split = this.prop.replace(/[\[\]]/g, '').split('.');
             let res = row;
 
@@ -229,6 +230,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
 
     let sortColumn;
     if (this.sortColumn) {
+      // eslint-disable-next-line no-useless-escape -- escapes kept for readability of this regex
       sortColumn = this.sortColumn.prop.replace(/[\[\]]/g, '');
     }
 
@@ -299,6 +301,9 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
     this.translateService.onLangChange.subscribe((lang) => {
       // Also, when the event is triggered, the language is not
       // already changed, so we need to sligthly delay the render
+      // Reassigning the QueryList in a macrotask is what makes Angular pick up the
+      // projected content change.
+      // eslint-disable-next-line no-self-assign
       setTimeout(() => this.columnTemplates = this.columnTemplates, 0);
     });
   }
@@ -339,9 +344,9 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
    * Accepts both the array and the comma-separated string form.
    */
   private mergeFields(
-    target: { [type: string]: string[] },
-    source: { [type: string]: string | string[] }
-  ): { [type: string]: string[] } {
+    target: Record<string, string[]>,
+    source: Record<string, string | string[]>
+  ): Record<string, string[]> {
     return Object.keys(source || {}).reduce((res, type) => {
       const value = source[type];
       const list = (Array.isArray(value) ? value : `${value}`.split(','))
@@ -360,6 +365,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
   restoreState() {
     if (this.previousState.sort) {
       const sortColumnProp = this.previousState.sort.match(/-?(.*)/)[1];
+      // eslint-disable-next-line no-useless-escape -- escapes kept for readability of this regex
       const sortColumn = this.columns.find(c => c.prop.replace(/[\[\]]/g, '') === sortColumnProp);
       const isDesc = !!this.previousState.sort.match(/(-?).*/)[1].length;
 
@@ -419,7 +425,6 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
     const duration = 500;
     const frame = 16; // We assume a 60FPS animation
     let time = 0;
-    const iterations = Math.ceil(duration / frame);
 
     const scrollToTop = () => {
       time += frame;
@@ -444,7 +449,7 @@ export class TableComponent implements AfterContentInit, AfterViewChecked {
   }
 
   onToggleColumnVisibility(e: Event, columnName: string): void {
-    const visible = (<HTMLInputElement>e.target).checked;
+    const visible = (e.target as HTMLInputElement).checked;
 
     if (visible) {
       this.hiddenColumns = [...this.hiddenColumns].filter(column => column !== columnName);

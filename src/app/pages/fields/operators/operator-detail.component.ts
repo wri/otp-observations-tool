@@ -40,10 +40,10 @@ export class OperatorDetailComponent implements OnInit {
     dynamicTitleMaxItems: 8
   };
 
-  @Input() useRouter: boolean = true;
-  @Input() showActionsOnTop: boolean = true;
-  @Input() showSuccessMessage: boolean = true;
-  @Input() longForm: boolean = true;
+  @Input() useRouter = true;
+  @Input() showActionsOnTop = true;
+  @Input() showSuccessMessage = true;
+  @Input() longForm = true;
   @Input() fixedCountry: Country = null;
   @Input() uniqueNameErrorMessage: string = null;
 

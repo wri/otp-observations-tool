@@ -11,6 +11,9 @@ import { Fmu } from '../../models/fmu.model';
 export interface Filter {
   name: string;
   prop: string;
+  // Deliberately loose: filter values are strings for async filters and objects for
+  // static ones. Narrowing this is a refactor of every caller.
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   values: {};
   selected?: any;
   required: boolean;
@@ -36,7 +39,7 @@ export class FiltersComponent implements AfterContentInit {
   private optionsRequest: Promise<void> = null;
   // Selections in effect when the modal was opened, to be able to discard the edits made
   // in it (see onDismissModal)
-  private selectionsOnOpen: { [prop: string]: any } = {};
+  private selectionsOnOpen: Record<string, any> = {};
   previousState: JsonApiParams;
   filters: Filter[] = [];
   modalOpen = false;
@@ -68,6 +71,9 @@ export class FiltersComponent implements AfterContentInit {
     this.translateService.onLangChange.subscribe((lang) => {
       // Also, when the event is triggered, the language is not
       // already changed, so we need to sligthly delay the render
+      // Reassigning the QueryList in a macrotask is what makes Angular pick up the
+      // projected content change.
+      // eslint-disable-next-line no-self-assign
       setTimeout(() => this.filtersNodes = this.filtersNodes, 0);
     });
 
@@ -286,7 +292,7 @@ export class FiltersComponent implements AfterContentInit {
     }
 
     for (const key in this.previousState) {
-      if (this.previousState.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this.previousState, key)) {
         const filterName = key.match(/filter\[(.*)\]/)[1];
         const filterValue = this.previousState[key];
         const filter = this.filters.find(f => f.prop === filterName);
@@ -409,14 +415,14 @@ export class FiltersComponent implements AfterContentInit {
       // The values of the filter needs to be fetched from
       // the API
       const models = Reflect.getMetadata('JsonApiDatastoreConfig', this.datastoreService.constructor).models;
-      const model = models[<string>asyncFiltersNode.values];
+      const model = models[(asyncFiltersNode.values as string)];
 
       const extraParams = (asyncFiltersNode.extraParams as any) || {};
       let params = {
         sort: asyncFiltersNode['name-attr'],
         page: { size: 3000 },
         // We just request the field we need
-        fields: { [<string>asyncFiltersNode.values]: asyncFiltersNode['name-attr'] },
+        fields: { [asyncFiltersNode.values as string]: asyncFiltersNode['name-attr'] },
         ...extraParams
       };
 

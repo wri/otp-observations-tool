@@ -1,7 +1,7 @@
 import { Directive, ViewChild, AfterViewInit } from '@angular/core';
-import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
-import { TableComponent, TableState } from 'app/shared/table/table.component';
-import { FiltersComponent, Filter } from 'app/shared/filters/filters.component';
+import { JsonApiService } from 'app/services/json-api.service';
+import { TableComponent } from 'app/shared/table/table.component';
+import { FiltersComponent } from 'app/shared/filters/filters.component';
 import debounce from 'lodash/debounce';
 import * as Sentry from '@sentry/browser'
 
@@ -10,7 +10,6 @@ import * as Sentry from '@sentry/browser'
 // It is a base class for list components, not a directive in its own right, so the
 // Directive name suffix codelyzer wants would be misleading.
 @Directive()
-// tslint:disable-next-line:directive-class-suffix
 export class TableFilterBehavior implements AfterViewInit {
 
   private latestRequestID = 0;
