@@ -1,4 +1,4 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 // Matches what angular2-spinner rendered: a 35px ring, 4px border, the leading edge in the
 // brand green and the rest translucent, rotating once every 0.8s.
@@ -34,7 +34,7 @@ $spinner-color: #317a4b;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba($white, .5);
+    background-color: rgba(settings.$white, .5);
 
     &.-fixed {
       position: fixed;

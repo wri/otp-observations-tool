@@ -1,9 +1,9 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   display: block;
 
-  @media screen and (min-width: $break-tablet) {
+  @media screen and (min-width: settings.$break-tablet) {
     padding-top: 25px;
   }
 

@@ -1,5 +1,5 @@
-@import 'src/settings.scss';
-@import 'src/styles/mixins.scss';
+@use 'src/settings.scss';
+@use 'src/styles/mixins.scss';
 
 :host {
   display: block;
@@ -13,7 +13,7 @@
     list-style: none;
 
     li {
-      font-size: $font-size-default;
+      font-size: settings.$font-size-default;
       display: flex;
       height: 42px;
       flex-shrink: 0; // Required for the mobile
@@ -27,7 +27,7 @@
 
       &.-active {
         position: relative;
-        font-weight: $font-weight-bold;
+        font-weight: settings.$font-weight-bold;
 
         &:after {
           display: block;
@@ -36,7 +36,7 @@
           left: 10px;
           height: 6px;
           width: calc(100% - 20px);
-          background-color: $color-primary;
+          background-color: settings.$color-primary;
           content: '';
         }
       }
@@ -45,7 +45,7 @@
       > button {
         padding: 0 10px;
         cursor: pointer;
-        color: $black;
+        color: settings.$black;
         text-decoration: none;
       }
     }
@@ -95,13 +95,13 @@
 
       li {
         text-transform: none;
-        font-size: $font-size-big;
+        font-size: settings.$font-size-big;
 
         &.-active {
-          font-weight: $font-weight-bold;
+          font-weight: settings.$font-weight-bold;
 
           &:after {
-            @include arrow(7px, 2px, $black, right);
+            @include mixins.arrow(7px, 2px, settings.$black, right);
 
             position: absolute;
             top: calc(50% - 4px);
@@ -109,7 +109,7 @@
             background-color: transparent;
           }
 
-          a { color: $color-primary; }
+          a { color: settings.$color-primary; }
         }
       }
     }

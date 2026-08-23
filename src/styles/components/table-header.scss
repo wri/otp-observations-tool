@@ -1,11 +1,11 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 .c-table-header {
   display: flex;
   flex-direction: column-reverse;
   align-items: stretch;
 
-  @media screen and (min-width: $break-tablet) {
+  @media screen and (min-width: settings.$break-tablet) {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
@@ -16,7 +16,7 @@
     flex-shrink: 0;
     margin-bottom: 10px;
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       margin-bottom: 0;
     }
   }

@@ -1,4 +1,4 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   margin: 0 0 0 20px;
@@ -32,13 +32,13 @@
       width: 100%;
       padding: 10px;
       text-align: center;
-      font-size: $font-size-default;
+      font-size: settings.$font-size-default;
       line-height: 1;
       cursor: pointer;
       outline: none;
 
       &.active {
-        font-weight: $font-weight-bold;
+        font-weight: settings.$font-weight-bold;
 
         &:after {
           display: block;
@@ -47,7 +47,7 @@
           left: 0;
           height: 3px;
           width: 100%;
-          background-color: $color-primary;
+          background-color: settings.$color-primary;
           content: '';
         }
       }

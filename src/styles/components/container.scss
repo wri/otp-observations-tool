@@ -1,9 +1,11 @@
+@use 'src/settings.scss';
+
 .c-container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 
-  @media screen and (max-width: $break-mobile) {
+  @media screen and (max-width: settings.$break-mobile) {
     // Direction
     &.-xs-d-column { flex-direction: column;}
     &.-xs-d-row { flex-direction: row;}
@@ -23,7 +25,7 @@
     &.-xs-a-center { align-items: center; }
   }
 
-  @media screen and (max-width: $break-tablet) {
+  @media screen and (max-width: settings.$break-tablet) {
     // Direction
     &.-t-d-column { flex-direction: column;}
     &.-t-d-row { flex-direction: row;}

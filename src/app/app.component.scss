@@ -1,12 +1,12 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   display: block;
   // This padding is necessary to avoid the content being below the
   // bottom-bar component
-  padding-bottom: $bottom-bar-height;
+  padding-bottom: settings.$bottom-bar-height;
 
-  @media screen and (min-width: $break-tablet) {
+  @media screen and (min-width: settings.$break-tablet) {
     padding-bottom: 0;
   }
 
@@ -17,9 +17,9 @@
 
     height: 30px;
     text-align: right;
-    background-color: $dark-grey;
+    background-color: settings.$dark-grey;
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       height: 35px;
     }
   }

@@ -1,8 +1,10 @@
+@use "sass:color";
+@use 'src/settings.scss';
 .c-button {
   display: inline-block;
   text-align: center;
   line-height: 1;
-  font-size: $font-size-default;
+  font-size: settings.$font-size-default;
   transition: all .1s linear;
   align-items: center;
   font-weight: bold;
@@ -14,46 +16,46 @@
   cursor: pointer;
 
   &.-primary {
-    border-color: $color-primary;
-    color: $white;
-    background: $color-primary;
+    border-color: settings.$color-primary;
+    color: settings.$white;
+    background: settings.$color-primary;
 
     &:hover,
     &:focus {
-      background: darken($color-primary, 10%);
+      background: color.adjust(settings.$color-primary, $lightness: -10%);
     }
   }
 
   &.-secondary {
-    border-color: $color-primary;
-    color: $dark-grey;
+    border-color: settings.$color-primary;
+    color: settings.$dark-grey;
     background: transparent;
 
     &:hover,
     &:focus {
-      background: darken($light-grey, 10%);
+      background: color.adjust(settings.$light-grey, $lightness: -10%);
     }
   }
 
   &.-danger {
-    border-color: $color-danger;
-    color: $white;
-    background: $color-danger;
+    border-color: settings.$color-danger;
+    color: settings.$white;
+    background: settings.$color-danger;
 
     &:hover,
     &:focus {
-      background: darken($color-danger, 10%);
+      background: color.adjust(settings.$color-danger, $lightness: -10%);
     }
   }
 
   &.-warning {
-    border-color: $color-warning;
-    color: $white;
-    background: $color-warning;
+    border-color: settings.$color-warning;
+    color: settings.$white;
+    background: settings.$color-warning;
 
     &:hover,
     &:focus {
-      background: darken($color-warning, 10%);
+      background: color.adjust(settings.$color-warning, $lightness: -10%);
     }
   }
 

@@ -1,15 +1,15 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
 
   h1 {
     margin: 0 0 10px;
-    font-size: $font-size-huge;
+    font-size: settings.$font-size-huge;
   }
 
   p {
     margin: 0 0 40px;
-    font-size: $font-size-default;
+    font-size: settings.$font-size-default;
   }
 
   .container {
@@ -17,7 +17,7 @@
     margin: 0 auto;
     margin-top: 50px;
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       margin-top: 100px;
     }
   }

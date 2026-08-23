@@ -1,4 +1,5 @@
-@import 'src/settings.scss';
+@use "sass:color";
+@use 'src/settings.scss';
 
 :host {
   display: block;
@@ -11,12 +12,12 @@
     left: 0;
     width: 100%;
     height: calc(100% - 59px);
-    background-color: $white;
+    background-color: settings.$white;
     border-radius: 3px;
     opacity: .7;
     z-index: 1;
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       top: 45px;
       height: calc(100% - 59px - 45px);
     }
@@ -34,7 +35,7 @@
       transform: translate(-50%, 50px);
     }
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       top: 45px;
     }
   }
@@ -54,15 +55,15 @@
     flex-wrap: wrap;
     margin-bottom: 25px;
     padding: 5px 10px;
-    border: 1px solid $lighter-grey;
+    border: 1px solid settings.$lighter-grey;
     border-radius: 4px;
 
     > p {
       flex-basis: 100%;
       margin: 0 0 5px;
-      font-size: $font-size-default;
+      font-size: settings.$font-size-default;
       font-weight: bold;
-      color: $dark-grey;
+      color: settings.$dark-grey;
     }
 
     > div {
@@ -81,12 +82,12 @@
 
   table {
     width: 100%;
-    font-size: $font-size-default;
-    color: $grey-2;
+    font-size: settings.$font-size-default;
+    color: settings.$grey-2;
     border-spacing: 0;
     border-collapse: separate;
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       padding-bottom: 15px;
     }
 
@@ -98,15 +99,15 @@
       display: none;
       background-color: transparent;
 
-      @media screen and (min-width: $break-tablet) {
+      @media screen and (min-width: settings.$break-tablet) {
         display: table-header-group;
       }
 
       th {
         position: relative;
         padding: 5px 25px 5px 10px;
-        color: $grey-2;
-        font-weight: $font-weight-default;
+        color: settings.$grey-2;
+        font-weight: settings.$font-weight-default;
         text-transform: uppercase;
         letter-spacing: .5px;
         box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05),
@@ -147,7 +148,7 @@
     }
 
     tbody {
-      @media screen and (min-width: $break-tablet) {
+      @media screen and (min-width: settings.$break-tablet) {
         transform: translateY(15px);
       }
 
@@ -155,9 +156,9 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        background-color: $white;
+        background-color: settings.$white;
 
-        @media screen and (min-width: $break-tablet) {
+        @media screen and (min-width: settings.$break-tablet) {
           display: table-row;
         }
 
@@ -166,43 +167,43 @@
           align-items: stretch;
           padding: 5px 10px;
           vertical-align: top;
-          border-left: 1px solid $lighter-grey;
-          border-right: 1px solid $lighter-grey;
+          border-left: 1px solid settings.$lighter-grey;
+          border-right: 1px solid settings.$lighter-grey;
 
-          @media screen and (min-width: $break-tablet) {
+          @media screen and (min-width: settings.$break-tablet) {
             display: table-cell;
             padding: 20px 10px;
             border-left: 0;
             border-right: 0;
-            border-bottom: 1px solid rgba($lighter-grey, .5);
+            border-bottom: 1px solid rgba(settings.$lighter-grey, .5);
           }
 
           &:first-of-type {
             padding-top: 20px;
 
-            @media screen and (min-width: $break-tablet) {
-              border-left: 1px solid $lighter-grey;
+            @media screen and (min-width: settings.$break-tablet) {
+              border-left: 1px solid settings.$lighter-grey;
               padding-left: 20px;
             }
           }
 
           &:last-of-type {
             padding-bottom: 20px;
-            border-bottom: 1px solid $lighter-grey;
+            border-bottom: 1px solid settings.$lighter-grey;
 
-            @media screen and (min-width: $break-tablet) {
-              border-bottom: 1px solid rgba($lighter-grey, .5);
-              border-right: 1px solid $lighter-grey;
+            @media screen and (min-width: settings.$break-tablet) {
+              border-bottom: 1px solid rgba(settings.$lighter-grey, .5);
+              border-right: 1px solid settings.$lighter-grey;
               padding-right: 20px;
             }
           }
 
           &.-highlight {
-            background: mix($white, $color-warning, 80%);
+            background: color.mix(settings.$white, settings.$color-warning, 80%);
           }
 
           ::ng-deep a {
-            color: $color-primary;
+            color: settings.$color-primary;
             text-decoration: underline;
           }
 
@@ -212,11 +213,11 @@
             flex-shrink: 0;
             margin-right: 10px;
             text-align: right;
-            color: rgba($grey-2, .5);
+            color: rgba(settings.$grey-2, .5);
             text-transform: uppercase;
             letter-spacing: .5px;
 
-            @media screen and (min-width: $break-tablet) {
+            @media screen and (min-width: settings.$break-tablet) {
               display: none;
             }
           }
@@ -224,13 +225,13 @@
 
         &:first-of-type td {
           &:first-of-type {
-            border-top: 1px solid $lighter-grey;
+            border-top: 1px solid settings.$lighter-grey;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
           }
 
-          @media screen and (min-width: $break-tablet) {
-            border-top: 1px solid $lighter-grey;
+          @media screen and (min-width: settings.$break-tablet) {
+            border-top: 1px solid settings.$lighter-grey;
 
             &:first-of-type {
               border-top-left-radius: 3px;
@@ -243,13 +244,13 @@
 
         &:last-of-type td {
           &:last-of-type {
-            border-bottom: 1px solid $lighter-grey;
+            border-bottom: 1px solid settings.$lighter-grey;
             border-bottom-left-radius: 3px;
             border-bottom-right-radius: 3px;
           }
 
-          @media screen and (min-width: $break-tablet) {
-            border-bottom: 1px solid $lighter-grey;
+          @media screen and (min-width: settings.$break-tablet) {
+            border-bottom: 1px solid settings.$lighter-grey;
             &:first-of-type { border-bottom-left-radius: 3px; }
             &:last-of-type { border-bottom-right-radius: 3px; }
           }
@@ -266,7 +267,7 @@
         svg {
           width: 15px;
           height: 15px;
-          fill: rgba($black, .5);
+          fill: rgba(settings.$black, .5);
         }
       }
     }
@@ -287,22 +288,22 @@
       li {
         display: block;
         margin-right: 10px;
-        color: rgba($dark-grey, .5);
+        color: rgba(settings.$dark-grey, .5);
 
         &:last-of-type { margin-right: 0; }
 
         button {
           padding: 0 2px;
-          color: rgba($dark-grey, .5);
+          color: rgba(settings.$dark-grey, .5);
           cursor: pointer;
         }
 
         &.-active {
           position: relative;
-          color: $dark-grey;
+          color: settings.$dark-grey;
 
           button {
-            color: $dark-grey;
+            color: settings.$dark-grey;
           }
 
           &::after {
@@ -311,7 +312,7 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background-color: $color-primary;
+            background-color: settings.$color-primary;
             content: '';
           }
         }

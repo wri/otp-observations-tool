@@ -1,4 +1,4 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   position: fixed;
@@ -9,17 +9,17 @@
   overflow: hidden;
   bottom: 0;
   background-color: white;
-  border-top: 1px solid $lighter-grey;
+  border-top: 1px solid settings.$lighter-grey;
 
   a {
     display: block;
     position: relative;
-    height: $bottom-bar-height;
-    color: $black;
+    height: settings.$bottom-bar-height;
+    color: settings.$black;
     margin: 0 10px 0 0;
-    font-size: $font-size-small;
+    font-size: settings.$font-size-small;
     text-decoration: none;
-    line-height: $bottom-bar-height;
+    line-height: settings.$bottom-bar-height;
     text-align: center;
     letter-spacing: .5px;
     text-transform: uppercase;
@@ -31,7 +31,7 @@
       left: 0;
       width: 100%;
       height: 6px;
-      background-color: $color-primary;
+      background-color: settings.$color-primary;
       content: '';
     }
 
