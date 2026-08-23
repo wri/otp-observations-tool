@@ -6,6 +6,6 @@
 </div>
 <otp-header></otp-header>
 <router-outlet></router-outlet>
-<ng-template [ngIf]="isLogged">
+@if (isLogged) {
   <otp-bottom-bar *otpMaxTablet></otp-bottom-bar>
-</ng-template>
+}

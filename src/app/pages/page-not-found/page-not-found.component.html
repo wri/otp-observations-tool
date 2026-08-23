@@ -2,7 +2,11 @@
   <div class="container">
     <h1>{{'404.title' | translate}}</h1>
     <p>{{'404.description' | translate}}</p>
-    <a routerLink="/private/my-otp" class="c-button -primary" *ngIf="isLogged">{{'Go to my OTP' | translate}}</a>
-    <a routerLink="/" class="c-button -primary" *ngIf="!isLogged">{{'Go to login page' | translate}}</a>
+    @if (isLogged) {
+      <a routerLink="/private/my-otp" class="c-button -primary">{{'Go to my OTP' | translate}}</a>
+    }
+    @if (!isLogged) {
+      <a routerLink="/" class="c-button -primary">{{'Go to login page' | translate}}</a>
+    }
   </div>
 </div>

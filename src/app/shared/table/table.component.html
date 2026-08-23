@@ -1,86 +1,144 @@
-<div class="overlay" *ngIf="loading"></div>
-<otp-loader *ngIf="loading" [attr.class]="rows && rows.length && rows.length > 1 ? '-has-data' : ''"></otp-loader>
-<div *ngIf="!hideVisibleColumnsBox" class="columns-visibility">
-  <p>
-    {{'Visible columns:' | translate}}
-  </p>
-  <div *ngFor="let column of hideableColumns; let i = index">
-    <label [for]="'table-' + name + '-column-' + i">{{column.name}}</label>
-    <input [id]="'table-' + name + '-column-' + i" type="checkbox" [checked]="hiddenColumns.indexOf(column.name) === -1" (change)="onToggleColumnVisibility($event, column.name)" />
+@if (loading) {
+  <div class="overlay"></div>
+}
+@if (loading) {
+  <otp-loader [attr.class]="rows && rows.length && rows.length > 1 ? '-has-data' : ''"></otp-loader>
+}
+@if (!hideVisibleColumnsBox) {
+  <div class="columns-visibility">
+    <p>
+      {{'Visible columns:' | translate}}
+    </p>
+    @for (column of hideableColumns; track column; let i = $index) {
+      <div>
+        <label [for]="'table-' + name + '-column-' + i">{{column.name}}</label>
+        <input [id]="'table-' + name + '-column-' + i" type="checkbox" [checked]="hiddenColumns.indexOf(column.name) === -1" (change)="onToggleColumnVisibility($event, column.name)" />
+      </div>
+    }
   </div>
-</div>
+}
 <div #tableContainer [attr.class]="'table-container' + (adjustToScreenHeight ? ' -adjusted-to-screen-height' : '')">
   <table role="grid" aria-readonly="true" [attr.aria-rowcount]="rowCount">
     <caption>
-      <ng-template [ngIf]="caption">{{caption}}</ng-template>
-      <ng-template [ngIf]="!caption">{{'Undefined table' | translate}}</ng-template>
-      <ng-template [ngIf]="sortColumn">
-        , {{'table.sortOrder' | translate: { 'column': sortColumn.name || sortColumn.prop} }}: <span *ngIf="sortOrder === 'asc'">{{'ascendent' | translate}}</span><span *ngIf="sortOrder === 'desc'">{{'descendent' | translate}}</span>
-      </ng-template>
-    </caption>
+      @if (caption) {
+        {{caption}}
+      }
+      @if (!caption) {
+        {{'Undefined table' | translate}}
+      }
+      @if (sortColumn) {
+        , {{'table.sortOrder' | translate: { 'column': sortColumn.name || sortColumn.prop} }}: @if (sortOrder === 'asc') {
+        <span>{{'ascendent' | translate}}</span>
+        }@if (sortOrder === 'desc') {
+        <span>{{'descendent' | translate}}</span>
+      }
+    }
+  </caption>
 
-    <thead>
-      <tr role="row" aria-rowindex="1">
+  <thead>
+    <tr role="row" aria-rowindex="1">
+      @for (column of visibleColumns; track column) {
         <th
-          *ngFor="let column of visibleColumns"
           [attr.class]="(sortColumn === column ? ('-order-' + sortOrder) : '') + ((!column.prop || !column.sortable) ? ' -no-sortable' : '')"
           [attr.aria-sort]="sortColumn === column ? sortOrder : 'none'"
           [tabindex]="sortColumn === column ? 0 : -1"
           role="columnheader"
           (click)="(column.sortable || column.sortable === undefined) && column.prop && sortByColumn(column)"
-        >
+          >
           {{column.name || column.prop}}
         </th>
-      </tr>
-    </thead>
+      }
+    </tr>
+  </thead>
 
-    <tbody>
-      <tr *ngIf="!rows || !rows.length" class="no-data" role="row">
+  <tbody>
+    @if (!rows || !rows.length) {
+      <tr class="no-data" role="row">
         <td role="gridcell" [attr.colspan]="visibleColumns.length">{{'No data' | translate}}</td>
       </tr>
+    }
 
-      <tr *ngFor="let row of renderableRows" role="row" [attr.aria-rowindex]="row.__index__">
-        <td *ngFor="let column of visibleColumns" role="gridcell" [attr.aria-rowindex]="row.__index__" [ngClass]="{ '-highlight': hasHighlight(row) }">
-          <span class="column-name">{{column.name || column.prop}}</span>
-          <ng-template [ngIf]="!column.cellTemplate">{{column.getValue(row)}}</ng-template>
-          <ng-template
-            [ngIf]="column.cellTemplate"
-            [ngTemplateOutlet]="column.cellTemplate"
-            [ngTemplateOutletContext]="{ value: column.getValue(row), row: row, column: column }"
-          >
-          </ng-template>
-        </td>
+    @for (row of renderableRows; track row) {
+      <tr role="row" [attr.aria-rowindex]="row.__index__">
+        @for (column of visibleColumns; track column) {
+          <td role="gridcell" [attr.aria-rowindex]="row.__index__" [ngClass]="{ '-highlight': hasHighlight(row) }">
+            <span class="column-name">{{column.name || column.prop}}</span>
+            @if (!column.cellTemplate) {
+              {{column.getValue(row)}}
+            }
+            @if (column.cellTemplate) {
+              <ng-template
+                [ngTemplateOutlet]="column.cellTemplate"
+                [ngTemplateOutletContext]="{ value: column.getValue(row), row: row, column: column }"
+                >
+              </ng-template>
+            }
+          </td>
+        }
       </tr>
-    </tbody>
-  </table>
+    }
+  </tbody>
+</table>
 </div>
 
-<div *ngIf="perPage" class="paginator">
-  <div class="per-page">
-    <select [(ngModel)]="perPage" [attr.aria-describedby]="'table-results-per-page'">
-      <option *ngFor="let option of perPageOptions" [ngValue]="option">{{option}}</option>
-    </select>
-    <span id="table-results-per-page">{{'results per page' | translate}}</span>
+@if (perPage) {
+  <div class="paginator">
+    <div class="per-page">
+      <select [(ngModel)]="perPage" [attr.aria-describedby]="'table-results-per-page'">
+        @for (option of perPageOptions; track option) {
+          <option [ngValue]="option">{{option}}</option>
+        }
+      </select>
+      <span id="table-results-per-page">{{'results per page' | translate}}</span>
+    </div>
+    <ul>
+      @if (currentPage > firstPage + 5) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': firstPage }" (click)="currentPage = firstPage">{{firstPage}}</button></li>
+      }
+      @if (currentPage > firstPage + 6) {
+        <li>...</li>
+      }
+      @if (currentPage > firstPage + 4) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 5 }" (click)="currentPage = currentPage - 5">{{currentPage - 5}}</button></li>
+      }
+      @if (currentPage > firstPage + 3) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 4 }" (click)="currentPage = currentPage - 4">{{currentPage - 4}}</button></li>
+      }
+      @if (currentPage > firstPage + 2) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 3 }" (click)="currentPage = currentPage - 3">{{currentPage - 3}}</button></li>
+      }
+      @if (currentPage > firstPage + 1) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 2 }" (click)="currentPage = currentPage - 2">{{currentPage - 2}}</button></li>
+      }
+      @if (currentPage > firstPage) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 1 }" (click)="currentPage = currentPage - 1">{{currentPage - 1}}</button></li>
+      }
+      <li class="-active"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage }">{{currentPage}}</button></li>
+      @if (currentPage < lastPage) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 1 }" (click)="currentPage = currentPage + 1">{{currentPage + 1}}</button></li>
+      }
+      @if (currentPage < lastPage - 1) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 2 }" (click)="currentPage = currentPage + 2">{{currentPage + 2}}</button></li>
+      }
+      @if (currentPage < lastPage - 2) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 3 }" (click)="currentPage = currentPage + 3">{{currentPage + 3}}</button></li>
+      }
+      @if (currentPage < lastPage - 3) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 4 }" (click)="currentPage = currentPage + 4">{{currentPage + 4}}</button></li>
+      }
+      @if (currentPage < lastPage - 4) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 5 }" (click)="currentPage = currentPage + 5">{{currentPage + 5}}</button></li>
+      }
+      @if (currentPage < lastPage - 6) {
+        <li>...</li>
+      }
+      @if (currentPage < lastPage - 5) {
+        <li><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': lastPage }" (click)="currentPage = lastPage">{{lastPage}}</button></li>
+      }
+    </ul>
+    <div class="buttons-container">
+      <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage">{{'Previous' | translate}}</button>
+      <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage">{{'Next' | translate}}</button>
+    </div>
   </div>
-  <ul>
-    <li *ngIf="currentPage > firstPage + 5"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': firstPage }" (click)="currentPage = firstPage">{{firstPage}}</button></li>
-    <li *ngIf="currentPage > firstPage + 6">...</li>
-    <li *ngIf="currentPage > firstPage + 4"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 5 }" (click)="currentPage = currentPage - 5">{{currentPage - 5}}</button></li>
-    <li *ngIf="currentPage > firstPage + 3"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 4 }" (click)="currentPage = currentPage - 4">{{currentPage - 4}}</button></li>
-    <li *ngIf="currentPage > firstPage + 2"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 3 }" (click)="currentPage = currentPage - 3">{{currentPage - 3}}</button></li>
-    <li *ngIf="currentPage > firstPage + 1"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 2 }" (click)="currentPage = currentPage - 2">{{currentPage - 2}}</button></li>
-    <li *ngIf="currentPage > firstPage"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage - 1 }" (click)="currentPage = currentPage - 1">{{currentPage - 1}}</button></li>
-    <li class="-active"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage }">{{currentPage}}</button></li>
-    <li *ngIf="currentPage < lastPage"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 1 }" (click)="currentPage = currentPage + 1">{{currentPage + 1}}</button></li>
-    <li *ngIf="currentPage < lastPage - 1"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 2 }" (click)="currentPage = currentPage + 2">{{currentPage + 2}}</button></li>
-    <li *ngIf="currentPage < lastPage - 2"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 3 }" (click)="currentPage = currentPage + 3">{{currentPage + 3}}</button></li>
-    <li *ngIf="currentPage < lastPage - 3"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 4 }" (click)="currentPage = currentPage + 4">{{currentPage + 4}}</button></li>
-    <li *ngIf="currentPage < lastPage - 4"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': currentPage + 5 }" (click)="currentPage = currentPage + 5">{{currentPage + 5}}</button></li>
-    <li *ngIf="currentPage < lastPage - 6">...</li>
-    <li *ngIf="currentPage < lastPage - 5"><button type="button" [attr.aria-label]="'table.page' | translate: { 'pageNumber': lastPage }" (click)="currentPage = lastPage">{{lastPage}}</button></li>
-  </ul>
-  <div class="buttons-container">
-    <button type="button" class="c-button -secondary" [disabled]="!previousPage" (click)="currentPage = previousPage">{{'Previous' | translate}}</button>
-    <button type="button" class="c-button -secondary" [disabled]="!nextPage" (click)="currentPage = nextPage">{{'Next' | translate}}</button>
-  </div>
-</div>
+}

@@ -9,8 +9,12 @@
   <otp-table-column prop="title" [name]="'Title' | translate"></otp-table-column>
   <otp-table-column prop="publication-date" [name]="'Publication date' | translate">
     <ng-template let-value="value" table-cell-template>
-      <ng-template [ngIf]="value"><otp-formatted-date [date]="value"></otp-formatted-date></ng-template>
-      <ng-template [ngIf]="!value">–</ng-template>
+      @if (value) {
+        <otp-formatted-date [date]="value"></otp-formatted-date>
+      }
+      @if (!value) {
+        –
+      }
     </ng-template>
   </otp-table-column>
   <otp-table-column [name]="'Actions' | translate">

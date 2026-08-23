@@ -13,10 +13,14 @@ import { Component, Input } from '@angular/core';
   selector: 'otp-loader',
   styleUrls: ['loader.component.scss'],
   template: `
-    <span *ngIf="overlay === false" class="spinner"></span>
-    <div *ngIf="overlay !== false" [ngClass]="{ overlay: true, '-fixed': fixed !== false }">
+    @if (overlay === false) {
       <span class="spinner"></span>
-    </div>
+    }
+    @if (overlay !== false) {
+      <div [ngClass]="{ overlay: true, '-fixed': fixed !== false }">
+        <span class="spinner"></span>
+      </div>
+    }
   `,
   standalone: false
 })
