@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ObserversService } from 'app/services/observers.service';
 import { Observer } from 'app/models/observer.model';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 import { UsersService } from 'app/services/users.service';
 import { environment } from 'environments/environment';
@@ -11,6 +11,7 @@ import { environment } from 'environments/environment';
   selector: 'otp-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class HeaderComponent {

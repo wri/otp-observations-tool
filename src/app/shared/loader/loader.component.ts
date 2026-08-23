@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Replaces the `<spinner>` from angular2-spinner, which was abandoned at 1.0.10 and ships only a
@@ -22,6 +22,7 @@ import { Component, Input } from '@angular/core';
       </div>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class LoaderComponent {

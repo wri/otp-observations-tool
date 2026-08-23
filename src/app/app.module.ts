@@ -26,7 +26,7 @@ import { AppRoutingModule } from 'app/app-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { ObservationsService } from 'app/services/observations.service';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -110,7 +110,7 @@ export function createTranslateLoader(http: HttpClient) {
     { provide: ErrorHandler, useClass: SentryErrorHandler },
     // Replaces HttpClientModule, removed in v18. `withInterceptorsFromDi` keeps the
     // HTTP_INTERCEPTORS-based apiInterceptorProvider above working.
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withXhr(), withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]
 })

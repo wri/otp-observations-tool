@@ -4,13 +4,14 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 import { OperatorsService } from 'app/services/operators.service';
 import { Operator, OperatorTypes } from 'app/models/operator.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { forkJoin ,  Observable } from 'rxjs';
 
 @Component({
   selector: 'otp-operator-list',
   templateUrl: './operator-list.component.html',
   styleUrls: ['./operator-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class OperatorListComponent extends TableFilterBehavior implements AfterViewInit {

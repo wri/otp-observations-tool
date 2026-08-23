@@ -6,12 +6,13 @@ import { GovernmentsService } from 'app/services/governments.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'otp-government-detail',
   templateUrl: './government-detail.component.html',
   styleUrls: ['./government-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class GovernmentDetailComponent implements OnInit {

@@ -231,7 +231,7 @@
         <div class="fieldset-container">
           <div class="form-group">
             <label for="report_field">{{'Report' | translate}}</label>
-            <select id="report_field" name="report_field" [ngModel]="reportChoice?.id" (change)="onChangeReport($event)" #report_field="ngModel" [disabled]="isDisabled()">
+            <select id="report_field" name="report_field" [ngModel]="$safeNavigationMigration(reportChoice?.id)" (change)="onChangeReport($event)" #report_field="ngModel" [disabled]="isDisabled()">
               <option [value]="null">{{'Upload a new report' | translate}}</option>
               @for (report of reports; track report) {
                 <option [value]="report.id">{{ report.title }}</option>

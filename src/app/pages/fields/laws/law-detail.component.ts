@@ -8,12 +8,13 @@ import { Country } from 'app/models/country.model';
 import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'otp-law-detail',
   templateUrl: './law-detail.component.html',
   styleUrls: ['./law-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class LawDetailComponent {

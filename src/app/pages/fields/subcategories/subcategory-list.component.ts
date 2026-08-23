@@ -2,12 +2,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { SubcategoriesService } from 'app/services/subcategories.service';
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'otp-subcategory-list',
   templateUrl: './subcategory-list.component.html',
   styleUrls: ['./subcategory-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class SubcategoryListComponent extends TableFilterBehavior {

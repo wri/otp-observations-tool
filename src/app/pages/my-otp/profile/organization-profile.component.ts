@@ -3,7 +3,7 @@ import { AuthService } from 'app/services/auth.service';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Observer } from 'app/models/observer.model';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
 
@@ -11,6 +11,7 @@ import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx
   selector: 'otp-organization-profile',
   templateUrl: './organization-profile.component.html',
   styleUrls: ['./organization-profile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class OrganizationProfileComponent {

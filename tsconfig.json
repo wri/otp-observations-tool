@@ -1,10 +1,17 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "downlevelIteration": true,
+    // TypeScript 6 turns `strict` on by default. This codebase predates strict mode
+    // (implicit any, uninitialised properties, untyped lodash deep imports), so the previous
+    // behaviour is pinned explicitly here. Turning it on is its own project.
+    "strict": false,
     "importHelpers": true,
     "outDir": "./dist/out-tsc",
-    "baseUrl": "src",
+    // TS 6 deprecates `baseUrl`; `"*": ["./src/*"]` is the exact equivalent of
+    // `baseUrl: "src"` for the bare `app/...` and `environments/...` specifiers.
+    "paths": {
+      "*": ["./src/*"]
+    },
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "bundler",

@@ -2,7 +2,6 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "baseUrl": "",
     "types": [],
     "paths": {
       // @michalkotas/angular2-jsonapi declares only lodash-es as a dependency, but one of its
@@ -10,7 +9,10 @@
       // CommonJS build in (worth ~55kB of main.js). lodash-es exposes the same functions as ES
       // modules, so webpack can tree-shake down to the handful actually used.
       // Only the bare specifier is remapped; deep `lodash/foo` imports resolve as before.
-      "lodash": ["../node_modules/lodash-es"]
+      "lodash": ["../node_modules/lodash-es"],
+      // `paths` in a child config replaces the parent's, so the wildcard that
+      // stands in for the old `baseUrl` has to be repeated here.
+      "*": ["./*"]
     }
   },
   // Angular 9 warns about files that are in the compilation but not reachable from an entry
@@ -27,5 +29,8 @@
   ],
   "exclude": [
     "**/*.worker.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

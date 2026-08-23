@@ -14,6 +14,11 @@ module.exports = tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      // Angular 22's own migration stamped `ChangeDetectionStrategy.Eager` on all 39
+      // components to preserve existing behaviour; angular-eslint 22 then added this rule to
+      // its recommended set to object to it. Moving to OnPush is a real project (immutable
+      // inputs, markForCheck discipline), not part of a version bump.
+      "@angular-eslint/prefer-on-push-component-change-detection": "off",
       // angular-eslint 20 added this to its recommended set. Constructor injection is still
       // fully supported; converting ~180 sites to inject() is an optional refactor of its own
       // (`ng generate @angular/core:inject` does it) and has nothing to do with this upgrade.

@@ -3,13 +3,14 @@ import { Law } from 'app/models/law.model';
 import { AuthService } from 'app/services/auth.service';
 import { LawsService } from 'app/services/laws.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ChangeDetectionStrategy } from '@angular/core';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 
 @Component({
   selector: 'otp-law-list',
   templateUrl: './law-list.component.html',
   styleUrls: ['./law-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class LawListComponent extends TableFilterBehavior implements AfterViewInit {

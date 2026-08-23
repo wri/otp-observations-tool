@@ -6,7 +6,7 @@ import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -14,6 +14,7 @@ import { HttpClient } from '@angular/common/http';
   selector: 'otp-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class RegisterComponent implements OnInit {

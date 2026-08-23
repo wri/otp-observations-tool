@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 
 
@@ -6,6 +6,7 @@ import { AuthService } from 'app/services/auth.service';
   selector: 'otp-bottom-bar',
   templateUrl: './bottom-bar.component.html',
   styleUrls: ['./bottom-bar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class BottombarComponent {

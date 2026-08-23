@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as A11yDialog from 'a11y-dialog';
 
 @Component({
   selector: 'otp-modal',
   templateUrl: 'modal.component.html',
   styleUrls: ['modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 

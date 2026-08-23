@@ -7,7 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from 'environments/environment';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { forkJoin ,  Observable } from 'rxjs';
 import { Fmu } from 'app/models/fmu.model';
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
@@ -18,6 +18,7 @@ import sortBy from 'lodash/sortBy';
   selector: 'otp-operator-detail',
   templateUrl: './operator-detail.component.html',
   styleUrls: ['./operator-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class OperatorDetailComponent implements OnInit {

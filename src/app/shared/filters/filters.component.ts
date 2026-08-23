@@ -2,7 +2,7 @@ import { JsonApiParams } from 'app/services/json-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { FilterDirective } from './directives/filter.directive';
-import { Component, ContentChildren, QueryList, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { Component, ContentChildren, QueryList, Output, EventEmitter, AfterContentInit, ChangeDetectionStrategy } from '@angular/core';
 import { Subcategory } from '../../models/subcategory.model';
 import { Government } from '../../models/government.model';
 import { Operator } from '../../models/operator.model';
@@ -26,6 +26,7 @@ export interface Filter {
   selector: 'otp-filters',
   templateUrl: 'filters.component.html',
   styleUrls: ['filters.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class FiltersComponent implements AfterContentInit {
