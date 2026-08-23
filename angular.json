@@ -49,6 +49,7 @@
               "lodash/uniq",
               "lodash/uniqBy",
               "exif-js",
+              "localforage",
               "leaflet",
               "proj4",
               "a11y-dialog",
