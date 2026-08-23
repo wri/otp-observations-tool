@@ -14,6 +14,10 @@ module.exports = tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      // angular-eslint 20 added this to its recommended set. Constructor injection is still
+      // fully supported; converting ~180 sites to inject() is an optional refactor of its own
+      // (`ng generate @angular/core:inject` does it) and has nothing to do with this upgrade.
+      "@angular-eslint/prefer-inject": "off",
       // This app is NgModule-based on purpose: every declaration carries `standalone: false`.
       // Beyond being wrong for us, `--fix` on this rule strips that property, which silently
       // makes components standalone while they are still declared in a module.
