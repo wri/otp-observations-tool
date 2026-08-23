@@ -25,8 +25,8 @@ export class TableFilterBehavior implements AfterViewInit {
     // The table needs the primary type to keep a sparse fieldset consistent with its includes
     this.table.type = Reflect.getMetadata('JsonApiModelConfig', this.service.model).type;
 
-    this.table.change.subscribe(() => this.loadData());
-    this.filters.change.subscribe(() => {
+    this.table.changed.subscribe(() => this.loadData());
+    this.filters.changed.subscribe(() => {
       // We don't forget to move the user to the first
       // page of results each time a filter changes
       this.table.paginationIndex = 0;

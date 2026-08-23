@@ -2,7 +2,7 @@
 
 <ng-container *ngFor="let filter of filters">
   <div class="filter" *ngIf="hasValue(filter)">
-    <select [attr.aria-label]="filter.name" [(ngModel)]="filter.selected" (change)="change.emit()">
+    <select [attr.aria-label]="filter.name" [(ngModel)]="filter.selected" (change)="changed.emit()">
       <option value="" disabled>{{filter.name}}</option>
       <option *ngFor="let key of objectKeys(filter.values)" [value]="filter.values[key]">{{key}}</option>
       <option [ngValue]="null" [disabled]="filter.required">{{'Remove filter' | translate}}</option>
@@ -10,7 +10,7 @@
   </div>
 </ng-container>
 
-<otp-modal [title]="'Table filters' | translate" [opened]="modalOpen" [closeable]="true" (onClose)="onDismissModal()">
+<otp-modal [title]="'Table filters' | translate" [opened]="modalOpen" [closeable]="true" (closed)="onDismissModal()">
   <h2>{{'Filter by' | translate}}</h2>
 
   <div class="filters-loader" *ngIf="loadingOptions">

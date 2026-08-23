@@ -47,7 +47,7 @@ export class FiltersComponent implements AfterContentInit {
   objectKeys = Object.keys;
   defaultApiParams = {};
 
-  @Output() change = new EventEmitter<void>();
+  @Output() changed = new EventEmitter<void>();
 
   @ContentChildren(FilterDirective)
   set filtersNodes(filters: QueryList<FilterDirective>) {
@@ -77,7 +77,7 @@ export class FiltersComponent implements AfterContentInit {
       setTimeout(() => this.filtersNodes = this.filtersNodes, 0);
     });
 
-    this.change.subscribe(() => {
+    this.changed.subscribe(() => {
       this.onChangeFilter();
     });
   }
@@ -102,7 +102,7 @@ export class FiltersComponent implements AfterContentInit {
     if (!silent) {
       // Hack so we don't trigger an infinite loop
       this.skipNextFilterChange = true;
-      this.change.emit();
+      this.changed.emit();
     }
   }
 
@@ -309,7 +309,7 @@ export class FiltersComponent implements AfterContentInit {
       this.ensureOptionsLoaded();
     }
 
-    this.change.emit();
+    this.changed.emit();
   }
 
   async resetFilters(silent = false) {
@@ -359,7 +359,7 @@ export class FiltersComponent implements AfterContentInit {
     }
 
     if (!silent) {
-      this.change.emit();
+      this.changed.emit();
     }
   }
 
@@ -484,7 +484,7 @@ export class FiltersComponent implements AfterContentInit {
 
   onDone() {
     this.modalOpen = false;
-    this.change.emit();
+    this.changed.emit();
   }
 
   hasValue(filter: Filter): boolean {

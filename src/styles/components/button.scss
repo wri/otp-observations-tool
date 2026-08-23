@@ -4,6 +4,8 @@
   display: inline-block;
   text-align: center;
   line-height: 1;
+  // <button> does not inherit the page font the way <a> does, and this class is used on both
+  font-family: inherit;
   font-size: settings.$font-size-default;
   transition: all .1s linear;
   align-items: center;
