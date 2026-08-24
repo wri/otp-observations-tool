@@ -39,10 +39,10 @@ jobs:
         uses: actions/cache@v6
         with:
           path: node_modules
-          key: node-modules-${{ hashFiles('yarn.lock') }}
+          key: node-modules-${{ steps.nvm.outputs.NVMRC }}-${{ hashFiles('package.json', 'yarn.lock') }}
 
       - name: Install Observation Tool Dependencies
-        run: yarn install --immutable
+        run: yarn install --frozen-lockfile
 
       - name: Run Lint
         run: yarn lint
@@ -67,10 +67,10 @@ jobs:
         uses: actions/cache@v6
         with:
           path: node_modules
-          key: node-modules-${{ hashFiles('yarn.lock') }}
+          key: node-modules-${{ steps.nvm.outputs.NVMRC }}-${{ hashFiles('package.json', 'yarn.lock') }}
 
       - name: Install Observation Tool Dependencies
-        run: yarn install --immutable
+        run: yarn install --frozen-lockfile
 
       - name: Run Build
         run: yarn prod-build
@@ -90,7 +90,7 @@ jobs:
         image: redis
         ports: ["6379:6379"]
       postgres:
-        image: postgis/postgis:12-3.1-alpine
+        image: postgis/postgis:18-3.6-alpine
         env:
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
@@ -128,10 +128,10 @@ jobs:
         uses: actions/cache@v6
         with:
           path: node_modules
-          key: node-modules-${{ hashFiles('yarn.lock') }}
+          key: node-modules-${{ steps.nvm.outputs.NVMRC }}-${{ hashFiles('package.json', 'yarn.lock') }}
 
       - name: Install Observation Tool Dependencies
-        run: yarn install --immutable
+        run: yarn install --frozen-lockfile
 
       # Backgrounded so the Angular production build overlaps the API setup below
       # rather than running after it. Blocked on further down.
@@ -143,16 +143,17 @@ jobs:
       # The runner image points apt at azure.archive.ubuntu.com via a mirrorlist.
       # With three shards hitting it at once it intermittently stops answering and
       # apt burns minutes retrying before it falls back. Use the canonical archive.
-      # Still needed alongside the cache below: that action refreshes stale apt lists,
-      # and a cache miss downloads the packages the usual way.
-      - name: Use a reachable apt mirror
+      - name: Refresh apt index
         run: |
           if [ -f /etc/apt/apt-mirrors.txt ]; then
             sudo sed -i '/azure\.archive\.ubuntu\.com/Id' /etc/apt/apt-mirrors.txt
           fi
+          # Stale lists resolve to versions the archive no longer carries, which 404s
+          # on a cache miss.
+          sudo apt-get update -qq
 
-      # Bump `version` to rebuild the cache; the key is derived from the package list
-      # and that value only, so it does not invalidate on new upstream package versions.
+      # Bump `version` to rebuild the cache. The key also covers resolved package
+      # versions, so upstream releases invalidate it on their own.
       # Nothing may apt-get install after this: the restore does not register the
       # packages with dpkg, so apt would consider all 156 of them missing.
       - name: Install API dependencies
@@ -165,11 +166,14 @@ jobs:
           version: "1"
           execute_install_scripts: true
 
+      # gdal, rgeo and pg are compiled against the apt libraries, so the gem cache has
+      # to follow the apt one. CACHE_KEY is the package-set hash the step above exports.
       - name: Setup API Ruby
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
           working-directory: otp_api
+          cache-version: apt-${{ env.CACHE_KEY }}
 
       - name: Cache API Precompiled Assets
         id: cache-api-precompiled-assets
@@ -202,9 +206,19 @@ jobs:
         with:
           node-version: 22
 
+      # Cypress's ~800 MB binary lives in ~/.cache/Cypress and nothing cached it.
+      - name: Cache E2E Dependencies
+        id: cache-e2e-deps
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/Cypress
+            e2e/node_modules
+          key: e2e-deps-${{ hashFiles('e2e/package.json', 'e2e/yarn.lock') }}
+
       - name: Install E2E Dependencies
         working-directory: e2e
-        run: yarn install --immutable
+        run: yarn install --frozen-lockfile
 
       - name: Run E2E Tests
         working-directory: e2e
