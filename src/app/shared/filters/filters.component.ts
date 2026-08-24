@@ -2,7 +2,7 @@ import { JsonApiParams } from 'app/services/json-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { FilterDirective } from './directives/filter.directive';
-import { Component, ContentChildren, QueryList, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { Component, ContentChildren, QueryList, Output, EventEmitter, AfterContentInit, DoCheck } from '@angular/core';
 import { Subcategory } from '../../models/subcategory.model';
 import { Government } from '../../models/government.model';
 import { Operator } from '../../models/operator.model';
@@ -28,7 +28,7 @@ export interface Filter {
   styleUrls: ['filters.component.scss'],
   standalone: false
 })
-export class FiltersComponent implements AfterContentInit {
+export class FiltersComponent implements AfterContentInit, DoCheck {
 
   // Props of the filters whose value narrows the options of another filter
   private static readonly CONTROLLING_PROPS = ['category-id', 'country-id', 'operator'];
@@ -37,6 +37,8 @@ export class FiltersComponent implements AfterContentInit {
   private _filtersNodes: QueryList<FilterDirective>;
   private optionsLoaded = false;
   private optionsRequest: Promise<void> = null;
+  // Last `values` binding seen on each sync filter node
+  private syncValuesSeen = new WeakMap<FilterDirective, unknown>();
   // Selections in effect when the modal was opened, to be able to discard the edits made
   // in it (see onDismissModal)
   private selectionsOnOpen: Record<string, any> = {};
@@ -80,6 +82,50 @@ export class FiltersComponent implements AfterContentInit {
     this.changed.subscribe(() => {
       this.onChangeFilter();
     });
+  }
+
+  ngDoCheck(): void {
+    this.refreshSyncFilterOptions();
+  }
+
+  /**
+   * Re-read the options of the sync filters when the binding changes.
+   *
+   * They're built from translations, so resetFilters snapshots them while still empty.
+   * Covers both the initial fill and the rebuild on a language change.
+   */
+  private refreshSyncFilterOptions(): void {
+    if (!this._filtersNodes) {
+      return;
+    }
+
+    for (const node of this._filtersNodes.toArray()) {
+      // A string means an async filter: its options come from the API
+      if (typeof node.values === 'string' || this.syncValuesSeen.get(node) === node.values) {
+        continue;
+      }
+
+      this.syncValuesSeen.set(node, node.values);
+
+      const filter = this.filters.find(f => f.prop === node.prop && !f.async);
+      if (filter) {
+        filter.values = FiltersComponent.toOptions(node.values);
+      }
+    }
+  }
+
+  /**
+   * Normalise a sync filter's `values` binding into an { label: value } map
+   */
+  private static toOptions(values: FilterDirective['values']): object {
+    if (Array.isArray(values)) {
+      return values
+        .map(value => ({ [value]: value }))
+        .reduce((res, value) => Object.assign({}, res, value), {});
+    }
+
+    // Both callers exclude the string (async) case before getting here
+    return typeof values === 'object' && values !== null ? values : {};
   }
 
   private async onChangeFilter(silent = false) {
@@ -324,11 +370,7 @@ export class FiltersComponent implements AfterContentInit {
     const syncFilters = syncFiltersNodes.map((syncFiltersNode) => ({
       name: syncFiltersNode.name,
       prop: syncFiltersNode.prop,
-      values: !Array.isArray(syncFiltersNode.values)
-        ? (syncFiltersNode.values)
-        : syncFiltersNode.values
-          .map(value => ({ [value]: value }))
-          .reduce((res, value) => Object.assign({}, res, value), {}),
+      values: FiltersComponent.toOptions(syncFiltersNode.values),
       selected: syncFiltersNode.default !== null && syncFiltersNode.default !== undefined
         ? syncFiltersNode.default
         : null,
@@ -351,6 +393,7 @@ export class FiltersComponent implements AfterContentInit {
     }));
 
     this.filters = [...syncFilters, ...asyncFilters];
+    syncFiltersNodes.forEach(node => this.syncValuesSeen.set(node, node.values));
 
     // Resetting after the options have been fetched has to fetch them again: the lists of
     // the dependent filters were narrowed by the values we just cleared
