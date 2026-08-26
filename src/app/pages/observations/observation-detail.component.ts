@@ -122,15 +122,24 @@ export class ObservationDetailComponent implements OnDestroy {
   };
 
   // Map related
-  map: L.Map;
+  map: L.Map = null; // null whenever the map div isn't rendered, see onMapReady
   _mapMarker = null; // Layer with the marker
   _mapFmu = null; // Layer with the FMU
+  _mapView: { center: L.LatLngTuple, zoom: number } = { center: [10, 0], zoom: 3 };
+  _mapOptions: L.MapOptions = null;
 
-  get mapOptions() {
-    if (this.map) {
-      return {
-        center: [this.map.getCenter().lat, this.map.getCenter().lng],
-        zoom: this.map.getZoom(),
+  /**
+   * Options the map is created with, opening it on the view the user last left.
+   *
+   * Cached because the tile layer they carry belongs to one map only, and the getter is
+   * called on every change detection while the options are read once, at creation time.
+   */
+  get mapOptions(): L.MapOptions {
+    if (!this._mapOptions) {
+      this._mapOptions = {
+        center: this._mapView.center,
+        zoom: this._mapView.zoom,
+        minZoom: 2,
         layers: [
           L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
             maxZoom: 18,
@@ -139,22 +148,10 @@ export class ObservationDetailComponent implements OnDestroy {
               &copy;<a href="https://carto.com/attribution">CARTO</a>`
           })
         ]
-      }
+      };
     }
 
-    return {
-      center: [10, 0],
-      zoom: 3,
-      minZoom: 2,
-      layers: [
-        L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-          maxZoom: 18,
-          noWrap: true,
-          attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
-            &copy;<a href="https://carto.com/attribution">CARTO</a>`
-        })
-      ]
-    };
+    return this._mapOptions;
   }
 
   currentContextObserver = null;
@@ -1212,6 +1209,38 @@ export class ObservationDetailComponent implements OnDestroy {
    */
   onMapReady(map: L.Map) {
     this.map = map;
+
+    // Keep the view so the next map, should the div be rendered again, opens on it
+    const rememberView = () => {
+      const center = map.getCenter();
+      this._mapView = { center: [center.lat, center.lng], zoom: map.getZoom() };
+      this._mapOptions = null;
+    };
+
+    map.on('moveend zoomend', rememberView);
+
+    // ngx-leaflet destroys the map together with its div (toggling "physical place" or the
+    // read-only state does that) and gives us no destroy hook. A removed map has no panes
+    // left, so anything still holding on to it fails on `_leaflet_pos`.
+    map.on('unload', () => {
+      rememberView();
+
+      if (this.map === map) {
+        this.map = null;
+      }
+    });
+  }
+
+  /**
+   * Move the map to a view, remembering it even when the map isn't currently rendered
+   */
+  private setMapView(center: L.LatLngTuple, zoom: number) {
+    this._mapView = { center, zoom };
+    this._mapOptions = null;
+
+    if (this.map) {
+      this.map.setView(center, zoom);
+    }
   }
 
   private checkCoordinatesValidity(): number[] | boolean {
@@ -1354,7 +1383,7 @@ export class ObservationDetailComponent implements OnDestroy {
         self.longitude = longitude;
 
         // We zoom in the area
-        self.map.setView([latitude, longitude], 8);
+        self.setMapView([latitude, longitude], 8);
       });
     } else {
       this.georeferencedPhoto.attachment = null;

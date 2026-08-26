@@ -109,7 +109,7 @@ describe('Observations', () => {
     ).should('be.visible');
   })
 
-  it('allow to select all country FMUs if checking non concession activity checkbox - only for DRC', () => {
+  it('allow to select all country FMUs if checking non concession activity checkbox - only for DRC, and keep the map when toggling the physical place', () => {
     cy.get('a').contains('New observation', { timeout: 10000 }).click();
     cy.get('select#observation_type').select('Producer');
     cy.get('select#country_id').select('Cameroon');
@@ -123,6 +123,18 @@ describe('Observations', () => {
     cy.get('input#non_concession_activity').check();
     cy.get('select#fmu_field').find('option').should('contain.text', '046/11');
     cy.get('select#fmu_field').select('046/11');
+
+    // Selecting the FMU draws it and zooms onto it. Answering NO destroys the map along
+    // with its div and YES builds a new one, which used to be built off the removed map
+    // and throw on `_leaflet_pos`
+    cy.get('div.map.leaflet-container svg path').should('exist');
+    cy.chooseOption('Did this observation occur at a physical place?', 'NO');
+    cy.get('div.map').should('not.exist');
+    cy.chooseOption('Did this observation occur at a physical place?', 'YES');
+    cy.get('div.map.leaflet-container svg path').should('exist');
+    // zoom 3 is the world view the map falls back to when it forgets where it was
+    cy.get('div.map img.leaflet-tile[src*="/light_all/3/"]').should('not.exist');
+
     cy.get('button').contains('Create').click();
 
     // let's verify if everyting was correctly saved
