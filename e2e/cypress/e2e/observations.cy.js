@@ -124,16 +124,25 @@ describe('Observations', () => {
     cy.get('select#fmu_field').find('option').should('contain.text', '046/11');
     cy.get('select#fmu_field').select('046/11');
 
-    // Selecting the FMU draws it and zooms onto it. Answering NO destroys the map along
-    // with its div and YES builds a new one, which used to be built off the removed map
-    // and throw on `_leaflet_pos`
-    cy.get('div.map.leaflet-container svg path').should('exist');
+    // Selecting the FMU draws it and zooms onto it, so the polygon takes up a good part
+    // of the map - on the world view the map falls back to it is a couple of pixels wide.
+    // Waiting on that also means the zoom has finished before the toggle below.
+    const expectMapZoomedOnFmu = () => {
+      cy.get('div.map.leaflet-container svg path').should('exist');
+      cy.get('div.map.leaflet-container').should(($map) => {
+        const mapWidth = $map[0].getBoundingClientRect().width;
+        const fmuWidth = $map.find('svg path')[0].getBoundingClientRect().width;
+        expect(fmuWidth / mapWidth).to.be.greaterThan(0.1);
+      });
+    };
+
+    // Answering NO destroys the map along with its div and YES builds a new one, which
+    // used to be built off the removed map and throw on `_leaflet_pos`
+    expectMapZoomedOnFmu();
     cy.chooseOption('Did this observation occur at a physical place?', 'NO');
     cy.get('div.map').should('not.exist');
     cy.chooseOption('Did this observation occur at a physical place?', 'YES');
-    cy.get('div.map.leaflet-container svg path').should('exist');
-    // zoom 3 is the world view the map falls back to when it forgets where it was
-    cy.get('div.map img.leaflet-tile[src*="/light_all/3/"]').should('not.exist');
+    expectMapZoomedOnFmu();
 
     cy.get('button').contains('Create').click();
 
