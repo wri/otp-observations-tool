@@ -1,6 +1,6 @@
-import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from 'angular2-jsonapi';
-import { Country } from 'app/models/country.model';
-import { User } from 'app/models/user.model';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from '@michalkotas/angular2-jsonapi';
+import type { Country } from 'app/models/country.model';
+import type { User } from 'app/models/user.model';
 
 @JsonApiModelConfig({
   type: 'observers'

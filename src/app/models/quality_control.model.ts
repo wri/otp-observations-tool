@@ -1,5 +1,5 @@
-import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany, BelongsTo } from 'angular2-jsonapi';
-import { Observation } from 'app/models/observation.model';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from '@michalkotas/angular2-jsonapi';
+import type { Observation } from 'app/models/observation.model';
 
 @JsonApiModelConfig({
   type: 'quality-controls'

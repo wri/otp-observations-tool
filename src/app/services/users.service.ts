@@ -2,7 +2,6 @@ import { JsonApiService } from 'app/services/json-api.service';
 import { User } from 'app/models/user.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';
-import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()

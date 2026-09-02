@@ -7,7 +7,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'otp-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
+  standalone: false
 })
 export class ProfileComponent {
 
@@ -61,7 +62,8 @@ export class ProfileComponent {
     // Temp Workaround to not send email to API if it was not changed
     // # TODO: change API to check if email changed instead
     if (this.user.email === this.initialEmail) {
-      // @ts-ignore
+      // @ts-expect-error -- reaches angular2-jsonapi's private attribute-metadata symbol,
+      // which the library does not expose in its typings
       this.user[Object.getOwnPropertySymbols(this.user)[0]]['email'].hasDirtyAttributes = false;
     }
 

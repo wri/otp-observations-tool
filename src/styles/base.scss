@@ -1,18 +1,20 @@
+@use 'src/settings.scss';
+
 html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body {
   font-family: 'Acumin Pro';
-  font-weight: $font-weight-default;
+  font-weight: settings.$font-weight-default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: $dark-grey;
-  background: $light-grey;
+  color: settings.$dark-grey;
+  background: settings.$light-grey;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: $font-weight-default;
+  font-weight: settings.$font-weight-default;
   margin: 0;
   padding: 0;
 }

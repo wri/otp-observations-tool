@@ -26,15 +26,13 @@ import { AppRoutingModule } from 'app/app-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
-import { JsonApiModule } from 'angular2-jsonapi';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ObservationsService } from 'app/services/observations.service';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { apiInterceptorProvider } from 'app/services/api-interceptor';
 
 import * as Sentry from '@sentry/browser'
-import { RewriteFrames } from '@sentry/integrations'
 
 import { environment } from 'environments/environment';
 
@@ -46,7 +44,9 @@ Sentry.init({
     return environment.production ? 'production' : 'development';
   })(),
   integrations: [
-    new RewriteFrames(),
+    // Re-exported by @sentry/browser since 7.120, so the separate @sentry/integrations
+    // dependency is no longer needed.
+    Sentry.rewriteFramesIntegration(),
   ],
 })
 
@@ -74,11 +74,9 @@ export function createTranslateLoader(http: HttpClient) {
     PageNotFoundComponent
   ],
   imports: [
-    JsonApiModule,
     BrowserModule,
     SharedModule,
     AppRoutingModule,
-    HttpClientModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -109,7 +107,10 @@ export function createTranslateLoader(http: HttpClient) {
     SeveritiesService,
     ResponsiveService,
     apiInterceptorProvider,
-    { provide: ErrorHandler, useClass: SentryErrorHandler }
+    { provide: ErrorHandler, useClass: SentryErrorHandler },
+    // Replaces HttpClientModule, removed in v18. `withInterceptorsFromDi` keeps the
+    // HTTP_INTERCEPTORS-based apiInterceptorProvider above working.
+    provideHttpClient(withInterceptorsFromDi())
   ],
   bootstrap: [AppComponent]
 })

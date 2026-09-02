@@ -4,7 +4,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'otp-field-detail',
   templateUrl: './field-detail.component.html',
-  styleUrls: ['./field-detail.component.scss']
+  styleUrls: ['./field-detail.component.scss'],
+  standalone: false
 })
 export class FieldDetailComponent {
 

@@ -6,14 +6,15 @@ import { AuthService } from 'app/services/auth.service';
 import { environment } from 'environments/environment';
 
 // declare gives Angular app access to ga function
-declare let ga: Function;
+declare let ga: (...args: unknown[]) => void;
 
 const ACCEPTED_LOCALES = ['en', 'fr', 'es'];
 
 @Component({
   selector: 'otp-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  standalone: false
 })
 export class AppComponent {
   isLogged = false;
@@ -71,7 +72,6 @@ export class AppComponent {
       }
     } else {
       // Deliberate: this branch only runs when not in production, so it never reaches users.
-      // tslint:disable-next-line:no-console
       console.info(`[GA] Page view: ${fullURL}`);
     }
   }

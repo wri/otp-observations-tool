@@ -1,4 +1,4 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   display: block;
@@ -21,18 +21,18 @@
 
     &:before {
       left: 0;
-      background: linear-gradient(to left, rgba($light-grey, 0), $light-grey 90%);
+      background: linear-gradient(to left, rgba(settings.$light-grey, 0), settings.$light-grey 90%);
     }
 
     &:after {
       right: 0;
-      background: linear-gradient(to right, rgba($light-grey, 0), $light-grey 90%);
+      background: linear-gradient(to right, rgba(settings.$light-grey, 0), settings.$light-grey 90%);
     }
 
     > otp-navigation {
       width: 100%;
-      background-color: $light-grey;
-      border-bottom: 1px solid $lighter-grey;
+      background-color: settings.$light-grey;
+      border-bottom: 1px solid settings.$lighter-grey;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -41,7 +41,7 @@
   otp-navigation {
     display: block;
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       width: auto;
       background-color: transparent;
       border-bottom: 0;

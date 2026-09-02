@@ -1,6 +1,6 @@
-import { Observation } from 'app/models/observation.model';
-import { ObservationReport } from 'app/models/observation_report';
-import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from 'angular2-jsonapi';
+import type { Observation } from 'app/models/observation.model';
+import type { ObservationReport } from 'app/models/observation_report';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo, HasMany } from '@michalkotas/angular2-jsonapi';
 
 @JsonApiModelConfig({
   type: 'observation-documents'

@@ -21,7 +21,7 @@
 
     <!-- 2. Current file -->
     <div *ngIf="report.id" class="form-group">
-      <label>{{'Current file' | translate}}</label>
+      <span class="form-label">{{'Current file' | translate}}</span>
       <a href="{{report.attachment.url}}" target="_blank" download>{{'Download file' | translate}}</a>
     </div>
 
@@ -54,22 +54,22 @@
 
     <!-- Current Monitor -->
     <div class="form-group">
-      <label>{{'Monitor' | translate}}</label>
-      <input type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
+      <label for="monitor">{{'Monitor' | translate}}</label>
+      <input id="monitor" type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
     </div>
 
     <!-- Additional monitors -->
     <div class="form-group">
-      <label>{{'Additional monitors' | translate}}</label>
-      <ss-multiselect-dropdown
+      <label for="additional_observers">{{'Additional monitors' | translate}}</label>
+      <ngx-bootstrap-multiselect
         [texts]="multiSelectTexts"
         [options]="additionalObserversOptions"
         [settings]="additionalObserversSelectSettings"
         [(ngModel)]="_additionalObserversSelection"
         (ngModelChange)="onChangeAdditionalObserversOptions($event)"
-        name="additional_observers"
+        name="additional_observers" id="additional_observers"
       >
-      </ss-multiselect-dropdown>
+      </ngx-bootstrap-multiselect>
       <p class="note">
         {{ 'observation.additionalMonitors.note' | translate }}
       </p>

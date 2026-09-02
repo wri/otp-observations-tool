@@ -1,19 +1,19 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   display: block;
 
-  @media screen and (min-width: $break-tablet) {
+  @media screen and (min-width: settings.$break-tablet) {
     margin-top: 20px;
   }
 
   a[download] {
-    color: $color-primary;
+    color: settings.$color-primary;
     text-decoration: underline;
   }
 
   .callout {
-    font-size: $font-size-medium;
+    font-size: settings.$font-size-medium;
 
     blockquote {
       font-style: italic;
@@ -29,9 +29,9 @@
   }
 
   .geo-note {
-    color: $color-primary;
-    font-size: $font-size-medium;
-    font-weight: $font-weight-bold;
+    color: settings.$color-primary;
+    font-size: settings.$font-size-medium;
+    font-weight: settings.$font-weight-bold;
     margin-top: 10px;
   }
 
@@ -42,7 +42,7 @@
     border-radius: 3px;
     z-index: 1; // Needed for the border-radius to apply
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       height: 350px;
     }
   }
@@ -57,13 +57,13 @@
 
   .documents-list {
     padding: 0;
-    border-top: 1px solid $lighter-grey;
-    border-bottom: 1px solid $lighter-grey;
+    border-top: 1px solid settings.$lighter-grey;
+    border-bottom: 1px solid settings.$lighter-grey;
     max-height: 400px;
     overflow: auto;
 
     a {
-      color: $color-primary;
+      color: settings.$color-primary;
       text-decoration: underline;
     }
 
@@ -84,11 +84,11 @@
       padding: 5px 10px;
 
       &:not(:last-of-type) {
-        border-bottom: 1px solid $lighter-grey;
+        border-bottom: 1px solid settings.$lighter-grey;
       }
 
       .title {
-        font-weight: $font-weight-medium;
+        font-weight: settings.$font-weight-medium;
       }
 
       .status {

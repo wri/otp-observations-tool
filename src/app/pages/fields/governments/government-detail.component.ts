@@ -1,4 +1,3 @@
-import { ObserversService } from 'app/services/observers.service';
 import { AuthService } from 'app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Government } from 'app/models/government.model';
@@ -12,7 +11,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 @Component({
   selector: 'otp-government-detail',
   templateUrl: './government-detail.component.html',
-  styleUrls: ['./government-detail.component.scss']
+  styleUrls: ['./government-detail.component.scss'],
+  standalone: false
 })
 export class GovernmentDetailComponent implements OnInit {
 
@@ -21,9 +21,9 @@ export class GovernmentDetailComponent implements OnInit {
   loading = false;
   nameServerError: string = null;
 
-  @Input() useRouter: boolean = true;
-  @Input() showActionsOnTop: boolean = true;
-  @Input() showSuccessMessage: boolean = true;
+  @Input() useRouter = true;
+  @Input() showActionsOnTop = true;
+  @Input() showSuccessMessage = true;
   @Input() fixedCountry: Country = null;
   @Input() uniqueNameErrorMessage: string = null;
 

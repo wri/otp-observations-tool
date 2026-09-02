@@ -1,5 +1,4 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Category } from './../../../models/category.model';
 import { CategoriesService } from 'app/services/categories.service';
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
@@ -8,7 +7,8 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 @Component({
   selector: 'otp-category-list',
   templateUrl: './category-list.component.html',
-  styleUrls: ['./category-list.component.scss']
+  styleUrls: ['./category-list.component.scss'],
+  standalone: false
 })
 export class CategoryListComponent extends TableFilterBehavior {
 

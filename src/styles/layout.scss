@@ -1,9 +1,11 @@
+@use 'src/settings.scss';
+
 .l-wrapper {
   margin: 0 auto;
   padding: 0 10px;
-  max-width: $body-max-width;
+  max-width: settings.$body-max-width;
 
-  @media screen and (min-width: $break-mobile) {
+  @media screen and (min-width: settings.$break-mobile) {
     padding: 0 20px;
   }
 }

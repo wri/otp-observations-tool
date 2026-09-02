@@ -2,7 +2,7 @@ import { JsonApiParams } from 'app/services/json-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DatastoreService } from 'app/services/datastore.service';
 import { FilterDirective } from './directives/filter.directive';
-import { Component, ContentChildren, QueryList, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { Component, ContentChildren, QueryList, Output, EventEmitter, AfterContentInit, DoCheck } from '@angular/core';
 import { Subcategory } from '../../models/subcategory.model';
 import { Government } from '../../models/government.model';
 import { Operator } from '../../models/operator.model';
@@ -11,6 +11,9 @@ import { Fmu } from '../../models/fmu.model';
 export interface Filter {
   name: string;
   prop: string;
+  // Deliberately loose: filter values are strings for async filters and objects for
+  // static ones. Narrowing this is a refactor of every caller.
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   values: {};
   selected?: any;
   required: boolean;
@@ -22,9 +25,10 @@ export interface Filter {
 @Component({
   selector: 'otp-filters',
   templateUrl: 'filters.component.html',
-  styleUrls: ['filters.component.scss']
+  styleUrls: ['filters.component.scss'],
+  standalone: false
 })
-export class FiltersComponent implements AfterContentInit {
+export class FiltersComponent implements AfterContentInit, DoCheck {
 
   // Props of the filters whose value narrows the options of another filter
   private static readonly CONTROLLING_PROPS = ['category-id', 'country-id', 'operator'];
@@ -33,9 +37,11 @@ export class FiltersComponent implements AfterContentInit {
   private _filtersNodes: QueryList<FilterDirective>;
   private optionsLoaded = false;
   private optionsRequest: Promise<void> = null;
+  // Last `values` binding seen on each sync filter node
+  private syncValuesSeen = new WeakMap<FilterDirective, unknown>();
   // Selections in effect when the modal was opened, to be able to discard the edits made
   // in it (see onDismissModal)
-  private selectionsOnOpen: { [prop: string]: any } = {};
+  private selectionsOnOpen: Record<string, any> = {};
   previousState: JsonApiParams;
   filters: Filter[] = [];
   modalOpen = false;
@@ -43,7 +49,7 @@ export class FiltersComponent implements AfterContentInit {
   objectKeys = Object.keys;
   defaultApiParams = {};
 
-  @Output() change = new EventEmitter<void>();
+  @Output() changed = new EventEmitter<void>();
 
   @ContentChildren(FilterDirective)
   set filtersNodes(filters: QueryList<FilterDirective>) {
@@ -67,12 +73,59 @@ export class FiltersComponent implements AfterContentInit {
     this.translateService.onLangChange.subscribe((lang) => {
       // Also, when the event is triggered, the language is not
       // already changed, so we need to sligthly delay the render
+      // Reassigning the QueryList in a macrotask is what makes Angular pick up the
+      // projected content change.
+      // eslint-disable-next-line no-self-assign
       setTimeout(() => this.filtersNodes = this.filtersNodes, 0);
     });
 
-    this.change.subscribe(() => {
+    this.changed.subscribe(() => {
       this.onChangeFilter();
     });
+  }
+
+  ngDoCheck(): void {
+    this.refreshSyncFilterOptions();
+  }
+
+  /**
+   * Re-read the options of the sync filters when the binding changes.
+   *
+   * They're built from translations, so resetFilters snapshots them while still empty.
+   * Covers both the initial fill and the rebuild on a language change.
+   */
+  private refreshSyncFilterOptions(): void {
+    if (!this._filtersNodes) {
+      return;
+    }
+
+    for (const node of this._filtersNodes.toArray()) {
+      // A string means an async filter: its options come from the API
+      if (typeof node.values === 'string' || this.syncValuesSeen.get(node) === node.values) {
+        continue;
+      }
+
+      this.syncValuesSeen.set(node, node.values);
+
+      const filter = this.filters.find(f => f.prop === node.prop && !f.async);
+      if (filter) {
+        filter.values = FiltersComponent.toOptions(node.values);
+      }
+    }
+  }
+
+  /**
+   * Normalise a sync filter's `values` binding into an { label: value } map
+   */
+  private static toOptions(values: FilterDirective['values']): object {
+    if (Array.isArray(values)) {
+      return values
+        .map(value => ({ [value]: value }))
+        .reduce((res, value) => Object.assign({}, res, value), {});
+    }
+
+    // Both callers exclude the string (async) case before getting here
+    return typeof values === 'object' && values !== null ? values : {};
   }
 
   private async onChangeFilter(silent = false) {
@@ -95,7 +148,7 @@ export class FiltersComponent implements AfterContentInit {
     if (!silent) {
       // Hack so we don't trigger an infinite loop
       this.skipNextFilterChange = true;
-      this.change.emit();
+      this.changed.emit();
     }
   }
 
@@ -285,7 +338,7 @@ export class FiltersComponent implements AfterContentInit {
     }
 
     for (const key in this.previousState) {
-      if (this.previousState.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(this.previousState, key)) {
         const filterName = key.match(/filter\[(.*)\]/)[1];
         const filterValue = this.previousState[key];
         const filter = this.filters.find(f => f.prop === filterName);
@@ -302,7 +355,7 @@ export class FiltersComponent implements AfterContentInit {
       this.ensureOptionsLoaded();
     }
 
-    this.change.emit();
+    this.changed.emit();
   }
 
   async resetFilters(silent = false) {
@@ -317,11 +370,7 @@ export class FiltersComponent implements AfterContentInit {
     const syncFilters = syncFiltersNodes.map((syncFiltersNode) => ({
       name: syncFiltersNode.name,
       prop: syncFiltersNode.prop,
-      values: !Array.isArray(syncFiltersNode.values)
-        ? (syncFiltersNode.values)
-        : syncFiltersNode.values
-          .map(value => ({ [value]: value }))
-          .reduce((res, value) => Object.assign({}, res, value), {}),
+      values: FiltersComponent.toOptions(syncFiltersNode.values),
       selected: syncFiltersNode.default !== null && syncFiltersNode.default !== undefined
         ? syncFiltersNode.default
         : null,
@@ -344,6 +393,7 @@ export class FiltersComponent implements AfterContentInit {
     }));
 
     this.filters = [...syncFilters, ...asyncFilters];
+    syncFiltersNodes.forEach(node => this.syncValuesSeen.set(node, node.values));
 
     // Resetting after the options have been fetched has to fetch them again: the lists of
     // the dependent filters were narrowed by the values we just cleared
@@ -352,7 +402,7 @@ export class FiltersComponent implements AfterContentInit {
     }
 
     if (!silent) {
-      this.change.emit();
+      this.changed.emit();
     }
   }
 
@@ -408,14 +458,14 @@ export class FiltersComponent implements AfterContentInit {
       // The values of the filter needs to be fetched from
       // the API
       const models = Reflect.getMetadata('JsonApiDatastoreConfig', this.datastoreService.constructor).models;
-      const model = models[<string>asyncFiltersNode.values];
+      const model = models[(asyncFiltersNode.values as string)];
 
-      const extraParams = (asyncFiltersNode['extra-params'] as any) || {};
+      const extraParams = (asyncFiltersNode.extraParams as any) || {};
       let params = {
         sort: asyncFiltersNode['name-attr'],
         page: { size: 3000 },
         // We just request the field we need
-        fields: { [<string>asyncFiltersNode.values]: asyncFiltersNode['name-attr'] },
+        fields: { [asyncFiltersNode.values as string]: asyncFiltersNode['name-attr'] },
         ...extraParams
       };
 
@@ -477,7 +527,7 @@ export class FiltersComponent implements AfterContentInit {
 
   onDone() {
     this.modalOpen = false;
-    this.change.emit();
+    this.changed.emit();
   }
 
   hasValue(filter: Filter): boolean {

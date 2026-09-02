@@ -2,7 +2,7 @@
 // The styles are based on the styles of the
 // select elements
 // FIXME:
-ss-multiselect-dropdown {
+ngx-bootstrap-multiselect {
   display: block;
   width: 100%;
   position: relative;
@@ -59,7 +59,12 @@ ss-multiselect-dropdown {
       -webkit-overflow-scrolling: touch;
       z-index: 2;
 
+      // v1.9 renders each option as `<a class="dropdown-item">`; older versions wrapped an
+      // `<a>` inside `<li class="dropdown-item">`. An `<a>` is inline, so without this the
+      // options run together on one line instead of stacking. Covers both shapes.
+      .dropdown-item,
       .dropdown-item a {
+        display: block;
         color: #0a0a0a;
         text-decoration: none;
 

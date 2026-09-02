@@ -9,6 +9,10 @@
       "duration": 81000
     },
     {
+      "spec": "cypress/e2e/filters.cy.js",
+      "duration": 20000
+    },
+    {
       "spec": "cypress/e2e/user.cy.js",
       "duration": 17000
     },

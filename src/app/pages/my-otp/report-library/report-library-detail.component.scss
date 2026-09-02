@@ -1,4 +1,4 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   otp-loader {
@@ -7,7 +7,7 @@
   }
 
   a[download] {
-    color: $color-primary;
+    color: settings.$color-primary;
     text-decoration: underline;
   }
 }

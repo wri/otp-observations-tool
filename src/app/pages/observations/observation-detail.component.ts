@@ -1,8 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
-import cloneDeep from 'lodash/cloneDeep';
 import orderBy from 'lodash/orderBy';
 import uniqBy from 'lodash/uniqBy';
-import flatten from 'lodash/flatten';
 import * as EXIF from 'exif-js';
 import proj4 from 'app/shared/proj4-subset';
 import { Law } from 'app/models/law.model';
@@ -30,7 +28,7 @@ import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
 import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
-import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
 import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
@@ -56,7 +54,8 @@ interface GeoreferencedPhoto { // Usage georefered photo as evidence
 @Component({
   selector: 'otp-observation-detail',
   templateUrl: './observation-detail.component.html',
-  styleUrls: ['./observation-detail.component.scss']
+  styleUrls: ['./observation-detail.component.scss'],
+  standalone: false
 })
 export class ObservationDetailComponent implements OnDestroy {
   @ViewChild('evidenceBlock', { static: false }) evidenceBlock: ElementRef;
@@ -123,15 +122,24 @@ export class ObservationDetailComponent implements OnDestroy {
   };
 
   // Map related
-  map: L.Map;
+  map: L.Map = null; // null whenever the map div isn't rendered, see onMapReady
   _mapMarker = null; // Layer with the marker
   _mapFmu = null; // Layer with the FMU
+  _mapView: { center: L.LatLngTuple, zoom: number } = { center: [10, 0], zoom: 3 };
+  _mapOptions: L.MapOptions = null;
 
-  get mapOptions() {
-    if (this.map) {
-      return {
-        center: [this.map.getCenter().lat, this.map.getCenter().lng],
-        zoom: this.map.getZoom(),
+  /**
+   * Options the map is created with, opening it on the view the user last left.
+   *
+   * Cached because the tile layer they carry belongs to one map only, and the getter is
+   * called on every change detection while the options are read once, at creation time.
+   */
+  get mapOptions(): L.MapOptions {
+    if (!this._mapOptions) {
+      this._mapOptions = {
+        center: this._mapView.center,
+        zoom: this._mapView.zoom,
+        minZoom: 2,
         layers: [
           L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
             maxZoom: 18,
@@ -140,22 +148,10 @@ export class ObservationDetailComponent implements OnDestroy {
               &copy;<a href="https://carto.com/attribution">CARTO</a>`
           })
         ]
-      }
+      };
     }
 
-    return {
-      center: [10, 0],
-      zoom: 3,
-      minZoom: 2,
-      layers: [
-        L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-          maxZoom: 18,
-          noWrap: true,
-          attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>,
-            &copy;<a href="https://carto.com/attribution">CARTO</a>`
-        })
-      ]
-    };
+    return this._mapOptions;
   }
 
   currentContextObserver = null;
@@ -236,7 +232,7 @@ export class ObservationDetailComponent implements OnDestroy {
   _latitude: number; // Only for type operator
   _longitude: number; // Only for type operator
   _fmu: Fmu = null; // Only for type operator
-  _nonConcessionActivity: boolean = false; // Only for type operator
+  _nonConcessionActivity = false; // Only for type operator
   _government: Government = null; // Only for type government
   _law: Law = null; // Only for type operator
   _actions: string;
@@ -294,7 +290,7 @@ export class ObservationDetailComponent implements OnDestroy {
         }
       });
 
-    this.subcategoriesService.getByType(<'operator' | 'government'>type, { include: 'severities,category' })
+    this.subcategoriesService.getByType((type as 'operator' | 'government'), { include: 'severities,category' })
       .then(subcategories => this.subcategories = subcategories)
       .then(() => {
         // If we're editing an observation (or using draft), the object Subcategory of the observation won't
@@ -533,7 +529,7 @@ export class ObservationDetailComponent implements OnDestroy {
       return;
     }
 
-    const layer = L.geoJSON(<GeoJsonObject>fmu.geojson);
+    const layer = L.geoJSON((fmu.geojson as GeoJsonObject));
     this._mapFmu = layer;
 
     // We zoom onto the FMU in two cases:
@@ -628,7 +624,8 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get latitude() { return this.observation ? this.observation.lat : this._latitude; }
   set latitude(latitude) {
-     // @ts-ignore
+    // @ts-expect-error -- the setter accepts the empty string the template binds while
+    // the field itself is typed as a number
     const value = latitude === '' ? null : latitude;
     if (this.observation) {
       this.observation.lat = value;
@@ -640,7 +637,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
     // We create a layer with the marker
     if (decimalCoordinates) {
-      this._mapMarker = L.marker(<L.LatLngExpression>decimalCoordinates);
+      this._mapMarker = L.marker((decimalCoordinates as L.LatLngExpression));
     } else {
       this._mapMarker = null;
     }
@@ -648,7 +645,8 @@ export class ObservationDetailComponent implements OnDestroy {
 
   get longitude() { return this.observation ? this.observation.lng : this._longitude; }
   set longitude(longitude) {
-    // @ts-ignore
+    // @ts-expect-error -- the setter accepts the empty string the template binds while
+    // the field itself is typed as a number
     const value = longitude === '' ? null : longitude;
     if (this.observation) {
       this.observation.lng = value;
@@ -660,7 +658,7 @@ export class ObservationDetailComponent implements OnDestroy {
 
     // We create a layer with the marker
     if (decimalCoordinates) {
-      this._mapMarker = L.marker(<L.LatLngExpression>decimalCoordinates);
+      this._mapMarker = L.marker((decimalCoordinates as L.LatLngExpression));
     } else {
       this._mapMarker = null;
     }
@@ -1012,7 +1010,6 @@ export class ObservationDetailComponent implements OnDestroy {
     const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: 'locale' }});
 
     return this.observationsService.getById(this.existingObservation, {
-      // tslint:disable-next-line:max-line-length
       locale: preloaded.locale || this.uiLocale,
       include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators,quality-controls'
     }).then((observation) => {
@@ -1034,7 +1031,7 @@ export class ObservationDetailComponent implements OnDestroy {
         this.observation['validation-status'] = undefined;
       }
 
-      // FIXME: angular2-jsonapi should return a Date object but instead return
+      // FIXME: the jsonapi library should return a Date object but instead returns
       // a string for some reason
       this.observation['publication-date'] = new Date(this.observation['publication-date']);
       this.observation['created-at'] = new Date(this.observation['created-at']);
@@ -1148,7 +1145,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   private canChangeMonitors(): boolean {
-    return !Boolean(this.reportChoice);
+    return !this.reportChoice;
   }
 
   private saveAsDraftObservation(): void {
@@ -1212,6 +1209,38 @@ export class ObservationDetailComponent implements OnDestroy {
    */
   onMapReady(map: L.Map) {
     this.map = map;
+
+    // Keep the view so the next map, should the div be rendered again, opens on it
+    const rememberView = () => {
+      const center = map.getCenter();
+      this._mapView = { center: [center.lat, center.lng], zoom: map.getZoom() };
+      this._mapOptions = null;
+    };
+
+    map.on('moveend zoomend', rememberView);
+
+    // ngx-leaflet destroys the map together with its div (toggling "physical place" or the
+    // read-only state does that) and gives us no destroy hook. A removed map has no panes
+    // left, so anything still holding on to it fails on `_leaflet_pos`.
+    map.on('unload', () => {
+      rememberView();
+
+      if (this.map === map) {
+        this.map = null;
+      }
+    });
+  }
+
+  /**
+   * Move the map to a view, remembering it even when the map isn't currently rendered
+   */
+  private setMapView(center: L.LatLngTuple, zoom: number) {
+    this._mapView = { center, zoom };
+    this._mapOptions = null;
+
+    if (this.map) {
+      this.map.setView(center, zoom);
+    }
   }
 
   private checkCoordinatesValidity(): number[] | boolean {
@@ -1236,6 +1265,7 @@ export class ObservationDetailComponent implements OnDestroy {
             return res;
           };
 
+          // eslint-disable-next-line no-useless-escape -- escapes kept for readability of this regex
           const parts = coordinate.split(/[^\d\w\.]+/);
           return convert(parts[0], parts[1], parts[2]);
         };
@@ -1261,6 +1291,7 @@ export class ObservationDetailComponent implements OnDestroy {
             return res;
           };
 
+          // eslint-disable-next-line no-useless-escape -- escapes kept for readability of this regex
           const parts = coordinate.split(/[^\d\w\.]+/);
           return convert(parts[0], parts[1], parts[2], parts[3]);
         };
@@ -1306,13 +1337,14 @@ export class ObservationDetailComponent implements OnDestroy {
       case 'Decimal':
       case 'Degrees and decimal minutes':
       case 'Sexagesimal':
-      case 'UTM':
+      case 'UTM': {
         const decimalCoordinates = this.checkCoordinatesValidity();
         if (!decimalCoordinates) {
           return null;
         }
 
-        return <number[]>decimalCoordinates;
+        return decimalCoordinates as number[];
+      }
       default:
         return null;
     }
@@ -1320,6 +1352,9 @@ export class ObservationDetailComponent implements OnDestroy {
 
   onChangePhoto(e: any) {
     const photo = e.target.files[0];
+    // EXIF.getData binds `this` to the image inside the callback below, so the component
+    // is reached through this alias.
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
     if (photo) {
@@ -1348,7 +1383,7 @@ export class ObservationDetailComponent implements OnDestroy {
         self.longitude = longitude;
 
         // We zoom in the area
-        self.map.setView([latitude, longitude], 8);
+        self.setMapView([latitude, longitude], 8);
       });
     } else {
       this.georeferencedPhoto.attachment = null;
@@ -1452,7 +1487,7 @@ export class ObservationDetailComponent implements OnDestroy {
           if (this.newOperatorModalSelect === 'operator') {
             if ((this.operatorsSelection || []).length === 0) this.operatorChoice = operator;
           } else if (this.newOperatorModalSelect === 'relevantOperators') {
-            this._relevantOperatorsSelection.push(operator.id);
+            this._relevantOperatorsSelection = [...this._relevantOperatorsSelection, operator.id];
           }
         });
     }
@@ -1797,19 +1832,20 @@ export class ObservationDetailComponent implements OnDestroy {
 
   /**
    * Upload the report, if any
-   * @returns {Promise<{}>}
+   * @returns {Promise<unknown>}
    */
-  uploadReport(): Promise<{}> {
+  uploadReport(): Promise<unknown> {
     return new Promise((resolve, reject) => {
       // If the user doesn't want to upload a report,
       // we just resolve
       if (!this.report.attachment) {
-        resolve();
+        // Explicit undefined: TS 4 rejects a bare resolve() when the Promise type is not void
+        resolve(undefined);
       } else {
         // Otherwise, we upload the report first
         this.report.observers = this.observers
           .filter((observer) => this._additionalObserversSelection.includes(observer.id))
-          .concat([this.observers.find(o => o.id === this.authService.userObserverId)]),
+          .concat([this.observers.find(o => o.id === this.authService.userObserverId)]);
         this.report.save()
           .toPromise()
           .then(resolve)

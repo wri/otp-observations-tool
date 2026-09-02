@@ -1,5 +1,6 @@
 
-import {fromEvent as observableFromEvent,  ReplaySubject ,  Observable } from 'rxjs';
+
+import { fromEvent as observableFromEvent, ReplaySubject } from 'rxjs';
 
 import {startWith, defaultIfEmpty, map, debounceTime} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -11,7 +12,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ResponsiveService {
 
-  private resize$: ReplaySubject<number> = new ReplaySubject(1);
+  private resize$ = new ReplaySubject<number>(1);
 
   get onResize() {
     return this.resize$;

@@ -5,7 +5,7 @@ addEventListener('message', ({ data }) => {
     const fileReader = new FileReader();
 
     fileReader.addEventListener('load', ({ target}: Event) => {
-      postMessage((<string>(<FileReader>target).result));
+      postMessage(((target as FileReader).result as string));
     });
     fileReader.addEventListener('error', (err) => {
       postMessage({ error: err });

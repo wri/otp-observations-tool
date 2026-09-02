@@ -2,11 +2,12 @@ import { Directive, forwardRef, Input } from '@angular/core';
 import { Validator, NG_VALIDATORS, AbstractControl, ValidationErrors, NgModel } from '@angular/forms';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
+  // eslint-disable-next-line @angular-eslint/directive-selector -- the selector deliberately mirrors Angular's own validator attributes
   selector: '[equalTo][formControlName],[equalTo][formControl],[equalTo][ngModel]',
   providers: [
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => EqualToValidatorDirective), multi: true }
-  ]
+  ],
+  standalone: false
 })
 export class EqualToValidatorDirective implements Validator {
 

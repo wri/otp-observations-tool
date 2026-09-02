@@ -1,5 +1,4 @@
-import { JsonApiModel, JsonApiModelConfig, Attribute } from 'angular2-jsonapi';
-import { User } from 'app/models/user.model';
+import { JsonApiModel, JsonApiModelConfig, Attribute } from '@michalkotas/angular2-jsonapi';
 
 @JsonApiModelConfig({
     type: 'user_permissions'

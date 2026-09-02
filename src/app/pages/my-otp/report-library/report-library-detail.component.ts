@@ -8,13 +8,14 @@ import { DatastoreService } from 'app/services/datastore.service';
 import { AuthService } from 'app/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'environments/environment';
-import { IMultiSelectOption, IMultiSelectSettings, IMultiSelectTexts } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectSettings, IMultiSelectTexts } from 'ngx-bootstrap-multiselect';
 import { MISSION_TYPES } from 'app/models/observation_report';
 
 @Component({
   selector: 'otp-report-library-detail',
   templateUrl: './report-library-detail.component.html',
-  styleUrls: ['./report-library-detail.component.scss']
+  styleUrls: ['./report-library-detail.component.scss'],
+  standalone: false
 })
 export class ReportLibraryDetailComponent {
   loading = false;

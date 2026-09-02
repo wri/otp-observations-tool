@@ -3,6 +3,8 @@
     *ngFor="let tab of tabs; let i = index"
     [class.active]="i === currentTab"
     (click)="onClickTab(tab)"
+    (keydown.enter)="onClickTab(tab)"
+    (keydown.space)="onClickTab(tab)"
     role="tab"
     [attr.tabindex]="i === currentTab ? 0 : -1"
     [attr.aria-selected]="i === currentTab"

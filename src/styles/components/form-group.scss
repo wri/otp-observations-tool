@@ -1,8 +1,13 @@
+@use 'src/settings.scss';
+
 // TODO: to be deleted, check c-form instead
 .form-group {
-  label {
-    font-size: $font-size-default;
-    font-weight: $font-weight-default;
+  // .form-label is for captions that are not tied to a form control (a download link,
+  // for instance) - a <label> there would be a false association for screen readers.
+  label,
+  .form-label {
+    font-size: settings.$font-size-default;
+    font-weight: settings.$font-weight-default;
     text-transform: uppercase;
   }
 
@@ -10,6 +15,6 @@
     margin: -0.5rem 0 1rem;
     font-size: 0.8125rem;
     font-style: italic;
-    color: $color-error;
+    color: settings.$color-error;
   }
 }

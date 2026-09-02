@@ -31,7 +31,7 @@
     </ul>
   </div>
   <ng-template [ngIf]="isLogged">
-    <otp-navigation (change)="onChange($event)" *otpMinTablet>
+    <otp-navigation (changed)="onChange($event)" *otpMinTablet>
       <otp-navigation-item [name]="'My OTP' | translate" url="/private/my-otp"></otp-navigation-item>
       <otp-navigation-item [name]="'Observations' | translate" url="/private/observations"></otp-navigation-item>
       <otp-navigation-item [name]="'Observation fields' | translate" url="/private/fields"></otp-navigation-item>

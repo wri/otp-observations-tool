@@ -1,11 +1,11 @@
-import { NavigationItem } from 'app/shared/navigation/navigation.component';
 import { Component } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'otp-my-otp',
   templateUrl: './my-otp.component.html',
-  styleUrls: ['./my-otp.component.scss']
+  styleUrls: ['./my-otp.component.scss'],
+  standalone: false
 })
 export class MyOTPComponent {
   constructor(

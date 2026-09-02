@@ -1,13 +1,17 @@
-@import 'src/settings.scss';
+@use "sass:color";
+@use "sass:map";
+@use 'src/settings.scss';
+// $grid-column-gutter is Foundation's, re-exported through the vendor module
+@use 'src/styles/vendor';
 
 .c-form {
   .form-container {
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       padding: 20px;
-      background-color: $lighter-grey-2;
+      background-color: settings.$lighter-grey-2;
       border-radius: 2px;
-      border: 1px solid $lighter-grey;
+      border: 1px solid settings.$lighter-grey;
     }
 
     .form-group,
@@ -62,8 +66,8 @@
       }
 
       label {
-        font-size: $font-size-default;
-        font-weight: $font-weight-default;
+        font-size: settings.$font-size-default;
+        font-weight: settings.$font-weight-default;
         text-transform: uppercase;
         max-width: calc(100% - 45px);
         vertical-align: top;
@@ -84,7 +88,7 @@
           display: inline-block;
           text-align: center;
           line-height: 1;
-          font-size: $font-size-default;
+          font-size: settings.$font-size-default;
           transition: all .1s linear;
           align-items: center;
           font-weight: bold;
@@ -92,15 +96,15 @@
           padding: 12px 20px;
           border-width: 1px;
           border-style: solid;
-          border-color: $color-primary;
+          border-color: settings.$color-primary;
           text-decoration: none;
           cursor: pointer;
-          color: $dark-grey;
+          color: settings.$dark-grey;
           background: transparent;
 
           &:hover,
           &:focus {
-            background: darken($light-grey, 10%);
+            background: color.adjust(settings.$light-grey, $lightness: -10%);
           }
         }
       }
@@ -110,12 +114,12 @@
         margin: 5px 0 0;
         font-size: 0.8125rem;
 
-        a { color: $color-primary; }
+        a { color: settings.$color-primary; }
       }
 
       .help-text {
         font-style: italic;
-        color: $color-error;
+        color: settings.$color-error;
       }
 
       &.-inline {
@@ -135,7 +139,7 @@
     fieldset {
       &.has-error {
         .help-text {
-          color: $color-error;
+          color: settings.$color-error;
         }
       }
 
@@ -152,16 +156,16 @@
       }
 
       legend {
-        font-size: $font-size-default;
-        font-weight: $font-weight-default;
+        font-size: settings.$font-size-default;
+        font-weight: settings.$font-weight-default;
         text-transform: uppercase;
       }
 
       .fieldset-container {
         padding: 10px;
-        border: 1px solid $lighter-grey;
+        border: 1px solid settings.$lighter-grey;
 
-        @media screen and (min-width: $break-tablet) {
+        @media screen and (min-width: settings.$break-tablet) {
           padding: 20px;
         }
       }
@@ -169,7 +173,7 @@
       .fieldset-description {
         margin: 0 0 20px;
         padding-bottom: 5px;
-        border-bottom: 1px solid $lighter-grey;
+        border-bottom: 1px solid settings.$lighter-grey;
       }
 
       // We remove the paddings on each side of the row
@@ -180,7 +184,7 @@
           padding-right: 0;
           padding-bottom: 15px;
           // We assume only two columns will be used
-          border-bottom: 1px solid $lighter-grey;
+          border-bottom: 1px solid settings.$lighter-grey;
         }
 
         > div:last-of-type {
@@ -189,19 +193,19 @@
           padding-right: 0;
         }
 
-        @media screen and (min-width: $break-tablet) {
+        @media screen and (min-width: settings.$break-tablet) {
           > div:first-of-type {
             padding-left: 0;
-            padding-right: #{map-get($grid-column-gutter, small)};
+            padding-right: #{map.get(vendor.$grid-column-gutter, small)};
             padding-bottom: 0;
             // We assume only two columns will be used
             border-bottom: 0;
-            border-right: 1px solid $lighter-grey;
+            border-right: 1px solid settings.$lighter-grey;
           }
 
           > div:last-of-type {
             padding-top: 0;
-            padding-left: #{map-get($grid-column-gutter, small)};
+            padding-left: #{map.get(vendor.$grid-column-gutter, small)};
             padding-right: 0;
           }
         }
@@ -226,14 +230,14 @@
       margin: 5px 0 0;
       font-size: 0.8125rem;
 
-      a { color: $color-primary; }
+      a { color: settings.$color-primary; }
     }
   }
 
   .form-footer {
     margin: 30px 0 0;
 
-    @media screen and (min-width: $break-tablet) {
+    @media screen and (min-width: settings.$break-tablet) {
       margin: 50px 0 30px 0;
     }
 

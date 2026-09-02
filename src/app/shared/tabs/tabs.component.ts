@@ -8,13 +8,14 @@ export interface Tab {
 @Component({
   selector: 'otp-tabs',
   templateUrl: './tabs.component.html',
-  styleUrls: ['./tabs.component.scss']
+  styleUrls: ['./tabs.component.scss'],
+  standalone: false
 })
 export class TabsComponent {
 
   @Input() tabs: Tab[] = [];
   @Input() currentTab = 0; // Index of the current Tab
-  @Output() change: EventEmitter<Tab> = new EventEmitter();
+  @Output() changed = new EventEmitter<Tab>();
 
   get tab () {
     return this.tabs[this.currentTab];
@@ -25,7 +26,7 @@ export class TabsComponent {
       return t === tab;
     });
 
-    this.change.emit(this.tab);
+    this.changed.emit(this.tab);
   }
 
   /**
@@ -45,19 +46,21 @@ export class TabsComponent {
   onKeydown (e: KeyboardEvent) {
     switch (e.keyCode) {
       case 37: // left arrow
-      case 38: // top arrow
+      case 38: { // top arrow
         let previousTabIndex = (this.currentTab - 1) % this.tabs.length;
         if (previousTabIndex < 0) {
           previousTabIndex = this.tabs.length - 1;
         }
         this.tab = this.getTab(previousTabIndex);
         break;
+      }
 
       case 39: // right arrow
-      case 40: // down arrow
+      case 40: { // down arrow
         const nextTabIndex = (this.currentTab + 1) % this.tabs.length;
         this.tab = this.getTab(nextTabIndex);
         break;
+      }
 
       default:
     }

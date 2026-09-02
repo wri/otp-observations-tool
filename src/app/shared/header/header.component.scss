@@ -1,9 +1,9 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   display: block;
-  background: $white;
-  border-bottom: 1px solid $lighter-grey;
+  background: settings.$white;
+  border-bottom: 1px solid settings.$lighter-grey;
 
   .menu {
     display: flex;
@@ -21,7 +21,7 @@
       li {
         padding: 0 10px;
 
-        @media screen and (min-width: $break-tablet) {
+        @media screen and (min-width: settings.$break-tablet) {
           padding: 0 20px;
         }
 
@@ -32,18 +32,18 @@
 
         a,
         a:hover {
-          color: $black;
+          color: settings.$black;
           text-decoration: none;
         }
 
         button,
         button:active {
-          color: $black;
+          color: settings.$black;
           cursor: pointer;
         }
 
         select {
-          color: $black;
+          color: settings.$black;
         }
       }
     }
@@ -60,9 +60,9 @@
       position: relative;
       top: -2px;
       padding-left: 43px;
-      color: $color-error;
-      font-size: $font-size-default;
-      font-weight: $font-weight-medium;
+      color: settings.$color-error;
+      font-size: settings.$font-size-default;
+      font-weight: settings.$font-weight-medium;
       text-transform: uppercase;
     }
   }

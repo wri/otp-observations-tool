@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, forwardRef, Input, AfterViewInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { dateFormat } from '../formatted-date/formatted-date.component';
@@ -21,7 +21,8 @@ const VALUE_ACCESSOR: any = {
   selector: 'otp-datepicker',
   templateUrl: './datepicker.component.html',
   styleUrls: ['./datepicker.component.scss'],
-  providers: [REQUIRED_VALIDATOR, VALUE_ACCESSOR]
+  providers: [REQUIRED_VALIDATOR, VALUE_ACCESSOR],
+  standalone: false
 })
 export class DatepickerComponent implements Validator, ControlValueAccessor, AfterViewInit {
 
@@ -52,7 +53,7 @@ export class DatepickerComponent implements Validator, ControlValueAccessor, Aft
 
   ngAfterViewInit(): void {
     this.flatpickr = flatpickr(`#${this.id}`, {
-      locale: <CustomLocale>(LOCALE[localStorage.getItem('lang') || 'en']),
+      locale: LOCALE[localStorage.getItem('lang') || 'en'] as CustomLocale,
       dateFormat: dateFormat,
       defaultDate: this.date,
       onChange: ([date]) => {

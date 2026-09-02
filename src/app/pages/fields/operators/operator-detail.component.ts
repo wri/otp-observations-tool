@@ -10,14 +10,15 @@ import { CountriesService } from 'app/services/countries.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { forkJoin ,  Observable } from 'rxjs';
 import { Fmu } from 'app/models/fmu.model';
-import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
 import { FmusService } from 'app/services/fmus.service';
 import sortBy from 'lodash/sortBy';
 
 @Component({
   selector: 'otp-operator-detail',
   templateUrl: './operator-detail.component.html',
-  styleUrls: ['./operator-detail.component.scss']
+  styleUrls: ['./operator-detail.component.scss'],
+  standalone: false
 })
 export class OperatorDetailComponent implements OnInit {
   objectKeys = Object.keys;
@@ -39,10 +40,10 @@ export class OperatorDetailComponent implements OnInit {
     dynamicTitleMaxItems: 8
   };
 
-  @Input() useRouter: boolean = true;
-  @Input() showActionsOnTop: boolean = true;
-  @Input() showSuccessMessage: boolean = true;
-  @Input() longForm: boolean = true;
+  @Input() useRouter = true;
+  @Input() showActionsOnTop = true;
+  @Input() showSuccessMessage = true;
+  @Input() longForm = true;
   @Input() fixedCountry: Country = null;
   @Input() uniqueNameErrorMessage: string = null;
 

@@ -1,5 +1,4 @@
 import { JsonApiService } from 'app/services/json-api.service';
-import { Country } from 'app/models/country.model';
 import { Government } from './../models/government.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { Injectable } from '@angular/core';

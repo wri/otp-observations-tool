@@ -189,22 +189,15 @@ jobs:
         run: |
           bin/rails e2e:setup ${{ steps.cache-api-precompiled-assets.outputs.cache-hit == 'true' && 'SKIP_ASSETS_RESET=true' || '' }}
 
+      # `-b localhost` listens on 127.0.0.1 and ::1. Puma's default (0.0.0.0) is IPv4
+      # only, and Node 17+ resolves localhost to ::1 first, so every request from
+      # Cypress and from the app failed with ECONNREFUSED ::1:3000.
       - name: Run API Server
         working-directory: otp_api
         env:
           APP_URL: http://localhost:3000
         run: |
-          bin/rails s > log/e2e.log 2>&1 &
-
-      - name: Wait for Observation Tool
-        timeout-minutes: 5
-        run: |
-          npx --yes wait-on -t 80000 http://localhost:4200 \
-            || { echo '--- observation tool build log ---'; cat /tmp/observation-tool.log; exit 1; }
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
+          bin/rails s -b localhost > log/e2e.log 2>&1 &
 
       # Cypress's ~800 MB binary lives in ~/.cache/Cypress and nothing cached it.
       - name: Cache E2E Dependencies
@@ -219,6 +212,25 @@ jobs:
       - name: Install E2E Dependencies
         working-directory: e2e
         run: yarn install --frozen-lockfile
+
+      - name: Wait for Observation Tool
+        timeout-minutes: 5
+        run: |
+          npx --yes wait-on -t 80000 http://localhost:4200 \
+            || { echo '--- observation tool build log ---'; cat /tmp/observation-tool.log; exit 1; }
+
+      # curl fails here only on connection errors, so any HTTP status counts as up.
+      - name: Wait for API
+        timeout-minutes: 2
+        run: |
+          for _ in $(seq 1 60); do
+            curl -sS -m 5 -o /dev/null http://localhost:3000/observers && exit 0
+            sleep 2
+          done
+          echo '--- api unreachable on http://localhost:3000 ---'
+          ss -ltn | grep ':3000' || true
+          tail -50 otp_api/log/e2e.log
+          exit 1
 
       - name: Run E2E Tests
         working-directory: e2e

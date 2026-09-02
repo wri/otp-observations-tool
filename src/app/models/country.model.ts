@@ -1,5 +1,5 @@
-import { Government } from 'app/models/government.model';
-import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany } from 'angular2-jsonapi';
+import type { Government } from 'app/models/government.model';
+import { JsonApiModel, JsonApiModelConfig, Attribute, HasMany } from '@michalkotas/angular2-jsonapi';
 
 @JsonApiModelConfig({
   type: 'countries'

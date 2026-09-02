@@ -2,10 +2,9 @@
 import {map} from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JsonApiModel, JsonApiDatastore } from 'angular2-jsonapi';
+import { JsonApiModel, JsonApiDatastore } from '@michalkotas/angular2-jsonapi';
 import { DatastoreService } from 'app/services/datastore.service';
 
-// tslint:disable-next-line:interface-over-type-literal
 export type ModelType<T extends JsonApiModel> = new(datastore: JsonApiDatastore, data: any) => T;
 
 export interface JsonApiParams {
@@ -42,18 +41,18 @@ export class JsonApiService<T extends JsonApiModel> {
   private toQueryString(params: any) {
     let encodedStr = '';
     for (const key in params) {
-      if (params.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(params, key)) {
         if (encodedStr && encodedStr[encodedStr.length - 1] !== '&') {
           encodedStr = encodedStr + '&';
         }
         const value: any = params[key];
         if (value instanceof Array) {
-          for (let i = 0; i < value.length; i++) {
-            encodedStr = encodedStr + key + '=' + encodeURIComponent(value[i]) + '&';
+          for (const item of value) {
+            encodedStr = encodedStr + key + '=' + encodeURIComponent(item) + '&';
           }
         } else if (typeof value === 'object') {
           for (const innerKey in value) {
-            if (value.hasOwnProperty(innerKey)) {
+            if (Object.prototype.hasOwnProperty.call(value, innerKey)) {
               encodedStr = encodedStr + key + '[' + innerKey + ']=' + encodeURIComponent(value[innerKey]) + '&';
             }
           }

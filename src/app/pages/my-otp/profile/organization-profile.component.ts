@@ -5,12 +5,13 @@ import { Country } from 'app/models/country.model';
 import { Observer } from 'app/models/observer.model';
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
 
 @Component({
   selector: 'otp-organization-profile',
   templateUrl: './organization-profile.component.html',
-  styleUrls: ['./organization-profile.component.scss']
+  styleUrls: ['./organization-profile.component.scss'],
+  standalone: false
 })
 export class OrganizationProfileComponent {
   isAdmin = false;

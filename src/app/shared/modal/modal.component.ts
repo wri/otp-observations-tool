@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter, ContentChild, ElementRef, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit } from '@angular/core';
 import * as A11yDialog from 'a11y-dialog';
 
 @Component({
   selector: 'otp-modal',
   templateUrl: 'modal.component.html',
-  styleUrls: ['modal.component.scss']
+  styleUrls: ['modal.component.scss'],
+  standalone: false
 })
 
 export class ModalComponent implements OnInit {
@@ -27,7 +28,7 @@ export class ModalComponent implements OnInit {
     return this._opened;
   }
 
-  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closed: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private elementRef: ElementRef) {}
 
@@ -46,7 +47,7 @@ export class ModalComponent implements OnInit {
   }
 
   close() {
-    this.onClose.emit();
+    this.closed.emit();
   }
 
 }

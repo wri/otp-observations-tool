@@ -9,7 +9,8 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'otp-reset-password',
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.scss']
+  styleUrls: ['./reset-password.component.scss'],
+  standalone: false
 })
 export class ResetPasswordComponent {
 

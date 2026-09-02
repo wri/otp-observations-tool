@@ -1,4 +1,4 @@
-@import 'src/settings.scss';
+@use 'src/settings.scss';
 
 :host {
   display: flex;
@@ -8,10 +8,10 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  height: ($bottom-bar-height + 1px);
+  height: (settings.$bottom-bar-height + 1px);
   z-index: 1;
-  border-top: 1px solid $lighter-grey;
-  background: $white;
+  border-top: 1px solid settings.$lighter-grey;
+  background: settings.$white;
 
   ::ng-deep .c-button {
     margin: 0 10px 0 0;

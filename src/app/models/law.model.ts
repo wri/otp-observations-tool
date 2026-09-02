@@ -1,6 +1,6 @@
-import { Country } from 'app/models/country.model';
-import { Subcategory } from 'app/models/subcategory.model';
-import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
+import type { Country } from 'app/models/country.model';
+import type { Subcategory } from 'app/models/subcategory.model';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from '@michalkotas/angular2-jsonapi';
 
 @JsonApiModelConfig({
   type: 'laws'

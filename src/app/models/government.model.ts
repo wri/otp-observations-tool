@@ -1,6 +1,5 @@
-import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from 'angular2-jsonapi';
-import { Country } from 'app/models/country.model';
-import { User } from 'app/models/user.model';
+import { JsonApiModel, JsonApiModelConfig, Attribute, BelongsTo } from '@michalkotas/angular2-jsonapi';
+import type { Country } from 'app/models/country.model';
 
 @JsonApiModelConfig({
   type: 'governments'

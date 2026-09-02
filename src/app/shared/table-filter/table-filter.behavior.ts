@@ -1,10 +1,15 @@
-import { ViewChild, AfterViewInit } from '@angular/core';
-import { JsonApiParams, JsonApiService } from 'app/services/json-api.service';
-import { TableComponent, TableState } from 'app/shared/table/table.component';
-import { FiltersComponent, Filter } from 'app/shared/filters/filters.component';
+import { Directive, ViewChild, AfterViewInit } from '@angular/core';
+import { JsonApiService } from 'app/services/json-api.service';
+import { TableComponent } from 'app/shared/table/table.component';
+import { FiltersComponent } from 'app/shared/filters/filters.component';
 import debounce from 'lodash/debounce';
 import * as Sentry from '@sentry/browser'
 
+// Selector-less @Directive() marks this as an abstract directive (NG2007): it uses
+// @ViewChild and ngAfterViewInit, which Angular 10+ requires a decorator for.
+// It is a base class for list components, not a directive in its own right, so the
+// Directive name suffix codelyzer wants would be misleading.
+@Directive()
 export class TableFilterBehavior implements AfterViewInit {
 
   private latestRequestID = 0;
@@ -20,8 +25,8 @@ export class TableFilterBehavior implements AfterViewInit {
     // The table needs the primary type to keep a sparse fieldset consistent with its includes
     this.table.type = Reflect.getMetadata('JsonApiModelConfig', this.service.model).type;
 
-    this.table.change.subscribe(() => this.loadData());
-    this.filters.change.subscribe(() => {
+    this.table.changed.subscribe(() => this.loadData());
+    this.filters.changed.subscribe(() => {
       // We don't forget to move the user to the first
       // page of results each time a filter changes
       this.table.paginationIndex = 0;

@@ -1,4 +1,4 @@
-<div class="overlay" tabindex="-1" (click)="closeable && close()"></div>
+<div class="overlay" tabindex="-1" aria-hidden="true" (click)="closeable && close()"></div>
 
 <div class="content" role="dialog" [attr.aria-label]="title" aria-hidden="true">
   <button type="button" *ngIf="closeable" class="close-button" [attr.aria-label]="'Close this dialog window' | translate" (click)="close()">&times;</button>
