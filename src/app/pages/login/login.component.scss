@@ -26,5 +26,13 @@
       text-decoration: underline;
       cursor: pointer;
     }
+
+    .login-notice {
+      margin-bottom: 20px;
+      padding: 10px 15px;
+      border-left: 3px solid settings.$color-primary;
+      background-color: rgba(settings.$color-primary, .1);
+      color: settings.$color-primary;
+    }
   }
 }

@@ -229,6 +229,7 @@
   "Register": "Register",
   "login.permissionError": "You are not allowed to access this app.",
   "login.error": "You entered a wrong username and password combination.",
+  "login.unlocked": "Your account has been unlocked. You can log in again.",
   "Select an organization": "Select an organization",
   "Please select an organization": "Please select an organization",
   "Please enter a password": "Please enter a password",

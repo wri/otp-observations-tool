@@ -229,6 +229,7 @@
   "Register": "Créer un compte",
   "login.permissionError": "Vous n'êtes pas autorisé à accéder à cette application",
   "login.error": "Nom d'utilisateur ou mot de passe erroné",
+  "login.unlocked": "Votre compte a été déverrouillé. Vous pouvez vous connecter à nouveau.",
   "Select an organization": "Sélectionnez une organisation",
   "Please select an organization": "Sélectionnez une organisation SVP",
   "Please enter a password": "Entrez un mot de passe SVP",

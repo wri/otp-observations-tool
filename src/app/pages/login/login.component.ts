@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   model: any = {};
   loading = false;
   returnUrl = '/private/observations';
+  accountUnlocked = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,8 +24,23 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.route.snapshot.queryParams.returnUrl) {
-      this.returnUrl = this.route.snapshot.queryParams.returnUrl;
+    const { returnUrl, message } = this.route.snapshot.queryParams;
+
+    if (returnUrl) {
+      this.returnUrl = returnUrl;
+    }
+
+    // the API redirects here after an account is unlocked from the email link
+    if (message === 'user_unlocked') {
+      this.accountUnlocked = true;
+
+      // drop the param, so the notice doesn't come back on reload
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { message: null },
+        queryParamsHandling: 'merge',
+        replaceUrl: true
+      });
     }
   }
 
