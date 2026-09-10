@@ -30,9 +30,19 @@
     .login-notice {
       margin-bottom: 20px;
       padding: 10px 15px;
-      border-left: 3px solid settings.$color-primary;
-      background-color: rgba(settings.$color-primary, .1);
-      color: settings.$color-primary;
+      border-left: 3px solid;
+
+      &.-success {
+        border-left-color: settings.$color-primary;
+        background-color: rgba(settings.$color-primary, .1);
+        color: settings.$color-primary;
+      }
+
+      &.-error {
+        border-left-color: settings.$color-error;
+        background-color: rgba(settings.$color-error, .1);
+        color: settings.$color-error;
+      }
     }
   }
 }

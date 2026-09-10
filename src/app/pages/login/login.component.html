@@ -1,7 +1,7 @@
 <div class="l-wrapper">
   <div class="login-container">
     <h2>{{'Login' | translate}}</h2>
-    <p *ngIf="accountUnlocked" class="login-notice" role="status">{{'login.unlocked' | translate}}</p>
+    <p *ngIf="notice" class="login-notice" [ngClass]="'-' + notice.type" [attr.role]="notice.type === 'error' ? 'alert' : 'status'">{{ notice.key ? (notice.key | translate) : notice.text }}</p>
     <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
       <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
         <label for="username">{{'Email' | translate}}</label>
