@@ -53,8 +53,7 @@
         <input id="email" type="email" class="form-control" name="email" ngModel #email="ngModel" required email />
         @if (f.submitted && email.errors?.required) {
           <p class="help-text">{{'Email is required' | translate}}</p>
-        }
-        @if (f.submitted && email.errors?.email && !email.errors?.required) {
+        } @else if (f.submitted && email.errors?.email && !email.errors?.required) {
           <p class="help-text">{{'Please enter your email address' | translate}}</p>
         }
       </div>
@@ -112,8 +111,7 @@
         <input id="password_confirmation" type="password" ngModel class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="password" required />
         @if (f.submitted && password_confirmation.errors?.required) {
           <div class="help-text">{{'Please confirm your password' | translate}}</div>
-        }
-        @if (f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required) {
+        } @else if (f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required) {
           <div class="help-text">{{"Password values don't not coincide" | translate}}</div>
         }
       </div>

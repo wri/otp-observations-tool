@@ -13,8 +13,7 @@
 
     @if (loading) {
       <div class="form-container"><otp-loader></otp-loader></div>
-    }
-    @if (!loading) {
+    } @else {
       <div class="form-container">
         @if (!user['organization-account']) {
           <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !first_name.valid }">
@@ -49,8 +48,7 @@
           <input id="email_field" type="email" class="form-control" name="email_field" [(ngModel)]="user.email" #email_field="ngModel" required email />
           @if (f.submitted && email_field.errors?.required) {
             <p class="help-text">{{'Email is required' | translate}}</p>
-          }
-          @if (f.submitted && email_field.errors?.email && !email_field.errors?.required) {
+          } @else if (f.submitted && email_field.errors?.email && !email_field.errors?.required) {
             <p class="help-text">{{'Please enter your email address' | translate}}</p>
           }
         </div>
@@ -87,8 +85,7 @@
               <input id="password_confirmation" type="password" autocomplete="new-password" [(ngModel)]="user['password-confirmation']" class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="new_password" [required]="!!new_password.value" />
               @if (f.submitted && password_confirmation.errors?.required) {
                 <div class="help-text">{{'Please confirm your new password' | translate}}</div>
-              }
-              @if (f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required) {
+              } @else if (f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required) {
                 <div class="help-text">{{"Password values don't not coincide" | translate}}</div>
               }
             </div>

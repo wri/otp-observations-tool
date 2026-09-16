@@ -15,8 +15,7 @@
 
     @if (loading) {
       <div class="form-container"><otp-loader></otp-loader></div>
-    }
-    @if (!loading) {
+    } @else {
       <div class="form-container">
         <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
           <label for="name">{{'Name of the organization' | translate}}</label>

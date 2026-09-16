@@ -15,8 +15,7 @@ import { Component, Input } from '@angular/core';
   template: `
     @if (overlay === false) {
       <span class="spinner"></span>
-    }
-    @if (overlay !== false) {
+    } @else {
       <div [ngClass]="{ overlay: true, '-fixed': fixed !== false }">
         <span class="spinner"></span>
       </div>

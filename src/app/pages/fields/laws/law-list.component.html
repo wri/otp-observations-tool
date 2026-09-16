@@ -27,8 +27,7 @@
     }
     @if (!canEdit(row)) {
       <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
-    }
-    @if (canEdit(row)) {
+    } @else {
       <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
     }
   </ng-template>

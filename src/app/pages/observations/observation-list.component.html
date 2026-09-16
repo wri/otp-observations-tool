@@ -108,57 +108,59 @@
     </otp-table-column>
     <otp-table-column [name]="'Status' | translate">
       <ng-template let-row="row" table-cell-template>
-        @if (row['validation-status'] === 'Created') {
-          {{'Created' | translate}}
-        }
-        @if (row['validation-status'] === 'Ready for QC1') {
-          {{'Ready for QC1' | translate}}
-        }
-        @if (row['validation-status'] === 'Ready for QC2') {
-          {{'Ready for QC2' | translate}}
-        }
-        @if (row['validation-status'] === 'QC1 in progress') {
-          {{'QC1 in progress' | translate}}
-        }
-        @if (row['validation-status'] === 'QC2 in progress') {
-          {{'QC2 in progress' | translate}}
-        }
-        @if (row['validation-status'] === 'Needs revision') {
-          <span class="highlighted-status">{{'Needs revision' | translate}}</span>
-        }
-        @if (row['validation-status'] === 'Ready for publication') {
-          <span class="highlighted-status">{{'Ready for publication' | translate}}</span>
-        }
-        @if (row['validation-status'] === 'Published (no comments)') {
-          {{'Published (no comments)' | translate}}
-          <button class="status-info" [attr.aria-label]="'Info' | translate">
-            <otp-icon name="#icon-info"></otp-icon>
-            <div class="tooltip">
-              {{'observation.publishedNoComment.note' | translate}}
-            </div>
-          </button>
-        }
-        @if (row['validation-status'] === 'Published (not modified)') {
-          {{'Published (not modified)' | translate}}
-          <button class="status-info" [attr.aria-label]="'Info' | translate">
-            <otp-icon name="#icon-info"></otp-icon>
-            <div class="tooltip">
-              {{'observation.publishedNotModified.note' | translate}}
-            </div>
-          </button>
-        }
-        @if (row['validation-status'] === 'Published (modified)') {
-          {{'Published (modified)' | translate}}
-          <button class="status-info" [attr.aria-label]="'Info' | translate">
-            <otp-icon name="#icon-info"></otp-icon>
-            <div class="tooltip">
-              {{'observation.publishedModified.note' | translate}}
-            </div>
-          </button>
-        }
-        <!-- Below are the old statuses that are temporarily maintained for consistency with the data (not entirely migrated) -->
-        @if (row['validation-status'] === 'Rejected') {
-          {{'Rejected' | translate}}
+        @switch (row['validation-status']) {
+          @case ('Created') {
+            {{'Created' | translate}}
+          }
+          @case ('Ready for QC1') {
+            {{'Ready for QC1' | translate}}
+          }
+          @case ('Ready for QC2') {
+            {{'Ready for QC2' | translate}}
+          }
+          @case ('QC1 in progress') {
+            {{'QC1 in progress' | translate}}
+          }
+          @case ('QC2 in progress') {
+            {{'QC2 in progress' | translate}}
+          }
+          @case ('Needs revision') {
+            <span class="highlighted-status">{{'Needs revision' | translate}}</span>
+          }
+          @case ('Ready for publication') {
+            <span class="highlighted-status">{{'Ready for publication' | translate}}</span>
+          }
+          @case ('Published (no comments)') {
+            {{'Published (no comments)' | translate}}
+            <button class="status-info" [attr.aria-label]="'Info' | translate">
+              <otp-icon name="#icon-info"></otp-icon>
+              <div class="tooltip">
+                {{'observation.publishedNoComment.note' | translate}}
+              </div>
+            </button>
+          }
+          @case ('Published (not modified)') {
+            {{'Published (not modified)' | translate}}
+            <button class="status-info" [attr.aria-label]="'Info' | translate">
+              <otp-icon name="#icon-info"></otp-icon>
+              <div class="tooltip">
+                {{'observation.publishedNotModified.note' | translate}}
+              </div>
+            </button>
+          }
+          @case ('Published (modified)') {
+            {{'Published (modified)' | translate}}
+            <button class="status-info" [attr.aria-label]="'Info' | translate">
+              <otp-icon name="#icon-info"></otp-icon>
+              <div class="tooltip">
+                {{'observation.publishedModified.note' | translate}}
+              </div>
+            </button>
+          }
+          <!-- Below are the old statuses that are temporarily maintained for consistency with the data (not entirely migrated) -->
+          @case ('Rejected') {
+            {{'Rejected' | translate}}
+          }
         }
       </ng-template>
     </otp-table-column>
@@ -167,8 +169,7 @@
       <ng-template let-row="row" table-cell-template>
         @if (canEdit(row)) {
           <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
-        }
-        @if (!canEdit(row)) {
+        } @else {
           <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
         }
         @if (canDelete(row)) {

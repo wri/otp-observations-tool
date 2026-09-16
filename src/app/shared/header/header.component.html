@@ -17,8 +17,7 @@
             <option value="fr">Français</option>
           </select>
         </li>
-      }
-      @if (isLogged && displayObserverSelector) {
+      } @else if (displayObserverSelector) {
         <li>
           <select data-test-id="observer-context-select" [(ngModel)]="selectedObserverId" style="max-width: 150px;">
             <option value="" disabled>{{'Select an organization' | translate}}</option>

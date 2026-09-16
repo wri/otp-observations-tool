@@ -97,8 +97,7 @@
       <div class="callout primary">
         @if (!canStartQC()) {
           <p>{{'observation.statusNote.ReadyForQC' | translate}}</p>
-        }
-        @if (canStartQC()) {
+        } @else {
           <p>{{'observation.statusNote.ReadyForQC.reviewer' | translate}}</p>
         }
       </div>
@@ -107,13 +106,11 @@
       <div class="callout warning">
         @if (!canQC()) {
           <p>{{'observation.statusNote.QCInProgress' | translate}}</p>
-        }
-        @if (canQC()) {
+        } @else {
           <div>
             @if (observation['validation-status'] === 'QC1 in progress') {
               <p>{{'observation.statusNote.QC1InProgress.reviewer' | translate}}</p>
-            }
-            @if (observation['validation-status'] === 'QC2 in progress') {
+            } @else if (observation['validation-status'] === 'QC2 in progress') {
               <p>{{'observation.statusNote.QC2InProgress.reviewer' | translate}}</p>
             }
             @if (qcState === 'undecided') {
@@ -124,8 +121,7 @@
                   <button type="button" (click)="onNeedsRevisionQC()" class="c-button -warning">{{'Needs revision' | translate}}</button>
                 }
               </div>
-            }
-            @if (qcState === 'reject' || qcState === 'needsRevision') {
+            } @else if (qcState === 'reject' || qcState === 'needsRevision') {
               <div class="form-group">
                 <label for="explain_qc_rejection">{{'Explanation' | translate}}</label>
                 <textarea id="explain_qc_rejection" name="explain_qc_rejection" [(ngModel)]="qcComment" #explain_qc_rejection="ngModel" required minlength="10"></textarea>
@@ -138,8 +134,7 @@
                     <button type="button" (click)="onSubmitQCRejection()" class="c-button -warning" [disabled]="!explain_qc_rejection.valid">
                       {{ 'Submit to Needs Revision' | translate }}
                     </button>
-                  }
-                  @if (qcState === 'reject') {
+                  } @else if (qcState === 'reject') {
                     <button type="button" (click)="onSubmitQCRejection()" class="c-button -danger" [disabled]="!explain_qc_rejection.valid">
                       {{ 'Submit Rejection' | translate }}
                     </button>
@@ -157,8 +152,7 @@
         <p>{{ 'Comments' | translate }}</p>
         <blockquote>{{latestQCComment || '−'}}</blockquote>
       </div>
-    }
-    @if (observation && observation['validation-status'] === 'Needs revision') {
+    } @else if (observation && observation['validation-status'] === 'Needs revision') {
       <div class="callout warning">
         <p>{{'observation.statusNote.NeedsRevision' | translate}}</p>
         <p>{{ 'Comments' | translate }}</p>
@@ -166,14 +160,11 @@
         @if (canManage()) {
           @if (needsRevisionState === 'undecided') {
             <p>{{'observation.statusNote.NeedsRevision.question' | translate}}</p>
-          }
-          @if (needsRevisionState === 'undecided') {
             <div class="c-button-container -j-start form-group">
               <button type="button" (click)="onClickExplainAndPublish()" class="c-button -secondary">{{'Explain and publish' | translate}}</button>
               <button type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
             </div>
-          }
-          @if (needsRevisionState === 'explain') {
+          } @else if (needsRevisionState === 'explain') {
             <div class="form-group">
               <label for="explain_no_revision">{{'Explanation' | translate}}</label>
               <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" required minlength="10"></textarea>
@@ -185,8 +176,7 @@
                 <button type="button" (click)="onPublish('Published (not modified)')" class="c-button -primary" [disabled]="!explain_no_revision.valid">{{'Publish' | translate}}</button>
               </div>
             </div>
-          }
-          @if (needsRevisionState === 'amend') {
+          } @else if (needsRevisionState === 'amend') {
             <div class="form-group">
               <label for="explain_no_revision">{{'Explanation' | translate}}</label>
               <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" minlength="10"></textarea>
@@ -206,8 +196,7 @@
           }
         }
       </div>
-    }
-    @if (observation && observation['validation-status'] === 'Ready for publication') {
+    } @else if (observation && observation['validation-status'] === 'Ready for publication') {
       <div class="callout success">
         <p>{{'observation.statusNote.ReadyForPublication' | translate}}</p>
         @if (canPublishWithoutComments()) {
@@ -246,8 +235,7 @@
               <span class="form-label">{{'Current file' | translate}}</span>
               <a href="{{reportChoice.attachment.url}}" target="_blank" download>{{'Download file' | translate}}</a>
             </div>
-          }
-          @if (!reportChoice && !isDisabled()) {
+          } @else if (!isDisabled()) {
             <!-- File -->
             <div class="form-group">
               <label for="report_file">{{'File' | translate}}</label>
@@ -346,8 +334,7 @@
               }
               <p class="note">{{ 'observation.evidenceDetails.note' | translate }}</p>
             </div>
-          }
-          @if (evidenceType === 'Uploaded documents') {
+          } @else if (evidenceType === 'Uploaded documents') {
             <br />
             <div class="row">
               @if (isDisabled()) {
@@ -361,21 +348,18 @@
                             <div class="title">{{document.name}}</div>
                             @if (document.id) {
                               <div class="status">{{'Already uploaded' | translate}}</div>
-                            }
-                            @if (!document.id) {
+                            } @else {
                               <div class="status">{{'To upload' | translate}}</div>
                             }
                           </div>
                         </li>
                       }
                     </ul>
-                  }
-                  @if (!documents.length) {
+                  } @else {
                     <p>{{'No evidence' | translate}}</p>
                   }
                 </div>
-              }
-              @if (!isDisabled()) {
+              } @else {
                 <div data-test-id="documents-list-selected" class="small-12 medium-6 columns">
                   <!-- List of evidence -->
                   <h3>{{'List of evidence' | translate}}</h3>
@@ -386,8 +370,7 @@
                           <div class="content">
                             @if (!document.id) {
                               <div class="title">{{document.name}}</div>
-                            }
-                            @if (document.id) {
+                            } @else {
                               <div class="title">
                                 <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
                               </div>
@@ -400,8 +383,7 @@
                         </li>
                       }
                     </ul>
-                  }
-                  @if (!documents.length) {
+                  } @else {
                     <p>{{'No evidence' | translate}}</p>
                   }
                 </div>
@@ -429,13 +411,11 @@
                             </li>
                           }
                         </ul>
-                      }
-                      @if (!reportDocuments.length) {
+                      } @else {
                         <p>{{'No evidence' | translate}}</p>
                       }
                     </div>
-                  }
-                  @if (currentEvidenceTab.id === 'new') {
+                  } @else if (currentEvidenceTab.id === 'new') {
                     <div data-test-id="documents-upload-new">
                       <br />
                       <!-- Type -->
@@ -679,8 +659,7 @@
                   <label for="longitude_field">{{'Longitude' | translate}}</label>
                   <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" [required]="!this.fmu" disabled />
                 </div>
-              }
-              @if (!isDisabled()) {
+              } @else {
                 <fieldset>
                   <legend>{{'GPS coordinates' | translate}}</legend>
                   <div class="fieldset-container">
@@ -940,8 +919,7 @@
           </fieldset>
         }
       </div>
-    }
-    @if (type === 'government') {
+    } @else if (type === 'government') {
       <div class="form-container">
         <div class="form-group">
           <label for="language_field">{{'Language' | translate}}</label>

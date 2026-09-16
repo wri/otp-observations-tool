@@ -7,8 +7,7 @@
         <input type="email" id="username" class="form-control" name="username" [(ngModel)]="model.username" #username="ngModel" required email />
         @if (f.submitted && username.errors?.required) {
           <div class="help-text">{{'Email is required' | translate}}</div>
-        }
-        @if (f.submitted && username.errors?.email && !username.errors?.required) {
+        } @else if (f.submitted && username.errors?.email && !username.errors?.required) {
           <p class="help-text">{{'Please enter an email address' | translate}}</p>
         }
       </div>

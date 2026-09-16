@@ -3,8 +3,7 @@
     <li [class.-active]="isActive(item)">
       @if (item.url) {
         <a [routerLink]="item.url" (click)="onClick(item)">{{item.name}}</a>
-      }
-      @if (!item.url) {
+      } @else {
         <button type="button" (click)="onClick(item)">{{item.name}}</button>
       }
     </li>

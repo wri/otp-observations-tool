@@ -23,9 +23,7 @@
     <div class="filters-loader">
       <otp-loader></otp-loader>
     </div>
-  }
-
-  @if (!loadingOptions) {
+  } @else {
     <div class="filters">
       @for (filter of filters; track filter) {
         <div>

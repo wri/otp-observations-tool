@@ -1,7 +1,5 @@
 @if (loading) {
   <div class="overlay"></div>
-}
-@if (loading) {
   <otp-loader [attr.class]="rows && rows.length && rows.length > 1 ? '-has-data' : ''"></otp-loader>
 }
 @if (!hideVisibleColumnsBox) {
@@ -22,14 +20,13 @@
     <caption>
       @if (caption) {
         {{caption}}
-      }
-      @if (!caption) {
+      } @else {
         {{'Undefined table' | translate}}
       }
       @if (sortColumn) {
         , {{'table.sortOrder' | translate: { 'column': sortColumn.name || sortColumn.prop} }}: @if (sortOrder === 'asc') {
         <span>{{'ascendent' | translate}}</span>
-        }@if (sortOrder === 'desc') {
+        } @else if (sortOrder === 'desc') {
         <span>{{'descendent' | translate}}</span>
       }
     }
@@ -65,8 +62,7 @@
             <span class="column-name">{{column.name || column.prop}}</span>
             @if (!column.cellTemplate) {
               {{column.getValue(row)}}
-            }
-            @if (column.cellTemplate) {
+            } @else {
               <ng-template
                 [ngTemplateOutlet]="column.cellTemplate"
                 [ngTemplateOutletContext]="{ value: column.getValue(row), row: row, column: column }"

@@ -11,8 +11,7 @@
     <ng-template let-value="value" table-cell-template>
       @if (value) {
         <otp-formatted-date [date]="value"></otp-formatted-date>
-      }
-      @if (!value) {
+      } @else {
         –
       }
     </ng-template>

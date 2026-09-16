@@ -1,33 +1,19 @@
 @if (loading) {
   <otp-loader overlay fixed></otp-loader>
-}
-@if (!loading) {
+} @else {
   <form name="form" class="c-form" (ngSubmit)="canEdit() && f.valid && onSubmit()" #f="ngForm" novalidate>
     <div class="c-container -j-between -t-d-column -t-a-start">
       @if (!canEdit()) {
         <h2>{{'Operator details' | translate}}</h2>
-      }
-      @if (canEdit() && !operator.id) {
+      } @else if (!operator.id) {
         <h2>{{'New operator' | translate}}</h2>
-      }
-      @if (canEdit() && operator.id) {
+      } @else {
         <h2>{{'Edit operator' | translate}}</h2>
       }
       @if (showActionsOnTop) {
         <div>
           <div class="c-button-container -j-end form-group" *otpMinTablet>
-            @if (!canEdit()) {
-              <button type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-            }
-            @if (canEdit()) {
-              <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-            }
-            @if (canEdit() && !operator.id) {
-              <button  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-            }
-            @if (canEdit() && operator.id) {
-              <button  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
-            }
+            <ng-container *ngTemplateOutlet="actions"></ng-container>
           </div>
         </div>
       }
@@ -81,23 +67,17 @@
           <label for="details_field">{{'Details' | translate}}</label>
           <textarea id="details_field" name="details_field" [(ngModel)]="operator.details" #details_field="ngModel" [disabled]="!canEdit()"></textarea>
         </div>
-      }
-      <!-- Address -->
-      @if (longForm) {
+        <!-- Address -->
         <div class="form-group">
           <label for="address_field">{{'Address' | translate}}</label>
           <textarea id="address_field" name="address_field" [(ngModel)]="operator.address" #address_field="ngModel" [disabled]="!canEdit()"></textarea>
         </div>
-      }
-      <!-- Website -->
-      @if (longForm) {
+        <!-- Website -->
         <div class="form-group">
           <label for="website_field">{{'Website' | translate}}</label>
           <input id="website_field" type="url" class="form-control" name="website_field" [(ngModel)]="operator.website" #website_field="ngModel" [disabled]="!canEdit()" />
         </div>
-      }
-      <!-- Logo -->
-      @if (longForm) {
+        <!-- Logo -->
         <fieldset>
           <legend>{{'Logo' | translate}}</legend>
           <div class="fieldset-container">
@@ -106,22 +86,19 @@
                 <h3>{{'Preview' | translate}}</h3>
                 @if (!operator.logo) {
                   <p>{{'No logo' | translate}}</p>
-                }
-                @if (operator.logo) {
+                } @else {
                   <p>
                     <img class="logo" [src]="logoUrl" alt="Operator's logo" />
                   </p>
                 }
               </div>
-            }
-            @if (canEdit()) {
+            } @else {
               <div class="row">
                 <div class="small-12 medium-6 columns">
                   <h3>{{'Preview' | translate}}</h3>
                   @if (!operator.logo) {
                     <p>{{'No logo' | translate}}</p>
-                  }
-                  @if (operator.logo) {
+                  } @else {
                     <p>
                       <img class="logo" [src]="logoUrl" alt="Operator's logo" />
                     </p>
@@ -135,8 +112,7 @@
                     <input id="logo_field" type="file" class="form-control" name="logo_field" [(ngModel)]="operator.logo" #logo_field="ngModel" otpBase64FileInput maxSize="5242880" accept="image/*" />
                     @if (logo_field.errors?.maxSize) {
                       <div class="help-text">{{'The image should weight less than 5MB' | translate}}</div>
-                    }
-                    @if (!logo_field.errors?.maxSize && !logo_field.valid) {
+                    } @else if (!logo_field.valid) {
                       <div class="help-text">{{'The file is not valid' | translate}}</div>
                     }
                   </div>
@@ -150,34 +126,20 @@
     <div class="form-footer">
       <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
         <div class="c-button-container -j-end form-group">
-          @if (!canEdit()) {
-            <button type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-          }
-          @if (canEdit()) {
-            <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-          }
-          @if (canEdit() && !operator.id) {
-            <button  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-          }
-          @if (canEdit() && operator.id) {
-            <button  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
-          }
+          <ng-container *ngTemplateOutlet="actions"></ng-container>
         </div>
       </div>
       <otp-action-bar *otpMaxTablet>
-        @if (!canEdit()) {
-          <button type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-        }
-        @if (canEdit()) {
-          <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-        }
-        @if (canEdit() && !operator.id) {
-          <button  type="submit" class="c-button -primary">{{'Create' | translate}}</button>
-        }
-        @if (canEdit() && operator.id) {
-          <button  type="submit" class="c-button -primary">{{'Save' | translate}}</button>
-        }
+        <ng-container *ngTemplateOutlet="actions"></ng-container>
       </otp-action-bar>
     </div>
+    <ng-template #actions>
+      @if (canEdit()) {
+        <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        <button type="submit" class="c-button -primary">{{(operator.id ? 'Save' : 'Create') | translate}}</button>
+      } @else {
+        <button type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+      }
+    </ng-template>
   </form>
 }

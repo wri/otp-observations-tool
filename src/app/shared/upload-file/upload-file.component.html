@@ -7,8 +7,7 @@
       }
       @if (!errors.length) {
         <button type="button" (click)="exit.emit(true)" [disabled]="!hasResponse" class="c-button -primary">{{'Done' | translate}}</button>
-      }
-      @if (!!errors.length) {
+      } @else {
         <button type="button" (click)="reuploadFileInput.click()" class="c-button -primary">{{'Re-upload' | translate}}</button>
       }
       <input #reuploadFileInput type="file" (change)="reuploadFile($event.target.files)" accept=".csv" [style.display]="'none'">
@@ -21,14 +20,12 @@
         <otp-loader></otp-loader>
         <span class="status">{{'uploadFile.uploading' | translate}}</span>
       </div>
-    }
-    @if (hasResponse && !errors.length) {
+    } @else if (!errors.length) {
       <div class="success">
         <img src="assets/check-mark.svg" alt="check-mark">
         <span class="status">{{'uploadFile.success' | translate: {'records': recordsNumber} }}</span>
       </div>
-    }
-    @if (hasResponse && !!errors.length) {
+    } @else {
       <div class="error">
         <span class="status">{{'uploadFile.errorHeader' | translate}}</span>
         <ul>
@@ -48,8 +45,7 @@
     }
     @if (!errors.length) {
       <button type="button" (click)="exit.emit(true)" [disabled]="!hasResponse" class="c-button -primary">{{'Done' | translate}}</button>
-    }
-    @if (!!errors.length) {
+    } @else {
       <button type="button" (click)="reuploadFileInput.click()" class="c-button -primary">{{'Re-upload' | translate}}</button>
     }
   </div>

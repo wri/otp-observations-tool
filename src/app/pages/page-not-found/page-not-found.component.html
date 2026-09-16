@@ -4,8 +4,7 @@
     <p>{{'404.description' | translate}}</p>
     @if (isLogged) {
       <a routerLink="/private/my-otp" class="c-button -primary">{{'Go to my OTP' | translate}}</a>
-    }
-    @if (!isLogged) {
+    } @else {
       <a routerLink="/" class="c-button -primary">{{'Go to login page' | translate}}</a>
     }
   </div>
