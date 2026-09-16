@@ -1,5 +1,7 @@
 <div class="l-wrapper">
-  <otp-loader fixed overlay *ngIf="loading"></otp-loader>
+  @if (loading) {
+    <otp-loader fixed overlay></otp-loader>
+  }
   <form class="c-form" name="form" (ngSubmit)="f.valid && onSubmit(f.value)" #f="ngForm" novalidate>
     <h2>{{'Register' | translate}}</h2>
 
@@ -10,19 +12,27 @@
         <label for="observer_id">{{'Organization' | translate}}</label>
         <select id="observer_id" name="observer_id" ngModel #observer_id="ngModel" required>
           <option value="" disabled>{{'Select an organization' | translate}}</option>
-          <option *ngFor="let observer of observers" [value]="observer.id">{{ observer.name }}</option>
+          @for (observer of observers; track observer) {
+            <option [value]="observer.id">{{ observer.name }}</option>
+          }
         </select>
         <p class="note" [innerHTML]="'organization.missing' | translate"></p>
-        <div *ngIf="f.submitted && !observer_id.valid" class="help-text">{{'Please select an organization' | translate}}</div>
+        @if (f.submitted && !observer_id.valid) {
+          <div class="help-text">{{'Please select an organization' | translate}}</div>
+        }
       </div>
 
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
         <label for="country_id">{{'Country' | translate}}</label>
         <select id="country_id" name="country_id" ngModel #country_id="ngModel" required>
           <option value="" disabled>{{'Select a country' | translate}}</option>
-          <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+          @for (country of countries; track country) {
+            <option [value]="country.id">{{ country.name }}</option>
+          }
         </select>
-        <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
+        @if (f.submitted && !country_id.valid) {
+          <div class="help-text">{{'Please select a country' | translate}}</div>
+        }
       </div>
 
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !locale_field.valid }">
@@ -33,14 +43,20 @@
           <option value="es">Español</option>
           <option value="fr">Français</option>
         </select>
-        <div *ngIf="f.submitted && !locale_field.valid" class="help-text">{{'Please select a language' | translate}}</div>
+        @if (f.submitted && !locale_field.valid) {
+          <div class="help-text">{{'Please select a language' | translate}}</div>
+        }
       </div>
 
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
         <label for="email">{{'Email' | translate}}</label>
         <input id="email" type="email" class="form-control" name="email" ngModel #email="ngModel" required email />
-        <p *ngIf="f.submitted && email.errors?.required" class="help-text">{{'Email is required' | translate}}</p>
-        <p *ngIf="f.submitted && email.errors?.email && !email.errors?.required" class="help-text">{{'Please enter your email address' | translate}}</p>
+        @if (f.submitted && email.errors?.required) {
+          <p class="help-text">{{'Email is required' | translate}}</p>
+        }
+        @if (f.submitted && email.errors?.email && !email.errors?.required) {
+          <p class="help-text">{{'Please enter your email address' | translate}}</p>
+        }
       </div>
 
       <div class="form-group -radio" [ngClass]="{ 'has-error': f.submitted && !account_type.valid }">
@@ -49,20 +65,22 @@
         <label><input type="radio" name="account_type" value="organization" ngModel="personal" #account_type="ngModel">{{'A generic organization e-mail address (for e.g., info@wri.org)' | translate}}</label>
       </div>
 
-      <ng-template [ngIf]="account_type.value === 'personal'">
+      @if (account_type.value === 'personal') {
         <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !first_name.valid }">
           <label for="first_name">{{'First name' | translate}}</label>
           <input id="first_name" type="text" class="form-control" name="first_name" ngModel #first_name="ngModel" required />
-          <div *ngIf="f.submitted && !first_name.valid" class="help-text">{{'Please enter your first name' | translate}}</div>
+          @if (f.submitted && !first_name.valid) {
+            <div class="help-text">{{'Please enter your first name' | translate}}</div>
+          }
         </div>
-
         <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !last_name.valid }">
           <label for="last_name">{{'Last name' | translate}}</label>
           <input id="last_name" type="text" class="form-control" name="last_name" ngModel #last_name="ngModel" required />
-          <div *ngIf="f.submitted && !last_name.valid" class="help-text">{{'Please enter your last name' | translate}}</div>
+          @if (f.submitted && !last_name.valid) {
+            <div class="help-text">{{'Please enter your last name' | translate}}</div>
+          }
         </div>
-
-      </ng-template>
+      }
 
       <div class="form-group">
         <input type="checkbox" name="manager_role" id="manager_role" ngModel #manager_role="ngModel" />
@@ -75,23 +93,37 @@
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
         <label for="password">{{'Password' | translate}}</label>
         <input id="password" type="password" class="form-control" name="password" ngModel #password="ngModel" required minlength="10" maxlength="128" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+" />
-        <div *ngIf="f.submitted && password.errors?.required" class="help-text">{{'Please enter a password' | translate}}</div>
-        <div *ngIf="f.submitted && password.errors?.minlength" class="help-text">{{ 'validation.minLength' | translate : { min: 10 } }}</div>
-        <div *ngIf="f.submitted && password.errors?.maxlength" class="help-text">{{ 'validation.maxLength' | translate : { max: 128 } }}</div>
-        <div *ngIf="f.submitted && password.errors?.pattern" class="help-text">{{ 'validation.passwordComplexity' | translate }}</div>
+        @if (f.submitted && password.errors?.required) {
+          <div class="help-text">{{'Please enter a password' | translate}}</div>
+        }
+        @if (f.submitted && password.errors?.minlength) {
+          <div class="help-text">{{ 'validation.minLength' | translate : { min: 10 } }}</div>
+        }
+        @if (f.submitted && password.errors?.maxlength) {
+          <div class="help-text">{{ 'validation.maxLength' | translate : { max: 128 } }}</div>
+        }
+        @if (f.submitted && password.errors?.pattern) {
+          <div class="help-text">{{ 'validation.passwordComplexity' | translate }}</div>
+        }
       </div>
 
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid }">
         <label for="password_confirmation">{{'Confirm your password' | translate}}</label>
         <input id="password_confirmation" type="password" ngModel class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="password" required />
-        <div *ngIf="f.submitted && password_confirmation.errors?.required" class="help-text">{{'Please confirm your password' | translate}}</div>
-        <div *ngIf="f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required" class="help-text">{{"Password values don't not coincide" | translate}}</div>
+        @if (f.submitted && password_confirmation.errors?.required) {
+          <div class="help-text">{{'Please confirm your password' | translate}}</div>
+        }
+        @if (f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required) {
+          <div class="help-text">{{"Password values don't not coincide" | translate}}</div>
+        }
       </div>
 
       <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !has_rights.valid }">
         <input type="checkbox" name="has_rights" id="has_rights" ngModel #has_rights="ngModel" required />
         <label for="has_rights">{{'I confirm that I have the right to publish any information I upload to the site.' | translate}}</label>
-        <div *ngIf="f.submitted && has_rights.errors?.required" class="help-text">{{'Please tick the box' | translate}}</div>
+        @if (f.submitted && has_rights.errors?.required) {
+          <div class="help-text">{{'Please tick the box' | translate}}</div>
+        }
       </div>
     </div>
 

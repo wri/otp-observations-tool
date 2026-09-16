@@ -1,5 +1,7 @@
 <div class="l-wrapper">
-  <otp-loader *ngIf="saveLoading" overlay fixed></otp-loader>
+  @if (saveLoading) {
+    <otp-loader overlay fixed></otp-loader>
+  }
   <form name="form" class="c-form" (ngSubmit)="f.valid && onSubmit()" #f="ngForm" novalidate>
     <div class="c-container -j-between -t-d-column -t-a-start">
       <h2>{{'My profile' | translate}}</h2>
@@ -9,83 +11,100 @@
       </div>
     </div>
 
-    <div class="form-container" *ngIf="loading"><otp-loader></otp-loader></div>
-    <div class="form-container" *ngIf="!loading">
-
-      <ng-template [ngIf]="!user['organization-account']">
-        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !first_name.valid }">
-          <label for="first_name">{{'First name' | translate}}</label>
-          <input id="first_name" type="text" class="form-control" name="first_name" [(ngModel)]="user['first-name']" #first_name="ngModel" required />
-          <div *ngIf="f.submitted && !first_name.valid" class="help-text">{{'Please enter your first name' | translate}}</div>
-        </div>
-
-        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !last_name.valid }">
-          <label for="last_name">{{'Last name' | translate}}</label>
-          <input id="last_name" type="text" class="form-control" name="last_name" [(ngModel)]="user['last-name']" #last_name="ngModel" required />
-          <div *ngIf="f.submitted && !last_name.valid" class="help-text">{{'Please enter your last name' | translate}}</div>
-        </div>
-      </ng-template>
-
-      <div class="form-group">
-        <label for="observer_id">{{'Organization' | translate}}</label>
-        <select id="observer_id" name="observer_id" disabled>
-          <option value="">{{ user.observer.name }}</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="country_id">{{'Country' | translate}}</label>
-        <select id="country_id" name="country_id" disabled>
-          <option value="">{{ user.country && user.country.name }}</option>
-        </select>
-      </div>
-
-      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !email_field.valid }">
-        <label for="email_field">{{'Email' | translate}}</label>
-        <input id="email_field" type="email" class="form-control" name="email_field" [(ngModel)]="user.email" #email_field="ngModel" required email />
-        <p *ngIf="f.submitted && email_field.errors?.required" class="help-text">{{'Email is required' | translate}}</p>
-        <p *ngIf="f.submitted && email_field.errors?.email && !email_field.errors?.required" class="help-text">{{'Please enter your email address' | translate}}</p>
-      </div>
-
-      <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !locale_field.valid }">
-        <label for="locale_field">{{'Language' | translate}}</label>
-        <select id="locale_field" name="locale_field" [(ngModel)]="user.locale" #locale_field="ngModel" required>
-          <option [value]="undefined" disabled>{{'Select a language' | translate}}</option>
-          <option value="en">English</option>
-          <option value="es">Español</option>
-          <option value="fr">Français</option>
-        </select>
-        <div *ngIf="f.submitted && !locale_field.valid" class="help-text">{{'Please select a language' | translate}}</div>
-      </div>
-
-      <fieldset>
-        <legend>{{'Update your password' | translate}}</legend>
-        <div class="fieldset-container">
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !new_password.valid }">
-            <label for="new_password">{{'New password' | translate}}</label>
-            <input id="new_password" type="password" autocomplete="new-password" class="form-control" name="new_password" [(ngModel)]="user.password" #new_password="ngModel" minlength="10" maxlength="128" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+" />
-            <div *ngIf="f.submitted && new_password.errors?.minlength && !new_password.errors?.required" class="help-text">{{ 'validation.minLength' | translate : { min: 10 } }}</div>
-            <div *ngIf="f.submitted && new_password.errors?.maxlength && !new_password.errors?.required" class="help-text">{{ 'validation.maxLength' | translate : { max: 128 } }}</div>
-            <div *ngIf="f.submitted && new_password.errors?.pattern && !new_password.errors?.required" class="help-text">{{ 'validation.passwordComplexity' | translate }}</div>
+    @if (loading) {
+      <div class="form-container"><otp-loader></otp-loader></div>
+    }
+    @if (!loading) {
+      <div class="form-container">
+        @if (!user['organization-account']) {
+          <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !first_name.valid }">
+            <label for="first_name">{{'First name' | translate}}</label>
+            <input id="first_name" type="text" class="form-control" name="first_name" [(ngModel)]="user['first-name']" #first_name="ngModel" required />
+            @if (f.submitted && !first_name.valid) {
+              <div class="help-text">{{'Please enter your first name' | translate}}</div>
+            }
           </div>
-
-          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid, '-required': !!new_password.value && !!new_password.value.length }">
-            <label for="password_confirmation">{{'Confirm your new password' | translate}}</label>
-            <input id="password_confirmation" type="password" autocomplete="new-password" [(ngModel)]="user['password-confirmation']" class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="new_password" [required]="!!new_password.value" />
-            <div *ngIf="f.submitted && password_confirmation.errors?.required" class="help-text">{{'Please confirm your new password' | translate}}</div>
-            <div *ngIf="f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required" class="help-text">{{"Password values don't not coincide" | translate}}</div>
+          <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !last_name.valid }">
+            <label for="last_name">{{'Last name' | translate}}</label>
+            <input id="last_name" type="text" class="form-control" name="last_name" [(ngModel)]="user['last-name']" #last_name="ngModel" required />
+            @if (f.submitted && !last_name.valid) {
+              <div class="help-text">{{'Please enter your last name' | translate}}</div>
+            }
           </div>
+        }
+        <div class="form-group">
+          <label for="observer_id">{{'Organization' | translate}}</label>
+          <select id="observer_id" name="observer_id" disabled>
+            <option value="">{{ user.observer.name }}</option>
+          </select>
         </div>
-      </fieldset>
-
-      <div class="form-group" *ngIf="showCurrentPasswordField" [ngClass]="{ 'has-error': f.submitted && !current_password.valid, '-required': true }">
-        <label for="current_password">{{'Current password' | translate}}</label>
-        <input id="current_password" type="password" autocomplete="current-password" class="form-control" name="password" [(ngModel)]="user['current-password']" #current_password="ngModel" required />
-        <p [class]="f.submitted && !current_password.valid ? 'help-text' : 'note'">
-          {{'We need your current password to confirm your changes' | translate}}
-        </p>
+        <div class="form-group">
+          <label for="country_id">{{'Country' | translate}}</label>
+          <select id="country_id" name="country_id" disabled>
+            <option value="">{{ user.country && user.country.name }}</option>
+          </select>
+        </div>
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !email_field.valid }">
+          <label for="email_field">{{'Email' | translate}}</label>
+          <input id="email_field" type="email" class="form-control" name="email_field" [(ngModel)]="user.email" #email_field="ngModel" required email />
+          @if (f.submitted && email_field.errors?.required) {
+            <p class="help-text">{{'Email is required' | translate}}</p>
+          }
+          @if (f.submitted && email_field.errors?.email && !email_field.errors?.required) {
+            <p class="help-text">{{'Please enter your email address' | translate}}</p>
+          }
+        </div>
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !locale_field.valid }">
+          <label for="locale_field">{{'Language' | translate}}</label>
+          <select id="locale_field" name="locale_field" [(ngModel)]="user.locale" #locale_field="ngModel" required>
+            <option [value]="undefined" disabled>{{'Select a language' | translate}}</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+          </select>
+          @if (f.submitted && !locale_field.valid) {
+            <div class="help-text">{{'Please select a language' | translate}}</div>
+          }
+        </div>
+        <fieldset>
+          <legend>{{'Update your password' | translate}}</legend>
+          <div class="fieldset-container">
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !new_password.valid }">
+              <label for="new_password">{{'New password' | translate}}</label>
+              <input id="new_password" type="password" autocomplete="new-password" class="form-control" name="new_password" [(ngModel)]="user.password" #new_password="ngModel" minlength="10" maxlength="128" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+" />
+              @if (f.submitted && new_password.errors?.minlength && !new_password.errors?.required) {
+                <div class="help-text">{{ 'validation.minLength' | translate : { min: 10 } }}</div>
+              }
+              @if (f.submitted && new_password.errors?.maxlength && !new_password.errors?.required) {
+                <div class="help-text">{{ 'validation.maxLength' | translate : { max: 128 } }}</div>
+              }
+              @if (f.submitted && new_password.errors?.pattern && !new_password.errors?.required) {
+                <div class="help-text">{{ 'validation.passwordComplexity' | translate }}</div>
+              }
+            </div>
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password_confirmation.valid, '-required': !!new_password.value && !!new_password.value.length }">
+              <label for="password_confirmation">{{'Confirm your new password' | translate}}</label>
+              <input id="password_confirmation" type="password" autocomplete="new-password" [(ngModel)]="user['password-confirmation']" class="form-control" name="password_confirmation" #password_confirmation="ngModel" [equalTo]="new_password" [required]="!!new_password.value" />
+              @if (f.submitted && password_confirmation.errors?.required) {
+                <div class="help-text">{{'Please confirm your new password' | translate}}</div>
+              }
+              @if (f.submitted && password_confirmation.errors?.equalTo && !password_confirmation.errors?.required) {
+                <div class="help-text">{{"Password values don't not coincide" | translate}}</div>
+              }
+            </div>
+          </div>
+        </fieldset>
+        @if (showCurrentPasswordField) {
+          <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !current_password.valid, '-required': true }">
+            <label for="current_password">{{'Current password' | translate}}</label>
+            <input id="current_password" type="password" autocomplete="current-password" class="form-control" name="password" [(ngModel)]="user['current-password']" #current_password="ngModel" required />
+            <p [class]="f.submitted && !current_password.valid ? 'help-text' : 'note'">
+              {{'We need your current password to confirm your changes' | translate}}
+            </p>
+          </div>
+        }
       </div>
-    </div>
+    }
 
     <div class="form-footer">
       <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>

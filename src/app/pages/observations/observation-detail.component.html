@@ -1,970 +1,1156 @@
-<otp-loader *ngIf="loading" overlay fixed></otp-loader>
+@if (loading) {
+  <otp-loader overlay fixed></otp-loader>
+}
 
 <otp-modal [title]="'New Gov' | translate" [opened]="newGovEntityModalOpen" (closed)="newGovEntityModalOpen = false">
-  <otp-government-detail
-    *ngIf="newGovEntityModalOpen"
-    [fixedCountry]="country"
-    [showSuccessMessage]="false"
-    [showActionsOnTop]="false"
-    [useRouter]="false"
-    [uniqueNameErrorMessage]="'observation.government.uniqueNameError' | translate"
-    (afterSave)="onNewGovEntityAdded($event)"
-    (afterCancel)="newGovEntityModalOpen = false">
-  </otp-government-detail>
+  @if (newGovEntityModalOpen) {
+    <otp-government-detail
+      [fixedCountry]="country"
+      [showSuccessMessage]="false"
+      [showActionsOnTop]="false"
+      [useRouter]="false"
+      [uniqueNameErrorMessage]="'observation.government.uniqueNameError' | translate"
+      (afterSave)="onNewGovEntityAdded($event)"
+      (afterCancel)="newGovEntityModalOpen = false">
+    </otp-government-detail>
+  }
 </otp-modal>
 
 <otp-modal [title]="'New Producer' | translate" [opened]="newOperatorModalOpen" (closed)="onNewOperatorModalClosed()">
-  <otp-operator-detail
-    *ngIf="newOperatorModalOpen"
-    [fixedCountry]="country"
-    [longForm]="false"
-    [showSuccessMessage]="false"
-    [showActionsOnTop]="false"
-    [useRouter]="false"
-    [uniqueNameErrorMessage]="'observation.producer.uniqueNameError' | translate"
-    (afterSave)="onNewOperatorAdded($event)"
-    (afterCancel)="onNewOperatorModalClosed()">
-  </otp-operator-detail>
+  @if (newOperatorModalOpen) {
+    <otp-operator-detail
+      [fixedCountry]="country"
+      [longForm]="false"
+      [showSuccessMessage]="false"
+      [showActionsOnTop]="false"
+      [useRouter]="false"
+      [uniqueNameErrorMessage]="'observation.producer.uniqueNameError' | translate"
+      (afterSave)="onNewOperatorAdded($event)"
+      (afterCancel)="onNewOperatorModalClosed()">
+    </otp-operator-detail>
+  }
 </otp-modal>
 
-<form *ngIf="!loading" name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && clearServerError() && f.valid && isReportChosen && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
-  <div class="c-container -j-between -t-d-column -t-a-start">
-    <h2 *ngIf="isDisabled() && !isCopied">{{'Observation details' | translate}}</h2>
-    <h2 *ngIf="(!isDisabled() && !observation) || isCopied">{{'New observation' | translate}}</h2>
-    <h2 *ngIf="!isDisabled() && observation && !isCopied">{{'Edit observation' | translate}}</h2>
-    <div class="c-button-container -j-end form-group" *otpMinTablet>
-      <button *ngIf="canGoBack()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-      <button *ngIf="canCancel()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="canSubmitForReview()" type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
-      <button *ngIf="canAmend()" type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
-      <button *ngIf="canSave()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
-      <button *ngIf="canCreate()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="canStartQC()" type="button" (click)="onStartQC()" class="c-button -primary">{{'Start QC' | translate}}</button>
-      <button *ngIf="canPublishWithoutComments()" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
-      <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
-    </div>
-  </div>
-
-  <ng-template #errorsTemplate let-containerClass="containerClass">
-    <div [ngClass]="containerClass">
-      <div class="callout warning" *ngIf="f.submitted && (!isReportChosen || !this.checkCoordinatesValidity || !f.valid)">
-        <p>
-          {{ 'Please fill or select all required fields before submitting the form.' | translate }}
-        </p>
-      </div>
-
-      <div class="callout warning" *ngIf="serverValidationError">
-        <p>{{ 'There was a problem with the form submission.' | translate }}</p>
-        <p>
-          {{ serverValidationError }}
-        </p>
-      </div>
-    </div>
-  </ng-template>
-
-  <ng-container *ngTemplateOutlet="errorsTemplate"></ng-container>
-
-  <div class="callout primary" *ngIf="observation && observation['validation-status'] && observation['validation-status'].includes('Ready for QC')">
-    <p *ngIf="!canStartQC()">{{'observation.statusNote.ReadyForQC' | translate}}</p>
-    <p *ngIf="canStartQC()">{{'observation.statusNote.ReadyForQC.reviewer' | translate}}</p>
-  </div>
-
-  <div class="callout warning" *ngIf="observation && ['QC1 in progress', 'QC2 in progress'].includes(observation['validation-status'])">
-    <p *ngIf="!canQC()">{{'observation.statusNote.QCInProgress' | translate}}</p>
-
-    <div *ngIf="canQC()">
-      <p *ngIf="observation['validation-status'] === 'QC1 in progress'">{{'observation.statusNote.QC1InProgress.reviewer' | translate}}</p>
-      <p *ngIf="observation['validation-status'] === 'QC2 in progress'">{{'observation.statusNote.QC2InProgress.reviewer' | translate}}</p>
-      <div class="c-button-container -j-start form-group" *ngIf="qcState === 'undecided'">
-        <button type="button" (click)="onApproveQC()" class="c-button -primary">{{'Accept' | translate}}</button>
-        <button type="button" (click)="onRejectQC()" class="c-button -danger">{{'Reject' | translate}}</button>
-        <button *ngIf="observation['validation-status'] === 'QC2 in progress'" type="button" (click)="onNeedsRevisionQC()" class="c-button -warning">{{'Needs revision' | translate}}</button>
-      </div>
-      <div class="form-group" *ngIf="qcState === 'reject' || qcState === 'needsRevision'">
-        <label for="explain_qc_rejection">{{'Explanation' | translate}}</label>
-        <textarea id="explain_qc_rejection" name="explain_qc_rejection" [(ngModel)]="qcComment" #explain_qc_rejection="ngModel" required minlength="10"></textarea>
-        <div *ngIf="!explain_qc_rejection.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
-
-        <div class="c-button-container -j-start">
-          <button type="button" (click)="onCancelRejectQC()" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
-          <button *ngIf="qcState === 'needsRevision'" type="button" (click)="onSubmitQCRejection()" class="c-button -warning" [disabled]="!explain_qc_rejection.valid">
-            {{ 'Submit to Needs Revision' | translate }}
-          </button>
-          <button *ngIf="qcState === 'reject'" type="button" (click)="onSubmitQCRejection()" class="c-button -danger" [disabled]="!explain_qc_rejection.valid">
-            {{ 'Submit Rejection' | translate }}
-          </button>
-        </div>
+@if (!loading) {
+  <form name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && clearServerError() && f.valid && isReportChosen && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
+    <div class="c-container -j-between -t-d-column -t-a-start">
+      @if (isDisabled() && !isCopied) {
+        <h2>{{'Observation details' | translate}}</h2>
+      }
+      @if ((!isDisabled() && !observation) || isCopied) {
+        <h2>{{'New observation' | translate}}</h2>
+      }
+      @if (!isDisabled() && observation && !isCopied) {
+        <h2>{{'Edit observation' | translate}}</h2>
+      }
+      <div class="c-button-container -j-end form-group" *otpMinTablet>
+        @if (canGoBack()) {
+          <button type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+        }
+        @if (canCancel()) {
+          <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        }
+        @if (canSubmitForReview()) {
+          <button type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
+        }
+        @if (canAmend()) {
+          <button type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
+        }
+        @if (canSave()) {
+          <button  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
+        }
+        @if (canCreate()) {
+          <button  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
+        }
+        @if (canStartQC()) {
+          <button type="button" (click)="onStartQC()" class="c-button -primary">{{'Start QC' | translate}}</button>
+        }
+        @if (canPublishWithoutComments()) {
+          <button type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
+        }
+        @if (canPublishWithModification()) {
+          <button type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
+        }
       </div>
     </div>
-  </div>
-
-  <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Rejected'">
-    <p>{{'observation.statusNote.Rejected' | translate}}</p>
-    <p>{{ 'Comments' | translate }}</p>
-    <blockquote>{{latestQCComment || '−'}}</blockquote>
-  </div>
-
-  <div class="callout warning" *ngIf="observation && observation['validation-status'] === 'Needs revision'">
-    <p>{{'observation.statusNote.NeedsRevision' | translate}}</p>
-    <p>{{ 'Comments' | translate }}</p>
-    <blockquote>{{latestQCComment || '−'}}</blockquote>
-
-    <ng-template [ngIf]="canManage()">
-      <p *ngIf="needsRevisionState === 'undecided'">{{'observation.statusNote.NeedsRevision.question' | translate}}</p>
-      <div class="c-button-container -j-start form-group" *ngIf="needsRevisionState === 'undecided'">
-        <button type="button" (click)="onClickExplainAndPublish()" class="c-button -secondary">{{'Explain and publish' | translate}}</button>
-        <button type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
-      </div>
-      <div class="form-group" *ngIf="needsRevisionState === 'explain'">
-        <label for="explain_no_revision">{{'Explanation' | translate}}</label>
-        <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" required minlength="10"></textarea>
-        <div *ngIf="!explain_no_revision.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
-        <div class="c-button-container -j-start">
-          <button type="button" (click)="needsRevisionState = 'undecided'" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
-          <button type="button" (click)="onPublish('Published (not modified)')" class="c-button -primary" [disabled]="!explain_no_revision.valid">{{'Publish' | translate}}</button>
-        </div>
-      </div>
-      <div class="form-group" *ngIf="needsRevisionState === 'amend'">
-        <label for="explain_no_revision">{{'Explanation' | translate}}</label>
-        <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" minlength="10"></textarea>
-        <div *ngIf="!explain_no_revision.valid" class="help-text">{{'Please enter the explanation' | translate}}</div>
-        <div class="c-button-container -j-start">
-          <button type="button" (click)="needsRevisionState = 'undecided'" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
-          <button *ngIf="canSubmitForReview()" type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
-          <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
-        </div>
+    <ng-template #errorsTemplate let-containerClass="containerClass">
+      <div [ngClass]="containerClass">
+        @if (f.submitted && (!isReportChosen || !this.checkCoordinatesValidity || !f.valid)) {
+          <div class="callout warning">
+            <p>
+              {{ 'Please fill or select all required fields before submitting the form.' | translate }}
+            </p>
+          </div>
+        }
+        @if (serverValidationError) {
+          <div class="callout warning">
+            <p>{{ 'There was a problem with the form submission.' | translate }}</p>
+            <p>
+              {{ serverValidationError }}
+            </p>
+          </div>
+        }
       </div>
     </ng-template>
-  </div>
-
-  <div class="callout success" *ngIf="observation && observation['validation-status'] === 'Ready for publication'">
-    <p>{{'observation.statusNote.ReadyForPublication' | translate}}</p>
-    <div *ngIf="canPublishWithoutComments()" class="c-button-container -j-start form-group">
-      <button type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
-    </div>
-  </div>
-
-  <div class="callout primary" *ngIf="isObservationPublished">
-    <p>{{'observation.statusNote.Published' | translate}}</p>
-  </div>
-
-  <ng-template #reportTemplate>
-    <fieldset class="-required" [ngClass]="{ 'has-error': f.submitted && !isReportChosen }">
-      <legend>{{'Report' | translate}}</legend>
-      <div *ngIf="f.submitted && !isReportChosen" class="help-text">{{'Please select an existing report or upload a new one' | translate}}</div>
-      <div class="fieldset-container">
+    <ng-container *ngTemplateOutlet="errorsTemplate"></ng-container>
+    @if (observation && observation['validation-status'] && observation['validation-status'].includes('Ready for QC')) {
+      <div class="callout primary">
+        @if (!canStartQC()) {
+          <p>{{'observation.statusNote.ReadyForQC' | translate}}</p>
+        }
+        @if (canStartQC()) {
+          <p>{{'observation.statusNote.ReadyForQC.reviewer' | translate}}</p>
+        }
+      </div>
+    }
+    @if (observation && ['QC1 in progress', 'QC2 in progress'].includes(observation['validation-status'])) {
+      <div class="callout warning">
+        @if (!canQC()) {
+          <p>{{'observation.statusNote.QCInProgress' | translate}}</p>
+        }
+        @if (canQC()) {
+          <div>
+            @if (observation['validation-status'] === 'QC1 in progress') {
+              <p>{{'observation.statusNote.QC1InProgress.reviewer' | translate}}</p>
+            }
+            @if (observation['validation-status'] === 'QC2 in progress') {
+              <p>{{'observation.statusNote.QC2InProgress.reviewer' | translate}}</p>
+            }
+            @if (qcState === 'undecided') {
+              <div class="c-button-container -j-start form-group">
+                <button type="button" (click)="onApproveQC()" class="c-button -primary">{{'Accept' | translate}}</button>
+                <button type="button" (click)="onRejectQC()" class="c-button -danger">{{'Reject' | translate}}</button>
+                @if (observation['validation-status'] === 'QC2 in progress') {
+                  <button type="button" (click)="onNeedsRevisionQC()" class="c-button -warning">{{'Needs revision' | translate}}</button>
+                }
+              </div>
+            }
+            @if (qcState === 'reject' || qcState === 'needsRevision') {
+              <div class="form-group">
+                <label for="explain_qc_rejection">{{'Explanation' | translate}}</label>
+                <textarea id="explain_qc_rejection" name="explain_qc_rejection" [(ngModel)]="qcComment" #explain_qc_rejection="ngModel" required minlength="10"></textarea>
+                @if (!explain_qc_rejection.valid) {
+                  <div class="help-text">{{'Please enter the explanation' | translate}}</div>
+                }
+                <div class="c-button-container -j-start">
+                  <button type="button" (click)="onCancelRejectQC()" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
+                  @if (qcState === 'needsRevision') {
+                    <button type="button" (click)="onSubmitQCRejection()" class="c-button -warning" [disabled]="!explain_qc_rejection.valid">
+                      {{ 'Submit to Needs Revision' | translate }}
+                    </button>
+                  }
+                  @if (qcState === 'reject') {
+                    <button type="button" (click)="onSubmitQCRejection()" class="c-button -danger" [disabled]="!explain_qc_rejection.valid">
+                      {{ 'Submit Rejection' | translate }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+    @if (observation && observation['validation-status'] === 'Rejected') {
+      <div class="callout warning">
+        <p>{{'observation.statusNote.Rejected' | translate}}</p>
+        <p>{{ 'Comments' | translate }}</p>
+        <blockquote>{{latestQCComment || '−'}}</blockquote>
+      </div>
+    }
+    @if (observation && observation['validation-status'] === 'Needs revision') {
+      <div class="callout warning">
+        <p>{{'observation.statusNote.NeedsRevision' | translate}}</p>
+        <p>{{ 'Comments' | translate }}</p>
+        <blockquote>{{latestQCComment || '−'}}</blockquote>
+        @if (canManage()) {
+          @if (needsRevisionState === 'undecided') {
+            <p>{{'observation.statusNote.NeedsRevision.question' | translate}}</p>
+          }
+          @if (needsRevisionState === 'undecided') {
+            <div class="c-button-container -j-start form-group">
+              <button type="button" (click)="onClickExplainAndPublish()" class="c-button -secondary">{{'Explain and publish' | translate}}</button>
+              <button type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
+            </div>
+          }
+          @if (needsRevisionState === 'explain') {
+            <div class="form-group">
+              <label for="explain_no_revision">{{'Explanation' | translate}}</label>
+              <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" required minlength="10"></textarea>
+              @if (!explain_no_revision.valid) {
+                <div class="help-text">{{'Please enter the explanation' | translate}}</div>
+              }
+              <div class="c-button-container -j-start">
+                <button type="button" (click)="needsRevisionState = 'undecided'" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
+                <button type="button" (click)="onPublish('Published (not modified)')" class="c-button -primary" [disabled]="!explain_no_revision.valid">{{'Publish' | translate}}</button>
+              </div>
+            </div>
+          }
+          @if (needsRevisionState === 'amend') {
+            <div class="form-group">
+              <label for="explain_no_revision">{{'Explanation' | translate}}</label>
+              <textarea id="explain_no_revision" name="explain_no_revision" [(ngModel)]="monitorComment" #explain_no_revision="ngModel" minlength="10"></textarea>
+              @if (!explain_no_revision.valid) {
+                <div class="help-text">{{'Please enter the explanation' | translate}}</div>
+              }
+              <div class="c-button-container -j-start">
+                <button type="button" (click)="needsRevisionState = 'undecided'" class="c-button -secondary">{{ 'Cancel' | translate }}</button>
+                @if (canSubmitForReview()) {
+                  <button type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
+                }
+                @if (canPublishWithModification()) {
+                  <button type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+    }
+    @if (observation && observation['validation-status'] === 'Ready for publication') {
+      <div class="callout success">
+        <p>{{'observation.statusNote.ReadyForPublication' | translate}}</p>
+        @if (canPublishWithoutComments()) {
+          <div class="c-button-container -j-start form-group">
+            <button type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
+          </div>
+        }
+      </div>
+    }
+    @if (isObservationPublished) {
+      <div class="callout primary">
+        <p>{{'observation.statusNote.Published' | translate}}</p>
+      </div>
+    }
+    <ng-template #reportTemplate>
+      <fieldset class="-required" [ngClass]="{ 'has-error': f.submitted && !isReportChosen }">
+        <legend>{{'Report' | translate}}</legend>
+        @if (f.submitted && !isReportChosen) {
+          <div class="help-text">{{'Please select an existing report or upload a new one' | translate}}</div>
+        }
+        <div class="fieldset-container">
+          <div class="form-group">
+            <label for="report_field">{{'Report' | translate}}</label>
+            <select id="report_field" name="report_field" [ngModel]="reportChoice?.id" (change)="onChangeReport($event)" #report_field="ngModel" [disabled]="isDisabled()">
+              <option [value]="null">{{'Upload a new report' | translate}}</option>
+              @for (report of reports; track report) {
+                <option [value]="report.id">{{ report.title }}</option>
+              }
+            </select>
+            <p class="note">
+              {{ 'You can upload a new report or select an existing one from the list.' | translate }}
+            </p>
+          </div>
+          @if (reportChoice) {
+            <div class="form-group">
+              <span class="form-label">{{'Current file' | translate}}</span>
+              <a href="{{reportChoice.attachment.url}}" target="_blank" download>{{'Download file' | translate}}</a>
+            </div>
+          }
+          @if (!reportChoice && !isDisabled()) {
+            <!-- File -->
+            <div class="form-group">
+              <label for="report_file">{{'File' | translate}}</label>
+              <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="41943040" accept=".pdf" />
+              @if (report_file.errors?.maxSize) {
+                <div class="help-text">{{'The file should weight less than 40MB' | translate}}</div>
+              }
+              @if (report_file.errors?.accept) {
+                <div class="help-text">{{'Allowed file types' | translate}}: pdf</div>
+              }
+              @if ((f.submitted || reportFormSubmitted) && !report_file.valid) {
+                <div class="help-text">{{'The file is not valid' | translate}}</div>
+              }
+            </div>
+            <!-- Title -->
+            <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
+              <label for="report_title">{{'Title' | translate}}</label>
+              <input id="report_title" type="text" class="form-control" name="report_title" [(ngModel)]="report.title" #report_title="ngModel" [required]="!!report_file.value" />
+              @if ((f.submitted || reportFormSubmitted) && !report_title.valid) {
+                <div class="help-text">{{'Please enter the name' | translate}}</div>
+              }
+            </div>
+            <!-- Publication date -->
+            <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
+              <label for="report_date">{{'Publication date' | translate}}</label>
+              <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="reportDate" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
+              @if ((f.submitted || reportFormSubmitted) && !report_date.valid) {
+                <div class="help-text">{{'Please enter the publication date' | translate}}</div>
+              }
+            </div>
+            <!-- Mission type -->
+            <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
+              <label for="report_mission_type">{{'Mission Type' | translate}}</label>
+              <select id="report_mission_type" name="report_mission_type" [(ngModel)]="report['mission-type']" #report_mission_type="ngModel" [required]="!!report_file.value">
+                <option disabled [value]="">{{'Select a mission type' | translate}}</option>
+                @for (mission_type of missionTypes; track mission_type) {
+                  <option [value]="mission_type">{{ mission_type | translate }}</option>
+                }
+              </select>
+              @if ((f.submitted || reportFormSubmitted) && !report_mission_type.valid) {
+                <div class="help-text">{{'Please select a mission type' | translate}}</div>
+              }
+            </div>
+          }
+          <!-- Current monitor -->
+          <div class="form-group">
+            <label for="monitor">{{'Monitor' | translate}}</label>
+            <input id="monitor" type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
+          </div>
+          <!-- 4. Additional monitors -->
+          <div class="form-group">
+            <label for="additional_observers">{{'Additional monitors' | translate}}</label>
+            <ngx-bootstrap-multiselect
+              [texts]="multiSelectTexts"
+              [options]="additionalObserversOptions"
+              [settings]="additionalObserversSelectSettings"
+              [(ngModel)]="_additionalObserversSelection"
+              (ngModelChange)="onChangeAdditionalObserversOptions($event)"
+              name="additional_observers" id="additional_observers"
+              [disabled]="isDisabled() || !canChangeMonitors()">
+            </ngx-bootstrap-multiselect>
+            <p class="note">
+              {{ 'observation.additionalMonitors.note' | translate }}
+            </p>
+            @if (!canChangeMonitors()) {
+              <p class="note">
+                {{ 'observation.additionalMonitors.disabled.note' | translate }}
+              </p>
+            }
+          </div>
+        </div>
+      </fieldset>
+    </ng-template>
+    <ng-template #evidenceTemplate>
+      <fieldset #evidenceBlock>
+        <legend>{{'Evidence' | translate}}</legend>
+        <div class="fieldset-container">
+          <div class="form-group -required">
+            <label for="evidence">{{'Evidence' | translate}}</label>
+            <select #selectTypeElement id="evidence_type" name="evidence_type" (ngModelChange)="onChangeEvidenceType(evidence_type, $event, selectTypeElement)" [ngModel]="evidenceType" #evidence_type="ngModel" [disabled]="isDisabled()" required>
+              @for (type of objectKeys(evidenceTypeOptions); track type) {
+                <option [ngValue]="evidenceTypeOptions[type]">{{ type }}</option>
+              }
+            </select>
+            @if (f.submitted && !evidence_type.valid) {
+              <div class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
+            }
+            <p class="note">{{'observation.evidenceType.note' | translate}}</p>
+          </div>
+          @if (evidenceType === 'Evidence presented in the report') {
+            <div class="form-group -required">
+              <label for="evidence_details">{{'observation.evidenceDetails.title' | translate}}</label>
+              <textarea id="evidence_details" name="evidence_details" [(ngModel)]="evidenceOnReport" #evidence_details="ngModel" required [disabled]="isDisabled()"></textarea>
+              @if (f.submitted && !evidence_details.valid) {
+                <div class="help-text">{{'observation.evidenceDetails.invalid' | translate}}</div>
+              }
+              <p class="note">{{ 'observation.evidenceDetails.note' | translate }}</p>
+            </div>
+          }
+          @if (evidenceType === 'Uploaded documents') {
+            <br />
+            <div class="row">
+              @if (isDisabled()) {
+                <div data-test-id="documents-list-selected" class="small-12 columns">
+                  <h3>{{'List of evidence' | translate}}</h3>
+                  @if (documents.length) {
+                    <ul class="documents-list">
+                      @for (document of documents; track document) {
+                        <li>
+                          <div class="content">
+                            <div class="title">{{document.name}}</div>
+                            @if (document.id) {
+                              <div class="status">{{'Already uploaded' | translate}}</div>
+                            }
+                            @if (!document.id) {
+                              <div class="status">{{'To upload' | translate}}</div>
+                            }
+                          </div>
+                        </li>
+                      }
+                    </ul>
+                  }
+                  @if (!documents.length) {
+                    <p>{{'No evidence' | translate}}</p>
+                  }
+                </div>
+              }
+              @if (!isDisabled()) {
+                <div data-test-id="documents-list-selected" class="small-12 medium-6 columns">
+                  <!-- List of evidence -->
+                  <h3>{{'List of evidence' | translate}}</h3>
+                  @if (documents.length) {
+                    <ul class="documents-list">
+                      @for (document of documents; track document) {
+                        <li>
+                          <div class="content">
+                            @if (!document.id) {
+                              <div class="title">{{document.name}}</div>
+                            }
+                            @if (document.id) {
+                              <div class="title">
+                                <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
+                              </div>
+                            }
+                            <div class="status">{{document['document-type'] | translate}} | {{ (document.id ? 'Already uploaded' : 'To upload') | translate}}</div>
+                          </div>
+                          <div class="actions">
+                            <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)">{{'Remove' | translate}}</button>
+                          </div>
+                        </li>
+                      }
+                    </ul>
+                  }
+                  @if (!documents.length) {
+                    <p>{{'No evidence' | translate}}</p>
+                  }
+                </div>
+              }
+              @if (!isDisabled()) {
+                <div  class="small-12 medium-6 columns">
+                  <otp-tabs [tabs]="evidenceTabs" [currentTab]="currentEvidenceTabIndex" (changed)="onChangeEvidenceTab($event)"></otp-tabs>
+                  @if (currentEvidenceTab.id === 'existing') {
+                    <div data-test-id="documents-list-report">
+                      <!-- List of evidences from the report -->
+                      @if (reportDocuments.length) {
+                        <ul class="documents-list">
+                          @for (document of reportDocuments; track document) {
+                            <li>
+                              <div class="content">
+                                <div class="title">
+                                  <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
+                                </div>
+                                <div class="status">{{document['document-type'] | translate}}</div>
+                              </div>
+                              <div class="actions">
+                                <button type="button" class="c-button -secondary" (click)="onClickRemoveReportDocument(document)">{{'Remove' | translate}}</button>
+                                <button type="button" class="c-button -primary" (click)="onClickAddReportDocument(document)">{{'observation.useAsEvidence' | translate}}</button>
+                              </div>
+                            </li>
+                          }
+                        </ul>
+                      }
+                      @if (!reportDocuments.length) {
+                        <p>{{'No evidence' | translate}}</p>
+                      }
+                    </div>
+                  }
+                  @if (currentEvidenceTab.id === 'new') {
+                    <div data-test-id="documents-upload-new">
+                      <br />
+                      <!-- Type -->
+                      <div class="form-group -required">
+                        <label for="document_type">{{'Document Type' | translate}}</label>
+                        <select id="document_type" name="document_type" [(ngModel)]="evidence['document-type']" #document_type="ngModel" required [disabled]="isDisabled()">
+                          <option [ngValue]="null" disabled>{{'Select a document type' | translate}}</option>
+                          @for (type of objectKeys(documentTypeOptions); track type) {
+                            <option [ngValue]="documentTypeOptions[type]">{{ type }}</option>
+                          }
+                        </select>
+                        @if (f.submitted && !document_type.valid) {
+                          <div class="help-text">{{'Please select a document type' | translate}}</div>
+                        }
+                      </div>
+                      <!-- Title -->
+                      <div [ngClass]="{ 'form-group': true, '-required': (!!evidence.attachment || !documents.length) }">
+                        <label for="evidence_title">{{'Title' | translate}}</label>
+                        <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="(!!evidence.attachment || !documents.length)" />
+                        @if (f.submitted && !evidence_title.valid) {
+                          <div class="help-text">{{'Please enter the title' | translate}}</div>
+                        }
+                      </div>
+                      <!-- Evidence -->
+                      <p>{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
+                      <!-- This input is used to prevent the submitting until evidence are uploaded -->
+                      @if (!documents.length) {
+                        <input type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
+                      }
+                      @if (f.submitted && !documents.length) {
+                        <div class="form-group">
+                          <div class="help-text">{{'You need to upload evidence' | translate}}</div>
+                        </div>
+                      }
+                      <div class="form-group">
+                        <label for="evidence_field">{{'Evidence' | translate}}</label>
+                        <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="20971520" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
+                        @if (georeferencedPhoto.isUsed) {
+                          <div class="geo-note">{{'observation.geoPhotoUploaded.note' | translate}}</div>
+                        }
+                        @if (evidence_field.errors?.maxSize) {
+                          <div class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
+                        }
+                        @if (evidence_field.errors?.accept) {
+                          <div class="help-text">{{'Allowed file types' | translate}}: pdf, doc, docx, txt, csv, xml, jpg, jpeg, png, exif, tiff, bmp</div>
+                        }
+                        @if (!evidence_field.errors?.maxSize && !evidence_field.valid) {
+                          <div class="help-text">{{'The file is not valid' | translate}}</div>
+                        }
+                      </div>
+                      <!-- Add to list -->
+                      <div class="form-group">
+                        <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'observation.useAsEvidence' | translate}}</button>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </fieldset>
+    </ng-template>
+    <div class="form-header">
+      <div class="form-group">
+        <label for="observation_type">{{'Type' | translate}}</label>
+        <select id="observation_type" name="observation_type" [(ngModel)]="type" #observation_type="ngModel" [required]="!observation" [disabled]="!!observation && !isCopied">
+          <option [ngValue]="null" disabled>{{'Select an observation type' | translate}}</option>
+          <option value="operator">{{'Operator' | translate}}</option>
+          <option value="government">{{'Government' | translate}}</option>
+        </select>
+        @if (f.submitted && observation_type.invalid) {
+          <div class="help-text">{{'Please select an observation type' | translate}}</div>
+        }
+        <p class="note">
+          {{ 'observation.type.note' | translate }}
+        </p>
+      </div>
+      <!-- Publication date -->
+      @if (isObservationPublished) {
         <div class="form-group">
-          <label for="report_field">{{'Report' | translate}}</label>
-          <select id="report_field" name="report_field" [ngModel]="reportChoice?.id" (change)="onChangeReport($event)" #report_field="ngModel" [disabled]="isDisabled()">
-            <option [value]="null">{{'Upload a new report' | translate}}</option>
-            <option *ngFor="let report of reports" [value]="report.id">{{ report.title }}</option>
-          </select>
+          <label for="publication_date">{{'Publication date' | translate}}</label>
+          <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required disabled></otp-datepicker>
           <p class="note">
-            {{ 'You can upload a new report or select an existing one from the list.' | translate }}
+            {{ 'observation.publicationDate.note' | translate }}
           </p>
         </div>
-
-        <ng-template [ngIf]="reportChoice">
-          <div class="form-group">
-            <span class="form-label">{{'Current file' | translate}}</span>
-            <a href="{{reportChoice.attachment.url}}" target="_blank" download>{{'Download file' | translate}}</a>
-          </div>
-        </ng-template>
-
-        <ng-template [ngIf]="!reportChoice && !isDisabled()">
-          <!-- File -->
-          <div class="form-group">
-            <label for="report_file">{{'File' | translate}}</label>
-            <input id="report_file" type="file" class="form-control" name="report_file" [(ngModel)]="reportAttachment" #report_file="ngModel" otpBase64FileInput maxSize="41943040" accept=".pdf" />
-            <div *ngIf="report_file.errors?.maxSize" class="help-text">{{'The file should weight less than 40MB' | translate}}</div>
-            <div *ngIf="report_file.errors?.accept" class="help-text">{{'Allowed file types' | translate}}: pdf</div>
-            <div *ngIf="(f.submitted || reportFormSubmitted) && !report_file.valid" class="help-text">{{'The file is not valid' | translate}}</div>
-          </div>
-
-          <!-- Title -->
-          <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-            <label for="report_title">{{'Title' | translate}}</label>
-            <input id="report_title" type="text" class="form-control" name="report_title" [(ngModel)]="report.title" #report_title="ngModel" [required]="!!report_file.value" />
-            <div *ngIf="(f.submitted || reportFormSubmitted) && !report_title.valid" class="help-text">{{'Please enter the name' | translate}}</div>
-          </div>
-
-          <!-- Publication date -->
-          <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-            <label for="report_date">{{'Publication date' | translate}}</label>
-            <otp-datepicker [id]="'report_date'" [name]="'report_date'" [(ngModel)]="reportDate" #report_date="ngModel" [required]="!!report_file.value"></otp-datepicker>
-            <div *ngIf="(f.submitted || reportFormSubmitted) && !report_date.valid" class="help-text">{{'Please enter the publication date' | translate}}</div>
-          </div>
-
-          <!-- Mission type -->
-          <div [ngClass]="{ 'form-group': true, '-required': !!report_file.value }">
-            <label for="report_mission_type">{{'Mission Type' | translate}}</label>
-            <select id="report_mission_type" name="report_mission_type" [(ngModel)]="report['mission-type']" #report_mission_type="ngModel" [required]="!!report_file.value">
-              <option disabled [value]="">{{'Select a mission type' | translate}}</option>
-              <option *ngFor="let mission_type of missionTypes" [value]="mission_type">{{ mission_type | translate }}</option>
-            </select>
-            <div *ngIf="(f.submitted || reportFormSubmitted) && !report_mission_type.valid" class="help-text">{{'Please select a mission type' | translate}}</div>
-          </div>
-        </ng-template>
-
-        <!-- Current monitor -->
+      }
+    </div>
+    @if (type === 'operator') {
+      <div class="form-container">
         <div class="form-group">
-          <label for="monitor">{{'Monitor' | translate}}</label>
-          <input id="monitor" type="text" class="form-control" [value]="currentContextObserver && currentContextObserver.name" disabled />
+          <label for="language_field">{{'Language' | translate}}</label>
+          <input id="language_field" type="text" class="form-control" name="language_field" [value]="languages[locale]" disabled />
+          <p class="note">
+            {{ ((canSave() || canCreate()) ? 'observation.language.note' : 'observation.language.viewNote' ) | translate }}
+          </p>
         </div>
-
-        <!-- 4. Additional monitors -->
-        <div class="form-group">
-          <label for="additional_observers">{{'Additional monitors' | translate}}</label>
+        <!-- 0. ID -->
+        @if (observation && !isCopied) {
+          <div class="form-group">
+            <label for="id_field">{{'ID' | translate}}</label>
+            <input id="id_field" type="text" class="form-control" name="id_field" [(ngModel)]="observation.id" #id_field="ngModel" disabled />
+          </div>
+        }
+        <!-- 1. Report -->
+        <ng-container *ngTemplateOutlet="reportTemplate"></ng-container>
+        <!-- 2. Country -->
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
+          <label for="country_id">{{'Country' | translate}}</label>
+          <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required [disabled]="isDisabled()">
+            <option [ngValue]="null" disabled>{{'Select a country' | translate}}</option>
+            @for (country of countries; track country) {
+              <option [ngValue]="country">{{ country.name }}</option>
+            }
+          </select>
+          @if (f.submitted && !country_id.valid) {
+            <div class="help-text">{{'Please select a country' | translate}}</div>
+          }
+          <p class="note">
+            {{ 'observation.country.note' | translate }}
+          </p>
+        </div>
+        <!-- 3. Operator -->
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && (!operator_id.valid || unknownOperatorSelected) }">
+          <label for="operator_id">{{'Operator' | translate}}</label>
           <ngx-bootstrap-multiselect
             [texts]="multiSelectTexts"
-            [options]="additionalObserversOptions"
-            [settings]="additionalObserversSelectSettings"
-            [(ngModel)]="_additionalObserversSelection"
-            (ngModelChange)="onChangeAdditionalObserversOptions($event)"
-            name="additional_observers" id="additional_observers"
-            [disabled]="isDisabled() || !canChangeMonitors()">
+            [options]="operatorsOptions"
+            [settings]="operatorsSelectSettings"
+            [(ngModel)]="operatorsSelection"
+            (ngModelChange)="onChangeOperatorsOptions($event)"
+            name="operator_id"
+            #operator_id="ngModel"
+            [disabled]="isDisabled()"
+            required
+          ></ngx-bootstrap-multiselect>
+          @if (f.submitted && !operator_id.valid) {
+            <div class="help-text">{{'Please select an operator' | translate}}</div>
+          }
+          @if (unknownOperatorSelected) {
+            <div class="help-text">{{'You will not be able to submit this observation to review with unknown operator selected' | translate}}</div>
+          }
+          @if (!isDisabled()) {
+            <div class="note">
+              <button type="button" class="c-button -primary" (click)="onClickAddOperator('operator')">{{'Add a new producer to the list' | translate}}</button>
+            </div>
+          }
+        </div>
+        <!-- 5. Relevant operators -->
+        <div class="form-group">
+          <label for="relevant_operators">{{'Relevant operators' | translate}}</label>
+          <ngx-bootstrap-multiselect
+            [texts]="multiSelectTexts"
+            [options]="relevantOperatorsOptions"
+            [settings]="relevantOperatorsSelectSettings"
+            [(ngModel)]="_relevantOperatorsSelection"
+            (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
+            name="relevant_operators" id="relevant_operators"
+            [disabled]="isDisabled()">
           </ngx-bootstrap-multiselect>
           <p class="note">
-            {{ 'observation.additionalMonitors.note' | translate }}
+            {{ 'observation.relevantOperators.note' | translate }}
           </p>
-          <p *ngIf="!canChangeMonitors()" class="note">
-            {{ 'observation.additionalMonitors.disabled.note' | translate }}
-          </p>
+          @if (!isDisabled()) {
+            <div class="note">
+              <button type="button" class="c-button -primary" (click)="onClickAddOperator('relevantOperators')">{{'Add a new producer to the list' | translate}}</button>
+            </div>
+          }
         </div>
-      </div>
-    </fieldset>
-  </ng-template>
-
-  <ng-template #evidenceTemplate>
-    <fieldset #evidenceBlock>
-      <legend>{{'Evidence' | translate}}</legend>
-      <div class="fieldset-container">
-        <div class="form-group -required">
-          <label for="evidence">{{'Evidence' | translate}}</label>
-          <select #selectTypeElement id="evidence_type" name="evidence_type" (ngModelChange)="onChangeEvidenceType(evidence_type, $event, selectTypeElement)" [ngModel]="evidenceType" #evidence_type="ngModel" [disabled]="isDisabled()" required>
-            <option *ngFor="let type of objectKeys(evidenceTypeOptions)" [ngValue]="evidenceTypeOptions[type]">{{ type }}</option>
+        <!-- 6. Observation category -->
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
+          <label for="subcategory_id">{{'Observation category' | translate}}</label>
+          <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required [disabled]="isDisabled()">
+            <option [ngValue]="null" disabled>{{'Select an observation category' | translate}}</option>
+            @for (subcategory of subcategories; track subcategory) {
+              <option [ngValue]="subcategory">{{ subcategory.name }}</option>
+            }
           </select>
-          <div *ngIf="f.submitted && !evidence_type.valid" class="help-text">{{'observation.evidenceType.invalid' | translate}}</div>
-          <p class="note">{{'observation.evidenceType.note' | translate}}</p>
+          @if (f.submitted && !subcategory_id.valid) {
+            <div class="help-text">{{'Please select an observation category' | translate}}</div>
+          }
+          <p class="note">
+            {{ 'observation.observationCategory.note' | translate }}
+          </p>
         </div>
-
-        <ng-template [ngIf]="evidenceType === 'Evidence presented in the report'">
-          <div class="form-group -required">
-            <label for="evidence_details">{{'observation.evidenceDetails.title' | translate}}</label>
-            <textarea id="evidence_details" name="evidence_details" [(ngModel)]="evidenceOnReport" #evidence_details="ngModel" required [disabled]="isDisabled()"></textarea>
-            <div *ngIf="f.submitted && !evidence_details.valid" class="help-text">{{'observation.evidenceDetails.invalid' | translate}}</div>
-            <p class="note">{{ 'observation.evidenceDetails.note' | translate }}</p>
-          </div>
-        </ng-template>
-
-        <ng-template [ngIf]="evidenceType === 'Uploaded documents'">
-          <br />
-          <div class="row">
-            <div *ngIf="isDisabled()" data-test-id="documents-list-selected" class="small-12 columns">
-              <h3>{{'List of evidence' | translate}}</h3>
-              <ul class="documents-list" *ngIf="documents.length">
-                <li *ngFor="let document of documents">
-                  <div class="content">
-                    <div class="title">{{document.name}}</div>
-                    <div class="status" *ngIf="document.id">{{'Already uploaded' | translate}}</div>
-                    <div class="status" *ngIf="!document.id">{{'To upload' | translate}}</div>
+        <!-- 7. Due diligence category -->
+        <div class="form-group">
+          <label for="diligence_category">{{'Due diligence category' | translate}}</label>
+          <input id="diligence_category" type="text" class="form-control" name="diligence_category" [ngModel]="subcategory && subcategory.category && subcategory.category.name" (ngModelChange)="subcategory && subcategory.category && (subcategory.category.name = $event)" #diligence_category="ngModel" disabled />
+          <p class="note">
+            {{ 'observation.diligenceCategory.note' | translate }}
+          </p>
+        </div>
+        <!-- 8. Location -->
+        <fieldset>
+          <legend>{{'Location' | translate}}</legend>
+          <div class="fieldset-container">
+            @if (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) {
+              <!-- 8.0. Physical place -->
+              <div class="form-group -radio">
+                <p>{{'Did this observation occur at a physical place?' | translate}}</p>
+                <label><input type="radio" name="physical_place" [value]="true"  [(ngModel)]="physicalPlace" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">{{'Yes' | translate}}</label>
+                <label><input type="radio" name="physical_place" [value]="false" [(ngModel)]="physicalPlace" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">{{'No' | translate}}</label>
+              </div>
+            }
+            @if (physicalPlace) {
+              @if (nonConcessionActivityEnabled) {
+                <div class="form-group">
+                  <input type="checkbox" name="non_concession_activity" id="non_concession_activity" [(ngModel)]="nonConcessionActivity" #non_concession_activity="ngModel" [disabled]="isDisabled()" />
+                  <label for="non_concession_activity">{{'observation.nonConcessionActivity' | translate}}</label>
+                  <p class="note">
+                    {{'observation.nonConcessionActivity.note' | translate}}
+                  </p>
+                </div>
+              }
+              <!-- 8.1. Forest management unit -->
+              <div [ngClass]="{ 'form-group': true, '-required': !!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
+                <label for="fmu_field">{{'Forest management unit' | translate}}</label>
+                <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="!!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
+                  <option [ngValue]="null">{{'Select a FMU' | translate}}</option>
+                  @for (fmu of fmus; track fmu) {
+                    <option [ngValue]="fmu">{{ fmu.name }}</option>
+                  }
+                </select>
+                <p class="note">
+                  {{ 'observation.fmu.note' | translate }}
+                </p>
+              </div>
+              <!-- 8.2. GPS coordinates -->
+              @if (isDisabled()) {
+                <div class="form-group">
+                  <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="mapLayers" (leafletMapReady)="onMapReady($event)" class="map">
                   </div>
-                </li>
-              </ul>
-              <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
-            </div>
-            <div *ngIf="!isDisabled()" data-test-id="documents-list-selected" class="small-12 medium-6 columns">
-              <!-- List of evidence -->
-              <h3>{{'List of evidence' | translate}}</h3>
-              <ul class="documents-list" *ngIf="documents.length">
-                <li *ngFor="let document of documents">
-                  <div class="content">
-                    <div class="title" *ngIf="!document.id">{{document.name}}</div>
-                    <div class="title" *ngIf="document.id">
-                      <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
+                </div>
+                <div class="form-group" [ngClass]="{ '-required': !this.fmu }">
+                  <label for="latitude_field">{{'Latitude' | translate}}</label>
+                  <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" [required]="!this.fmu" disabled />
+                </div>
+                <div class="form-group" [ngClass]="{ '-required': !this.fmu }">
+                  <label for="longitude_field">{{'Longitude' | translate}}</label>
+                  <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" [required]="!this.fmu" disabled />
+                </div>
+              }
+              @if (!isDisabled()) {
+                <fieldset>
+                  <legend>{{'GPS coordinates' | translate}}</legend>
+                  <div class="fieldset-container">
+                    <!-- 8.2.0. Map -->
+                    <div class="form-group">
+                      <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="mapLayers" (leafletMapReady)="onMapReady($event)" class="map">
+                      </div>
                     </div>
-                    <div class="status">{{document['document-type'] | translate}} | {{ (document.id ? 'Already uploaded' : 'To upload') | translate}}</div>
-                  </div>
-                  <div class="actions">
-                    <button type="button" class="c-button -secondary" (click)="onClickDeleteDocument(document)">{{'Remove' | translate}}</button>
-                  </div>
-                </li>
-              </ul>
-              <p *ngIf="!documents.length">{{'No evidence' | translate}}</p>
-            </div>
-            <div *ngIf="!isDisabled()"  class="small-12 medium-6 columns">
-              <otp-tabs [tabs]="evidenceTabs" [currentTab]="currentEvidenceTabIndex" (changed)="onChangeEvidenceTab($event)"></otp-tabs>
-
-              <ng-template [ngIf]="currentEvidenceTab.id === 'existing'">
-                <div data-test-id="documents-list-report">
-                  <!-- List of evidences from the report -->
-                  <ul class="documents-list" *ngIf="reportDocuments.length">
-                    <li *ngFor="let document of reportDocuments">
-                      <div class="content">
-                        <div class="title">
-                          <a href="{{document.attachment.url}}" target="_blank" download>{{document.name}}</a>
+                    <div class="row">
+                      <!-- 8.2.1. Coordinates -->
+                      <div class="small-12 medium-6 columns">
+                        @if (f.submitted && !fmu && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)) {
+                          <div class="form-group">
+                            <div class="help-text">{{'Please select a FMU or enter coordinates below' | translate}}</div>
+                          </div>
+                        }
+                        <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
+                          <label for="coords_format_field">{{'Coordinates format' | translate}}</label>
+                          <select id="coords_format_field" name="coords_format_field" [(ngModel)]="coordinatesFormat" #coords_format_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
+                            <option [ngValue]="null" disabled>{{'observation.coordsFormat.select' | translate}}</option>
+                            @for (type of objectKeys(coordinatesFormatOptions); track type) {
+                              <option [ngValue]="coordinatesFormatOptions[type]">{{ type }}</option>
+                            }
+                          </select>
+                          @if (f.submitted && !coords_format_field.valid) {
+                            <div class="help-text">{{'observation.coordsFormat.invalid' | translate}}</div>
+                          }
+                          <p class="note">{{'observation.coordsFormat.note' | translate}}</p>
                         </div>
-                        <div class="status">{{document['document-type'] | translate}}</div>
+                        @if (coords_format_field.valid && latitude_field.valid && longitude_field.valid && (coordinatesFormat === 'UTM' ? hemisphere_field && hemisphere_field.valid && zone_field && zone_field.valid : true) && !this.checkCoordinatesValidity()) {
+                          <div class="form-group">
+                            <div class="help-text">{{'The coordinates are invalid' | translate}}</div>
+                          </div>
+                        }
+                        @if (coordinatesFormat === 'UTM') {
+                          <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
+                            <label for="hemisphere_field">{{'Hemisphere' | translate}}</label>
+                            <select id="hemisphere_field" name="hemisphere_field" (change)="onChangeCoordinates()" [(ngModel)]="hemisphere" #hemisphere_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
+                              <option [ngValue]="null" disabled>{{'observation.hemisphere.select' | translate}}</option>
+                              <option [ngValue]="'North'">{{'North' | translate}}</option>
+                              <option [ngValue]="'South'">{{'South' | translate}}</option>
+                            </select>
+                            @if (f.submitted && !hemisphere_field.valid) {
+                              <div class="help-text">{{'observation.hemisphere.select' | translate}}</div>
+                            }
+                          </div>
+                          <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
+                            <label for="zone_field">{{'Zone' | translate}}</label>
+                            <input id="zone_field" type="number" class="form-control" name="zone_field" (change)="onChangeCoordinates()" [(ngModel)]="zone" #zone_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
+                            @if (f.submitted && !zone_field.valid) {
+                              <div class="help-text">{{'observation.zone.select' | translate}}</div>
+                            }
+                          </div>
+                        }
+                        <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
+                          <label for="latitude_field">{{(coordinatesFormat === 'UTM' ? 'X' :'Latitude') | translate}}</label>
+                          <input id="latitude_field" type="text" class="form-control" name="latitude_field" (change)="onChangeCoordinates()" [(ngModel)]="latitude" #latitude_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
+                          @if (f.submitted && !latitude_field.valid) {
+                            <div class="help-text">{{(coordinatesFormat === 'UTM' ? 'Please enter the X value' : 'Please enter a latitude') | translate}}</div>
+                          }
+                        </div>
+                        <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
+                          <label for="longitude_field">{{(coordinatesFormat === 'UTM' ? 'Y' : 'Longitude') | translate}}</label>
+                          <input id="longitude_field" type="text" class="form-control" name="longitude_field" (change)="onChangeCoordinates()" [(ngModel)]="longitude" #longitude_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
+                          @if (f.submitted && !longitude_field.valid) {
+                            <div class="help-text">{{(coordinatesFormat === 'UTM' ? 'Please enter the Y value' : 'Please enter a longitude') | translate}}</div>
+                          }
+                        </div>
                       </div>
-                      <div class="actions">
-                        <button type="button" class="c-button -secondary" (click)="onClickRemoveReportDocument(document)">{{'Remove' | translate}}</button>
-                        <button type="button" class="c-button -primary" (click)="onClickAddReportDocument(document)">{{'observation.useAsEvidence' | translate}}</button>
+                      <!-- 8.2.2. Coordinates from photo -->
+                      <div class="small-12 medium-6 columns">
+                        <h3>{{'Get coordinates from a photo' | translate}}</h3>
+                        <p>{{"Instead of clicking on the map or manually filling the coordinates, you can get them from a georeferenced photo. This photo won't be part of the observation." | translate}}</p>
+                        <div class="form-group">
+                          <label for="photo_field">{{'Georeferenced photo' | translate}}</label>
+                          <input id="photo_field" type="file" class="form-control" name="photo_field" #photo_field="ngModel" (change)="onChangePhoto($event)" otpBase64FileInput maxSize="20971520" [(ngModel)]="georeferencedPhoto.attachment" accept=".jpg, .jpeg" />
+                          <button type="button" (click)="uploadAsEvidencePhoto()" class="use-as-evidence c-button -secondary" [disabled]="!georeferencedPhoto.attachment || photo_field.errors?.maxSize">{{'observation.useAsEvidence' | translate}}</button>
+                          @if (photo_field.errors?.maxSize) {
+                            <div class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
+                          }
+                        </div>
                       </div>
-                    </li>
-                  </ul>
-                  <p *ngIf="!reportDocuments.length">{{'No evidence' | translate}}</p>
-                </div>
-              </ng-template>
-
-              <ng-template [ngIf]="currentEvidenceTab.id === 'new'">
-                <div data-test-id="documents-upload-new">
-                  <br />
-                  <!-- Type -->
-                  <div class="form-group -required">
-                    <label for="document_type">{{'Document Type' | translate}}</label>
-                    <select id="document_type" name="document_type" [(ngModel)]="evidence['document-type']" #document_type="ngModel" required [disabled]="isDisabled()">
-                      <option [ngValue]="null" disabled>{{'Select a document type' | translate}}</option>
-                      <option *ngFor="let type of objectKeys(documentTypeOptions)" [ngValue]="documentTypeOptions[type]">{{ type }}</option>
-                    </select>
-                    <div *ngIf="f.submitted && !document_type.valid" class="help-text">{{'Please select a document type' | translate}}</div>
+                    </div>
                   </div>
-
-                  <!-- Title -->
-                  <div [ngClass]="{ 'form-group': true, '-required': (!!evidence.attachment || !documents.length) }">
-                    <label for="evidence_title">{{'Title' | translate}}</label>
-                    <input id="evidence_title" type="text" class="form-control" name="evidence_title" [(ngModel)]="evidence.name" #evidence_title="ngModel" [required]="(!!evidence.attachment || !documents.length)" />
-                    <div *ngIf="f.submitted && !evidence_title.valid" class="help-text">{{'Please enter the title' | translate}}</div>
-                  </div>
-
-                  <!-- Evidence -->
-                  <p>{{'When you upload a new file, it will appear in the list of evidence.' | translate}}</p>
-                  <!-- This input is used to prevent the submitting until evidence are uploaded -->
-                  <input *ngIf="!documents.length" type="hidden" name="evidence_presence_field" ngModel #evidence_presence_field="ngModel" [required]="!documents.length" />
-                  <div class="form-group" *ngIf="f.submitted && !documents.length">
-                    <div class="help-text">{{'You need to upload evidence' | translate}}</div>
-                  </div>
-                  <div class="form-group">
-                    <label for="evidence_field">{{'Evidence' | translate}}</label>
-                    <input #evidenceInput id="evidence_field" type="file" (change)="onChangeEvidence($event.target.files)" class="form-control" [ngClass]="{ 'filled': georeferencedPhoto.isUsed }" name="evidence_field" [(ngModel)]="evidence.attachment" #evidence_field="ngModel" otpBase64FileInput maxSize="20971520" accept=".pdf,.doc,.docx,.txt,.csv,.xml,.jpg,.jpeg,.png,.exif,.tiff,.bmp" />
-                    <div *ngIf="georeferencedPhoto.isUsed" class="geo-note">{{'observation.geoPhotoUploaded.note' | translate}}</div>
-                    <div *ngIf="evidence_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
-                    <div *ngIf="evidence_field.errors?.accept" class="help-text">{{'Allowed file types' | translate}}: pdf, doc, docx, txt, csv, xml, jpg, jpeg, png, exif, tiff, bmp</div>
-                    <div *ngIf="!evidence_field.errors?.maxSize && !evidence_field.valid" class="help-text">{{'The file is not valid' | translate}}</div>
-                  </div>
-
-                  <!-- Add to list -->
-                  <div class="form-group">
-                    <button type="button" class="c-button -primary" [disabled]="!evidence.attachment || !evidence_field.valid || !evidence_title.valid" (click)="onClickAddEvidence()">{{'observation.useAsEvidence' | translate}}</button>
-                  </div>
-                </div>
-              </ng-template>
-            </div>
-          </div>
-        </ng-template>
-      </div>
-    </fieldset>
-  </ng-template>
-
-  <div class="form-header">
-    <div class="form-group">
-      <label for="observation_type">{{'Type' | translate}}</label>
-      <select id="observation_type" name="observation_type" [(ngModel)]="type" #observation_type="ngModel" [required]="!observation" [disabled]="!!observation && !isCopied">
-        <option [ngValue]="null" disabled>{{'Select an observation type' | translate}}</option>
-        <option value="operator">{{'Operator' | translate}}</option>
-        <option value="government">{{'Government' | translate}}</option>
-      </select>
-      <div *ngIf="f.submitted && observation_type.invalid" class="help-text">{{'Please select an observation type' | translate}}</div>
-      <p class="note">
-        {{ 'observation.type.note' | translate }}
-      </p>
-    </div>
-
-    <!-- Publication date -->
-    <div class="form-group" *ngIf="isObservationPublished">
-      <label for="publication_date">{{'Publication date' | translate}}</label>
-      <otp-datepicker [id]="'publication_date'" [name]="'publication_date'" [(ngModel)]="publicationDate" #publication_date="ngModel" required disabled></otp-datepicker>
-      <p class="note">
-        {{ 'observation.publicationDate.note' | translate }}
-      </p>
-    </div>
-  </div>
-
-  <div class="form-container" *ngIf="type === 'operator'">
-    <div class="form-group">
-      <label for="language_field">{{'Language' | translate}}</label>
-      <input id="language_field" type="text" class="form-control" name="language_field" [value]="languages[locale]" disabled />
-      <p class="note">
-        {{ ((canSave() || canCreate()) ? 'observation.language.note' : 'observation.language.viewNote' ) | translate }}
-      </p>
-    </div>
-
-    <!-- 0. ID -->
-    <div class="form-group" *ngIf="observation && !isCopied">
-      <label for="id_field">{{'ID' | translate}}</label>
-      <input id="id_field" type="text" class="form-control" name="id_field" [(ngModel)]="observation.id" #id_field="ngModel" disabled />
-    </div>
-
-    <!-- 1. Report -->
-    <ng-container *ngTemplateOutlet="reportTemplate"></ng-container>
-
-    <!-- 2. Country -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
-      <label for="country_id">{{'Country' | translate}}</label>
-      <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required [disabled]="isDisabled()">
-        <option [ngValue]="null" disabled>{{'Select a country' | translate}}</option>
-        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
-      </select>
-      <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
-      <p class="note">
-        {{ 'observation.country.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 3. Operator -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && (!operator_id.valid || unknownOperatorSelected) }">
-      <label for="operator_id">{{'Operator' | translate}}</label>
-      <ngx-bootstrap-multiselect
-        [texts]="multiSelectTexts"
-        [options]="operatorsOptions"
-        [settings]="operatorsSelectSettings"
-        [(ngModel)]="operatorsSelection"
-        (ngModelChange)="onChangeOperatorsOptions($event)"
-        name="operator_id"
-        #operator_id="ngModel"
-        [disabled]="isDisabled()"
-        required
-      ></ngx-bootstrap-multiselect>
-      <div *ngIf="f.submitted && !operator_id.valid" class="help-text">{{'Please select an operator' | translate}}</div>
-      <div *ngIf="unknownOperatorSelected" class="help-text">{{'You will not be able to submit this observation to review with unknown operator selected' | translate}}</div>
-      <div class="note" *ngIf="!isDisabled()">
-        <button type="button" class="c-button -primary" (click)="onClickAddOperator('operator')">{{'Add a new producer to the list' | translate}}</button>
-      </div>
-    </div>
-
-    <!-- 5. Relevant operators -->
-    <div class="form-group">
-      <label for="relevant_operators">{{'Relevant operators' | translate}}</label>
-      <ngx-bootstrap-multiselect
-        [texts]="multiSelectTexts"
-        [options]="relevantOperatorsOptions"
-        [settings]="relevantOperatorsSelectSettings"
-        [(ngModel)]="_relevantOperatorsSelection"
-        (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
-        name="relevant_operators" id="relevant_operators"
-        [disabled]="isDisabled()">
-      </ngx-bootstrap-multiselect>
-      <p class="note">
-        {{ 'observation.relevantOperators.note' | translate }}
-      </p>
-      <div class="note" *ngIf="!isDisabled()">
-        <button type="button" class="c-button -primary" (click)="onClickAddOperator('relevantOperators')">{{'Add a new producer to the list' | translate}}</button>
-      </div>
-    </div>
-
-    <!-- 6. Observation category -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
-      <label for="subcategory_id">{{'Observation category' | translate}}</label>
-      <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required [disabled]="isDisabled()">
-        <option [ngValue]="null" disabled>{{'Select an observation category' | translate}}</option>
-        <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
-      </select>
-      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">{{'Please select an observation category' | translate}}</div>
-      <p class="note">
-        {{ 'observation.observationCategory.note' | translate }}
-      </p>
-    </div>
-
-
-    <!-- 7. Due diligence category -->
-    <div class="form-group">
-      <label for="diligence_category">{{'Due diligence category' | translate}}</label>
-      <input id="diligence_category" type="text" class="form-control" name="diligence_category" [ngModel]="subcategory && subcategory.category && subcategory.category.name" (ngModelChange)="subcategory && subcategory.category && (subcategory.category.name = $event)" #diligence_category="ngModel" disabled />
-      <p class="note">
-        {{ 'observation.diligenceCategory.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 8. Location -->
-    <fieldset>
-      <legend>{{'Location' | translate}}</legend>
-      <div class="fieldset-container">
-        <ng-template [ngIf]="subcategory === null || subcategory === undefined || subcategory['location-required'] === true">
-          <!-- 8.0. Physical place -->
-          <div class="form-group -radio">
-            <p>{{'Did this observation occur at a physical place?' | translate}}</p>
-            <label><input type="radio" name="physical_place" [value]="true"  [(ngModel)]="physicalPlace" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">{{'Yes' | translate}}</label>
-            <label><input type="radio" name="physical_place" [value]="false" [(ngModel)]="physicalPlace" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">{{'No' | translate}}</label>
-          </div>
-        </ng-template>
-
-        <ng-template [ngIf]="physicalPlace">
-          <div class="form-group" *ngIf="nonConcessionActivityEnabled">
-            <input type="checkbox" name="non_concession_activity" id="non_concession_activity" [(ngModel)]="nonConcessionActivity" #non_concession_activity="ngModel" [disabled]="isDisabled()" />
-            <label for="non_concession_activity">{{'observation.nonConcessionActivity' | translate}}</label>
-            <p class="note">
-              {{'observation.nonConcessionActivity.note' | translate}}
-            </p>
-          </div>
-
-          <!-- 8.1. Forest management unit -->
-          <div [ngClass]="{ 'form-group': true, '-required': !!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
-            <label for="fmu_field">{{'Forest management unit' | translate}}</label>
-            <select id="fmu_field" name="fmu_field" [(ngModel)]="fmu" #fmu_field="ngModel" [required]="!!fmus.length && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
-              <option [ngValue]="null">{{'Select a FMU' | translate}}</option>
-              <option *ngFor="let fmu of fmus" [ngValue]="fmu">{{ fmu.name }}</option>
-            </select>
-            <p class="note">
-              {{ 'observation.fmu.note' | translate }}
-            </p>
-          </div>
-
-          <!-- 8.2. GPS coordinates -->
-          <ng-template [ngIf]="isDisabled()">
+                </fieldset>
+              }
+            }
+            <!-- 8.3. Location information -->
             <div class="form-group">
-              <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="mapLayers" (leafletMapReady)="onMapReady($event)" class="map">
-              </div>
+              <label for="location_information">{{'Location information' | translate}}</label>
+              <textarea id="location_information" name="location_information" [(ngModel)]="locationInformation" #location_information="ngModel" [disabled]="isDisabled()"></textarea>
             </div>
-            <div class="form-group" [ngClass]="{ '-required': !this.fmu }">
-              <label for="latitude_field">{{'Latitude' | translate}}</label>
-              <input id="latitude_field" type="text" class="form-control" name="latitude_field" [(ngModel)]="latitude" #latitude_field="ngModel" [required]="!this.fmu" disabled />
+          </div>
+        </fieldset>
+        <!-- 9. Observation details -->
+        <div class="form-group">
+          <label for="details_field">{{'Observation details' | translate}}</label>
+          <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
+          <p class="note">
+            {{ 'observation.observationDetails.note' | translate }}
+          </p>
+        </div>
+        <!-- 10. Evidence -->
+        <ng-container *ngTemplateOutlet="evidenceTemplate"></ng-container>
+        <!-- 11. Severity -->
+        <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity }">
+          <label for="severity_id">{{'Severity' | translate}}</label>
+          <div class="buttons">
+            @for (s of severities; track s) {
+              <label>
+                <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()" required>
+                <span>{{ s.level }} - {{ s.details }}</span>
+              </label>
+            }
+          </div>
+          @if (!subcategory_id.valid) {
+            <p class="note">
+              {{ 'Please pick sub-category first.' | translate }}
+            </p>
+          }
+          @if (f.submitted && !severity) {
+            <div class="help-text">{{'Please select a severity' | translate}}</div>
+          }
+          @if (subcategory_id.valid) {
+            <p class="note">
+              {{ 'observation.severity.note' | translate }}
+            </p>
+          }
+        </div>
+        <!-- 12. Actions taken by operator -->
+        <div class="form-group">
+          <label for="actions_taken">{{'Actions taken by operator' | translate}}</label>
+          <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
+          <p class="note">
+            {{ 'observation.actionsTakenByOperator.note' | translate }}
+          </p>
+        </div>
+        <!-- 13. Comments from the operator -->
+        <div class="form-group">
+          <label for="concern_opinion">{{'Comments from the operator' | translate}}</label>
+          <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
+          <p class="note">
+            {{ 'observation.commentsFromOperator.note' | translate }}
+          </p>
+        </div>
+        <!-- 14. Citation -->
+        <div class="form-group">
+          <label for="pv_field">{{'Citation' | translate}}</label>
+          <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" [disabled]="isDisabled()" />
+          <p class="note">
+            {{ 'observation.citation.note' | translate }}
+          </p>
+        </div>
+        <!-- 15. Litigation status -->
+        <div class="form-group">
+          <label for="litigation_status">{{'Litigation status' | translate}}</label>
+          <input id="litigation_status" type="text" class="form-control" name="litigation_status" [(ngModel)] ="litigationStatus" #litigation_status="ngModel" [disabled]="isDisabled()" />
+          <p class="note">
+            {{ 'observation.litigationStatus.note' | translate }}
+          </p>
+        </div>
+        <!-- 16. Legal -->
+        <fieldset>
+          <legend>{{'Legal' | translate}}</legend>
+          <div class="fieldset-container">
+            <!-- 16.1. Observation according to legal text -->
+            <div class="form-group">
+              <label for="law">{{'Observation according to legal text' | translate}}</label>
+              <ngx-bootstrap-multiselect
+                [texts]="multiSelectTexts"
+                [options]="lawsOptions"
+                [settings]="lawsSelectSettings"
+                [(ngModel)]="lawsSelection"
+                (ngModelChange)="onChangeLawsOptions($event)"
+                name="law_field"
+                #law_field="ngModel"
+                [disabled]="isDisabled()"
+              ></ngx-bootstrap-multiselect>
+              <p class="note">
+                {{ 'observation.illegalityAsWritten.note' | translate }}
+              </p>
             </div>
-
-            <div class="form-group" [ngClass]="{ '-required': !this.fmu }">
-              <label for="longitude_field">{{'Longitude' | translate}}</label>
-              <input id="longitude_field" type="text" class="form-control" name="longitude_field" [(ngModel)]="longitude" #longitude_field="ngModel" [required]="!this.fmu" disabled />
+            <!-- 16.1. Legal reference (infraction) -->
+            <div class="form-group">
+              <label for="infraction">{{'Legal reference (infraction)' | translate}}</label>
+              <input id="infraction" type="text" class="form-control" name="infraction" [ngModel]="law && law.infraction" (ngModelChange)="law && (law.infraction = $event)" #infraction="ngModel" disabled />
+              <p class="note">
+                {{ 'observation.legalReferenceInfraction.note' | translate }}
+              </p>
             </div>
-          </ng-template>
-          <fieldset *ngIf="!isDisabled()">
-            <legend>{{'GPS coordinates' | translate}}</legend>
+            <!-- 16.2. Legal reference (sanction) -->
+            <div class="form-group">
+              <label for="sanction">{{'Legal reference (sanction)' | translate}}</label>
+              <input id="sanction" type="text" class="form-control" name="sanction" [ngModel]="law && law.sanctions" (ngModelChange)="law && (law.sanctions = $event)" #sanction="ngModel" disabled />
+              <p class="note">
+                {{ 'observation.legalReferenceSanction.note' | translate }}
+              </p>
+            </div>
+            <!-- 16.3. Minimum fine -->
+            <div class="form-group">
+              <label for="min_fine">{{'Minimum fine' | translate}}</label>
+              <input id="min_fine" type="text" class="form-control" name="min_fine" [ngModel]="law && law['min-fine']" (ngModelChange)="law && (law['min-fine'] = $event)" #min_fine="ngModel" disabled />
+              <p class="note">
+                {{ 'observation.minimumFine.note' | translate }}
+              </p>
+            </div>
+            <!-- 16.4. Maximum fine -->
+            <div class="form-group">
+              <label for="max_fine">{{'Maximum fine' | translate}}</label>
+              <input id="max_fine" type="text" class="form-control" name="max_fine" [ngModel]="law && law['max-fine']" (ngModelChange)="law && (law['max-fine'] = $event)" #max_fine="ngModel" disabled />
+              <p class="note">
+                {{ 'observation.maximumFine.note' | translate }}
+              </p>
+            </div>
+            <!-- 16.5. Penal servitude -->
+            <div class="form-group">
+              <label for="penal_servitude">{{'Penal servitude' | translate}}</label>
+              <input id="penal_servitude" type="text" class="form-control" name="penal_servitude" [ngModel]="law && law['penal-servitude']" (ngModelChange)="law && (law['penal-servitude'] = $event)" #penal_servitude="ngModel" disabled />
+              <p class="note">
+                {{ 'observation.penalServitude.note' | translate }}
+              </p>
+            </div>
+            <!-- 16.6. Other penalties -->
+            <div class="form-group">
+              <label for="other_penalties">{{'Other penalties' | translate}}</label>
+              <input id="other_penalties" type="text" class="form-control" name="other_penalties" [ngModel]="law && law['other-penalties']" (ngModelChange)="law && (law['other-penalties'] = $event)" #other_penalties="ngModel" disabled />
+              <p class="note">
+                {{ 'observation.otherPenalties.note' | translate }}
+              </p>
+            </div>
+            <!-- 16.7. APV -->
+            <div class="form-group">
+              <label for="apv">{{'APV' | translate}}</label>
+              <input id="apv" type="text" class="form-control" name="apv" [ngModel]="law && law.apv" (ngModelChange)="law && (law.apv = $event)" #flegt="ngModel" disabled />
+              <p class="note">
+                {{ 'observation.apv.note' | translate }}
+              </p>
+            </div>
+          </div>
+        </fieldset>
+        <!-- 18. Metadata -->
+        @if (observation && !isCopied) {
+          <fieldset>
+            <legend>{{'Metadata' | translate}}</legend>
             <div class="fieldset-container">
-              <!-- 8.2.0. Map -->
+              <!-- 18.1. Last modification by -->
               <div class="form-group">
-                <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="mapLayers" (leafletMapReady)="onMapReady($event)" class="map">
-                </div>
+                <label for="last_modification_by">{{'Last modification by' | translate}}</label>
+                <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [ngModel]="observation['modified-user'] && observation['modified-user'].name" (ngModelChange)="observation['modified-user'] && (observation['modified-user'].name = $event)" #last_modification_by="ngModel" disabled />
               </div>
-
-              <div class="row">
-                <!-- 8.2.1. Coordinates -->
-                <div class="small-12 medium-6 columns">
-                  <div class="form-group" *ngIf="f.submitted && !fmu && (latitude === null || longitude === null || latitude === undefined || longitude === undefined || latitude.length === 0 || longitude.length === 0) && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)">
-                    <div class="help-text">{{'Please select a FMU or enter coordinates below' | translate}}</div>
-                  </div>
-
-                  <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
-                    <label for="coords_format_field">{{'Coordinates format' | translate}}</label>
-                    <select id="coords_format_field" name="coords_format_field" [(ngModel)]="coordinatesFormat" #coords_format_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
-                      <option [ngValue]="null" disabled>{{'observation.coordsFormat.select' | translate}}</option>
-                      <option *ngFor="let type of objectKeys(coordinatesFormatOptions)" [ngValue]="coordinatesFormatOptions[type]">{{ type }}</option>
-                    </select>
-                    <div *ngIf="f.submitted && !coords_format_field.valid" class="help-text">{{'observation.coordsFormat.invalid' | translate}}</div>
-                    <p class="note">{{'observation.coordsFormat.note' | translate}}</p>
-                  </div>
-
-                  <div class="form-group" *ngIf="coords_format_field.valid && latitude_field.valid && longitude_field.valid && (coordinatesFormat === 'UTM' ? hemisphere_field && hemisphere_field.valid && zone_field && zone_field.valid : true) && !this.checkCoordinatesValidity()">
-                    <div class="help-text">{{'The coordinates are invalid' | translate}}</div>
-                  </div>
-
-                  <ng-template [ngIf] ="coordinatesFormat === 'UTM'">
-                    <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
-                      <label for="hemisphere_field">{{'Hemisphere' | translate}}</label>
-                      <select id="hemisphere_field" name="hemisphere_field" (change)="onChangeCoordinates()" [(ngModel)]="hemisphere" #hemisphere_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" [disabled]="isDisabled()">
-                        <option [ngValue]="null" disabled>{{'observation.hemisphere.select' | translate}}</option>
-                        <option [ngValue]="'North'">{{'North' | translate}}</option>
-                        <option [ngValue]="'South'">{{'South' | translate}}</option>
-                      </select>
-                      <div *ngIf="f.submitted && !hemisphere_field.valid" class="help-text">{{'observation.hemisphere.select' | translate}}</div>
-                    </div>
-
-                    <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
-                      <label for="zone_field">{{'Zone' | translate}}</label>
-                      <input id="zone_field" type="number" class="form-control" name="zone_field" (change)="onChangeCoordinates()" [(ngModel)]="zone" #zone_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
-                      <div *ngIf="f.submitted && !zone_field.valid" class="help-text">{{'observation.zone.select' | translate}}</div>
-                    </div>
-                  </ng-template>
-
-                  <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
-                    <label for="latitude_field">{{(coordinatesFormat === 'UTM' ? 'X' :'Latitude') | translate}}</label>
-                    <input id="latitude_field" type="text" class="form-control" name="latitude_field" (change)="onChangeCoordinates()" [(ngModel)]="latitude" #latitude_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
-                    <div *ngIf="f.submitted && !latitude_field.valid" class="help-text">{{(coordinatesFormat === 'UTM' ? 'Please enter the X value' : 'Please enter a latitude') | translate}}</div>
-                  </div>
-
-                  <div class="form-group" [ngClass]="{ '-required': !this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true) }">
-                    <label for="longitude_field">{{(coordinatesFormat === 'UTM' ? 'Y' : 'Longitude') | translate}}</label>
-                    <input id="longitude_field" type="text" class="form-control" name="longitude_field" (change)="onChangeCoordinates()" [(ngModel)]="longitude" #longitude_field="ngModel" [required]="!this.fmu && (subcategory === null || subcategory === undefined || subcategory['location-required'] === true)" />
-                    <div *ngIf="f.submitted && !longitude_field.valid" class="help-text">{{(coordinatesFormat === 'UTM' ? 'Please enter the Y value' : 'Please enter a longitude') | translate}}</div>
-                  </div>
-                </div>
-
-                <!-- 8.2.2. Coordinates from photo -->
-                <div class="small-12 medium-6 columns">
-                  <h3>{{'Get coordinates from a photo' | translate}}</h3>
-                  <p>{{"Instead of clicking on the map or manually filling the coordinates, you can get them from a georeferenced photo. This photo won't be part of the observation." | translate}}</p>
-
-                  <div class="form-group">
-                    <label for="photo_field">{{'Georeferenced photo' | translate}}</label>
-                    <input id="photo_field" type="file" class="form-control" name="photo_field" #photo_field="ngModel" (change)="onChangePhoto($event)" otpBase64FileInput maxSize="20971520" [(ngModel)]="georeferencedPhoto.attachment" accept=".jpg, .jpeg" />
-                    <button type="button" (click)="uploadAsEvidencePhoto()" class="use-as-evidence c-button -secondary" [disabled]="!georeferencedPhoto.attachment || photo_field.errors?.maxSize">{{'observation.useAsEvidence' | translate}}</button>
-                    <div *ngIf="photo_field.errors?.maxSize" class="help-text">{{'The file should weight less than 20MB' | translate}}</div>
-                  </div>
-                </div>
+              <!-- 18.1. Last modified on -->
+              <div class="form-group">
+                <label for="last_modified_on">{{'Last modified on' | translate}}</label>
+                <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>
               </div>
             </div>
           </fieldset>
-        </ng-template>
-
-        <!-- 8.3. Location information -->
+        }
+      </div>
+    }
+    @if (type === 'government') {
+      <div class="form-container">
         <div class="form-group">
-          <label for="location_information">{{'Location information' | translate}}</label>
-          <textarea id="location_information" name="location_information" [(ngModel)]="locationInformation" #location_information="ngModel" [disabled]="isDisabled()"></textarea>
+          <label for="language_field">{{'Language' | translate}}</label>
+          <input id="language_field" type="text" class="form-control" name="language_field" [value]="languages[locale]" disabled />
+          <p class="note">
+            {{ ((canSave() || canCreate()) ? 'observation.language.note' : 'observation.language.viewNote' ) | translate }}
+          </p>
         </div>
-      </div>
-    </fieldset>
-
-    <!-- 9. Observation details -->
-    <div class="form-group">
-      <label for="details_field">{{'Observation details' | translate}}</label>
-      <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
-      <p class="note">
-        {{ 'observation.observationDetails.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 10. Evidence -->
-    <ng-container *ngTemplateOutlet="evidenceTemplate"></ng-container>
-
-    <!-- 11. Severity -->
-    <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity }">
-      <label for="severity_id">{{'Severity' | translate}}</label>
-
-      <div class="buttons">
-        <label *ngFor="let s of severities">
-          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()" required>
-          <span>{{ s.level }} - {{ s.details }}</span>
-        </label>
-      </div>
-
-      <p class="note" *ngIf="!subcategory_id.valid">
-        {{ 'Please pick sub-category first.' | translate }}
-      </p>
-      <div *ngIf="f.submitted && !severity" class="help-text">{{'Please select a severity' | translate}}</div>
-      <p class="note" *ngIf="subcategory_id.valid">
-        {{ 'observation.severity.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 12. Actions taken by operator -->
-    <div class="form-group">
-      <label for="actions_taken">{{'Actions taken by operator' | translate}}</label>
-      <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
-      <p class="note">
-        {{ 'observation.actionsTakenByOperator.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 13. Comments from the operator -->
-    <div class="form-group">
-      <label for="concern_opinion">{{'Comments from the operator' | translate}}</label>
-      <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
-      <p class="note">
-        {{ 'observation.commentsFromOperator.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 14. Citation -->
-    <div class="form-group">
-      <label for="pv_field">{{'Citation' | translate}}</label>
-      <input id="pv_field" type="text" class="form-control" name="pv_field" [(ngModel)]="pv" #pv_field="ngModel" [disabled]="isDisabled()" />
-      <p class="note">
-        {{ 'observation.citation.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 15. Litigation status -->
-    <div class="form-group">
-      <label for="litigation_status">{{'Litigation status' | translate}}</label>
-      <input id="litigation_status" type="text" class="form-control" name="litigation_status" [(ngModel)] ="litigationStatus" #litigation_status="ngModel" [disabled]="isDisabled()" />
-      <p class="note">
-        {{ 'observation.litigationStatus.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 16. Legal -->
-    <fieldset>
-      <legend>{{'Legal' | translate}}</legend>
-      <div class="fieldset-container">
-        <!-- 16.1. Observation according to legal text -->
+        <!-- 0. ID -->
+        @if (observation) {
+          <div class="form-group">
+            <label for="id_field">{{'ID' | translate}}</label>
+            <input id="id_field" type="text" class="form-control" name="id_field" [(ngModel)]="observation.id" #id_field="ngModel" disabled />
+          </div>
+        }
+        <!-- 1. Report -->
+        <ng-container *ngTemplateOutlet="reportTemplate"></ng-container>
+        <!-- 2. Country -->
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
+          <label for="country_id">{{'Country' | translate}}</label>
+          <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required [disabled]="isDisabled()">
+            <option [ngValue]="null" disabled>{{'Select a country' | translate}}</option>
+            @for (country of countries; track country) {
+              <option [ngValue]="country">{{ country.name }}</option>
+            }
+          </select>
+          @if (f.submitted && !country_id.valid) {
+            <div class="help-text">{{'Please select a country' | translate}}</div>
+          }
+          <p class="note">
+            {{ 'observation.country.note' | translate }}
+          </p>
+        </div>
+        <!-- 3. Government entities -->
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
+          <label for="government_id">{{'Government entities' | translate}}</label>
+          <ngx-bootstrap-multiselect [texts]="multiSelectTexts" [options]="governmentsOptions" [(ngModel)]="_governmentsSelection" (ngModelChange)="onChangeGovernmentsOptions($event)" #government_id="ngModel" name="government_id" [disabled]="isDisabled()" required></ngx-bootstrap-multiselect>
+          @if (f.submitted && !government_id.valid) {
+            <div class="help-text">{{'Please select government entities' | translate}}</div>
+          }
+          <p class="note">
+            {{ 'observation.governmentEntity.note' | translate }}
+          </p>
+          @if (!isDisabled()) {
+            <div class="note">
+              <button type="button" class="c-button -primary" (click)="onClickAddGovernanceEntity()">{{'Add a new government entity to the list' | translate}}</button>
+            </div>
+          }
+        </div>
+        <!-- 4. Governance problem -->
+        <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
+          <label for="subcategory_id">{{'Governance problem' | translate}}</label>
+          <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required [disabled]="isDisabled()">
+            <option [ngValue]="null" disabled>{{'Select a governance problem' | translate}}</option>
+            @for (subcategory of subcategories; track subcategory) {
+              <option [ngValue]="subcategory">{{ subcategory.name }}</option>
+            }
+          </select>
+          @if (f.submitted && !subcategory_id.valid) {
+            <div class="help-text">{{'Please select a governance problem' | translate}}</div>
+          }
+          <p class="note">
+            {{ 'observation.governanceProblem.note' | translate }}
+          </p>
+        </div>
+        <!-- 6. Relevant operators -->
         <div class="form-group">
-          <label for="law">{{'Observation according to legal text' | translate}}</label>
+          <label for="relevant_operators">{{'Relevant operators' | translate}}</label>
           <ngx-bootstrap-multiselect
             [texts]="multiSelectTexts"
-            [options]="lawsOptions"
-            [settings]="lawsSelectSettings"
-            [(ngModel)]="lawsSelection"
-            (ngModelChange)="onChangeLawsOptions($event)"
-            name="law_field"
-            #law_field="ngModel"
-            [disabled]="isDisabled()"
-          ></ngx-bootstrap-multiselect>
+            [options]="relevantOperatorsOptions"
+            [settings]="relevantOperatorsSelectSettings"
+            [(ngModel)]="_relevantOperatorsSelection"
+            (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
+            name="relevant_operators" id="relevant_operators"
+            [disabled]="isDisabled()">
+          </ngx-bootstrap-multiselect>
           <p class="note">
-            {{ 'observation.illegalityAsWritten.note' | translate }}
+            {{ 'observation.relevantOperators.note' | translate }}
           </p>
         </div>
-
-        <!-- 16.1. Legal reference (infraction) -->
+        <!-- 7. Description -->
         <div class="form-group">
-          <label for="infraction">{{'Legal reference (infraction)' | translate}}</label>
-          <input id="infraction" type="text" class="form-control" name="infraction" [ngModel]="law && law.infraction" (ngModelChange)="law && (law.infraction = $event)" #infraction="ngModel" disabled />
+          <label for="details_field">{{'Description' | translate}}</label>
+          <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
           <p class="note">
-            {{ 'observation.legalReferenceInfraction.note' | translate }}
+            {{ 'observation.details.note' | translate }}
           </p>
         </div>
-
-        <!-- 16.2. Legal reference (sanction) -->
+        <!-- 8. Evidence -->
+        <ng-container *ngTemplateOutlet="evidenceTemplate"></ng-container>
+        <!-- 9. Severity -->
+        <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity }">
+          <label for="severity_id">{{'Severity' | translate}}</label>
+          <div class="buttons">
+            @for (s of severities; track s) {
+              <label>
+                <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">
+                <span>{{ s.level }} - {{ s.details }}</span>
+              </label>
+            }
+          </div>
+          @if (!subcategory_id.valid) {
+            <p class="note">
+              {{ 'Please pick governance problem first.' | translate }}
+            </p>
+          }
+          @if (f.submitted && !severity) {
+            <div class="help-text">{{'Please select a severity' | translate}}</div>
+          }
+          @if (subcategory_id.valid) {
+            <p class="note">
+              {{ 'observation.severity.note' | translate }}
+            </p>
+          }
+        </div>
+        <!-- 10. Actions taken by government -->
         <div class="form-group">
-          <label for="sanction">{{'Legal reference (sanction)' | translate}}</label>
-          <input id="sanction" type="text" class="form-control" name="sanction" [ngModel]="law && law.sanctions" (ngModelChange)="law && (law.sanctions = $event)" #sanction="ngModel" disabled />
+          <label for="actions_taken">{{'Actions taken by government' | translate}}</label>
+          <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
           <p class="note">
-            {{ 'observation.legalReferenceSanction.note' | translate }}
+            {{ 'observation.actionsTakenByGovernment.note' | translate }}
           </p>
         </div>
-
-        <!-- 16.3. Minimum fine -->
+        <!-- 11. Government entity comments -->
         <div class="form-group">
-          <label for="min_fine">{{'Minimum fine' | translate}}</label>
-          <input id="min_fine" type="text" class="form-control" name="min_fine" [ngModel]="law && law['min-fine']" (ngModelChange)="law && (law['min-fine'] = $event)" #min_fine="ngModel" disabled />
+          <label for="concern_opinion">{{'observation.commentsFromGovernment.title' | translate}}</label>
+          <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
           <p class="note">
-            {{ 'observation.minimumFine.note' | translate }}
+            {{ 'observation.commentsFromGovernment.note' | translate }}
           </p>
         </div>
-
-        <!-- 16.4. Maximum fine -->
-        <div class="form-group">
-          <label for="max_fine">{{'Maximum fine' | translate}}</label>
-          <input id="max_fine" type="text" class="form-control" name="max_fine" [ngModel]="law && law['max-fine']" (ngModelChange)="law && (law['max-fine'] = $event)" #max_fine="ngModel" disabled />
-          <p class="note">
-            {{ 'observation.maximumFine.note' | translate }}
-          </p>
-        </div>
-
-        <!-- 16.5. Penal servitude -->
-        <div class="form-group">
-          <label for="penal_servitude">{{'Penal servitude' | translate}}</label>
-          <input id="penal_servitude" type="text" class="form-control" name="penal_servitude" [ngModel]="law && law['penal-servitude']" (ngModelChange)="law && (law['penal-servitude'] = $event)" #penal_servitude="ngModel" disabled />
-          <p class="note">
-            {{ 'observation.penalServitude.note' | translate }}
-          </p>
-        </div>
-
-        <!-- 16.6. Other penalties -->
-        <div class="form-group">
-          <label for="other_penalties">{{'Other penalties' | translate}}</label>
-          <input id="other_penalties" type="text" class="form-control" name="other_penalties" [ngModel]="law && law['other-penalties']" (ngModelChange)="law && (law['other-penalties'] = $event)" #other_penalties="ngModel" disabled />
-          <p class="note">
-            {{ 'observation.otherPenalties.note' | translate }}
-          </p>
-        </div>
-
-        <!-- 16.7. APV -->
-        <div class="form-group">
-          <label for="apv">{{'APV' | translate}}</label>
-          <input id="apv" type="text" class="form-control" name="apv" [ngModel]="law && law.apv" (ngModelChange)="law && (law.apv = $event)" #flegt="ngModel" disabled />
-          <p class="note">
-            {{ 'observation.apv.note' | translate }}
-          </p>
+        <!-- 13. Metadata -->
+        @if (observation) {
+          <fieldset>
+            <legend>{{'Metadata' | translate}}</legend>
+            <div class="fieldset-container">
+              <!-- 13.1. Last modification by -->
+              <div class="form-group">
+                <label for="last_modification_by">{{'Last modification by' | translate}}</label>
+                <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [ngModel]="observation['modified-user'] && observation['modified-user'].name" (ngModelChange)="observation['modified-user'] && (observation['modified-user'].name = $event)" #last_modification_by="ngModel" disabled />
+              </div>
+              <!-- 13.1. Last modified on -->
+              <div class="form-group">
+                <label for="last_modified_on">{{'Last modified on' | translate}}</label>
+                <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>
+              </div>
+            </div>
+          </fieldset>
+        }
+      </div>
+    }
+    <ng-container [ngTemplateOutlet]="errorsTemplate" [ngTemplateOutletContext]="{ containerClass: 'with-top-margin' }">
+    </ng-container>
+    <div class="form-footer">
+      <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
+        <div class="c-button-container -j-end form-group">
+          @if (canGoBack()) {
+            <button type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+          }
+          @if (canCancel()) {
+            <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+          }
+          @if (canSubmitForReview()) {
+            <button type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
+          }
+          @if (canAmend()) {
+            <button type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
+          }
+          @if (canSave()) {
+            <button  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
+          }
+          @if (canCreate()) {
+            <button  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
+          }
+          @if (canPublishWithoutComments()) {
+            <button type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
+          }
+          @if (canPublishWithModification()) {
+            <button type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
+          }
         </div>
       </div>
-    </fieldset>
-
-    <!-- 18. Metadata -->
-    <fieldset *ngIf="observation && !isCopied">
-      <legend>{{'Metadata' | translate}}</legend>
-      <div class="fieldset-container">
-        <!-- 18.1. Last modification by -->
-        <div class="form-group">
-          <label for="last_modification_by">{{'Last modification by' | translate}}</label>
-          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [ngModel]="observation['modified-user'] && observation['modified-user'].name" (ngModelChange)="observation['modified-user'] && (observation['modified-user'].name = $event)" #last_modification_by="ngModel" disabled />
-        </div>
-
-        <!-- 18.1. Last modified on -->
-        <div class="form-group">
-          <label for="last_modified_on">{{'Last modified on' | translate}}</label>
-          <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>
-        </div>
-      </div>
-    </fieldset>
-
-  </div>
-
-  <div class="form-container" *ngIf="type === 'government'">
-    <div class="form-group">
-      <label for="language_field">{{'Language' | translate}}</label>
-      <input id="language_field" type="text" class="form-control" name="language_field" [value]="languages[locale]" disabled />
-      <p class="note">
-        {{ ((canSave() || canCreate()) ? 'observation.language.note' : 'observation.language.viewNote' ) | translate }}
-      </p>
+      <otp-action-bar *otpMaxTablet>
+        @if (canGoBack()) {
+          <button type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
+        }
+        @if (canCancel()) {
+          <button type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
+        }
+        @if (canSubmitForReview()) {
+          <button type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
+        }
+        @if (canAmend()) {
+          <button type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
+        }
+        @if (canSave()) {
+          <button  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
+        }
+        @if (canCreate()) {
+          <button  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
+        }
+        @if (canPublishWithoutComments()) {
+          <button type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
+        }
+        @if (canPublishWithModification()) {
+          <button type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
+        }
+      </otp-action-bar>
     </div>
-
-    <!-- 0. ID -->
-    <div class="form-group" *ngIf="observation">
-      <label for="id_field">{{'ID' | translate}}</label>
-      <input id="id_field" type="text" class="form-control" name="id_field" [(ngModel)]="observation.id" #id_field="ngModel" disabled />
-    </div>
-
-    <!-- 1. Report -->
-    <ng-container *ngTemplateOutlet="reportTemplate"></ng-container>
-
-    <!-- 2. Country -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !country_id.valid }">
-      <label for="country_id">{{'Country' | translate}}</label>
-      <select id="country_id" name="country_id" [(ngModel)]="country" #country_id="ngModel" required [disabled]="isDisabled()">
-        <option [ngValue]="null" disabled>{{'Select a country' | translate}}</option>
-        <option *ngFor="let country of countries" [ngValue]="country">{{ country.name }}</option>
-      </select>
-      <div *ngIf="f.submitted && !country_id.valid" class="help-text">{{'Please select a country' | translate}}</div>
-      <p class="note">
-        {{ 'observation.country.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 3. Government entities -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !government_id.valid }">
-      <label for="government_id">{{'Government entities' | translate}}</label>
-      <ngx-bootstrap-multiselect [texts]="multiSelectTexts" [options]="governmentsOptions" [(ngModel)]="_governmentsSelection" (ngModelChange)="onChangeGovernmentsOptions($event)" #government_id="ngModel" name="government_id" [disabled]="isDisabled()" required></ngx-bootstrap-multiselect>
-      <div *ngIf="f.submitted && !government_id.valid" class="help-text">{{'Please select government entities' | translate}}</div>
-      <p class="note">
-        {{ 'observation.governmentEntity.note' | translate }}
-      </p>
-      <div class="note" *ngIf="!isDisabled()">
-        <button type="button" class="c-button -primary" (click)="onClickAddGovernanceEntity()">{{'Add a new government entity to the list' | translate}}</button>
-      </div>
-    </div>
-
-    <!-- 4. Governance problem -->
-    <div class="form-group -required" [ngClass]="{ 'has-error': f.submitted && !subcategory_id.valid }">
-      <label for="subcategory_id">{{'Governance problem' | translate}}</label>
-      <select if="subcategory_id" name="subcategory_id" [(ngModel)]="subcategory" #subcategory_id="ngModel" required [disabled]="isDisabled()">
-        <option [ngValue]="null" disabled>{{'Select a governance problem' | translate}}</option>
-        <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">{{ subcategory.name }}</option>
-      </select>
-      <div *ngIf="f.submitted && !subcategory_id.valid" class="help-text">{{'Please select a governance problem' | translate}}</div>
-      <p class="note">
-        {{ 'observation.governanceProblem.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 6. Relevant operators -->
-    <div class="form-group">
-      <label for="relevant_operators">{{'Relevant operators' | translate}}</label>
-      <ngx-bootstrap-multiselect
-        [texts]="multiSelectTexts"
-        [options]="relevantOperatorsOptions"
-        [settings]="relevantOperatorsSelectSettings"
-        [(ngModel)]="_relevantOperatorsSelection"
-        (ngModelChange)="onChangeRelevantOperatorsOptions($event)"
-        name="relevant_operators" id="relevant_operators"
-        [disabled]="isDisabled()">
-      </ngx-bootstrap-multiselect>
-      <p class="note">
-        {{ 'observation.relevantOperators.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 7. Description -->
-    <div class="form-group">
-      <label for="details_field">{{'Description' | translate}}</label>
-      <textarea id="details_field" name="details_field" [(ngModel)]="details" #details_field="ngModel" [disabled]="isDisabled()"></textarea>
-      <p class="note">
-        {{ 'observation.details.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 8. Evidence -->
-    <ng-container *ngTemplateOutlet="evidenceTemplate"></ng-container>
-
-    <!-- 9. Severity -->
-    <div class="form-group -required -radio-buttons" [ngClass]="{ 'has-error': f.submitted && !severity }">
-      <label for="severity_id">{{'Severity' | translate}}</label>
-
-      <div class="buttons">
-        <label *ngFor="let s of severities">
-          <input name="severity_id" type="radio" [(ngModel)]="severity" [value]="s" [attr.disabled]="isDisabled() ? true : null" [disabled]="isDisabled()">
-          <span>{{ s.level }} - {{ s.details }}</span>
-        </label>
-      </div>
-
-      <p class="note" *ngIf="!subcategory_id.valid">
-        {{ 'Please pick governance problem first.' | translate }}
-      </p>
-      <div *ngIf="f.submitted && !severity" class="help-text">{{'Please select a severity' | translate}}</div>
-      <p class="note" *ngIf="subcategory_id.valid">
-        {{ 'observation.severity.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 10. Actions taken by government -->
-    <div class="form-group">
-      <label for="actions_taken">{{'Actions taken by government' | translate}}</label>
-      <textarea id="action_taken" name="action_taken" [(ngModel)]="actions" #action_taken="ngModel" [disabled]="isDisabled()"></textarea>
-      <p class="note">
-        {{ 'observation.actionsTakenByGovernment.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 11. Government entity comments -->
-    <div class="form-group">
-      <label for="concern_opinion">{{'observation.commentsFromGovernment.title' | translate}}</label>
-      <textarea id="concern_opinion" name="concern_opinion" [(ngModel)]="opinion" #concern_opinion="ngModel" [disabled]="isDisabled()"></textarea>
-      <p class="note">
-        {{ 'observation.commentsFromGovernment.note' | translate }}
-      </p>
-    </div>
-
-    <!-- 13. Metadata -->
-    <fieldset *ngIf="observation">
-      <legend>{{'Metadata' | translate}}</legend>
-      <div class="fieldset-container">
-        <!-- 13.1. Last modification by -->
-        <div class="form-group">
-          <label for="last_modification_by">{{'Last modification by' | translate}}</label>
-          <input id="last_modification_by" type="text" class="form-control" name="last_modification_by" [ngModel]="observation['modified-user'] && observation['modified-user'].name" (ngModelChange)="observation['modified-user'] && (observation['modified-user'].name = $event)" #last_modification_by="ngModel" disabled />
-        </div>
-
-        <!-- 13.1. Last modified on -->
-        <div class="form-group">
-          <label for="last_modified_on">{{'Last modified on' | translate}}</label>
-          <otp-datepicker [id]="'last_modified_on'" [name]="'last_modified_on'" [(ngModel)]="observation['updated-at']" #last_modified_on="ngModel" disabled></otp-datepicker>
-        </div>
-      </div>
-    </fieldset>
-  </div>
-
-  <ng-container [ngTemplateOutlet]="errorsTemplate" [ngTemplateOutletContext]="{ containerClass: 'with-top-margin' }">
-  </ng-container>
-
-  <div class="form-footer">
-    <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
-      <div class="c-button-container -j-end form-group">
-        <button *ngIf="canGoBack()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-        <button *ngIf="canCancel()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-        <button *ngIf="canSubmitForReview()" type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
-        <button *ngIf="canAmend()" type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
-        <button *ngIf="canSave()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
-        <button *ngIf="canCreate()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
-        <button *ngIf="canPublishWithoutComments()" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
-        <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
-      </div>
-    </div>
-
-    <otp-action-bar *otpMaxTablet>
-      <button *ngIf="canGoBack()" type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
-      <button *ngIf="canCancel()" type="button" (click)="onCancel()" class="c-button -secondary">{{'Cancel' | translate}}</button>
-      <button *ngIf="canSubmitForReview()" type="submit" [class]="canSave() || canCreate() ? 'c-button -secondary' : 'c-button -primary'">{{'Submit for review' | translate}}</button>
-      <button *ngIf="canAmend()" type="button" (click)="onClickAmend()" class="c-button -primary">{{'Amend' | translate}}</button>
-      <button *ngIf="canSave()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Save' | translate}}</button>
-      <button *ngIf="canCreate()"  type="button" (click)="onSubmit()" class="c-button -primary">{{'Create' | translate}}</button>
-      <button *ngIf="canPublishWithoutComments()" type="button" (click)="onPublish('Published (no comments)')" class="c-button -primary">{{'Publish' | translate}}</button>
-      <button *ngIf="canPublishWithModification()" type="button" (click)="onPublish('Published (modified)')" class="c-button -primary">{{'Publish' | translate}}</button>
-    </otp-action-bar>
-  </div>
-
-</form>
+  </form>
+}

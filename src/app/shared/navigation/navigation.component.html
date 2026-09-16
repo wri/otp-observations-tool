@@ -1,6 +1,12 @@
 <ul [class]="'-' + this.layout">
-  <li *ngFor="let item of items" [class.-active]="isActive(item)">
-    <a *ngIf="item.url" [routerLink]="item.url" (click)="onClick(item)">{{item.name}}</a>
-    <button *ngIf="!item.url" type="button" (click)="onClick(item)">{{item.name}}</button>
-  </li>
+  @for (item of items; track item) {
+    <li [class.-active]="isActive(item)">
+      @if (item.url) {
+        <a [routerLink]="item.url" (click)="onClick(item)">{{item.name}}</a>
+      }
+      @if (!item.url) {
+        <button type="button" (click)="onClick(item)">{{item.name}}</button>
+      }
+    </li>
+  }
 </ul>

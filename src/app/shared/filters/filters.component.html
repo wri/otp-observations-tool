@@ -1,31 +1,45 @@
-<button type="button" *ngIf="filters.length" class="c-button -secondary add-filter" (click)="onOpenModal()">{{'Add filter' | translate}}</button>
+@if (filters.length) {
+  <button type="button" class="c-button -secondary add-filter" (click)="onOpenModal()">{{'Add filter' | translate}}</button>
+}
 
-<ng-container *ngFor="let filter of filters">
-  <div class="filter" *ngIf="hasValue(filter)">
-    <select [attr.aria-label]="filter.name" [(ngModel)]="filter.selected" (change)="changed.emit()">
-      <option value="" disabled>{{filter.name}}</option>
-      <option *ngFor="let key of objectKeys(filter.values)" [value]="filter.values[key]">{{key}}</option>
-      <option [ngValue]="null" [disabled]="filter.required">{{'Remove filter' | translate}}</option>
-    </select>
-  </div>
-</ng-container>
+@for (filter of filters; track filter) {
+  @if (hasValue(filter)) {
+    <div class="filter">
+      <select [attr.aria-label]="filter.name" [(ngModel)]="filter.selected" (change)="changed.emit()">
+        <option value="" disabled>{{filter.name}}</option>
+        @for (key of objectKeys(filter.values); track key) {
+          <option [value]="filter.values[key]">{{key}}</option>
+        }
+        <option [ngValue]="null" [disabled]="filter.required">{{'Remove filter' | translate}}</option>
+      </select>
+    </div>
+  }
+}
 
 <otp-modal [title]="'Table filters' | translate" [opened]="modalOpen" [closeable]="true" (closed)="onDismissModal()">
   <h2>{{'Filter by' | translate}}</h2>
 
-  <div class="filters-loader" *ngIf="loadingOptions">
-    <otp-loader></otp-loader>
-  </div>
-
-  <div class="filters" *ngIf="!loadingOptions">
-    <div *ngFor="let filter of filters">
-      <label [for]="'filter-modal-' + filter.prop">{{filter.name}}</label>
-      <select [id]="'filter-modal-' + filter.prop" [(ngModel)]="filter.selected" (change)="onChangeFilter(true)">
-        <option [ngValue]="null" [disabled]="filter.required">{{'Not filtering' | translate}}</option>
-        <option *ngFor="let key of objectKeys(filter.values)" [value]="filter.values[key]">{{key}}</option>
-      </select>
+  @if (loadingOptions) {
+    <div class="filters-loader">
+      <otp-loader></otp-loader>
     </div>
-  </div>
+  }
+
+  @if (!loadingOptions) {
+    <div class="filters">
+      @for (filter of filters; track filter) {
+        <div>
+          <label [for]="'filter-modal-' + filter.prop">{{filter.name}}</label>
+          <select [id]="'filter-modal-' + filter.prop" [(ngModel)]="filter.selected" (change)="onChangeFilter(true)">
+            <option [ngValue]="null" [disabled]="filter.required">{{'Not filtering' | translate}}</option>
+            @for (key of objectKeys(filter.values); track key) {
+              <option [value]="filter.values[key]">{{key}}</option>
+            }
+          </select>
+        </div>
+      }
+    </div>
+  }
 
   <div *otpMinTablet class="c-container -j-between">
     <button  type="button" (click)="onCancel()" class="c-button -secondary">{{'Reset filters' | translate}}</button>

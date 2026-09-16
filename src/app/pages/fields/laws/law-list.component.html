@@ -4,9 +4,11 @@
     <otp-filter [name]="'Subcategory' | translate" values="subcategories" prop="subcategory" name-attr="name"></otp-filter>
     <otp-filter [name]="'Complete' | translate" [values]="completeFilterValues" prop="complete"></otp-filter>
   </otp-filters>
-  <button *ngIf="isAdmin" (click)="onClickNewLaw()" class="c-button -primary">
-    {{'New law' | translate}}
-  </button>
+  @if (isAdmin) {
+    <button (click)="onClickNewLaw()" class="c-button -primary">
+      {{'New law' | translate}}
+    </button>
+  }
 </div>
 
 <otp-table [name]="'laws'" [caption]="'Laws' | translate" [options]="tableOptions" defaultSort="written-infraction" [hideVisibleColumnsBox]="true">
@@ -16,19 +18,19 @@
     <ng-template let-value="value" table-cell-template>{{ value ? shorten(value) : '–' }}</ng-template>
   </otp-table-column>
   <!-- <otp-table-column prop="complete" [name]="'Complete' | translate">
-    <ng-template let-value="value" table-cell-template>{{ value ? 'True' : 'False' }}</ng-template>
-  </otp-table-column> -->
-  <otp-table-column [name]="'Actions' | translate">
-    <ng-template let-row="row" table-cell-template>
-      <ng-template [ngIf]="!row.complete">
-        <otp-tag type="warning">{{ 'Incomplete' | translate }}</otp-tag>
-      </ng-template>
-      <ng-template [ngIf]="!canEdit(row)">
-        <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
-      </ng-template>
-      <ng-template [ngIf]="canEdit(row)">
-        <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
-      </ng-template>
-    </ng-template>
-  </otp-table-column>
+  <ng-template let-value="value" table-cell-template>{{ value ? 'True' : 'False' }}</ng-template>
+</otp-table-column> -->
+<otp-table-column [name]="'Actions' | translate">
+  <ng-template let-row="row" table-cell-template>
+    @if (!row.complete) {
+      <otp-tag type="warning">{{ 'Incomplete' | translate }}</otp-tag>
+    }
+    @if (!canEdit(row)) {
+      <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Info' | translate"><otp-icon name="#icon-info"></otp-icon></button>
+    }
+    @if (canEdit(row)) {
+      <button class="action" (click)="onEdit(row)" [attr.aria-label]="'Edit' | translate"><otp-icon name="#icon-edit"></otp-icon></button>
+    }
+  </ng-template>
+</otp-table-column>
 </otp-table>
