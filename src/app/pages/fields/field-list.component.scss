@@ -35,6 +35,11 @@
       border-bottom: 1px solid settings.$lighter-grey;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+
+      // Line the tabs up with the main navigation, which follows the .l-wrapper padding
+      @media screen and (min-width: settings.$break-mobile) {
+        padding-left: 10px;
+      }
     }
   }
 

@@ -19,6 +19,11 @@
       flex-shrink: 0; // Required for the mobile
       margin-right: 10px;
       line-height: 42px;
+
+      // The links' own padding is enough spacing on narrow phones, so short menus fit without scrolling
+      @media screen and (max-width: settings.$break-mobile - 1px) {
+        margin-right: 0;
+      }
       text-transform: uppercase;
 
       &:last-of-type {

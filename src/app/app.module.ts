@@ -15,7 +15,6 @@ import { GovernmentsService } from 'app/services/governments.service';
 import { HeaderComponent } from 'app/shared/header/header.component';
 import { UsersService } from 'app/services/users.service';
 import { FmusService } from 'app/services/fmus.service';
-import { BottombarComponent } from 'app/shared/bottom-bar/bottom-bar.component';
 import { DatastoreService } from 'app/services/datastore.service';
 import { CountriesService } from 'app/services/countries.service';
 import { AuthService } from 'app/services/auth.service';
@@ -69,7 +68,6 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     AppComponent,
     HeaderComponent,
-    BottombarComponent,
     LoginComponent,
     PageNotFoundComponent
   ],
