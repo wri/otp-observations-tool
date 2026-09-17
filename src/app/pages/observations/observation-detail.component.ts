@@ -1201,6 +1201,16 @@ export class ObservationDetailComponent implements OnDestroy {
       draftModel.relevantOperators = this._relevantOperatorsSelection;
     }
 
+    // A form nobody has filled in yet would otherwise overwrite a saved draft 10s after it opens,
+    // which is what "Create new" does when a draft already exists.
+    const isEmpty = Object.values(draftModel).every(value =>
+      value === null || value === undefined || value === '' || (Array.isArray(value) && !value.length)
+    );
+
+    if (isEmpty) {
+      return;
+    }
+
     this.observationsService.saveDraftObservation(draftModel);
   }
 
