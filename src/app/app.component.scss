@@ -2,9 +2,8 @@
 
 :host {
   display: block;
-  // This padding is necessary to avoid the content being below the
-  // bottom-bar component
-  padding-bottom: settings.$bottom-bar-height;
+  // Keeps the end of the page clear of the fixed action bar on mobile
+  padding-bottom: settings.$action-bar-height;
 
   @media screen and (min-width: settings.$break-tablet) {
     padding-bottom: 0;

@@ -72,5 +72,8 @@
   otp-navigation {
     position: relative;
     left: -10px;
+    // Mobile: scroll the items rather than cutting them off
+    overflow-x: auto;
+    scrollbar-width: none;
   }
 }
