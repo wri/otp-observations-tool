@@ -1,7 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'environments/environment';
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
   selector: 'otp-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ForgotPasswordComponent {

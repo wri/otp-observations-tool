@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { SeveritiesService } from 'app/services/severities.service';
 
@@ -7,6 +7,7 @@ import { SeveritiesService } from 'app/services/severities.service';
   selector: 'otp-severity-list',
   templateUrl: './severity-list.component.html',
   styleUrls: ['./severity-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class SeverityListComponent extends TableFilterBehavior {

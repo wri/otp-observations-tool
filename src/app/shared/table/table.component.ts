@@ -1,7 +1,7 @@
 import { JsonApiParams } from 'app/services/json-api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TABLET_BREAKPOINT } from 'app/directives/responsive.directive';
-import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, ElementRef, AfterContentInit, AfterViewChecked } from '@angular/core';
+import { Component, Input, QueryList, ContentChildren, EventEmitter, Output, ViewChild, ElementRef, AfterContentInit, AfterViewChecked, ChangeDetectionStrategy } from '@angular/core';
 import { TableColumnDirective } from 'app/shared/table/directives/column/column.directive';
 import uniq from 'lodash/uniq';
 
@@ -18,6 +18,7 @@ export interface TableState {
   selector: 'otp-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class TableComponent implements AfterContentInit, AfterViewChecked {

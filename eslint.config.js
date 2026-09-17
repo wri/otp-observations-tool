@@ -22,6 +22,9 @@ module.exports = tseslint.config(
       // Beyond being wrong for us, `--fix` on this rule strips that property, which silently
       // makes components standalone while they are still declared in a module.
       "@angular-eslint/prefer-standalone": "off",
+      // Angular 22 made OnPush the default; `ng update` pinned every existing component to
+      // Eager, and there is no app-wide setting to do that instead. Moving to OnPush is per component.
+      "@angular-eslint/prefer-on-push-component-change-detection": "off",
       // ~110 sites in code that predates strict typing. Turning this on would drown the
       // signal from every other rule; revisit if the models ever get typed properly.
       "@typescript-eslint/no-explicit-any": "off",
