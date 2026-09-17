@@ -1,13 +1,14 @@
 import { TranslateService } from '@ngx-translate/core';
 import { CategoriesService } from 'app/services/categories.service';
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 
 @Component({
   selector: 'otp-category-list',
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class CategoryListComponent extends TableFilterBehavior {

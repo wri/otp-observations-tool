@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, Input, HostListener, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
 export interface Tab {
   id: string;
@@ -9,6 +9,7 @@ export interface Tab {
   selector: 'otp-tabs',
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class TabsComponent {

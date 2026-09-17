@@ -1,7 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import Hotjar from '@hotjar/browser';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from 'app/services/auth.service';
 import { environment } from 'environments/environment';
 
@@ -14,6 +14,7 @@ const ACCEPTED_LOCALES = ['en', 'fr', 'es'];
   selector: 'otp-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class AppComponent {

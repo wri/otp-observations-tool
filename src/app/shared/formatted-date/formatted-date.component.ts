@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import flatpickr from 'flatpickr';
 import { LOCALE } from '../datepicker/flatpickr-locales';
 
@@ -7,6 +7,7 @@ export const dateFormat = 'd/m/Y';
 @Component({
   selector: 'otp-formatted-date',
   templateUrl: './formatted-date.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class FormattedDateComponent {

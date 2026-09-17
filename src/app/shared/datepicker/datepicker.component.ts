@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, AfterViewInit } from '@angular/core';
+import { Component, forwardRef, Input, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { dateFormat } from '../formatted-date/formatted-date.component';
@@ -22,6 +22,7 @@ const VALUE_ACCESSOR: any = {
   templateUrl: './datepicker.component.html',
   styleUrls: ['./datepicker.component.scss'],
   providers: [REQUIRED_VALIDATOR, VALUE_ACCESSOR],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class DatepickerComponent implements Validator, ControlValueAccessor, AfterViewInit {

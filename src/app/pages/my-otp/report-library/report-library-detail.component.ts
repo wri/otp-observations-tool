@@ -1,6 +1,6 @@
 import { Observer } from 'app/models/observer.model';
 import { ObserversService } from 'app/services/observers.service';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationReport } from 'app/models/observation_report';
@@ -15,6 +15,7 @@ import { MISSION_TYPES } from 'app/models/observation_report';
   selector: 'otp-report-library-detail',
   templateUrl: './report-library-detail.component.html',
   styleUrls: ['./report-library-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ReportLibraryDetailComponent {

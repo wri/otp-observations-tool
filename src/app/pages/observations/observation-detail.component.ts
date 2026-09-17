@@ -26,7 +26,7 @@ import { Government } from 'app/models/government.model';
 import { GovernmentsService } from 'app/services/governments.service';
 import { CountriesService } from 'app/services/countries.service';
 import { Country } from 'app/models/country.model';
-import { Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import * as L from 'leaflet';
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
 import { GeoJsonObject } from 'geojson';
@@ -55,6 +55,7 @@ interface GeoreferencedPhoto { // Usage georefered photo as evidence
   selector: 'otp-observation-detail',
   templateUrl: './observation-detail.component.html',
   styleUrls: ['./observation-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ObservationDetailComponent implements OnDestroy {

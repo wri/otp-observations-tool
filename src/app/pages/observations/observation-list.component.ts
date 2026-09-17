@@ -2,7 +2,7 @@ import { TranslateService } from '@ngx-translate/core';
 import * as truncate from 'lodash/truncate';
 import { AuthService } from 'app/services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AfterViewInit, Component, ViewChild, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
@@ -13,6 +13,7 @@ import { DraftObservation } from 'app/models/draft_observation.interface';
   selector: 'otp-observation-list',
   templateUrl: './observation-list.component.html',
   styleUrls: ['./observation-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ObservationListComponent extends TableFilterBehavior implements AfterViewInit {

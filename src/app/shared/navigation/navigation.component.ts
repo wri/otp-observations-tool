@@ -1,6 +1,6 @@
 import { NavigationItemDirective } from './directives/item/item.directive';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Component, Input, Output, EventEmitter, ContentChildren, QueryList, AfterContentInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ContentChildren, QueryList, AfterContentInit, ChangeDetectionStrategy } from '@angular/core';
 
 export interface NavigationItem {
   name: string;
@@ -14,6 +14,7 @@ export interface NavigationItem {
   selector: 'otp-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class NavigationComponent implements AfterContentInit {

@@ -2,9 +2,11 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "baseUrl": "",
     "types": [],
+    // Replaces the root `paths` rather than merging, so the root aliases are repeated here.
     "paths": {
+      "app/*": ["./app/*"],
+      "environments/*": ["./environments/*"],
       // @michalkotas/angular2-jsonapi declares only lodash-es as a dependency, but one of its
       // modules still does `import { ... } from 'lodash'`, which drags the whole 70kB monolithic
       // CommonJS build in (worth ~55kB of main.js). lodash-es exposes the same functions as ES
@@ -27,5 +29,8 @@
   ],
   "exclude": [
     "**/*.worker.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

@@ -2,12 +2,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { User } from './../../models/user.model';
 import { UsersService } from 'app/services/users.service';
 import { AuthService } from 'app/services/auth.service';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'otp-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class ProfileComponent {
