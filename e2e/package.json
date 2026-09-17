@@ -5,8 +5,10 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
+    "@cypress/code-coverage": "^4",
     "cypress": "^15.21.0",
-    "cypress-split": "^1.25.0"
+    "cypress-split": "^1.25.0",
+    "nyc": "^18"
   },
   "dependencies": {
     "@neuralegion/cypress-har-generator": "^5.16.4",

@@ -133,11 +133,11 @@ jobs:
       - name: Install Observation Tool Dependencies
         run: yarn install --frozen-lockfile
 
-      # Backgrounded so the Angular production build overlaps the API setup below
+      # Backgrounded so the instrumented Angular build overlaps the API setup below
       # rather than running after it. Blocked on further down.
       - name: Start Observation Tool
         run: |
-          nohup yarn start:e2e > /tmp/observation-tool.log 2>&1 &
+          nohup yarn start:e2e-coverage > /tmp/observation-tool.log 2>&1 &
           echo "observation tool building in background, pid $!"
 
       # The runner image points apt at azure.archive.ubuntu.com via a mirrorlist.
@@ -242,6 +242,16 @@ jobs:
           SPLIT_FILE: timings.json
         run: yarn cypress run
 
+      # Each shard only covers its own specs; the coverage job merges all three.
+      - name: Collect Coverage
+        run: mv e2e/.nyc_output/out.json e2e/.nyc_output/shard-${{ matrix.shard }}.json
+
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-shard-${{ matrix.shard }}
+          path: e2e/.nyc_output/shard-${{ matrix.shard }}.json
+
       - name: Uploading Test Artifacts
         uses: actions/upload-artifact@v7
         if: failure()
@@ -253,3 +263,51 @@ jobs:
             e2e/cypress/videos
             e2e/cypress/e2e/__image_snapshots__
             otp_api/log
+
+  coverage:
+    name: E2E Coverage
+    needs: test
+    runs-on: ubuntu-24.04
+
+    steps:
+      # The HTML report needs the sources it annotates.
+      - uses: actions/checkout@v7
+
+      - name: Read .nvmrc
+        id: nvm
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "${{ steps.nvm.outputs.NVMRC }}"
+
+      # Only nyc is needed here, not the Cypress binary.
+      - name: Install E2E Dependencies
+        working-directory: e2e
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+        run: yarn install --frozen-lockfile
+
+      - name: Download Coverage
+        uses: actions/download-artifact@v7
+        with:
+          pattern: coverage-shard-*
+          merge-multiple: true
+          path: coverage-shards
+
+      # .nycrc.json sets cwd to the repo root, so the dirs are passed as absolute paths.
+      - name: Merge Coverage Report
+        working-directory: e2e
+        run: |
+          npx nyc report \
+            --temp-dir "$GITHUB_WORKSPACE/coverage-shards" \
+            --report-dir "$GITHUB_WORKSPACE/e2e/coverage" \
+            --reporter=html --reporter=lcov --reporter=text-summary \
+            | tee summary.txt
+          { echo '### E2E coverage'; echo '```'; cat summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-coverage-report
+          path: e2e/coverage
