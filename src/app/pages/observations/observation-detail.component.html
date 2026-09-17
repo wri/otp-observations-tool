@@ -42,7 +42,7 @@
         <h2>{{'Edit observation' | translate}}</h2>
       }
       <div class="c-button-container -j-end form-group" *otpMinTablet>
-        <ng-container *ngTemplateOutlet="actions; context: { top: true }"></ng-container>
+        <ng-container *ngTemplateOutlet="actionButtons; context: { top: true }"></ng-container>
       </div>
     </div>
     <ng-template #errorsTemplate let-containerClass="containerClass">
@@ -1049,14 +1049,14 @@
     <div class="form-footer">
       <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
         <div class="c-button-container -j-end form-group">
-          <ng-container *ngTemplateOutlet="actions"></ng-container>
+          <ng-container *ngTemplateOutlet="actionButtons"></ng-container>
         </div>
       </div>
       <otp-action-bar *otpMaxTablet>
-        <ng-container *ngTemplateOutlet="actions"></ng-container>
+        <ng-container *ngTemplateOutlet="actionButtons"></ng-container>
       </otp-action-bar>
     </div>
-    <ng-template #actions let-top="top">
+    <ng-template #actionButtons let-top="top">
       @if (canGoBack()) {
         <button type="button" (click)="onClickBack()" class="c-button -secondary">{{'Go back' | translate}}</button>
       }
