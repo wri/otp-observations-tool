@@ -4,6 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "update-timings": "env -u ELECTRON_RUN_AS_NODE SPLIT=1 SPLIT_INDEX=0 SPLIT_FILE=timings.json ELECTRON_EXTRA_LAUNCH_ARGS=--remote-debugging-port=9222 cypress run"
+  },
   "devDependencies": {
     "@cypress/code-coverage": "^4",
     "cypress": "^15.21.0",
