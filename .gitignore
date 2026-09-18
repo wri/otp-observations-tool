@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/dist-coverage
 /tmp
 /out-tsc
 
@@ -45,3 +46,7 @@ Thumbs.db
 
 # local env config
 src/environments/environment.local.ts
+
+# e2e coverage
+/e2e/.nyc_output
+/e2e/coverage

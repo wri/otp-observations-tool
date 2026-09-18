@@ -1,0 +1,8 @@
+{
+  "cwd": "..",
+  "include": ["src/app/**/*.ts"],
+  "exclude-after-remap": false,
+  "temp-dir": ".nyc_output",
+  "report-dir": "coverage",
+  "reporter": ["html", "lcov", "text-summary", "json-summary"]
+}

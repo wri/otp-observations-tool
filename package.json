@@ -7,6 +7,7 @@
     "postinstall": "patch-package",
     "start": "ng serve",
     "start:e2e": "ng serve --configuration=e2e",
+    "start:e2e-coverage": "ng run otp-observations-tool:serve-coverage",
     "dev": "ng serve --configuration=local",
     "build": "ng build",
     "lint": "ng lint",
@@ -50,12 +51,14 @@
     "zone.js": "0.15.1"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^22",
     "@angular-devkit/build-angular": "22.1.8",
     "@angular-devkit/core": "22.1.8",
     "@angular-eslint/builder": "^22",
     "@angular/cli": "22.1.8",
     "@angular/compiler-cli": "22.1.7",
     "@eslint/js": "^9.28.0",
+    "@jsdevtools/coverage-istanbul-loader": "^3",
     "@sentry/cli": "^2.21.5",
     "@types/node": "^24",
     "angular-eslint": "^22",

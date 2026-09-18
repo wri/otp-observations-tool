@@ -91,6 +91,13 @@ describe('User', () => {
     describe('updating user profile', function () {
       it('can update some profile info without current password', function () {
         /* cy.get('a').contains('Profile', { timeout: 10000 }).click(); */
+        // Discarding reloads the saved values
+        cy.get('#first_name').invoke('val').then((original) => {
+          cy.get('#first_name').clear().type('Discarded');
+          cy.get('button').contains('Discard changes').click();
+          cy.get('#first_name').should('have.value', original);
+        });
+
         cy.get('#first_name').clear().type('NGO Manager');
         cy.get('#last_name').clear().type('Test');
         cy.get('#email_field').clear().type('ngo_manager@example.com');
@@ -118,8 +125,21 @@ describe('User', () => {
 
         cy.get('#email_field').should('have.value', 'ngo_managertest@example.com');
         cy.get('#current_password').should('not.exist');
+
+        // The confirmation is checked in the form, before anything is sent
         cy.get('#new_password').clear().type('Secret12345');
+        cy.get('#password_confirmation').clear().type('Secret54321');
+        cy.get('#current_password').clear().type('Supersecret1');
+        cy.get('button').contains('Save').click();
+        cy.contains("Password values don't not coincide").should('be.visible'); // sic, the source string
+
+        // The current password is only checked by the API
         cy.get('#password_confirmation').clear().type('Secret12345');
+        cy.get('#current_password').clear().type('WrongPassword1');
+        cy.get('button').contains('Save').click();
+        cy.get("@alert").should("have.been.calledWithMatch", /Current password is invalid/);
+        cy.then(() => alert.reset());
+
         cy.get('#current_password').clear().type('Supersecret1');
         cy.get('button').contains('Save').click();
         cy.get("@alert").should("have.been.calledWithMatch", /Your profile has been sucessfully updated/);
