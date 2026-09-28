@@ -43,6 +43,26 @@ describe('User', () => {
       });
     });
 
+    it('shows a notice when the account has just been unlocked', function () {
+      // the API sends the user here after they visit the unlock link in the email
+      cy.visit('/?message=user_unlocked');
+
+      cy.contains('Your account has been unlocked. You can log in again.');
+      cy.get('#username').should('exist');
+      // the param is dropped, so the notice does not come back on reload
+      cy.location('search').should('eq', '');
+    });
+
+    it('shows sign in errors in the same notice', function () {
+      // an unknown email keeps this from adding a failed attempt to a real account
+      cy.get('#username').type('nobody@example.com');
+      cy.get('#password').type('Supersecret1');
+      cy.get('button').contains('Login').click();
+
+      // the API words this one, it is what tells a locked account from a wrong password
+      cy.contains('Incorrect email or password');
+    });
+
     it('can create account', function () {
       cy.get('button').contains('Register').click();
 

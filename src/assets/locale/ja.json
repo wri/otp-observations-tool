@@ -229,6 +229,7 @@
   "Register": "Register",
   "login.permissionError": "You are not allowed to access this app.",
   "login.error": "You entered a wrong username and password combination.",
+  "login.unlocked": "アカウントのロックが解除されました。再度ログインできます。",
   "Select an organization": "Select an organization",
   "Please select an organization": "Please select an organization",
   "Please enter a password": "Please enter a password",

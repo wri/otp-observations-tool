@@ -229,6 +229,7 @@
   "Register": "Registrarse",
   "login.permissionError": "No tiene permitido acceder a esta aplicación.",
   "login.error": "Ingresó una combinación incorrecta de nombre de usuario y contraseña.",
+  "login.unlocked": "Su cuenta ha sido desbloqueada. Puede iniciar sesión de nuevo.",
   "Select an organization": "Seleccione una organización",
   "Please select an organization": "Por favor seleccione una organización",
   "Please enter a password": "Por favor ingrese una contraseña",
