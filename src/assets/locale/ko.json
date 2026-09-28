@@ -229,6 +229,7 @@
   "Register": "등록",
   "login.permissionError": "이 엡에 접근 권한이 없습니다. ",
   "login.error": "아이디와 패스워드 조합이 일치하지 않습니다. ",
+  "login.unlocked": "계정 잠금이 해제되었습니다. 다시 로그인할 수 있습니다.",
   "Select an organization": "기관 선택",
   "Please select an organization": "기관을 선택해주세요. ",
   "Please enter a password": "비밀번호를 입력해주세요.",
