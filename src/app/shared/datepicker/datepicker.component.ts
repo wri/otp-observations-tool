@@ -1,5 +1,6 @@
 import { Component, forwardRef, Input, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl } from '@angular/forms';
+import type { ValidationErrors } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { dateFormat } from '../formatted-date/formatted-date.component';
 import { LOCALE } from './flatpickr-locales';
