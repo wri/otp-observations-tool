@@ -1,5 +1,6 @@
 import { Directive, forwardRef, Input } from '@angular/core';
-import { Validator, NG_VALIDATORS, AbstractControl, ValidationErrors, NgModel } from '@angular/forms';
+import { Validator, NG_VALIDATORS, AbstractControl, NgModel } from '@angular/forms';
+import type { ValidationErrors } from '@angular/forms';
 
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector -- the selector deliberately mirrors Angular's own validator attributes

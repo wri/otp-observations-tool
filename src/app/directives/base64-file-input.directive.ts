@@ -1,5 +1,7 @@
-import { Directive, ElementRef, Input, HostListener, OnChanges, SimpleChanges, forwardRef, Output, EventEmitter } from '@angular/core';
-import { Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { Directive, ElementRef, Input, HostListener, OnChanges, forwardRef, Output, EventEmitter } from '@angular/core';
+import type { SimpleChanges } from '@angular/core';
+import { Validator, AbstractControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import type { ValidationErrors } from '@angular/forms';
 import uniq from 'lodash/uniq';
 
 const MAX_SIZE_VALIDATOR: any = {
