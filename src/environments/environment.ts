@@ -4,6 +4,8 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
+  autoPrepareOffline: true,
+  serviceWorker: false,
   production: false,
   apiUrl: '',
   OTP_API_KEY: '',

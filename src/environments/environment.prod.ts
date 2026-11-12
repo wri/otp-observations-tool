@@ -1,4 +1,6 @@
 export const environment = {
+  autoPrepareOffline: true,
+  serviceWorker: true,
   production: true,
   apiUrl: 'https://opentimberportal.org/api',
   OTP_API_KEY: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjozfQ.q7nr68vfMJqgiu5xyoi9GMD-U0qJLoClxOXL5UswJTg',

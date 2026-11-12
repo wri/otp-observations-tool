@@ -7,12 +7,17 @@
       <h2>{{'My profile' | translate}}</h2>
       <div class="c-button-container -j-end form-group" *otpMinTablet>
         <button type="button" (click)="onDiscard()" class="c-button -secondary">{{'Discard changes' | translate}}</button>
-        <button type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+        <button type="submit" class="c-button -primary" [disabled]="!canSave">{{'Save' | translate}}</button>
       </div>
     </div>
 
+    @if (!loading && isOffline) {
+      <div class="callout warning"><p>{{ 'offline.profileReadOnly' | translate }}</p></div>
+    }
     @if (loading) {
       <div class="form-container"><otp-loader></otp-loader></div>
+    } @else if (!user) {
+      <div class="form-container"><p>{{ 'offline.profileUnavailable' | translate }}</p></div>
     } @else {
       <div class="form-container">
         @if (!user['organization-account']) {
@@ -107,13 +112,13 @@
       <div class="c-container -j-end -t-d-column -t-a-start" *otpMinTablet>
         <div class="c-button-container -j-end form-group">
           <button type="button" (click)="onDiscard()" class="c-button -secondary">{{'Discard changes' | translate}}</button>
-          <button type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+          <button type="submit" class="c-button -primary" [disabled]="!canSave">{{'Save' | translate}}</button>
         </div>
       </div>
 
       <otp-action-bar *otpMaxTablet>
         <button type="button" (click)="onDiscard()" class="c-button -secondary">{{'Discard changes' | translate}}</button>
-        <button type="submit" class="c-button -primary">{{'Save' | translate}}</button>
+        <button type="submit" class="c-button -primary" [disabled]="!canSave">{{'Save' | translate}}</button>
       </otp-action-bar>
     </div>
   </form>

@@ -31,7 +31,9 @@
   }
 </otp-modal>
 
-@if (!loading) {
+@if (requiresConnection) {
+  <otp-online-only-notice></otp-online-only-notice>
+} @else if (!loading) {
   <form name="form" class="c-form" (ngSubmit)="!isDisabled() && !unknownOperatorSelected && clearServerError() && f.valid && isReportChosen && this.checkCoordinatesValidity() && onSubmitForReview()" #f="ngForm" novalidate>
     <div class="c-container -j-between -t-d-column -t-a-start">
       @if (isDisabled() && !isCopied) {
@@ -533,7 +535,11 @@
           }
           @if (!isDisabled()) {
             <div class="note">
-              <button type="button" class="c-button -primary" (click)="onClickAddOperator('operator')">{{'Add a new producer to the list' | translate}}</button>
+              @if (isOnline) {
+                <button type="button" class="c-button -primary" (click)="onClickAddOperator('operator')">{{'Add a new producer to the list' | translate}}</button>
+              } @else {
+                {{ 'offline.addProducerRequiresConnection' | translate }}
+              }
             </div>
           }
         </div>
@@ -554,7 +560,11 @@
           </p>
           @if (!isDisabled()) {
             <div class="note">
-              <button type="button" class="c-button -primary" (click)="onClickAddOperator('relevantOperators')">{{'Add a new producer to the list' | translate}}</button>
+              @if (isOnline) {
+                <button type="button" class="c-button -primary" (click)="onClickAddOperator('relevantOperators')">{{'Add a new producer to the list' | translate}}</button>
+              } @else {
+                {{ 'offline.addProducerRequiresConnection' | translate }}
+              }
             </div>
           }
         </div>
@@ -937,7 +947,11 @@
           </p>
           @if (!isDisabled()) {
             <div class="note">
-              <button type="button" class="c-button -primary" (click)="onClickAddGovernanceEntity()">{{'Add a new government entity to the list' | translate}}</button>
+              @if (isOnline) {
+                <button type="button" class="c-button -primary" (click)="onClickAddGovernanceEntity()">{{'Add a new government entity to the list' | translate}}</button>
+              } @else {
+                {{ 'offline.addRequiresConnection' | translate }}
+              }
             </div>
           }
         </div>

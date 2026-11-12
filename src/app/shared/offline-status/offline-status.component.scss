@@ -1,0 +1,46 @@
+@use 'src/settings.scss';
+
+:host {
+  display: block;
+
+  .banner {
+    padding: 8px 0;
+    font-size: settings.$font-size-default;
+    line-height: 1.4;
+
+    .l-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button,
+    a {
+      padding: 2px 10px;
+      border: 1px solid currentColor;
+      border-radius: 3px;
+      background: transparent;
+      color: inherit;
+      font-size: settings.$font-size-default;
+      font-weight: settings.$font-weight-medium;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    &.-offline {
+      background: settings.$dark-grey;
+      color: settings.$white;
+    }
+
+    &.-pending {
+      background: #fff4e5;
+      color: #7a4300;
+    }
+
+    &.-failed {
+      background: #fdecec;
+      color: settings.$color-error;
+    }
+  }
+}

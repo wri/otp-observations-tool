@@ -14,4 +14,7 @@ export class ObservationDocument extends JsonApiModel {
 
   @HasMany() observations: Observation[];
   @BelongsTo() 'observation-report'?: ObservationReport;
+
+  // Not sent to the API. Identifies a document of a draft across submission attempts.
+  localId?: string;
 }

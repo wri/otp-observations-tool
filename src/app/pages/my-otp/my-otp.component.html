@@ -12,7 +12,7 @@
       <otp-navigation-item [name]="'Report library' | translate" url="/private/my-otp/reports"></otp-navigation-item>
     </otp-navigation>
     <div class="content">
-      <router-outlet></router-outlet>
+      <router-outlet *otpOnlineOnly></router-outlet>
     </div>
   </div>
 </div>

@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
 import uniq from 'lodash/uniq';
 import { HttpClient } from '@angular/common/http';
+import { ApiCacheService } from 'app/services/offline/api-cache.service';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +48,8 @@ export class AuthService {
     private tokenService: TokenService,
     private router: Router,
     private translateService: TranslateService,
-    private observersService: ObserversService
+    private observersService: ObserversService,
+    private apiCache: ApiCacheService
   ) {
   }
 
@@ -169,6 +171,9 @@ export class AuthService {
    * use when the session is already gone (e.g. the cookie expired).
    */
   clearSession() {
+    // The offline cache answers the current-user probe while offline; without this a
+    // logged out user would still look logged in once the network is gone.
+    this.apiCache.clearSessionEntries();
     this.tokenService.token = null;
     this.userId = null;
     this.userRole = null;

@@ -2,14 +2,19 @@ import { TranslateService } from '@ngx-translate/core';
 import * as truncate from 'lodash/truncate';
 import { AuthService } from 'app/services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AfterViewInit, Component, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ElementRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ObservationsService } from 'app/services/observations.service';
 import { Observation } from 'app/models/observation.model';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { environment } from 'environments/environment';
-import { DraftObservation } from 'app/models/draft_observation.interface';
 import { NotificationService } from 'app/shared/notifications/notification.service';
 import { ConfirmDialogService } from 'app/shared/confirm-dialog/confirm-dialog.service';
+import { Subscription } from 'rxjs';
+import { filter, skip } from 'rxjs/operators';
+import { OutboxEntry, OutboxService } from 'app/services/offline/outbox.service';
+import { OfflinePreparationService, PreparationState } from 'app/services/offline/offline-preparation.service';
+import { ObservationSubmissionService } from 'app/services/offline/observation-submission.service';
+import { ConnectivityService } from 'app/services/offline/connectivity.service';
 
 @Component({
   selector: 'otp-observation-list',
@@ -18,9 +23,12 @@ import { ConfirmDialogService } from 'app/shared/confirm-dialog/confirm-dialog.s
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
-export class ObservationListComponent extends TableFilterBehavior implements AfterViewInit {
+export class ObservationListComponent extends TableFilterBehavior implements AfterViewInit, OnDestroy {
   apiUrl: string = environment.apiUrl;
-  draftObservation: DraftObservation = null;
+  // Observations created on this device (drafts and those not accepted by the API yet)
+  outboxEntries: OutboxEntry[] = [];
+  preparation: PreparationState = null;
+  private subscriptions = new Subscription();
   @ViewChild('uploadFile', { static: true }) uploadFile: ElementRef;
   @ViewChild('table', { static: true }) tableComponent: ElementRef;
 
@@ -77,6 +85,14 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
     return this.authService.isBackendAdmin();
   }
 
+  get isOnline(): boolean {
+    return this.connectivity.isOnline;
+  }
+
+  get isOfflineAvailable(): boolean {
+    return this.outboxService.isAvailable && this.preparationService.isAvailable;
+  }
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -84,7 +100,11 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
     private authService: AuthService,
     private translateService: TranslateService,
     private notifications: NotificationService,
-    private confirmDialog: ConfirmDialogService
+    private confirmDialog: ConfirmDialogService,
+    private outboxService: OutboxService,
+    private preparationService: OfflinePreparationService,
+    private submissionService: ObservationSubmissionService,
+    private connectivity: ConnectivityService
   ) {
     super();
 
@@ -99,12 +119,30 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
     this.fmuFilterParams = observerIdFilter;
     this.reportFilterParams = observerIdFilter;
 
-    this.draftObservation = this.service.getDraftObservation();
+    const userId = this.authService.userId;
+    const observerId = this.authService.userObserverId;
+    // The draft the previous version kept in localStorage, if any, joins the outbox
+    this.outboxService.migrateLegacyDraft(userId, observerId);
+    this.subscriptions.add(
+      this.outboxService.entriesForObserver$(userId, observerId).subscribe((entries) => this.outboxEntries = entries)
+    );
+    this.subscriptions.add(
+      this.preparationService.state$.subscribe((state) => this.preparation = state)
+    );
+    // The table could not load while offline
+    this.subscriptions.add(
+      this.connectivity.onlineChanges.pipe(skip(1), filter((online) => online)).subscribe(() => this.loadData())
+    );
+    this.preparationService.loadState();
 
     this.translateService.onLangChange.subscribe(() => {
       this.updateStatusFilterValues();
       this.updateTypeFilterValues();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -240,11 +278,34 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
     this.router.navigate(['/private/observations/new', { copiedId: observation.id }]);
   }
 
-  public onCreate(useDraft = false): void {
-    if (useDraft) {
-      this.router.navigate(['/private/observations/new', { useDraft }]);
+  public onContinueEntry(entry: OutboxEntry): void {
+    this.router.navigate(['/private/observations/new', { outboxId: entry.id }]);
+  }
+
+  public async onRetryEntry(entry: OutboxEntry): Promise<void> {
+    await this.outboxService.setStatus(entry.id, 'queued');
+    const result = await this.submissionService.submit(entry.id);
+
+    if (result.status === 'sent') {
+      this.loadData();
+    } else if (result.status === 'failed') {
+      this.notifications.error(await this.translateService.get('observationCreation.error').toPromise() + '\n' + result.message);
     } else {
-      this.router.navigate(['/private/observations/new']);
+      this.notifications.info('offline.deferredAlert');
+    }
+  }
+
+  public async onDeleteEntry(entry: OutboxEntry): Promise<void> {
+    if (await this.confirmDialog.confirm('offline.deleteConfirm', { confirmLabel: 'offline.delete', danger: true })) {
+      await this.outboxService.remove(entry.id);
+    }
+  }
+
+  public async onPrepareOffline(): Promise<void> {
+    const state = await this.preparationService.prepare();
+    // Success shows in the status line; only a failure needs the user's attention
+    if (state.failures) {
+      this.notifications.error('offline.prepareError');
     }
   }
 

@@ -10,6 +10,8 @@ import { MaxTabletDirective, MinTabletDirective } from 'app/directives/responsiv
 import { EmailValidatorDirective } from 'app/directives/email.directive';
 import { EqualToValidatorDirective } from 'app/directives/equal-to.directive';
 import { NumberValidatorDirective } from 'app/directives/number.directive';
+import { OnlineOnlyDirective } from 'app/shared/online-only/online-only.directive';
+import { OnlineOnlyNoticeComponent } from 'app/shared/online-only/online-only-notice.component';
 
 /**
  * Small declarables needed by both the eager app shell and the lazy feature modules.
@@ -30,7 +32,9 @@ import { NumberValidatorDirective } from 'app/directives/number.directive';
     MinTabletDirective,
     EmailValidatorDirective,
     EqualToValidatorDirective,
-    NumberValidatorDirective
+    NumberValidatorDirective,
+    OnlineOnlyDirective,
+    OnlineOnlyNoticeComponent
   ],
   exports: [
     CommonModule,
@@ -43,7 +47,9 @@ import { NumberValidatorDirective } from 'app/directives/number.directive';
     MinTabletDirective,
     EmailValidatorDirective,
     EqualToValidatorDirective,
-    NumberValidatorDirective
+    NumberValidatorDirective,
+    OnlineOnlyDirective,
+    OnlineOnlyNoticeComponent
   ]
 })
 export class SharedModule { }

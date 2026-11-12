@@ -33,9 +33,13 @@ import { GeoJsonObject } from 'geojson';
 import { ObservationReportsService } from 'app/services/observation-reports.service';
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
 import { forkJoin ,  Observable ,  interval ,  Subscription } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 import { QualityControl } from 'app/models/quality_control.model';
 import { NotificationService } from 'app/shared/notifications/notification.service';
 import { ConfirmDialogService } from 'app/shared/confirm-dialog/confirm-dialog.service';
+import { OutboxService } from 'app/services/offline/outbox.service';
+import { ObservationSubmissionService } from 'app/services/offline/observation-submission.service';
+import { ConnectivityService, isNetworkError } from 'app/services/offline/connectivity.service';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -69,6 +73,10 @@ export class ObservationDetailComponent implements OnDestroy {
   needsRevisionState = 'undecided'; // Options are: undecided, amend, explain
   observation: Observation = null; // Only for edit mode
   draft: DraftObservation = null; // Only for using draft observation
+  outboxEntryId: string = null; // The outbox entry this (new) observation is autosaved to
+  requiresConnection = false; // An existing observation was opened offline, see loadExistingObservation
+  private connectionSubscription: Subscription = null;
+  private draftSave: Promise<unknown> = Promise.resolve(); // Serializes the autosaves
   countries: Country[] = [];
   subcategories: Subcategory[] = [];
   severities: Severity[] = [];
@@ -924,6 +932,9 @@ export class ObservationDetailComponent implements OnDestroy {
     private fmusService: FmusService,
     private lawsService: LawsService,
     private datastoreService: DatastoreService,
+    private outboxService: OutboxService,
+    private submissionService: ObservationSubmissionService,
+    private connectivity: ConnectivityService,
     private router: Router,
     private route: ActivatedRoute,
     private translateService: TranslateService,
@@ -953,70 +964,127 @@ export class ObservationDetailComponent implements OnDestroy {
     // If we edit an existing observation or we copy an existing observation, we have a bit of
     // code to execute
     if (this.existingObservation) {
-      this.loadObservation().then(() => {
-        this.loadExtraData(); // we are loading the extra data after the observation is loaded because observer context could change
-      });
+      this.loadExistingObservation();
     } else {
-      this.loadExtraData();
-      if (this.route.snapshot.params.useDraft) {
-        this.draft = this.observationsService.getDraftObservation();
-        // Set values from the draft observation
-        if (this.draft) {
-          this.type = this.draft.observationType;
-          this.actions = this.draft.actionsTaken;
-          this.details = this.draft.details;
-          this.opinion = this.draft.concernOpinion;
-          // meaning we have to migrate to new evidence type
-          if (this.draft.evidenceType === 'Evidence presented in the report') {
-            this.evidenceType = this.draft.evidenceType;
-            this.evidenceOnReport = this.draft.evidenceOnReport;
-          } else if (this.documentTypes.includes(this.draft.evidenceType)) {
-            // old way migrate the data
-            this.evidenceType = 'Uploaded documents';
-            // TODO: remove attachement after some time and this migration, drafts should expire at some point
-            this.documents = this.draft.documents.map(document => this.datastoreService.createRecord(ObservationDocument, {
-              name: document.name,
-              'document-type': this.draft.evidenceType,
-              attachment: document.attachment || document.attachement
-            }));
-          } else {
-            // new way
-            this.evidenceType = this.draft.evidenceType;
-            this.documents = this.draft.documents.map(document => this.datastoreService.createRecord(ObservationDocument, document));
-          }
-          // if we were going to upload a new report
-          this.report.title = this.draft.reportTitle;
-          this.reportAttachment = this.draft.reportAttachment;
-          this.reportDate = new Date(this.draft.reportDate);
-
-          if (this.type === 'operator') {
-            this.nonConcessionActivity = this.draft.nonConcessionActivity;
-            this.physicalPlace = this.draft.isPhysicalPlace;
-            this.latitude = this.draft.lat;
-            this.longitude = this.draft.lng;
-            this.litigationStatus = this.draft.litigationStatus;
-            this.pv = this.draft.pv;
-            this.locationInformation = this.draft.locationInformation;
-            this.locationAccuracy = this.draft.locationAccuracy;
-          }
-        }
-      }
-
-      this.subscription = interval(10000).subscribe(() => {
-        this.saveAsDraftObservation();
-      });
+      this.initNewObservation();
     }
   }
 
-  async loadObservation() {
+  get isOnline(): boolean {
+    return this.connectivity.isOnline;
+  }
+
+  /**
+   * An observation to edit or copy only exists on the server: offline, the form shows a
+   * notice instead and loads it once the connection is back.
+   */
+  private loadExistingObservation() {
+    if (!this.connectivity.isOnline) {
+      this.waitForConnection();
+      return;
+    }
+
+    this.loadObservation().then((loaded) => {
+      // After the observation, because the observer context could change
+      if (loaded) this.loadExtraData();
+    });
+  }
+
+  private waitForConnection() {
+    this.requiresConnection = true;
+    this.connectionSubscription = this.connectivity.onlineChanges
+      .pipe(filter((online) => online), first())
+      .subscribe(() => {
+        this.requiresConnection = false;
+        this.loadExistingObservation();
+      });
+  }
+
+  /**
+   * A new observation: restore the outbox entry we were asked to continue, if any, then
+   * keep autosaving the form to the outbox.
+   *
+   * The entry is read before the extra data is requested, so the draft is in place when
+   * the responses come back and the handlers that restore the selection from it run.
+   */
+  private async initNewObservation() {
+    const outboxId: string = this.route.snapshot.params.outboxId;
+    if (outboxId) {
+      const entry = await this.outboxService.get(outboxId);
+      if (entry) {
+        this.outboxEntryId = entry.id;
+        this.draft = entry.draft;
+        this.serverValidationError = entry.status === 'failed' ? entry.error : null;
+      }
+    }
+
+    this.loadExtraData();
+
+    if (this.draft) {
+      this.applyDraft();
+    }
+
+    this.subscription = interval(10000).subscribe(() => {
+      this.saveAsDraftObservation();
+    });
+  }
+
+  private applyDraft() {
+    this.type = this.draft.observationType;
+    this.actions = this.draft.actionsTaken;
+    this.details = this.draft.details;
+    this.opinion = this.draft.concernOpinion;
+    // meaning we have to migrate to new evidence type
+    if (this.draft.evidenceType === 'Evidence presented in the report') {
+      this.evidenceType = this.draft.evidenceType;
+      this.evidenceOnReport = this.draft.evidenceOnReport;
+    } else if (this.documentTypes.includes(this.draft.evidenceType)) {
+      // old way migrate the data
+      this.evidenceType = 'Uploaded documents';
+      // TODO: remove attachement after some time and this migration, drafts should expire at some point
+      this.documents = (this.draft.documents || []).map(document => this.datastoreService.createRecord(ObservationDocument, {
+        localId: document.localId,
+        name: document.name,
+        'document-type': this.draft.evidenceType,
+        attachment: document.attachment || document.attachement
+      }));
+    } else {
+      // new way
+      this.evidenceType = this.draft.evidenceType;
+      this.documents = (this.draft.documents || []).map(document => this.datastoreService.createRecord(ObservationDocument, document));
+    }
+    // if we were going to upload a new report
+    this.report.title = this.draft.reportTitle;
+    this.report['mission-type'] = this.draft.reportMissionType;
+    this.reportAttachment = this.draft.reportAttachment;
+    this.reportDate = this.draft.reportDate ? new Date(this.draft.reportDate) : null;
+
+    if (this.type === 'operator') {
+      this.nonConcessionActivity = this.draft.nonConcessionActivity;
+      this.physicalPlace = this.draft.isPhysicalPlace;
+      this.latitude = this.draft.lat;
+      this.longitude = this.draft.lng;
+      this.litigationStatus = this.draft.litigationStatus;
+      this.pv = this.draft.pv;
+      this.locationInformation = this.draft.locationInformation;
+      this.locationAccuracy = this.draft.locationAccuracy;
+    }
+  }
+
+  /**
+   * Load the observation to edit or copy. Resolves whether it could be loaded.
+   */
+  async loadObservation(): Promise<boolean> {
     this.loading = true;
 
-    const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: 'locale' }});
+    try {
+      const preloaded = await this.observationsService.getById(this.existingObservation, { fields: { observations: 'locale' }});
 
-    return this.observationsService.getById(this.existingObservation, {
-      locale: preloaded.locale || this.uiLocale,
-      include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators,quality-controls'
-    }).then((observation) => {
+      const observation = await this.observationsService.getById(this.existingObservation, {
+        locale: preloaded.locale || this.uiLocale,
+        include: 'country,operator,subcategory,severity,observers,governments,modified-user,fmu,observation-report,observation-documents,law,user,relevant-operators,quality-controls'
+      });
+
       // change current observer context if needed to prevent 404 errors
 
       if (!observation.observers.find(o => o.id === this.authService.userObserverId)) {
@@ -1025,7 +1093,7 @@ export class ObservationDetailComponent implements OnDestroy {
         } else {
           // observation is not accessible by the current user
           this.router.navigate(['/', '404']);
-          return;
+          return false;
         }
       }
 
@@ -1054,15 +1122,21 @@ export class ObservationDetailComponent implements OnDestroy {
       this.operatorChoice = this.observation.operator;
       this.reportChoice = this.observation['observation-report'];
       this.documents = this.observation['observation-documents'];
-    })
-      .catch((err) => {
-        console.error(err);
-        // The only reason the request should fail is that the user
-        // don't have the permission to edit this observation
-        // In such a case, we redirect them to the 404 page
+
+      return true;
+    } catch (err) {
+      console.error(err);
+      if (isNetworkError(err)) {
+        // The connection dropped on the way: same as having opened the page offline
+        this.waitForConnection();
+      } else {
+        // Otherwise the user doesn't have the permission to see this observation
         this.router.navigate(['/', '404']);
-      })
-      .then(() => this.loading = false);
+      }
+      return false;
+    } finally {
+      this.loading = false;
+    }
   }
 
   loadExtraData() {
@@ -1110,6 +1184,9 @@ export class ObservationDetailComponent implements OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    if (this.connectionSubscription) {
+      this.connectionSubscription.unsubscribe();
+    }
   }
 
   private async updateMultiSelectTexts() {
@@ -1152,7 +1229,10 @@ export class ObservationDetailComponent implements OnDestroy {
     return !this.reportChoice;
   }
 
-  private saveAsDraftObservation(): void {
+  /**
+   * Snapshot of the form, in the shape the outbox stores and the submission service sends
+   */
+  private buildDraftModel(): DraftObservation {
     const draftModel: DraftObservation = {
       observationType: this.type,
       countryId: this.country && this.country.id,
@@ -1165,7 +1245,10 @@ export class ObservationDetailComponent implements OnDestroy {
       concernOpinion: this.opinion,
       evidenceType: this.evidenceType,
       evidenceOnReport: this.evidenceOnReport,
+      locale: this.locale,
       documents: this.documents.map(document => ({
+        // Lets the submission service recognise a document it already uploaded
+        localId: document.localId || (document.localId = this.generateLocalId()),
         id: document.id,
         name: document.name,
         attachment: document.attachment,
@@ -1179,6 +1262,7 @@ export class ObservationDetailComponent implements OnDestroy {
       draftModel.reportTitle = this.report && this.report.title;
       draftModel.reportAttachment = this.reportAttachment && String(this.reportAttachment);
       draftModel.reportDate = this.reportDate || null;
+      draftModel.reportMissionType = this.report['mission-type'] || null;
     }
 
     if (this.type === 'operator') {
@@ -1204,17 +1288,36 @@ export class ObservationDetailComponent implements OnDestroy {
       draftModel.relevantOperators = this._relevantOperatorsSelection;
     }
 
-    // A form nobody has filled in yet would otherwise overwrite a saved draft 10s after it opens,
-    // which is what "Create new" does when a draft already exists.
-    const isEmpty = Object.values(draftModel).every(value =>
+    return draftModel;
+  }
+
+  private isDraftEmpty(draftModel: DraftObservation): boolean {
+    // The locale is always set, it says nothing about whether the user typed anything
+    const rest = { ...draftModel, locale: null };
+    return Object.values(rest).every(value =>
       value === null || value === undefined || value === '' || (Array.isArray(value) && !value.length)
     );
+  }
 
-    if (isEmpty) {
-      return;
-    }
+  private saveAsDraftObservation(): void {
+    // Editing an existing observation is not autosaved, and a submission in flight owns the entry
+    if (this.existingObservation || this.loading) return;
 
-    this.observationsService.saveDraftObservation(draftModel);
+    const draftModel = this.buildDraftModel();
+
+    // A form nobody has filled in yet is not worth an outbox entry
+    if (this.isDraftEmpty(draftModel)) return;
+
+    this.draftSave = this.draftSave
+      .then(() => this.outboxService.saveDraft(
+        this.outboxEntryId, this.authService.userId, this.authService.userObserverId, draftModel
+      ))
+      .then((entry) => this.outboxEntryId = entry.id)
+      .catch((err) => console.error('Could not autosave the observation', err));
+  }
+
+  private generateLocalId(): string {
+    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
   }
 
   /**
@@ -2006,73 +2109,34 @@ export class ObservationDetailComponent implements OnDestroy {
     this.loading = true;
     this.serverValidationError = null;
 
-    let observation: Observation;
-
-    if (this.observation && !this.isCopied) {
-      // We update the list of observers
-      // NOTE: we make sure to add our own observer
-      this.observation.observers = this.observers
-        .filter((observer) => this._additionalObserversSelection.includes(observer.id))
-        .concat([this.observers.find(o => o.id === this.authService.userObserverId)]);
-
-      if (this.type !== 'operator') {
-        this.observation.governments = this.governments.filter((government) => this._governmentsSelection.includes(government.id));
-      } else {
-        if (!this.physicalPlace) {
-          this.observation.lat = null;
-          this.observation.lng = null;
-          this.observation.fmu = null;
-        } else {
-          const decimalCoordinates = this.getDecimalCoordinates();
-          this.observation.lat = decimalCoordinates && decimalCoordinates[0];
-          this.observation.lng = decimalCoordinates && decimalCoordinates[1];
-        }
-      }
-      this.observation['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(operator.id));
-      this.observation['validation-status'] = this.validationStatus;
-
-      observation = this.observation;
-    } else {
-      const model: any = {
-        'observation-type': this.type,
-        'publication-date': new Date(),
-        country: this.country,
-        subcategory: this.subcategory,
-        details: this.details,
-        severity: this.severity,
-        observers: this.observers
-          .filter((observer) => this._additionalObserversSelection.includes(observer.id))
-          .concat([this.observers.find(o => o.id === this.authService.userObserverId)]),
-        'actions-taken': this.actions,
-        'validation-status': this.validationStatus,
-        'concern-opinion': this.opinion,
-        'evidence-type': this.evidenceType,
-        'evidence-on-report': this.evidenceOnReport
-      };
-
-      if (this.type === 'operator') {
-        const decimalCoordinates = this.getDecimalCoordinates();
-
-        model.operator = this.operatorChoice;
-        model['non-concession-activity'] = this.nonConcessionActivityEnabled ? this.nonConcessionActivity : false;
-        model['is-physical-place'] = this.physicalPlace;
-        model.lat = this.physicalPlace && decimalCoordinates ? decimalCoordinates[0] : null;
-        model.lng = this.physicalPlace && decimalCoordinates ? decimalCoordinates[1] : null;
-        model['litigation-status'] = this.litigationStatus;
-        model.law = this.law;
-        model.pv = this.pv;
-        model.fmu = this.physicalPlace ? this.fmu : null;
-        model['location-accuracy'] = this.locationAccuracy;
-        model['location-information'] = this.locationInformation;
-      } else {
-        model.governments = this.governments.filter((government) => this._governmentsSelection.includes(government.id));
-      }
-      model['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(operator.id));
-      model.locale = this.locale;
-
-      observation = this.datastoreService.createRecord(Observation, model);
+    // A new observation (or a copy) goes through the outbox, so it survives being offline
+    if (!this.observation || this.isCopied) {
+      return this.submitNewObservation(onSuccess, onError);
     }
 
+    // We update the list of observers
+    // NOTE: we make sure to add our own observer
+    this.observation.observers = this.observers
+      .filter((observer) => this._additionalObserversSelection.includes(observer.id))
+      .concat([this.observers.find(o => o.id === this.authService.userObserverId)]);
+
+    if (this.type !== 'operator') {
+      this.observation.governments = this.governments.filter((government) => this._governmentsSelection.includes(government.id));
+    } else {
+      if (!this.physicalPlace) {
+        this.observation.lat = null;
+        this.observation.lng = null;
+        this.observation.fmu = null;
+      } else {
+        const decimalCoordinates = this.getDecimalCoordinates();
+        this.observation.lat = decimalCoordinates && decimalCoordinates[0];
+        this.observation.lng = decimalCoordinates && decimalCoordinates[1];
+      }
+    }
+    this.observation['relevant-operators'] = this.operators.filter((operator) => this._relevantOperatorsSelection.includes(operator.id));
+    this.observation['validation-status'] = this.validationStatus;
+
+    const observation = this.observation;
     observation['non-concession-activity'] = this.nonConcessionActivityEnabled ? this.nonConcessionActivity : false;
 
     this.uploadReport()
@@ -2090,22 +2154,13 @@ export class ObservationDetailComponent implements OnDestroy {
       })
       .then(() => observation.save({ locale: observation.locale }).toPromise())
       .then(async () => {
-        if (this.observation && !this.isCopied) {
-          this.notifications.success('observationUpdate.success');
-        } else {
-          this.observationsService.removeDraftObservation();
-          this.notifications.success('observationCreation.success');
-        }
+        this.notifications.success('observationUpdate.success');
         onSuccess && onSuccess();
 
         this.router.navigate(['/', 'private', 'observations']);
       })
       .catch(async (err) => {
-        if (this.observation && !this.isCopied) {
-          this.notifications.error('observationUpdate.error');
-        } else {
-          this.notifications.error('observationCreation.error');
-        }
+        this.notifications.error('observationUpdate.error');
         if (err.errors && err.errors.length) {
           this.serverValidationError = err.errors.map(e => e.detail).join('\n');
         }
@@ -2113,6 +2168,53 @@ export class ObservationDetailComponent implements OnDestroy {
         console.error(err);
       })
       .then(() => this.loading = false);
+  }
+
+  /**
+   * Save the form to the outbox and send it right away when we can. Offline, or when the
+   * server is unreachable, the observation stays in the outbox and is sent later.
+   */
+  private async submitNewObservation(onSuccess?: () => void, onError?: () => void) {
+    try {
+      // The autosave chain is drained first so it cannot overwrite what we are about to submit
+      await this.draftSave;
+
+      const entry = await this.outboxService.saveDraft(
+        this.outboxEntryId, this.authService.userId, this.authService.userObserverId, this.buildDraftModel()
+      );
+      this.outboxEntryId = entry.id;
+      await this.outboxService.setStatus(entry.id, 'queued');
+
+      if (!this.connectivity.isOnline) {
+        this.notifications.info('offline.queuedAlert');
+        onSuccess && onSuccess();
+        this.router.navigate(['/', 'private', 'observations']);
+        return;
+      }
+
+      const result = await this.submissionService.submit(entry.id);
+
+      if (result.status === 'sent') {
+        this.notifications.success('observationCreation.success');
+        onSuccess && onSuccess();
+        this.router.navigate(['/', 'private', 'observations']);
+      } else if (result.status === 'deferred') {
+        const key = result.reason === 'offline' ? 'offline.queuedAlert' : 'offline.deferredAlert';
+        this.notifications.info(key);
+        onSuccess && onSuccess();
+        this.router.navigate(['/', 'private', 'observations']);
+      } else {
+        this.notifications.error('observationCreation.error');
+        this.serverValidationError = result.message;
+        onError && onError();
+      }
+    } catch (err) {
+      this.notifications.error('observationCreation.error');
+      onError && onError();
+      console.error(err);
+    } finally {
+      this.loading = false;
+    }
   }
 
   clearServerError() {

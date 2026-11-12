@@ -13,12 +13,16 @@ export interface DraftObservation {
   observers?: string[]; // Array of observer ids
   observationReportId?: string;
   operatorId?: string;
-  documents?: { id?: string, name: string, attachment: string | { url: string }, attachement?: string | { url: string }, 'observation-report-id'?: number, 'document-type'?: string }[];
+  // localId identifies a document across submission attempts, see ObservationSubmissionService
+  documents?: { localId?: string, id?: string, name: string, attachment: string | { url: string }, attachement?: string | { url: string }, 'observation-report-id'?: number, 'document-type'?: string }[];
+
+  locale?: string;
 
   // New report
   reportTitle?: string;
   reportAttachment?: string; // Base64
   reportDate?: Date;
+  reportMissionType?: string;
 
   // New evidence
   evidenceTitle?: string;

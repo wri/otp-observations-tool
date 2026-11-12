@@ -1,23 +1,43 @@
-// A half-filled new observation is autosaved to localStorage every 10s and can be resumed
-// from the observations list. Nothing else exercises the draft restore paths.
+// A half-filled new observation is autosaved every 10s to the outbox (IndexedDB) and can be
+// resumed from the observations list. Nothing else exercises the draft restore paths.
 describe('Observation draft', () => {
   const AUTOSAVE_INTERVAL = 10000;
 
-  const draftValue = () => cy.getAllLocalStorage().then((storage) => {
-    const origin = storage[Cypress.config('baseUrl')] || {};
-    const key = Object.keys(origin).find((name) => name.startsWith('draftObservation-'));
-    return key ? origin[key] : 'NO DRAFT';
-  });
+  // Every entry of the outbox store, read straight from IndexedDB
+  const outboxEntries = () => cy.window().then((win) => new Cypress.Promise((resolve, reject) => {
+    const request = win.indexedDB.open('otp-observations-tool');
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains('outbox')) {
+        db.close();
+        resolve([]);
+        return;
+      }
+      const all = db.transaction('outbox', 'readonly').objectStore('outbox').getAll();
+      all.onerror = () => reject(all.error);
+      all.onsuccess = () => { db.close(); resolve(all.result); };
+    };
+  }));
+
+  const clearOutbox = () => cy.window().then((win) => new Cypress.Promise((resolve) => {
+    const request = win.indexedDB.deleteDatabase('otp-observations-tool');
+    request.onsuccess = resolve;
+    request.onerror = resolve;
+    request.onblocked = resolve;
+  }));
 
   beforeEach(() => {
     cy.login('ngo_manager@example.com', 'Supersecret1');
+    cy.visit('/private/observations');
+    clearOutbox();
     // Only the autosave interval is stubbed, so the form itself behaves normally.
     cy.clock(null, ['setInterval']);
     cy.visit('/private/observations/new');
   });
 
   afterEach(() => {
-    cy.clearLocalStorage();
+    clearOutbox();
   });
 
   it('autosaves a draft and restores it from the list', () => {
@@ -32,12 +52,15 @@ describe('Observation draft', () => {
 
     // Let the autosave interval fire
     cy.tick(AUTOSAVE_INTERVAL + 100);
-    draftValue().should('include', 'Draft details');
+    outboxEntries().should((entries) => {
+      expect(entries).to.have.length(1);
+      expect(entries[0].status).to.equal('draft');
+      expect(entries[0].draft.details).to.equal('Draft details');
+    });
 
-    // Leaving and coming back offers to continue the draft. The menu only opens on CSS :hover,
-    // which Cypress cannot trigger, hence the forced clicks.
+    // Leaving and coming back lists the draft, which can be continued
     cy.visit('/private/observations');
-    cy.get('.draft').contains('button', 'Continue draft').click({ force: true });
+    cy.get('.outbox .outbox-entry').should('have.length', 1).contains('button', 'Continue').click();
     cy.location('pathname').should('include', '/private/observations/new');
 
     cy.get('select#observation_type').find('option').contains('Producer').should('be.selected');
@@ -47,17 +70,29 @@ describe('Observation draft', () => {
     cy.get('#location_information').should('have.value', 'Draft location info');
     cy.get('#details_field').should('have.value', 'Draft details');
 
-    // "Create new" starts from an empty form, and its autosave must not wipe the saved draft
+    // "New observation" starts from an empty form; an empty form is never saved, so the
+    // draft is neither overwritten nor joined by an empty one
     cy.visit('/private/observations');
-    cy.get('.draft').contains('button', 'Create new').click({ force: true });
+    cy.get('a').contains('New observation').click();
+    cy.location('pathname').should('include', '/private/observations/new');
     // Nothing is restored, so the form stops at the first question
     cy.get('select#observation_type').should('exist');
     cy.get('#details_field').should('not.exist');
     cy.tick(AUTOSAVE_INTERVAL + 100);
-    draftValue().should('include', 'Draft details');
+    outboxEntries().should((entries) => {
+      expect(entries).to.have.length(1);
+      expect(entries[0].draft.details).to.equal('Draft details');
+    });
 
     cy.visit('/private/observations');
-    cy.get('.draft').contains('button', 'Continue draft').click({ force: true });
+    cy.get('.outbox .outbox-entry').contains('button', 'Continue').click();
     cy.get('#details_field').should('have.value', 'Draft details');
+
+    // Deleting the draft from the list removes it from the device
+    cy.visit('/private/observations');
+    cy.get('.outbox .outbox-entry').contains('button', 'Delete').click();
+    cy.confirmDialog(/Delete this observation from this device/);
+    cy.get('.outbox').should('not.exist');
+    outboxEntries().should('have.length', 0);
   });
 });

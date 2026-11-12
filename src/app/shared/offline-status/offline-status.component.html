@@ -1,0 +1,34 @@
+@if (isLogged) {
+  @if (!isOnline) {
+    <div class="banner -offline" role="status">
+      <div class="l-wrapper">
+        {{ 'offline.banner' | translate }}
+        @if (queued > 0) {
+          {{ 'offline.pending' | translate:{ count: queued } }}
+        }
+        @if (notPrepared) {
+          {{ 'offline.notPrepared' | translate }}
+        }
+      </div>
+    </div>
+  } @else if (isSyncing) {
+    <div class="banner -pending" role="status">
+      <div class="l-wrapper">{{ 'offline.sending' | translate }}</div>
+    </div>
+  } @else if (queued > 0) {
+    <div class="banner -pending" role="status">
+      <div class="l-wrapper">
+        {{ 'offline.pending' | translate:{ count: queued } }}
+        <button type="button" (click)="sync()">{{ 'offline.sendNow' | translate }}</button>
+      </div>
+    </div>
+  }
+  @if (isOnline && !isSyncing && failed > 0) {
+    <div class="banner -failed" role="status">
+      <div class="l-wrapper">
+        {{ 'offline.failed' | translate:{ count: failed } }}
+        <a routerLink="/private/observations">{{ 'Observations' | translate }}</a>
+      </div>
+    </div>
+  }
+}

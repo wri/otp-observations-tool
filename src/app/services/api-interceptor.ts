@@ -4,16 +4,19 @@ import {
   HttpHandler,
   HttpRequest,
   HttpErrorResponse,
+  HttpResponse,
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
 import type { HttpEvent } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, from, of, throwError } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 
 
 import { environment } from 'environments/environment';
 import { TokenService } from './token.service';
 import { AuthService } from './auth.service';
+import { ApiCacheService } from 'app/services/offline/api-cache.service';
+import { ConnectivityService, isNetworkError } from 'app/services/offline/connectivity.service';
 
 @Injectable()
 export class APIInterceptor implements HttpInterceptor {
@@ -23,6 +26,8 @@ export class APIInterceptor implements HttpInterceptor {
 
   constructor (
     private tokenService: TokenService,
+    private apiCache: ApiCacheService,
+    private connectivity: ConnectivityService,
     private injector: Injector
   ) {
   }
@@ -58,8 +63,27 @@ export class APIInterceptor implements HttpInterceptor {
         setParams: params,
         withCredentials: true
       });
+
+      const cacheable = authReq.method === 'GET' && this.apiCache.isCacheable(authReq.urlWithParams);
+
+      // Offline: don't even try the network, it can hang for a long time on a flaky connection
+      if (cacheable && !this.connectivity.isOnline) {
+        return this.fromCache(authReq, null);
+      }
+
       return next.handle(authReq).pipe(
+        tap((event) => {
+          if (cacheable && event instanceof HttpResponse && event.ok) {
+            // Cloned right away: the datastore rewrites the attributes of the body it receives
+            this.apiCache.store(authReq.urlWithParams, JSON.parse(JSON.stringify(event.body)));
+          }
+        }),
         catchError((error) => {
+          // The network, not the API: the device is offline or the server unreachable.
+          // Reference data is then served from the cache when we have it.
+          if (cacheable && isNetworkError(error)) {
+            return this.fromCache(authReq, error);
+          }
           // A 401 means the session cookie is missing/expired. Drop the local
           // auth state and send the user back to login. Skip the auth-flow
           // endpoints (login/logout and the current-user probe) whose 401s are
@@ -74,6 +98,21 @@ export class APIInterceptor implements HttpInterceptor {
     }
 
     return next.handle(req);
+  }
+
+  /**
+   * Answer a request from the cache, failing like a network error when nothing is cached
+   * so the callers see the same error they would have seen without the cache.
+   */
+  private fromCache(req: HttpRequest<any>, networkError: HttpErrorResponse | null): Observable<HttpEvent<any>> {
+    return from(this.apiCache.lookup(req.urlWithParams)).pipe(
+      switchMap((body) => {
+        if (body) {
+          return of(new HttpResponse({ body, status: 200, statusText: 'OK (offline cache)', url: req.urlWithParams }));
+        }
+        return throwError(networkError || new HttpErrorResponse({ status: 0, statusText: 'Offline', url: req.urlWithParams }));
+      })
+    );
   }
 
   private isAuthRequest(url: string): boolean {

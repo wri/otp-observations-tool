@@ -4,6 +4,7 @@ import { UsersService } from 'app/services/users.service';
 import { AuthService } from 'app/services/auth.service';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NotificationService } from 'app/shared/notifications/notification.service';
+import { ConnectivityService } from 'app/services/offline/connectivity.service';
 
 @Component({
   selector: 'otp-profile',
@@ -23,9 +24,19 @@ export class ProfileComponent {
     private auth: AuthService,
     private usersService: UsersService,
     private translateService: TranslateService,
-    private notifications: NotificationService
+    private notifications: NotificationService,
+    private connectivity: ConnectivityService
   ) {
     this.loadUser();
+  }
+
+  get isOffline(): boolean {
+    return !this.connectivity.isOnline;
+  }
+
+  /** The profile can be shown offline (when it was downloaded) but not saved */
+  get canSave(): boolean {
+    return !!this.user && this.connectivity.isOnline;
   }
 
   get showCurrentPasswordField(): boolean {
@@ -46,7 +57,11 @@ export class ProfileComponent {
         this.user['password-confirmation'] = '';
         this.initialEmail = this.user.email;
       })
-      .catch(err => console.error(err)) // TODO: visual feedback
+      .catch((err) => {
+        // Offline without a downloaded copy: the template says so
+        this.user = null;
+        console.error(err);
+      })
       .then(() => this.loading = false);
   }
 
@@ -55,6 +70,8 @@ export class ProfileComponent {
   }
 
   onSubmit(): void {
+    if (!this.canSave) return;
+
     this.saveLoading = true;
 
     // We can't send empty string to the server

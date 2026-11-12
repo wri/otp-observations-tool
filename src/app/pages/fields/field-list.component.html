@@ -25,7 +25,7 @@
       <otp-navigation-item [name]="'Severities' | translate" url="/private/fields/severities"></otp-navigation-item>
     </otp-navigation>
     <div class="content">
-      <router-outlet ></router-outlet>
+      <router-outlet *otpOnlineOnly></router-outlet>
     </div>
   </div>
 </div>

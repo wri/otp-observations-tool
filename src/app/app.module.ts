@@ -32,6 +32,13 @@ import { ObservationsService } from 'app/services/observations.service';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { apiInterceptorProvider } from 'app/services/api-interceptor';
+import { provideServiceWorker } from '@angular/service-worker';
+import { ConnectivityService } from 'app/services/offline/connectivity.service';
+import { ApiCacheService } from 'app/services/offline/api-cache.service';
+import { OutboxService } from 'app/services/offline/outbox.service';
+import { ObservationSubmissionService } from 'app/services/offline/observation-submission.service';
+import { OfflinePreparationService } from 'app/services/offline/offline-preparation.service';
+import { OfflineStatusComponent } from 'app/shared/offline-status/offline-status.component';
 
 import * as Sentry from '@sentry/browser'
 
@@ -70,6 +77,7 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     AppComponent,
     HeaderComponent,
+    OfflineStatusComponent,
     LoginComponent,
     PageNotFoundComponent,
     NotificationsComponent,
@@ -108,11 +116,22 @@ export function createTranslateLoader(http: HttpClient) {
     LawsService,
     SeveritiesService,
     ResponsiveService,
+    ConnectivityService,
+    ApiCacheService,
+    OutboxService,
+    ObservationSubmissionService,
+    OfflinePreparationService,
     apiInterceptorProvider,
     { provide: ErrorHandler, useClass: SentryErrorHandler },
     // Replaces HttpClientModule, removed in v18. `withInterceptorsFromDi` keeps the
     // HTTP_INTERCEPTORS-based apiInterceptorProvider above working.
-    provideHttpClient(withXhr(), withInterceptorsFromDi())
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    // Only in deployed builds: `ng serve` cannot serve the worker, and a worker left over
+    // from a build would keep serving stale files during development.
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: environment.serviceWorker,
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   bootstrap: [AppComponent]
 })

@@ -37,7 +37,9 @@
     </form>
   </otp-modal>
   <div class="c-table-header">
-    <otp-filters>
+    <!-- Hidden, not removed: the table behaviour holds static references to the filters and the table.
+         An inline style because their own :host styles override the hidden attribute. -->
+    <otp-filters [style.display]="isOnline ? null : 'none'">
       <otp-filter [name]="'Type' | translate" [values]="typeFilterValues" prop="observation-type"></otp-filter>
       <otp-filter [name]="'Country' | translate" values="countries" prop="country-id" name-attr="name" [extra-params]="countryFilterParams"></otp-filter>
       <otp-filter [name]="'Operator' | translate" values="operators" prop="operator" name-attr="name" [extra-params]="operatorFilterParams"></otp-filter>
@@ -49,30 +51,90 @@
       <otp-filter [name]="'Status' | translate" [values]="statusFilterValues" prop="validation-status"></otp-filter>
     </otp-filters>
     <div class="table-actions">
-      <button type="button" class="c-button -secondary go-to-button" (click)="goToModalOpen = true">{{'Go to...' | translate}}</button>
+      @if (isOnline) {
+        <button type="button" class="c-button -secondary go-to-button" (click)="goToModalOpen = true">{{'Go to...' | translate}}</button>
+      }
       <input #uploadFile type="file" (change)="uploadCSV($event.target.files)" accept=".csv" [style.display]="'none'" />
       @if (canCreate()) {
-        <button type="button" class="c-button -secondary upload-csv" (click)="uploadWarningModalOpen = true">{{'Upload CSV' | translate}}</button>
-        @if (!draftObservation) {
-          <a class="c-button -primary" routerLink="/private/observations/new">{{'New observation' | translate}}</a>
-        } @else {
-          <div class="draft">
-            <button class="c-button -primary">{{'New observation' | translate}}</button>
-            <ul>
-              <li><button class="c-button -primary" (click)="onCreate()">{{'Create new' | translate}}</button></li>
-              <li><button class="c-button -secondary" (click)="onCreate(true)">{{'Continue draft' | translate}}</button></li>
-            </ul>
-          </div>
+        @if (isOnline) {
+          <button type="button" class="c-button -secondary upload-csv" (click)="uploadWarningModalOpen = true">{{'Upload CSV' | translate}}</button>
         }
+        <a class="c-button -primary" routerLink="/private/observations/new">{{'New observation' | translate}}</a>
       }
     </div>
   </div>
 
-  @if (table.isHorizontalScrollVisible) {
+  @if (canCreate() && isOfflineAvailable) {
+    <div class="offline-tools">
+      <span class="note" data-test-id="offline-data-status">
+        @if (preparation?.running) {
+          {{ 'offline.preparing' | translate:{ done: preparation.done, total: preparation.total } }}
+        } @else if (preparation?.preparedAt) {
+          {{ 'offline.preparedAt' | translate:{ date: (preparation.preparedAt | date:'short') } }}
+        } @else {
+          {{ 'offline.neverPrepared' | translate }}
+        }
+      </span>
+      @if (isOnline && !preparation?.running) {
+        <button type="button" class="link" (click)="onPrepareOffline()">{{ 'offline.update' | translate }}</button>
+      }
+    </div>
+  }
+
+  @if (outboxEntries.length) {
+    <section class="outbox">
+      <h3>{{ 'offline.pendingTitle' | translate }}</h3>
+      <p class="note">{{ 'offline.pendingDescription' | translate }}</p>
+      <div class="outbox-list">
+        @for (entry of outboxEntries; track entry.id) {
+          <div class="outbox-entry" [attr.data-status]="entry.status">
+            <div class="details">
+              <div class="title">
+                @if (entry.draft.observationType) {
+                  {{ entry.draft.observationType | titlecase | translate }}
+                } @else {
+                  {{ 'New observation' | translate }}
+                }
+                @if (entry.draft.details) {
+                  <span class="excerpt">– {{ shortenText(entry.draft.details) }}</span>
+                }
+              </div>
+              <div class="meta">
+                <span class="status">{{ 'offline.status.' + entry.status | translate }}</span>
+                · {{ 'offline.lastSaved' | translate }} {{ entry.updatedAt | date:'short' }}
+              </div>
+              @if (entry.status === 'failed' && entry.error) {
+                <div class="error">{{ entry.error }}</div>
+              }
+            </div>
+            <div class="c-button-container -j-end">
+              @if (entry.status !== 'syncing') {
+                <button type="button" class="c-button -secondary" (click)="onContinueEntry(entry)">{{ 'offline.continue' | translate }}</button>
+              }
+              @if (entry.status === 'failed' || entry.status === 'queued') {
+                <button type="button" class="c-button -primary" (click)="onRetryEntry(entry)" [disabled]="!isOnline">{{ 'offline.retry' | translate }}</button>
+              }
+              @if (entry.status !== 'syncing') {
+                <button type="button" class="c-button -danger" (click)="onDeleteEntry(entry)">{{ 'offline.delete' | translate }}</button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  @if (!isOnline) {
+    <div class="callout warning" data-test-id="online-only-notice">
+      <p>{{ 'offline.listRequiresConnection' | translate }}</p>
+    </div>
+  }
+
+  @if (isOnline && table.isHorizontalScrollVisible) {
     <p class="scrolling-note">{{'observation.scrollingNote' | translate}}</p>
   }
 
-  <otp-table #table [name]="'observations'" adjustToScreenHeight="true" [hideVisibleColumnsBox]="true" [caption]="'Observations' | translate" defaultSort="-updated-at" [include]="['observers']" [fields]="tableFields" [hidden]="isUploading" [options]="tableOptions">
+  <otp-table #table [name]="'observations'" adjustToScreenHeight="true" [hideVisibleColumnsBox]="true" [caption]="'Observations' | translate" defaultSort="-updated-at" [include]="['observers']" [fields]="tableFields" [hidden]="isUploading" [style.display]="isOnline ? null : 'none'" [options]="tableOptions">
     <otp-table-column [name]="'ID' | translate" prop="id"></otp-table-column>
     <!-- Updated at as a default sort must be as a column, it will be hidden -->
     <otp-table-column name="updated-at" prop="updated-at" [hidden]="true"></otp-table-column>
