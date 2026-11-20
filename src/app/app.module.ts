@@ -23,6 +23,7 @@ import { LoginComponent } from 'app/pages/login/login.component';
 import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
+import { NotificationsComponent } from 'app/shared/notifications/notifications.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
@@ -69,7 +70,8 @@ export function createTranslateLoader(http: HttpClient) {
     AppComponent,
     HeaderComponent,
     LoginComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,

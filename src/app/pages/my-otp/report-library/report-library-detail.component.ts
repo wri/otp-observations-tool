@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'environments/environment';
 import { IMultiSelectOption, IMultiSelectSettings, IMultiSelectTexts } from 'ngx-bootstrap-multiselect';
 import { MISSION_TYPES } from 'app/models/observation_report';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 @Component({
   selector: 'otp-report-library-detail',
@@ -42,6 +43,7 @@ export class ReportLibraryDetailComponent {
     private route: ActivatedRoute,
     private authService: AuthService,
     private translateService: TranslateService,
+    private notifications: NotificationService,
     private datastoreService: DatastoreService,
     private observationReportsService: ObservationReportsService,
     private observersService: ObserversService
@@ -113,18 +115,18 @@ export class ReportLibraryDetailComponent {
     this.report.save().toPromise()
       .then(async () => {
         if (isEdition) {
-          alert(await this.translateService.get('reportUpdate.success').toPromise());
+          this.notifications.success('reportUpdate.success');
         } else {
-          alert(await this.translateService.get('reportCreation.success').toPromise());
+          this.notifications.success('reportCreation.success');
         }
 
         this.router.navigate(['/', 'private', 'my-otp', 'reports']);
       })
       .catch(async (err) => {
         if (isEdition) {
-          alert(await this.translateService.get('reportUpdate.error').toPromise());
+          this.notifications.error('reportUpdate.error');
         } else {
-          alert(await this.translateService.get('reportCreation.error').toPromise());
+          this.notifications.error('reportCreation.error');
         }
 
         console.error(err);

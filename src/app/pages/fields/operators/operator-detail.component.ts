@@ -13,6 +13,7 @@ import { Fmu } from 'app/models/fmu.model';
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
 import { FmusService } from 'app/services/fmus.service';
 import sortBy from 'lodash/sortBy';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 @Component({
   selector: 'otp-operator-detail',
@@ -91,6 +92,7 @@ export class OperatorDetailComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private translateService: TranslateService,
+    private notifications: NotificationService,
     private authService: AuthService
   ) {
     this.updateTranslatedOptions(this.operatorTypes, 'operatorType');
@@ -161,9 +163,9 @@ export class OperatorDetailComponent implements OnInit {
       .then(async (savedOperator) => {
         if (this.showSuccessMessage) {
           if (isEdition) {
-            alert(await this.translateService.get('operatorUpdate.success').toPromise());
+            this.notifications.success('operatorUpdate.success');
           } else {
-            alert(await this.translateService.get('operatorCreation.success').toPromise());
+            this.notifications.success('operatorCreation.success');
           }
         }
 
@@ -174,9 +176,9 @@ export class OperatorDetailComponent implements OnInit {
       })
       .catch(async (err) => {
         if (isEdition) {
-          alert(await this.translateService.get('operatorUpdate.error').toPromise());
+          this.notifications.error('operatorUpdate.error');
         } else {
-          alert(await this.translateService.get('operatorCreation.error').toPromise());
+          this.notifications.error('operatorCreation.error');
         }
         if (err.errors && err.errors.length > 0) {
           const errorMessages = [];
@@ -195,7 +197,7 @@ export class OperatorDetailComponent implements OnInit {
             }
           })
           if (errorMessages.length > 0) {
-            alert(errorMessages.join('\n'));
+            this.notifications.error(errorMessages.join('\n'));
           }
         }
         console.error(err);

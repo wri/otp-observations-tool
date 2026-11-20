@@ -3,6 +3,7 @@ import { User } from './../../models/user.model';
 import { UsersService } from 'app/services/users.service';
 import { AuthService } from 'app/services/auth.service';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 @Component({
   selector: 'otp-profile',
@@ -21,7 +22,8 @@ export class ProfileComponent {
   constructor(
     private auth: AuthService,
     private usersService: UsersService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private notifications: NotificationService
   ) {
     this.loadUser();
   }
@@ -72,7 +74,7 @@ export class ProfileComponent {
       .toPromise()
       .then(async () => {
         this.translateService.use(this.user.locale);
-        alert(await this.translateService.get('profileUpdate.success').toPromise());
+        this.notifications.successAfterReload('profileUpdate.success');
 
         // We reload to make sure the observations will be loaded in the correct language
         location.reload();
@@ -90,7 +92,7 @@ export class ProfileComponent {
             }
           }
         }
-        alert(messageArray.join('\n'));
+        this.notifications.error(messageArray.join('\n'));
       })
       .then(() => this.saveLoading = false);
   }

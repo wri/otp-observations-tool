@@ -1,4 +1,3 @@
-import { TranslateService } from '@ngx-translate/core';
 import { ObserversService } from 'app/services/observers.service';
 import { Observer } from 'app/models/observer.model';
 import { environment } from 'environments/environment';
@@ -8,6 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 
 @Component({
@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
     private countriesService: CountriesService,
     private observersService: ObserversService,
     private http: HttpClient,
-    private translateService: TranslateService
+    private notifications: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -70,12 +70,11 @@ export class RegisterComponent implements OnInit {
     this.http.post(`${environment.apiUrl}/register`, payload)
       .toPromise()
       .then(async () => {
-        alert(await this.translateService.get('register.success').toPromise());
+        this.notifications.success('register.success');
         this.router.navigate(['']);
       })
       .catch(error => {
-        const errorMessage = error.json().errors[0].title;
-        alert(errorMessage);
+        this.notifications.error(error?.error?.errors?.[0]?.title || 'errors.generic');
       })
       .then(() => this.loading = false);
   }

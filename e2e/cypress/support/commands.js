@@ -85,6 +85,21 @@ Cypress.Commands.add('expectChosenOption', (question, option) => {
     .should('be.checked');
 });
 
+// Checks an in-app toast (NotificationService) and dismisses it, so later checks can't match it
+Cypress.Commands.add('expectToast', (text) => {
+  cy.contains('[data-test-id="toast"]', text, { timeout: 10000 })
+    .should('be.visible')
+    .find('button')
+    .click();
+});
+
+// Answers the in-app confirmation dialog (NotificationService.confirm)
+Cypress.Commands.add('confirmDialog', (text, accept = true) => {
+  cy.get('[data-test-id="confirm-dialog"]').should('be.visible').contains(text);
+  cy.get(`[data-test-id="${accept ? 'confirm-accept' : 'confirm-cancel'}"]`).click();
+  cy.get('[data-test-id="confirm-dialog"]').should('not.be.visible');
+});
+
 Cypress.Commands.add('resetDB', () => {
   const apiPath = Cypress.env('API_PATH') || '../../otp-api';
   const fastReset = `${apiPath}/bin/e2e-db-reset`;

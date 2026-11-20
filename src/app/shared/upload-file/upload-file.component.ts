@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'app/services/auth.service';
 import { ObservationsService } from 'app/services/observations.service';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 export interface ErrorLine {
   line: number;
@@ -51,7 +51,7 @@ export class UploadFileComponent {
 
   constructor(
     private service: ObservationsService,
-    private translateService: TranslateService,
+    private notifications: NotificationService,
     private authService: AuthService,
   ) { }
 
@@ -92,7 +92,7 @@ export class UploadFileComponent {
       },
       (error) => {
         console.error(error);
-        this.translateService.get('uploadFile.errorHeader').subscribe(phrase => alert(phrase));
+        this.notifications.error('uploadFile.errorHeader');
         this.exit.emit(true);
         this.reuploadFileInput.nativeElement.value = '';
       });

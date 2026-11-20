@@ -1,5 +1,4 @@
 import { DatastoreService } from 'app/services/datastore.service';
-import { TranslateService } from '@ngx-translate/core';
 import { Subcategory } from 'app/models/subcategory.model';
 import { SubcategoriesService } from 'app/services/subcategories.service';
 import { AuthService } from 'app/services/auth.service';
@@ -9,6 +8,7 @@ import { Law } from 'app/models/law.model';
 import { LawsService } from 'app/services/laws.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 @Component({
   selector: 'otp-law-detail',
@@ -28,7 +28,7 @@ export class LawDetailComponent {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private translateService: TranslateService,
+    private notifications: NotificationService,
     private datastoreService: DatastoreService,
     private lawsService: LawsService,
     private countriesService: CountriesService,
@@ -84,18 +84,18 @@ export class LawDetailComponent {
       .toPromise()
       .then(async () => {
         if (isEdition) {
-          alert(await this.translateService.get('lawUpdate.success').toPromise());
+          this.notifications.success('lawUpdate.success');
         } else {
-          alert(await this.translateService.get('lawCreation.success').toPromise());
+          this.notifications.success('lawCreation.success');
         }
 
         this.router.navigate(['/', 'private', 'fields', 'laws']);
       })
       .catch(async (err) => {
         if (isEdition) {
-          alert(await this.translateService.get('lawUpdate.error').toPromise());
+          this.notifications.error('lawUpdate.error');
         } else {
-          alert(await this.translateService.get('lawCreation.error').toPromise());
+          this.notifications.error('lawCreation.error');
         }
 
         console.error(err);

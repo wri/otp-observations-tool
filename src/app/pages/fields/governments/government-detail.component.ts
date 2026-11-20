@@ -1,5 +1,4 @@
 import { AuthService } from 'app/services/auth.service';
-import { TranslateService } from '@ngx-translate/core';
 import { Government } from 'app/models/government.model';
 import { DatastoreService } from 'app/services/datastore.service';
 import { GovernmentsService } from 'app/services/governments.service';
@@ -7,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Country } from 'app/models/country.model';
 import { CountriesService } from 'app/services/countries.service';
 import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 @Component({
   selector: 'otp-government-detail',
@@ -37,7 +37,7 @@ export class GovernmentDetailComponent implements OnInit {
     private datastoreService: DatastoreService,
     private router: Router,
     private route: ActivatedRoute,
-    private translateService: TranslateService,
+    private notifications: NotificationService,
     private authService: AuthService
   ) {
   }
@@ -96,9 +96,9 @@ export class GovernmentDetailComponent implements OnInit {
       .then(async (savedGovernment) => {
         if (this.showSuccessMessage) {
           if (isEdition) {
-            alert(await this.translateService.get('governmentUpdate.success').toPromise());
+            this.notifications.success('governmentUpdate.success');
           } else {
-            alert(await this.translateService.get('governmentCreation.success').toPromise());
+            this.notifications.success('governmentCreation.success');
           }
         }
         this.afterSave.emit(savedGovernment);
@@ -108,9 +108,9 @@ export class GovernmentDetailComponent implements OnInit {
       })
       .catch(async (err) => {
         if (isEdition) {
-          alert(await this.translateService.get('governmentUpdate.error').toPromise());
+          this.notifications.error('governmentUpdate.error');
         } else {
-          alert(await this.translateService.get('governmentCreation.error').toPromise());
+          this.notifications.error('governmentCreation.error');
         }
         if (err.errors && err.errors.length > 0) {
           const errorMessages = [];
@@ -129,7 +129,7 @@ export class GovernmentDetailComponent implements OnInit {
             }
           })
           if (errorMessages.length > 0) {
-            alert(errorMessages.join('\n'));
+            this.notifications.error(errorMessages.join('\n'));
           }
         }
         console.error(err);

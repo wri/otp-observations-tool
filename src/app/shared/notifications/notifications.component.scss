@@ -1,0 +1,123 @@
+@use 'src/settings.scss';
+
+:host {
+  .toasts {
+    position: fixed;
+    // Above the action bar that some pages pin to the bottom
+    bottom: calc(#{settings.$action-bar-height} + 16px + env(safe-area-inset-bottom, 0px));
+    left: 16px;
+    right: 16px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    pointer-events: none;
+
+    @media screen and (min-width: settings.$break-tablet) {
+      left: auto;
+      width: 420px;
+    }
+  }
+
+  .toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 6px;
+    background: settings.$dark-grey;
+    box-shadow: 0 6px 24px rgba(#000, .3);
+    color: settings.$white;
+    pointer-events: auto;
+    animation: toast-in .2s ease-out;
+
+    &.-success { background: settings.$color-primary; }
+    &.-error { background: settings.$color-error; }
+
+    .icon {
+      flex: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: settings.$font-weight-bold;
+      line-height: 1;
+    }
+
+    .message {
+      flex: 1;
+      margin: 0;
+      font-size: settings.$font-size-big;
+      font-weight: settings.$font-weight-medium;
+      line-height: 1.4;
+      // Server errors are joined with new lines
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+
+    .dismiss {
+      flex: none;
+      padding: 0 4px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-size: 24px;
+      line-height: 22px;
+      opacity: .85;
+      cursor: pointer;
+
+      &:hover,
+      &:focus-visible {
+        opacity: 1;
+      }
+    }
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toast {
+      animation: none;
+    }
+  }
+
+  .confirm-dialog {
+    width: calc(100% - 32px);
+    max-width: 480px;
+    padding: 24px;
+    border: 0;
+    border-radius: 4px;
+    box-shadow: 0 8px 32px rgba(#000, .25);
+
+    &::backdrop {
+      background: rgba(#000, .5);
+    }
+
+    .message {
+      margin: 0;
+      font-size: settings.$font-size-big;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .c-button-container {
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 24px 0 0;
+
+      > * {
+        margin-left: 0;
+      }
+    }
+  }
+}

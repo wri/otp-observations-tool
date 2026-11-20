@@ -94,10 +94,8 @@ describe('User', () => {
       cy.get('#password_confirmation').type('GreatPassword6');
       cy.get('#has_rights').check();
 
-      const alert = cy.stub().as("alert");
-      cy.then(() => { cy.on('window:alert', alert); });
       cy.get('button').contains('Register').click();
-      cy.get("@alert").should("have.been.calledWithMatch", /The request has been sent! We'll get back to you soon/);
+      cy.expectToast(/The request has been sent! We'll get back to you soon/);
       cy.resetDB();
     });
   });
@@ -123,10 +121,8 @@ describe('User', () => {
         cy.get('#email_field').clear().type('ngo_manager@example.com');
         cy.get('#locale_field').select('English');
 
-        const alert = cy.stub().as("alert");
-        cy.on('window:alert', alert);
         cy.get('button').contains('Save').click(); //.then(() => {
-        cy.get("@alert").should("have.been.calledWithMatch", /Your profile has been sucessfully updated/);
+        cy.expectToast(/Your profile has been sucessfully updated/);
         cy.resetDB();
       });
 
@@ -136,13 +132,9 @@ describe('User', () => {
         cy.get('#email_field').clear().type('ngo_managertest@example.com');
         cy.get('#current_password').should('exist');
         cy.get('#current_password').clear().type('Supersecret1');
-        const alert = cy.stub().as("alert");
-        cy.on('window:alert', alert);
         cy.get('button').contains('Save').click();
-        cy.get("@alert").should("have.been.calledWithMatch", /Your profile has been sucessfully updated/);
-        cy.then(() => alert.reset());
-        cy.get('#email_field').should('not.exist'); // trick wait for page reload
-
+        // Shown after the page reload, so the form below is the reloaded one
+        cy.expectToast(/Your profile has been sucessfully updated/);
         cy.get('#email_field').should('have.value', 'ngo_managertest@example.com');
         cy.get('#current_password').should('not.exist');
 
@@ -157,12 +149,11 @@ describe('User', () => {
         cy.get('#password_confirmation').clear().type('Secret12345');
         cy.get('#current_password').clear().type('WrongPassword1');
         cy.get('button').contains('Save').click();
-        cy.get("@alert").should("have.been.calledWithMatch", /Current password is invalid/);
-        cy.then(() => alert.reset());
+        cy.expectToast(/Current password is invalid/);
 
         cy.get('#current_password').clear().type('Supersecret1');
         cy.get('button').contains('Save').click();
-        cy.get("@alert").should("have.been.calledWithMatch", /Your profile has been sucessfully updated/);
+        cy.expectToast(/Your profile has been sucessfully updated/);
         cy.resetDB();
       })
     })
