@@ -453,5 +453,7 @@
   "government": "Government",
   "There was a problem with the form submission.": "There was a problem with the form submission.",
   "Please fill or select all required fields before submitting the form.": "Please fill or select all required fields before submitting the form.",
-  "Remember me for 30 days": "Remember me for 30 days"
+  "Remember me for 30 days": "Remember me for 30 days",
+  "notifications.dismiss": "닫기",
+  "errors.generic": "문제가 발생했습니다. 다시 시도해 주세요."
 }
