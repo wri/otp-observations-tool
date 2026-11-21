@@ -1,8 +1,8 @@
-import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'environments/environment';
 import { Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class ForgotPasswordComponent {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private translateService: TranslateService
+    private notifications: NotificationService
   ) { }
 
   onSubmit(formValues) {
@@ -30,12 +30,11 @@ export class ForgotPasswordComponent {
     this.http.post(`${environment.apiUrl}/reset-password`, payload)
       .toPromise()
       .then(async () => {
-        alert(await this.translateService.get('forgotPassword.success', { email: payload.password.email }).toPromise());
+        this.notifications.success('forgotPassword.success', { email: payload.password.email });
         this.router.navigate(['']);
       })
       .catch(error => {
-        const errorMessage = error.json().errors[0].title;
-        alert(errorMessage);
+        this.notifications.error(error?.error?.errors?.[0]?.title || 'errors.generic');
       })
       .then(() => this.loading = false);
   }

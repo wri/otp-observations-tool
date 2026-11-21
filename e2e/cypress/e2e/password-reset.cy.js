@@ -20,11 +20,8 @@ describe('Password Reset', () => {
       cy.visit('/');
       cy.get('a').contains('Reset password').click();
       cy.get('#email').type('ngo@example.com');
-      const alert = cy.stub().as("alert");
-      cy.on('window:alert', alert);
       cy.get('button').contains('Reset').click();
-      cy.get("@alert").should("have.been.calledWithMatch", /If account exists for ngo@example.com, you will get/);
-      cy.then(() => alert.reset());
+      cy.expectToast(/If account exists for ngo@example.com, you will get/);
       // the callback runs in the other origin, so it cannot close over anything
       // from this scope; it yields the token back instead
       cy.origin(LETTER_OPENER_ORIGIN, () => {
@@ -56,8 +53,7 @@ describe('Password Reset', () => {
       cy.get('#new_password').clear().type('Secret12345');
       cy.get('#password_confirmation').clear().type('Secret12345');
       cy.get('button').contains('Change password').click();
-      cy.get("@alert").should("have.been.calledWithMatch", /Your password has been successfully updated/);
-      cy.then(() => alert.reset());
+      cy.expectToast(/Your password has been successfully updated/);
       // wait for the auto log-in to land on the observations page
       cy.location('pathname').should('eq', '/private/observations');
       // test log in again with new password, even after auto log-in
@@ -81,10 +77,8 @@ describe('Password Reset', () => {
         cy.visit('/reset-password?reset_password_token=invalid');
         cy.get('#new_password').clear().type('Secret12345');
         cy.get('#password_confirmation').clear().type('Secret12345');
-        const alert = cy.stub().as("alert");
-        cy.on('window:alert', alert);
         cy.get('button').contains('Change password').click();
-        cy.get("@alert").should("have.been.calledWithMatch", /reset_password_token is invalid/);
+        cy.expectToast(/reset_password_token is invalid/);
       });
     })
   })

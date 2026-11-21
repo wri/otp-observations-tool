@@ -8,6 +8,8 @@ import { Observation } from 'app/models/observation.model';
 import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavior';
 import { environment } from 'environments/environment';
 import { DraftObservation } from 'app/models/draft_observation.interface';
+import { NotificationService } from 'app/shared/notifications/notification.service';
+import { ConfirmDialogService } from 'app/shared/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'otp-observation-list',
@@ -80,7 +82,9 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
     private route: ActivatedRoute,
     protected service: ObservationsService,
     private authService: AuthService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private notifications: NotificationService,
+    private confirmDialog: ConfirmDialogService
   ) {
     super();
 
@@ -170,10 +174,10 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
   }
 
   async onDelete(row) {
-    if (confirm(await this.translateService.get('observationDeletion.confirm').toPromise())) {
+    if (await this.confirmDialog.confirm('observationDeletion.confirm', { confirmLabel: 'Delete', danger: true })) {
       this.service.deleteObservationWithId(row.id)
         .then(async data => {
-          alert(await this.translateService.get('observationDeletion.success').toPromise());
+          this.notifications.success('observationDeletion.success');
           this.loadData();
         });
     }
@@ -194,7 +198,7 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
       },
       (error) => {
         console.error(error);
-        this.translateService.get('uploadFile.errorHeader').subscribe(phrase => alert(phrase));
+        this.notifications.error('uploadFile.errorHeader');
         this.isUploading = false;
         this.uploadFile.nativeElement.value = '';
       });

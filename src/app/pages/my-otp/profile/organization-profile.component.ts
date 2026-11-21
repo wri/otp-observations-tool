@@ -6,6 +6,7 @@ import { Observer } from 'app/models/observer.model';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'ngx-bootstrap-multiselect';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 @Component({
   selector: 'otp-organization-profile',
@@ -34,6 +35,7 @@ export class OrganizationProfileComponent {
     private authService: AuthService,
     private observersService: ObserversService,
     private translateService: TranslateService,
+    private notifications: NotificationService,
     private countriesService: CountriesService,
   ) {
     this.isAdmin = this.authService.isAdmin() && this.authService.managedObserverIds.includes(this.authService.userObserverId);
@@ -92,10 +94,10 @@ export class OrganizationProfileComponent {
     this.observer.save()
       .toPromise()
       .then(async () => {
-        alert(await this.translateService.get('organizationProfile.success').toPromise());
+        this.notifications.success('organizationProfile.success');
         this.authService.setObserverCountriesIds();
       })
-      .catch(async () => alert(await this.translateService.get('organizationProfile.error').toPromise()))
+      .catch(async () => this.notifications.error('organizationProfile.error'))
       .then(() => this.saveLoading = false);
   }
 

@@ -34,6 +34,8 @@ import { ObservationReportsService } from 'app/services/observation-reports.serv
 import { ObservationDocumentsService } from 'app/services/observation-documents.service';
 import { forkJoin ,  Observable ,  interval ,  Subscription } from 'rxjs';
 import { QualityControl } from 'app/models/quality_control.model';
+import { NotificationService } from 'app/shared/notifications/notification.service';
+import { ConfirmDialogService } from 'app/shared/confirm-dialog/confirm-dialog.service';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -852,8 +854,7 @@ export class ObservationDetailComponent implements OnDestroy {
     const similarReport = this.reports.find(report => report['publication-date'] === date);
 
     if (similarReport) {
-      this.translateService.get('report.duplicate', { reportName: similarReport.title }).toPromise()
-        .then(s => alert(s));
+      this.notifications.info('report.duplicate', { reportName: similarReport.title });
     }
 
     this.report['publication-date'] = date;
@@ -925,7 +926,9 @@ export class ObservationDetailComponent implements OnDestroy {
     private datastoreService: DatastoreService,
     private router: Router,
     private route: ActivatedRoute,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private notifications: NotificationService,
+    private confirmDialog: ConfirmDialogService
   ) {
     this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
     this.updateTranslatedOptions(this.documentTypes, 'documentType');
@@ -1379,7 +1382,7 @@ export class ObservationDetailComponent implements OnDestroy {
         const longitudeRef = EXIF.getTag(this, 'GPSLongitudeRef') || 'W';
 
         if (!minLatitude || !minLongitude) {
-          alert(await self.translateService.get('imageGeoreference.error').toPromise());
+          self.notifications.error('imageGeoreference.error');
           return;
         } else {
           self.locationAccuracy = self.locationChoice.photo;
@@ -1415,7 +1418,7 @@ export class ObservationDetailComponent implements OnDestroy {
     let updateReport = false;
 
     if (anyDocumentsFromDifferentReport) {
-      if (window.confirm(await this.translateService.get('observation.evidence.filesFromDifferentReport').toPromise())) {
+      if (await this.confirmDialog.confirm('observation.evidence.filesFromDifferentReport')) {
         updateReport = true;
       }
     } else {
@@ -1554,21 +1557,21 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   async onClickRemoveReportDocument(document: ObservationDocument) {
-    if (window.confirm(await this.translateService.get('observation.evidence.removalNotification').toPromise())) {
+    if (await this.confirmDialog.confirm('observation.evidence.removalNotification', { confirmLabel: 'Remove', danger: true })) {
       try {
         const fetchedDocument = await this.datastoreService.findRecord(
           ObservationDocument, document.id, { include: 'observations', fields: { observations: 'id' } }
         ).toPromise();
         const otherObservationsLinkedIds = (fetchedDocument.observations || []).filter(x => x.id !== this.observation.id).map(x => x.id);
         if (otherObservationsLinkedIds.length > 0) {
-          alert(await this.translateService.get('observation.evidence.cannotRemoveNotification', { ids: otherObservationsLinkedIds }).toPromise());
+          this.notifications.error('observation.evidence.cannotRemoveNotification', { ids: otherObservationsLinkedIds });
         } else {
           await this.datastoreService.deleteRecord(ObservationDocument, document.id).toPromise();
           const documentIndex = this.reportDocuments.findIndex(d => d === document);
           this.reportDocuments.splice(documentIndex, 1);
         }
       } catch {
-        alert(await this.translateService.get('observation.evidence.removalError').toPromise());
+        this.notifications.error('observation.evidence.removalError');
       }
     }
   }
@@ -1885,7 +1888,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   async onSubmitForReview() {
-    if (window.confirm(await this.translateService.get('observationSubmitForReview').toPromise())) {
+    if (await this.confirmDialog.confirm('observationSubmitForReview')) {
       const oldValidationStatus = this.validationStatus;
       this.validationStatus = 'Ready for QC'
       this.onSubmit(null, () => {
@@ -1895,7 +1898,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   async onPublish(validationStatus) {
-    if (window.confirm(await this.translateService.get('observationPublish').toPromise())) {
+    if (await this.confirmDialog.confirm('observationPublish', { confirmLabel: 'Publish' })) {
       const oldValidationStatus = this.validationStatus;
       this.validationStatus = validationStatus;
       this.updateObservation(
@@ -1948,7 +1951,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   async onApproveQC() {
-    if (!window.confirm(await this.translateService.get('observationAccept').toPromise())) return;
+    if (!(await this.confirmDialog.confirm('observationAccept', { confirmLabel: 'Accept' }))) return;
 
     let decision;
     if (this.validationStatus.includes('QC1')) decision = 'Ready for QC2';
@@ -1970,7 +1973,7 @@ export class ObservationDetailComponent implements OnDestroy {
       if (err.errors && err.errors.length) {
         message += '\n' + err.errors.map(e => e.detail).join('\n');
       }
-      alert(message);
+      this.notifications.error(message);
       console.error(err);
     })
   }
@@ -1983,7 +1986,7 @@ export class ObservationDetailComponent implements OnDestroy {
         onSuccess && onSuccess();
       })
       .catch(async (err) => {
-        alert(await this.translateService.get('observationUpdate.error').toPromise());
+        this.notifications.error('observationUpdate.error');
         console.error(err);
         if (err.errors && err.errors.length) {
           this.serverValidationError = err.errors.map(e => e.detail).join('\n');
@@ -1996,7 +1999,7 @@ export class ObservationDetailComponent implements OnDestroy {
   async onSubmit(onSuccess?: () => void, onError?: () => void) {
     if (!this.newlyUploadedReportValid) {
       this.reportFormSubmitted = true;
-      alert(await this.translateService.get('observationReportNotValid').toPromise());
+      this.notifications.error('observationReportNotValid');
       return;
     }
 
@@ -2088,10 +2091,10 @@ export class ObservationDetailComponent implements OnDestroy {
       .then(() => observation.save({ locale: observation.locale }).toPromise())
       .then(async () => {
         if (this.observation && !this.isCopied) {
-          alert(await this.translateService.get('observationUpdate.success').toPromise());
+          this.notifications.success('observationUpdate.success');
         } else {
           this.observationsService.removeDraftObservation();
-          alert(await this.translateService.get('observationCreation.success').toPromise());
+          this.notifications.success('observationCreation.success');
         }
         onSuccess && onSuccess();
 
@@ -2099,9 +2102,9 @@ export class ObservationDetailComponent implements OnDestroy {
       })
       .catch(async (err) => {
         if (this.observation && !this.isCopied) {
-          alert(await this.translateService.get('observationUpdate.error').toPromise());
+          this.notifications.error('observationUpdate.error');
         } else {
-          alert(await this.translateService.get('observationCreation.error').toPromise());
+          this.notifications.error('observationCreation.error');
         }
         if (err.errors && err.errors.length) {
           this.serverValidationError = err.errors.map(e => e.detail).join('\n');

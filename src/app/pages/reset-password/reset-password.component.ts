@@ -1,9 +1,9 @@
-import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'environments/environment';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { NotificationService } from 'app/shared/notifications/notification.service';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class ResetPasswordComponent {
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private translateService: TranslateService
+    private notifications: NotificationService
   ) { }
 
   onSubmit(formValues) {
@@ -37,7 +37,7 @@ export class ResetPasswordComponent {
     })
       .toPromise()
       .then(async (response: any) => {
-        alert(await this.translateService.get('resetPassword.success').toPromise());
+        this.notifications.success('resetPassword.success');
         const email = response.data.attributes.email;
         return this.authService.login(email, formValues.new_password).then(() => {
           this.router.navigate(['']);
@@ -45,9 +45,9 @@ export class ResetPasswordComponent {
       })
       .catch(e => {
         if (e.error && e.error.errors && e.error.errors.length > 0) {
-          alert(e.error.errors.map(error => error.title).join('\n'));
+          this.notifications.error(e.error.errors.map(error => error.title).join('\n'));
         } else {
-          alert('An error occurred');
+          this.notifications.error('errors.generic');
         }
       })
       .then(() => this.loading = false);

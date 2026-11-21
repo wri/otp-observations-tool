@@ -67,12 +67,10 @@ describe('Observations CSV upload', () => {
     cy.get('otp-upload-file').should('not.exist');
 
     // Request failure
-    const alert = cy.stub().as('alert');
-    cy.on('window:alert', alert);
     cy.intercept('POST', importsUrl, { statusCode: 500, body: {} }).as('failure');
     selectCsv();
     cy.wait('@failure');
-    cy.get('@alert').should('have.been.calledWith', 'Error importing data from CSV file');
+    cy.expectToast('Error importing data from CSV file');
     cy.get('otp-upload-file').should('not.exist');
     cy.get('otp-table').should('be.visible');
   });

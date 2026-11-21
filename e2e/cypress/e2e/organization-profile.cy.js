@@ -21,11 +21,8 @@ describe('Organization profile', () => {
     cy.get('input#contact_inquiries_email').clear().type('inquiries@example.com');
     cy.get('input#public_info').check();
 
-    const alert = cy.stub().as('alert');
-    cy.then(() => cy.on('window:alert', alert));
     cy.get('button').contains('Save').click();
-    cy.get('@alert').should('have.been.calledWithMatch', /profile has been suc?cessfully updated/i);
-    cy.then(() => alert.reset());
+    cy.expectToast(/profile has been suc?cessfully updated/i);
 
     // reload to confirm it reached the API
     cy.visit('/private/my-otp/profile');

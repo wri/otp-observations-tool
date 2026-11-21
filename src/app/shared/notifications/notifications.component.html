@@ -1,0 +1,9 @@
+<div class="toasts" aria-live="polite">
+  @for (notification of notifications; track notification.id) {
+    <div class="toast" [class]="'-' + notification.type" [attr.role]="notification.type === 'error' ? 'alert' : 'status'" data-test-id="toast">
+      <span class="icon" aria-hidden="true">{{ notification.type === 'success' ? '✓' : notification.type === 'error' ? '!' : 'i' }}</span>
+      <p class="message">{{ notification.message | translate: notification.params }}</p>
+      <button type="button" class="dismiss" [attr.aria-label]="'notifications.dismiss' | translate" (click)="service.dismiss(notification.id)">&times;</button>
+    </div>
+  }
+</div>

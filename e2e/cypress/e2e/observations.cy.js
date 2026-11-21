@@ -54,11 +54,8 @@ describe('Observations', () => {
     cy.get('#litigation_status').clear().type('Litigation status example');
 
     cy.selectOption('law_field', 'Exploitation par autorisation');
-    const alert = cy.stub().as("alert");
-    cy.then(() => { cy.on('window:alert', alert); });
     cy.get('button').contains('Create').click();
-    cy.get("@alert").should("have.been.calledWithMatch", /The observation has been successfully created/);
-    cy.then(() => alert.reset());
+    cy.expectToast(/The observation has been successfully created/);
     // let's verify if everyting was correctly saved
     cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]', { timeout: 10000 }).click();
     cy.location('pathname').should('include', '/observations/edit');
@@ -93,12 +90,7 @@ describe('Observations', () => {
     cy.get('#last_modification_by').should('have.value', 'NGO Manager');
 
     cy.get('button').contains('Submit for review').click();
-    cy.then(() => {
-      cy.once('window:confirm', (str) => {
-        expect(str).to.match(/The observation will be submitted for revision. Do you want to continue/);
-        return true;
-      })
-    })
+    cy.confirmDialog(/The observation will be submitted for revision. Do you want to continue/);
 
     cy.get('button.go-to-button').click();
     cy.then(() => cy.get('#go-to-observation-id').clear().type(observationId))
@@ -188,10 +180,8 @@ describe('Observations', () => {
     cy.get('#action_taken').clear().type('Actions taken by government');
     cy.get('#concern_opinion').clear().type('Here are some comments');
 
-    const alert = cy.stub().as("alert");
-    cy.then(() => { cy.on('window:alert', alert); });
     cy.get('button').contains('Create').click();
-    cy.get("@alert").should("have.been.calledWithMatch", /The observation has been successfully created/);
+    cy.expectToast(/The observation has been successfully created/);
 
     // let's verify if everyting was correctly saved
     cy.get('otp-table tbody tr:first').find('button[aria-label=Edit]').click();
@@ -219,12 +209,7 @@ describe('Observations', () => {
     cy.get('#last_modification_by').should('have.value', 'NGO Manager');
 
     cy.get('button').contains('Submit for review').click();
-    cy.then(() => {
-      cy.once('window:confirm', (str) => {
-        expect(str).to.match(/The observation will be submitted for revision. Do you want to continue/);
-        return true;
-      })
-    })
+    cy.confirmDialog(/The observation will be submitted for revision. Do you want to continue/);
 
     cy.get('button.go-to-button').click();
     cy.then(() => cy.get('#go-to-observation-id').clear().type(observationId))
@@ -307,13 +292,8 @@ describe('Observations', () => {
       cy.get('select#evidence_type').select('Uploaded documents');
       cy.get('[data-test-id="documents-list-report"] ul li').contains('li', 'Lettre').find('button').contains('Use as evidence').click();
       cy.get('[data-test-id="documents-list-selected"] ul').find('li').contains('Lettre').should('be.visible');
-      cy.then(() => {
-        cy.once('window:confirm', (str) => {
-          expect(str).to.match(/Changing the report will unlink all linked evidences from the previous report. Do you want to continue?/);
-          return true;
-        })
-      })
       cy.get('select#report_field').select('Rapport 10 OGF');
+      cy.confirmDialog(/Changing the report will unlink all linked evidences from the previous report. Do you want to continue?/);
       cy.get('[data-test-id="documents-list-selected"]').contains('No evidence').should('be.visible');
       cy.get('[data-test-id="documents-list-report"]').contains('No evidence').should('be.visible');
     });
