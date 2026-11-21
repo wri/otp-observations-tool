@@ -9,6 +9,7 @@ import { TableFilterBehavior } from 'app/shared/table-filter/table-filter.behavi
 import { environment } from 'environments/environment';
 import { DraftObservation } from 'app/models/draft_observation.interface';
 import { NotificationService } from 'app/shared/notifications/notification.service';
+import { ConfirmDialogService } from 'app/shared/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'otp-observation-list',
@@ -82,7 +83,8 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
     protected service: ObservationsService,
     private authService: AuthService,
     private translateService: TranslateService,
-    private notifications: NotificationService
+    private notifications: NotificationService,
+    private confirmDialog: ConfirmDialogService
   ) {
     super();
 
@@ -172,7 +174,7 @@ export class ObservationListComponent extends TableFilterBehavior implements Aft
   }
 
   async onDelete(row) {
-    if (await this.notifications.confirm('observationDeletion.confirm', { confirmLabel: 'Delete', danger: true })) {
+    if (await this.confirmDialog.confirm('observationDeletion.confirm', { confirmLabel: 'Delete', danger: true })) {
       this.service.deleteObservationWithId(row.id)
         .then(async data => {
           this.notifications.success('observationDeletion.success');

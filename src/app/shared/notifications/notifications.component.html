@@ -7,14 +7,3 @@
     </div>
   }
 </div>
-
-<dialog #dialog class="confirm-dialog" aria-labelledby="otp-confirm-message" (close)="onDialogClose()" data-test-id="confirm-dialog">
-  @if (confirmation) {
-    <p id="otp-confirm-message" class="message">{{ confirmation.message | translate: confirmation.params }}</p>
-    <div class="c-button-container -j-end">
-      <!-- Destructive questions start on Cancel, so Enter can't delete by accident -->
-      <button type="button" class="c-button -secondary" (click)="answer(false)" data-test-id="confirm-cancel" [attr.autofocus]="confirmation.danger ? '' : null">{{ confirmation.cancelLabel | translate }}</button>
-      <button type="button" class="c-button" [class.-primary]="!confirmation.danger" [class.-danger]="confirmation.danger" (click)="answer(true)" data-test-id="confirm-accept" [attr.autofocus]="confirmation.danger ? null : ''">{{ confirmation.confirmLabel | translate }}</button>
-    </div>
-  }
-</dialog>

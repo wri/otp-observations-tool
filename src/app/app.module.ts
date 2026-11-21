@@ -24,6 +24,7 @@ import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { NotificationsComponent } from 'app/shared/notifications/notifications.component';
+import { ConfirmDialogComponent } from 'app/shared/confirm-dialog/confirm-dialog.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
@@ -71,7 +72,8 @@ export function createTranslateLoader(http: HttpClient) {
     HeaderComponent,
     LoginComponent,
     PageNotFoundComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

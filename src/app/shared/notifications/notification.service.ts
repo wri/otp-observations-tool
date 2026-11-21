@@ -11,34 +11,14 @@ export interface Notification {
   params?: object;
 }
 
-export interface ConfirmOptions {
-  params?: object;
-  /** Translation key of the accepting button */
-  confirmLabel?: string;
-  /** Translation key of the refusing button */
-  cancelLabel?: string;
-  /** Style the accepting button as destructive */
-  danger?: boolean;
-}
-
-export interface Confirmation extends Required<Omit<ConfirmOptions, 'params'>> {
-  message: string;
-  params?: object;
-  resolve: (accepted: boolean) => void;
-}
-
 /** Errors stay longer: they are often longer and need reading */
 const AUTO_DISMISS_MS: Record<NotificationType, number> = { success: 6000, info: 6000, error: 15000 };
 const AFTER_RELOAD_KEY = 'otp-notification-after-reload';
 
-/**
- * In-app replacement for window.alert/confirm: toasts that don't block the page, and a
- * confirmation dialog answered through a promise. Rendered by NotificationsComponent.
- */
+/** In-app replacement for window.alert: toasts that don't block the page. Rendered by NotificationsComponent. */
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   readonly notifications$ = new BehaviorSubject<Notification[]>([]);
-  readonly confirmation$ = new BehaviorSubject<Confirmation>(null);
 
   private nextId = 1;
 
@@ -69,26 +49,6 @@ export class NotificationService {
 
   dismiss(id: number): void {
     this.notifications$.next(this.notifications$.value.filter((n) => n.id !== id));
-  }
-
-  /** Resolves true when the user accepts, false when they cancel or press Esc */
-  confirm(message: string, options: ConfirmOptions = {}): Promise<boolean> {
-    // Only one question at a time: an unanswered one counts as refused
-    this.confirmation$.value?.resolve(false);
-
-    return new Promise((resolve) => {
-      this.confirmation$.next({
-        message,
-        params: options.params,
-        confirmLabel: options.confirmLabel ?? 'Yes',
-        cancelLabel: options.cancelLabel ?? 'Cancel',
-        danger: options.danger ?? false,
-        resolve: (accepted) => {
-          this.confirmation$.next(null);
-          resolve(accepted);
-        }
-      });
-    });
   }
 
   private show(type: NotificationType, message: string, params?: object): void {

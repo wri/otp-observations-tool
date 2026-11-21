@@ -35,6 +35,7 @@ import { ObservationDocumentsService } from 'app/services/observation-documents.
 import { forkJoin ,  Observable ,  interval ,  Subscription } from 'rxjs';
 import { QualityControl } from 'app/models/quality_control.model';
 import { NotificationService } from 'app/shared/notifications/notification.service';
+import { ConfirmDialogService } from 'app/shared/confirm-dialog/confirm-dialog.service';
 
 // Fix issues witht the icons of the Leaflet's markers
 const DefaultIcon = L.icon({
@@ -926,7 +927,8 @@ export class ObservationDetailComponent implements OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private translateService: TranslateService,
-    private notifications: NotificationService
+    private notifications: NotificationService,
+    private confirmDialog: ConfirmDialogService
   ) {
     this.updateTranslatedOptions(this.evidenceTypes, 'evidenceType');
     this.updateTranslatedOptions(this.documentTypes, 'documentType');
@@ -1416,7 +1418,7 @@ export class ObservationDetailComponent implements OnDestroy {
     let updateReport = false;
 
     if (anyDocumentsFromDifferentReport) {
-      if (await this.notifications.confirm('observation.evidence.filesFromDifferentReport')) {
+      if (await this.confirmDialog.confirm('observation.evidence.filesFromDifferentReport')) {
         updateReport = true;
       }
     } else {
@@ -1555,7 +1557,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   async onClickRemoveReportDocument(document: ObservationDocument) {
-    if (await this.notifications.confirm('observation.evidence.removalNotification', { confirmLabel: 'Remove', danger: true })) {
+    if (await this.confirmDialog.confirm('observation.evidence.removalNotification', { confirmLabel: 'Remove', danger: true })) {
       try {
         const fetchedDocument = await this.datastoreService.findRecord(
           ObservationDocument, document.id, { include: 'observations', fields: { observations: 'id' } }
@@ -1886,7 +1888,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   async onSubmitForReview() {
-    if (await this.notifications.confirm('observationSubmitForReview')) {
+    if (await this.confirmDialog.confirm('observationSubmitForReview')) {
       const oldValidationStatus = this.validationStatus;
       this.validationStatus = 'Ready for QC'
       this.onSubmit(null, () => {
@@ -1896,7 +1898,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   async onPublish(validationStatus) {
-    if (await this.notifications.confirm('observationPublish', { confirmLabel: 'Publish' })) {
+    if (await this.confirmDialog.confirm('observationPublish', { confirmLabel: 'Publish' })) {
       const oldValidationStatus = this.validationStatus;
       this.validationStatus = validationStatus;
       this.updateObservation(
@@ -1949,7 +1951,7 @@ export class ObservationDetailComponent implements OnDestroy {
   }
 
   async onApproveQC() {
-    if (!(await this.notifications.confirm('observationAccept', { confirmLabel: 'Accept' }))) return;
+    if (!(await this.confirmDialog.confirm('observationAccept', { confirmLabel: 'Accept' }))) return;
 
     let decision;
     if (this.validationStatus.includes('QC1')) decision = 'Ready for QC2';
